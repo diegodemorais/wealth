@@ -67,6 +67,15 @@ export default function MacroUnificado({
     : 'var(--red)';
   const cdsColor = cdsBrazil5y == null ? 'var(--muted)' : cdsBrazil5y >= 400 ? 'var(--red)' : cdsBrazil5y >= 250 ? 'var(--yellow)' : 'var(--green)';
 
+  // Ação recomendada baseada em Selic e CDS (gatilhos de carteira.md)
+  const selicAcao = selic == null ? null
+    : selic > 14 ? { text: '→ RF doméstica competitiva — manter peso equity', color: 'var(--green)' }
+    : selic >= 11 ? { text: '→ Ciclo neutro', color: 'var(--yellow)' }
+    : { text: '→ Favorecer equity', color: 'var(--accent)' };
+  const cdsAcao = cdsBrazil5y != null && cdsBrazil5y > 250
+    ? { text: '→ Risco soberano elevado — IPCA+ como hedge natural', color: 'var(--yellow)' }
+    : null;
+
   return (
     <div style={{ marginBottom: 14 }}>
       {/* Linha 1: Taxas BR/EUA */}
@@ -112,6 +121,18 @@ export default function MacroUnificado({
           <div className="text-xs text-muted mt-1">CDS 5Y (bps)</div>
         </div>
       </div>
+
+      {/* Ação recomendada — Selic e CDS */}
+      {(selicAcao || cdsAcao) && (
+        <div className="flex flex-wrap gap-x-4 gap-y-1 mb-3 px-0.5">
+          {selicAcao && (
+            <span className="font-mono text-xs" style={{ color: selicAcao.color }}>{selicAcao.text}</span>
+          )}
+          {cdsAcao && (
+            <span className="font-mono text-xs" style={{ color: cdsAcao.color }}>{cdsAcao.text}</span>
+          )}
+        </div>
+      )}
 
       {/* Linha 2: Ativos de Referência */}
       <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>

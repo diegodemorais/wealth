@@ -123,7 +123,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <SectionDivider label="Indicadores" />
+      <SectionDivider label="Status" />
       {/* 1. HERO STRIP — Patrimônio Total | Anos até FIRE | Progresso FIRE */}
       <KpiHero
         networth={d.networth}
@@ -187,8 +187,33 @@ export default function HomePage() {
         />
       </div>
 
-      {/* ── GROUP 1: Ação Imediata ── */}
-      <SectionDivider label="Ação Imediata" />
+      {/* ── CAMADA 2: Decisão do Mês ── */}
+      <SectionDivider label="Decisão do Mês" />
+
+      {/* Próximo Aporte — Equity & Gatilhos RF (decisão mais imediata) */}
+      {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
+        <div style={{ marginBottom: 14 }}>
+          <AporteDecisionPanel
+            etfs={aporteEtfs}
+            dcaItems={d.dcaItems}
+          />
+        </div>
+      )}
+
+      {/* Aporte do Mês — contexto do aporte */}
+      {d && (
+        <div style={{ marginBottom: 14 }}>
+          <AporteDoMes
+            aporteMensal={d.aporteMensal}
+            ultimoAporte={d.ultimoAporte}
+            ultimoAporteData={d.ultimoAporteData}
+            acumuladoMes={d.acumuladoMes}
+            acumuladoAno={d.acumuladoAno}
+          />
+        </div>
+      )}
+
+      {/* Macro — contexto de suporte à decisão */}
       <MacroUnificado
         selic={(data as any)?.macro?.selic_meta ?? null}
         ipca12m={(data as any)?.macro?.ipca_12m ?? null}
@@ -208,7 +233,9 @@ export default function HomePage() {
         cdsBrazil5y={(data as any)?.macro?.cds_brazil_5y_bps ?? null}
       />
 
-      {/* 4. SEÇÃO: Time to FIRE */}
+      {/* ── CAMADA 3: Evolução e Contexto ── */}
+      <SectionDivider label="Evolução" />
+
       <TimeToFireProgressBar
         fireProgress={d.firePercentage}
         yearsToFire={d.fireMonthsAway / 12}
@@ -216,17 +243,6 @@ export default function HomePage() {
         patrimonioGatilho={d.firePatrimonioGatilho}
       />
 
-      {/* 5. SEÇÃO: Próximo Aporte — Equity & Gatilhos RF */}
-      {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
-        <div style={{ marginBottom: 14 }}>
-          <AporteDecisionPanel
-            etfs={aporteEtfs}
-            dcaItems={d.dcaItems}
-          />
-        </div>
-      )}
-
-      {/* 6. PFireMonteCarloTornado — reordenado para ANTES de FireProgressWellness */}
       {d && (
         <PFireMonteCarloTornado
           pfireBase={d.pfireBase}
@@ -238,30 +254,15 @@ export default function HomePage() {
         />
       )}
 
-      {/* 6b. GRID 2-COL: Progresso FIRE + Aporte do Mês */}
-      <div className="grid grid-cols-2 gap-3.5 mb-3.5">
-        <FireProgressWellness
-          firePercentage={d.firePercentage}
-          firePatrimonioAtual={d.firePatrimonioAtual}
-          firePatrimonioGatilho={d.firePatrimonioGatilho}
-          swrFireDay={d.swrFireDay}
-          wellnessScore={d.wellnessScore * 100}
-          wellnessLabel={d.wellnessLabel}
-          wellnessMetrics={d.wellnessMetrics}
-        />
-        {d && (
-          <AporteDoMes
-            aporteMensal={d.aporteMensal}
-            ultimoAporte={d.ultimoAporte}
-            ultimoAporteData={d.ultimoAporteData}
-            acumuladoMes={d.acumuladoMes}
-            acumuladoAno={d.acumuladoAno}
-          />
-        )}
-      </div>
-
-      {/* ── GROUP 2: Monitoramento ── */}
-      <SectionDivider label="Monitoramento" />
+      <FireProgressWellness
+        firePercentage={d.firePercentage}
+        firePatrimonioAtual={d.firePatrimonioAtual}
+        firePatrimonioGatilho={d.firePatrimonioGatilho}
+        swrFireDay={d.swrFireDay}
+        wellnessScore={d.wellnessScore * 100}
+        wellnessLabel={d.wellnessLabel}
+        wellnessMetrics={d.wellnessMetrics}
+      />
 
       {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, CLOSED] */}
       {data?.wellness_config?.metrics && (

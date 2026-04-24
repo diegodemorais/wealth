@@ -19,10 +19,25 @@ interface RFStatusPanelProps {
   rows: RFStatusRow[];
 }
 
+// Deriva ação recomendada com base na taxa atual vs gatilhos de carteira.md
+function getAcaoRecomendada(row: RFStatusRow): { text: string; color: string } | null {
+  const taxa = row.taxaAtual;
+  if (taxa == null) return null;
+  if (row.id === 'renda2065') {
+    if (taxa >= 6.5) return { text: '→ DCA ativo (gatilho ativo)', color: 'var(--green)' };
+    if (taxa >= 6.0) return { text: '→ Monitorar', color: 'var(--yellow)' };
+    return { text: '→ Aguardar', color: 'var(--muted)' };
+  }
+  // IPCA+ 2040 e 2050
+  if (taxa >= 6.0) return { text: '→ Comprar (gatilho ativo)', color: 'var(--green)' };
+  if (taxa >= 5.5) return { text: '→ Monitorar — próximo do gatilho', color: 'var(--yellow)' };
+  return { text: '→ Aguardar', color: 'var(--muted)' };
+}
+
 /**
  * Consolidates IPCA+ Taxa Progress and DCA Status per RF instrument.
  * Shows, per instrument (IPCA+2040 / IPCA+2050 / Renda+2065):
- *   taxa atual · piso · gap · % atual · % alvo · posição R$
+ *   taxa atual · piso · gap · % atual · % alvo · posição R$ · ação recomendada
  */
 export default function RFStatusPanel({ rows }: RFStatusPanelProps) {
   const { privacyMode } = useUiStore();
@@ -84,6 +99,15 @@ export default function RFStatusPanel({ rows }: RFStatusPanelProps) {
                   </span>
                 </div>
               )}
+              {(() => {
+                const acao = getAcaoRecomendada(r);
+                if (!acao) return null;
+                return (
+                  <div className="font-mono text-xs mt-1.5 pt-1 border-t border-border/20" style={{ color: acao.color }}>
+                    {acao.text}
+                  </div>
+                );
+              })()}
               {r.pctAtual != null && r.pctAlvo != null && (
                 <div className="flex justify-between text-xs">
                   <span className="text-muted">% carteira</span>
