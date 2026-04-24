@@ -29,18 +29,13 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| DEV-mc-bootstrapping | MC Bootstrapping Histórico — metodologia superior ao paramétrico | Dev+FIRE+Quant | 🟡 Média — aguarda DEV-mc-canonico |
+| DEV-mc-regime-switching-fx | MC Regime Switching FX — dep_BRL episódica vs constante | Dev+Quant | 🟡 Média |
 
 ### Doing
 > Issues em andamento
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
-| DEV-mc-canonico | MC Canônico: Padronização Lognormal GBM + Ito + QA enforcement | Dev | 🔴 Alta |
 | DEV-twr-pipeline-fixes | Fix TWR: RF MtM, preços fim-de-mês, Modified Dietz | Dev | 🔴 Alta |
 
 ### Done (últimas 20)
@@ -48,6 +43,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DEV-mc-bootstrapping | Dev+FIRE+Quant | 2026-04-24 | Won't Do — Bootstrap BRL: N/H=2.29x, bias ±2–4pp > ganho. Bootstrap USD ≡ cenário stress. Fat tails irrelevantes em 14a (CLT). Risco dominante é r=4.85%, não método. Incremento real → DEV-mc-regime-switching-fx. |
+| DEV-mc-canonico | Dev | 2026-04-24 | MC canônico lognormal GBM + Ito. runCanonicalMC() único. 19 testes QA (fórmula + calibração + proibição grep). P50≈R$11M, P(FIRE)≈72% anchor. 454 passing. v1.2.10. |
 | DEV-drawdown-extended | Dev | 2026-04-23 | Drawdown 4 períodos (7a/21a/31a) com seletores. Target vs VWRA. Max DD -53% (GFC). Quant validou fórmula + resultados. |
 | FR-healthcare-recalibracao | FIRE | 2026-04-23 | SAUDE_BASE R$18k→R$24k, VCMH 2.7%→5.0%. P(FIRE) 91.0%→86.4% base. Pesquisa web SP + 4 modelos externos. Custos reais: plano R$1.3-2k/mês, VCMH real 7-10%. |
 | HD-multi-llm-validation | Head | 2026-04-22 | 4 modelos externos contestaram 5 decisões. 4/5 validadas. Healthcare unanimemente subestimado → FR-healthcare-recalibracao. |

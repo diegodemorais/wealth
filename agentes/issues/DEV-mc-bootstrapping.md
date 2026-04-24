@@ -6,12 +6,60 @@
 |-------|-------|
 | ID | DEV-mc-bootstrapping |
 | Dono | Dev + FIRE + Quant |
-| Status | Backlog |
-| Prioridade | 🟡 Média — executar após DEV-mc-canonico |
+| Status | ❌ Won't Do |
+| Prioridade | — |
 | Criada | 2026-04-24 |
-| Bloqueada por | DEV-mc-canonico (implementar lognormal primeiro) |
+| Fechada | 2026-04-24 |
+| Fechada por | Head — debate 6 agentes + 3 LLMs externos |
 
-## Por que esta Issue Existe
+## Decisão de Fechamento
+
+**Won't Do — MC canônico atual é metodologicamente superior para o caso específico de Diego.**
+
+Debate formal em 2026-04-24 com FIRE, Quant, Fact-Checker, Advocate + validação externa com Gemini, GPT-OSS e Llama4 (multi_llm_query.py). Veredicto unânime de que o bootstrap histórico introduz mais ruído do que sinal para este caso concreto.
+
+### Por que a premissa original estava errada
+
+A issue foi criada com a afirmação de que "bootstrapping histórico é metodologicamente superior a qualquer modelo paramétrico". O debate posterior revelou que essa superioridade é **condicional**, não universal — e não se aplica ao caso de Diego pelos motivos abaixo.
+
+### Evidência que levou ao fechamento
+
+| Ponto | Achado | Impacto |
+|-------|--------|---------|
+| Fat tails mensais (K≈5.75) | Via CLT: K(ln W₁₆₈) → 3.016 após 168 meses | Delta P(FIRE) ≈ 0.1–0.2pp — não material |
+| Bootstrap BRL 1994+ | N/H = 2.29x < threshold 3x (Politis & Romano 1994) | Bias ±2–4pp > ganho marginal ≈1–2pp. Líquido negativo |
+| Bootstrap USD 1970+ | N/H = 4x — adequado. Mas matematicamente ≡ cenário stress atual (dep_BRL=0%) | Não acrescenta informação nova |
+| Maior risco metodológico | r=4.85% com erro ±4–5pp (Goyal & Welch 2008) gera variação ±9–12pp em P(FIRE) | O método de simulação move ≤2pp — risco real é a premissa de retorno, não o método |
+| PTAX pré-1994 | 4 quebras estruturais (1986, 1989, 1993, 1994) + correlação dep×IPCA=0.81 gera std=6.35%/mês como artefato | Bootstrap BRL histórico é contaminado por regime incompatível |
+
+### Posições dos agentes
+
+| Agente | Veredicto | Confiança |
+|--------|-----------|-----------|
+| Quant | Opção C (manter MC) + sugere incremento D (regime switching FX) | 92% |
+| FIRE | Opção A (bootstrap USD como validação optativa) | 78% |
+| Advocate | Opção B (stress-test paralelo) — mas reconhece equivalência USD=stress | — |
+| Fact-Checker | N/H=3x não está explicitamente em Politis & Romano 1994 (heurística) | — |
+| GPT-OSS | Opção D prioritária; A como opcional; r=4.85% é o risco dominante | — |
+| Gemini | MC paramétrico com cenários FX superior para investidor BRL | — |
+| Llama4 | Confirma que erro em r domina erro de método | — |
+
+### O que fazer em vez do bootstrap
+
+O único déficit real identificado pelo debate: **dep_BRL tratada como constante** nos 3 cenários atuais, enquanto historicamente crises cambiais BRL ocorrem com frequência ≈1/6 anos. Isso é endereçado pela issue **DEV-mc-regime-switching-fx** (regime switching FX), que tem custo de implementação baixo e ganho metodológico real.
+
+### Reabertura
+
+Reabrir se:
+- CAPE S&P 500 > 35 por 2+ trimestres E P(FIRE) paramétrico divergir >5pp de benchmark externo (FIRECalc)
+- Disponibilidade de série PTAX+IPCA pré-1994 confiável e metodologicamente validada
+- Horizonte de acumulação aumentar para >20 anos (onde CLT não atenua fat tails suficientemente)
+
+---
+
+## Issue Original (arquivo histórico)
+
+### Por que esta Issue Existia
 
 Debate de 2026-04-24 (FIRE + Quant + Fact-Checker + Advocate) concluiu que **bootstrapping histórico é metodologicamente superior a qualquer modelo paramétrico** (Gaussiano ou Lognormal) para planejamento FIRE de longo prazo. A decisão de implementar lognormal (DEV-mc-canonico) é a correção imediata necessária — mas não é o destino final.
 
