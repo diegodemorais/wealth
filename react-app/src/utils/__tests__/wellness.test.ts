@@ -103,31 +103,31 @@ describe('Wellness Scoring', () => {
   });
 
   describe('getWellnessColor', () => {
-    it('returns hex color for critical status', () => {
+    it('returns CSS var for critical status', () => {
       const color = getWellnessColor('critical');
-      expect(color).toBe('#ef4444'); // red
+      expect(color).toBe('var(--red)');
     });
 
-    it('returns hex color for warning status', () => {
+    it('returns CSS var for warning status', () => {
       const color = getWellnessColor('warning');
-      expect(color).toBe('#f59e0b'); // amber
+      expect(color).toBe('var(--amber)');
     });
 
-    it('returns hex color for ok status', () => {
+    it('returns CSS var for ok status', () => {
       const color = getWellnessColor('ok');
-      expect(color).toBe('#3b82f6'); // blue
+      expect(color).toBe('var(--blue)');
     });
 
-    it('returns hex color for excellent status', () => {
+    it('returns CSS var for excellent status', () => {
       const color = getWellnessColor('excellent');
-      expect(color).toBe('#10b981'); // emerald
+      expect(color).toBe('var(--green)');
     });
 
-    it('returns valid hex color format', () => {
+    it('returns valid CSS var format', () => {
       const colors = ['critical', 'warning', 'ok', 'excellent'] as const;
       colors.forEach(status => {
         const color = getWellnessColor(status);
-        expect(color).toMatch(/^#[0-9a-f]{6}$/i);
+        expect(color).toMatch(/^var\(--\w+\)$/);
       });
     });
   });

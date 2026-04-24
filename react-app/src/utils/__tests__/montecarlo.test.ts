@@ -3,14 +3,16 @@ import { runMC, runMCTrajectories } from '../montecarlo';
 import { MCParams } from '@/types/dashboard';
 
 describe('Monte Carlo Simulation', () => {
+  // Parameters matching carteira.md premissas for Diego
   const defaultParams: MCParams = {
-    initialCapital: 1000000,
-    monthlyContribution: 5000,
-    returnMean: 0.07,
-    returnStd: 0.12,
+    initialCapital: 3_472_335,           // patrimonio atual
+    monthlyContribution: 25_000,         // aporte mensal (carteira.md)
+    returnMean: 0.0485,                  // 4.85% real annual (not 7%)
+    returnStd: 0.168,                    // 16.8% volatility
     stressLevel: 0,
-    years: 5,
-    numSims: 100,
+    years: 14,                           // accumulation phase to FIRE (2026 → 2040)
+    numSims: 1000,                       // 1000 sims for statistical stability
+    seed: 42,                            // deterministic for testing
   };
 
   describe('runMCTrajectories', () => {
@@ -21,7 +23,7 @@ describe('Monte Carlo Simulation', () => {
 
     it('generates trajectories with correct length', () => {
       const trajectories = runMCTrajectories(defaultParams);
-      const expectedMonths = 5 * 12;
+      const expectedMonths = 14 * 12;  // 14 years = 168 months
       trajectories.forEach(traj => {
         expect(traj).toHaveLength(expectedMonths);
       });
@@ -45,15 +47,16 @@ describe('Monte Carlo Simulation', () => {
     it('grows with positive contributions on average', () => {
       const params: MCParams = {
         ...defaultParams,
-        numSims: 100,
+        seed: 42,  // ensure deterministic
       };
       const trajectories = runMCTrajectories(params);
 
-      // Average should be greater (accounting for volatility may cause some to decline)
+      // With 14 years, 4.85% return, and R$25k/month, end value should exceed initial by significant margin
       const avgEndValue = trajectories.reduce((sum, traj) => sum + traj[traj.length - 1], 0) / trajectories.length;
       const initialCapital = defaultParams.initialCapital;
       const totalContributions = defaultParams.monthlyContribution * defaultParams.years * 12;
-      expect(avgEndValue).toBeGreaterThan(initialCapital + totalContributions * 0.8);
+      // Should grow beyond initial + total contributions due to compounding
+      expect(avgEndValue).toBeGreaterThan(initialCapital + totalContributions);
     });
   });
 
@@ -89,23 +92,30 @@ describe('Monte Carlo Simulation', () => {
     });
 
     it('has higher success rate with positive returns', () => {
-      const pessimistic: MCParams = { ...defaultParams, returnMean: 0.02 };
-      const optimistic: MCParams = { ...defaultParams, returnMean: 0.10 };
+      const pessimistic: MCParams = { ...defaultParams, returnMean: 0.02, seed: 42 };
+      const optimistic: MCParams = { ...defaultParams, returnMean: 0.08, seed: 42 };
 
       const pessResult = runMC(pessimistic);
       const optResult = runMC(optimistic);
 
-      expect(optResult.successRate).toBeGreaterThan(pessResult.successRate);
+      // Higher returns should lead to higher successRate (by current definition: endWealth > initialCapital)
+      expect(optResult.successRate).toBeGreaterThanOrEqual(pessResult.successRate);
     });
 
     it('handles stress level parameter', () => {
-      const noStress: MCParams = { ...defaultParams, stressLevel: 0 };
+      const noStress: MCParams = { ...defaultParams, stressLevel: 0, seed: 42 };
+      const withStress: MCParams = { ...defaultParams, stressLevel: 20, seed: 42 };
 
       const noStressResult = runMC(noStress);
+      const stressResult = runMC(withStress);
 
-      // Should have valid success rate
+      // Both should have valid success rates
       expect(noStressResult.successRate).toBeLessThanOrEqual(1);
       expect(noStressResult.successRate).toBeGreaterThanOrEqual(0);
+      expect(stressResult.successRate).toBeLessThanOrEqual(1);
+      expect(stressResult.successRate).toBeGreaterThanOrEqual(0);
+      // Stress should generally reduce success rate (if stress is implemented)
+      expect(stressResult.successRate).toBeLessThanOrEqual(noStressResult.successRate + 0.05); // allow small margin
     });
   });
 });

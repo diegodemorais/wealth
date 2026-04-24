@@ -76,14 +76,14 @@ describe('pfireLabel', () => {
 // ── calcFireYear ──────────────────────────────────────────────────────────────
 
 describe('calcFireYear', () => {
-  // Reference scenario matching fire_montecarlo.py premissas
-  const APORTE    = 20_000;           // R$20k/mês
+  // Reference scenario matching carteira.md premissas
+  const APORTE    = 25_000;           // R$25k/mês (carteira.md aporte_mensal)
   const RETORNO   = 0.0485;           // 4.85% real — ALWAYS a fraction, never %
-  const CUSTO     = 250_000;          // R$250k/ano
+  const CUSTO     = 250_000;          // R$250k/ano (spending_atual)
   const AGE       = 39;
   const ANO_ATUAL = 2026;
-  const PAT       = 3_700_000;        // R$3.7M
-  const SWR       = 0.03;             // 3%
+  const PAT       = 3_472_335;        // R$3.472M (patrimonio atual)
+  const SWR       = 0.03;             // 3% (swr_gatilho)
 
   it('returns a result when target is reachable within 30 years', () => {
     const result = calcFireYear(APORTE, RETORNO, CUSTO, AGE, ANO_ATUAL, PAT, SWR);

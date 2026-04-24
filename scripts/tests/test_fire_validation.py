@@ -148,7 +148,7 @@ class TestFireMatrixTableSWRValidation:
                         f"Drawdown out of range [-60%, 0%]: {dd:.4f}"
 
     def test_swr_percentis_ordered_p10_p50_p90(self):
-        """Teste que P10 ≤ P50 ≤ P90."""
+        """Teste que SWR percentis seguem ordenacao correta: P10 >= P50 >= P90."""
         data = self._load_data_json()
 
         fire_data = data.get("fire", {})
@@ -160,14 +160,15 @@ class TestFireMatrixTableSWRValidation:
         assert swr_percentis, "No SWR percentis found"
 
         if isinstance(swr_percentis, dict):
-            # Esperado: {"P10": X, "P50": Y, "P90": Z} com X ≤ Y ≤ Z
-            p10 = swr_percentis.get("P10", swr_percentis.get("p10"))
-            p50 = swr_percentis.get("P50", swr_percentis.get("p50"))
-            p90 = swr_percentis.get("P90", swr_percentis.get("p90"))
+            # Correto: {"swr_p10": X, "swr_p50": Y, "swr_p90": Z} com X >= Y >= Z
+            # (P10 = patrimonio baixo = SWR alto; P90 = patrimonio alto = SWR baixo)
+            swr_p10 = swr_percentis.get("swr_p10")
+            swr_p50 = swr_percentis.get("swr_p50")
+            swr_p90 = swr_percentis.get("swr_p90")
 
-            if p10 is not None and p50 is not None and p90 is not None:
-                assert p10 <= p50, f"P10 {p10} should be <= P50 {p50}"
-                assert p50 <= p90, f"P50 {p50} should be <= P90 {p90}"
+            if swr_p10 is not None and swr_p50 is not None and swr_p90 is not None:
+                assert swr_p10 >= swr_p50, f"SWR P10 {swr_p10:.4f} should be >= P50 {swr_p50:.4f}"
+                assert swr_p50 >= swr_p90, f"SWR P50 {swr_p50:.4f} should be >= P90 {swr_p90:.4f}"
 
     def test_fire_matrix_multiple_entries_consistent(self):
         """Teste que fire_matrix tem estrutura válida com SWRs."""
