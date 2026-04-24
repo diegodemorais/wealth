@@ -90,7 +90,6 @@ class TestTrilhaPercentilesCompletivalidacao:
         assert swr_p50 >= swr_p90, \
             f"SWR P50 ({swr_p50}) should be >= P90 ({swr_p90})"
 
-    @pytest.mark.xfail(reason="CRITICAL: P50 > P90 at point 61 in data.json — needs regeneration via fire_montecarlo.py", strict=False)
     def test_trilha_percentis_ordered_at_each_point(self):
         """Teste que P10 <= P50 <= P90 em todo ponto futuro."""
         data = self._load_data_json()

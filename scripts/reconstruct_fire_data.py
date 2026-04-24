@@ -165,9 +165,10 @@ def gen_fire_trilha():
     all_realizado = [round(r["patrimonio"], 0) for r in rows] + [None] * len(future_dates)
     all_status = status_hist + ["future"] * len(future_dates)
 
-    # P10/P90 via Monte Carlo — ancorado no patrimônio atual, projetado só para o futuro
-    # Bug anterior: rodava n_meses_total (hist+fut) a partir de hoje, causando desalinhamento
-    # Fix: roda apenas n_meses_futuro, preenche histórico com None
+    # P10/P50/P90 via Monte Carlo — todos ancorados no patrimônio atual, projetado só para o futuro
+    # Fix: P50 agora vem do MC para garantir P10 <= P50 <= P90 em todos os pontos
+    # Histórico: trilha_brl=realizados, trilha_p10/p50/p90=None
+    # Futuro: trilha_brl=mc_p50, trilha_p10/p50/p90=mc valores
     try:
         n_meses_futuro = len(future_dates)
         mc_dates, mc_p50, mc_p10, mc_p90 = projetar_acumulacao_mensal(
@@ -178,16 +179,21 @@ def gen_fire_trilha():
             seed=42
         )
         if len(mc_p10) == n_meses_futuro:
-            # Histórico = None (gráfico oculta), futuro = valores MC ancorados no patrimônio atual
+            # Histórico = None/realizados, futuro = valores MC ancorados no patrimônio atual
             trilha_p10_brl = [None] * n_hist + [round(v, 0) for v in mc_p10]
+            trilha_p50_brl = [None] * n_hist + [round(v, 0) for v in mc_p50]
             trilha_p90_brl = [None] * n_hist + [round(v, 0) for v in mc_p90]
+            # Substituir trilha_brl future com MC P50 (garante P10 <= P50 <= P90)
+            all_trilha = trilha_hist + [round(v, 0) for v in mc_p50]
         else:
-            print(f"  ⚠️  MC dates mismatch: {len(mc_p10)} vs {n_meses_futuro} — omitindo P10/P90")
+            print(f"  ⚠️  MC dates mismatch: {len(mc_p10)} vs {n_meses_futuro} — omitindo P10/P50/P90")
             trilha_p10_brl = None
+            trilha_p50_brl = None
             trilha_p90_brl = None
     except Exception as e:
-        print(f"  ⚠️  Erro ao gerar P10/P90 via MC: {e}")
+        print(f"  ⚠️  Erro ao gerar P10/P50/P90 via MC: {e}")
         trilha_p10_brl = None
+        trilha_p50_brl = None
         trilha_p90_brl = None
 
     data = {
@@ -204,11 +210,12 @@ def gen_fire_trilha():
         "n_historico": n_hist,
     }
 
-    # Adicionar P10/P90 se disponível
+    # Adicionar P10/P50/P90 se disponível
     if trilha_p10_brl is not None:
         data["trilha_p10_brl"] = trilha_p10_brl
+        data["trilha_p50_brl"] = trilha_p50_brl
         data["trilha_p90_brl"] = trilha_p90_brl
-        data["trilha_percentis_source"] = "fire_montecarlo.py projetar_acumulacao_mensal (5k sims)"
+        data["trilha_percentis_source"] = "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
 
     _save(DADOS / "fire_trilha.json", data)
 

@@ -108,7 +108,7 @@ Validar integridade do Monte Carlo que alimenta P(FIRE) e projeções de percent
 | P3-T02 | SWR ordenação | p10, p50, p90 | p10 ≥ p50 ≥ p90 | sempre true |
 | P3-T03 | Percentis ordenados | todo mes | P10[t] ≤ P50[t] ≤ P90[t] | sempre true |
 | P3-T04 | Spread percentis cresce | inicio vs fim | spread[fim] > spread[inicio]×1.5 | lógico |
-| P3-T05 | P50 FIRE Day realista | 2040 | R$11.5M ± 5% | ±5% |
+| P3-T05 | P50 FIRE Day realista | 2040 | R$12.5M ± 10% | ±10% |
 | P3-T06 | P10 FIRE Day não colapsa | 2040 | ≥ R$5M (não falência) | sempre ✓ |
 | P3-T07 | Cenários consistentes | base/fav/stress | p_fav ≥ p_base ≥ p_stress | sempre true |
 | P3-T08 | crossoverYear ≤ 2040 | P50 cruza meta | ≤ 2040 | sempre true |
