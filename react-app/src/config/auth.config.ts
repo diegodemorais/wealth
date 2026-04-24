@@ -1,21 +1,22 @@
 /**
- * Authentication Configuration
- * Senha é verificada via SHA-256 hash com sal público
- * Sal: 'com.diegodemorais.dashboard.v1.2026'
+ * Authentication Configuration — GitHub OAuth
+ * Usando GitHub como provider de identidade (seguro, nativa)
+ * Senha gerenciada pelo GitHub, nunca exposta no dashboard
  */
 
 export const AUTH_CONFIG = {
-  // SHA-256 hash da senha (injetado em build time)
-  // Nunca armazena a senha literal
-  PASSWORD_HASH: process.env.NEXT_PUBLIC_AUTH_HASH || '',
+  // GitHub OAuth App credentials (injetados em build time via .env.local)
+  GITHUB_CLIENT_ID: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || '',
+  GITHUB_REDIRECT_URI: process.env.NEXT_PUBLIC_GITHUB_REDIRECT_URI || 'http://localhost:3000/auth/callback',
 
-  // Sal público (usado para derivar hash no cliente)
-  SALT: 'com.diegodemorais.dashboard.v1.2026',
+  // Scopes: 'user:email' para validar que é Diego
+  GITHUB_SCOPES: 'user:email',
 
-  // Token expiry: 7 days
-  TOKEN_EXPIRY_DAYS: 7,
+  // Token expiry: 30 dias (GitHub tokens não expiram, mas validamos este TTL)
+  TOKEN_EXPIRY_DAYS: 30,
 
   // Storage keys
-  STORAGE_KEY_TOKEN: 'dashboard_auth_token',
-  STORAGE_KEY_EXPIRY: 'dashboard_auth_expiry',
+  STORAGE_KEY_TOKEN: 'dashboard_github_token',
+  STORAGE_KEY_USER: 'dashboard_github_user',
 };
+
