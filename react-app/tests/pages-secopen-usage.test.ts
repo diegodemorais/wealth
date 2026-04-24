@@ -5,7 +5,7 @@
  * breaking the abstraction layer that enforces layout decisions.
  *
  * Ensures:
- * - All pages in src/app/*/page.tsx use secOpen() for section visibility
+ * - All pages in src/app/[tab]/page.tsx use secOpen() for section visibility
  * - No direct destructuring of portfolio root without secOpen
  * - Pattern match: secOpen(tab, id) used before conditional renders
  * - No hardcoded defaultOpen boolean values

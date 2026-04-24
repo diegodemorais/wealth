@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-24T09:48:33",
+  "_generated": "2026-04-24T17:27:40",
   "_source": "reconstruct_fire_data.py",
   "dates": [
     "2021-04",
@@ -499,7 +499,7 @@
     1990837.0,
     2116797.0,
     2194155.0,
-    2206496.0,
+    2206495.0,
     2287160.0,
     2468269.0,
     2492726.0,
@@ -518,7 +518,7 @@
     3452186.0,
     3528618.0,
     3411872.0,
-    3629606.0,
+    3603511.0,
     null,
     null,
     null,
@@ -1602,7 +1602,5 @@
     18150395.0,
     18179174.0
   ],
-  "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)",
-  "_âncora_patrimônio_atual": 3472335,
-  "_patrimonio_realizado_último": null
+  "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
 }

@@ -121,84 +121,8 @@ beforeAll(() => {
   mockStoreState.data = realData;
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SemaforoGatilhos — Bug #1 target component
-//
-// The bug: caller passed `gatilhos={derived.dcaItems}` (wrong prop name).
-// TypeScript catches this at tsc level; this test catches it at render level.
-// ─────────────────────────────────────────────────────────────────────────────
-
-describe('SemaforoGatilhos', () => {
-  it('renders without crashing with correct items= prop', async () => {
-    const { default: SemaforoGatilhos } = await import(
-      '@/components/dashboard/SemaforoGatilhos'
-    );
-
-    const items: DcaItem[] = derived.dcaItems ?? [];
-
-    // Must not throw — this is the critical invariant
-    expect(() => {
-      render(React.createElement(SemaforoGatilhos, { items }));
-    }).not.toThrow();
-  });
-
-  it('renders summary row count matching items', async () => {
-    const { default: SemaforoGatilhos } = await import(
-      '@/components/dashboard/SemaforoGatilhos'
-    );
-
-    const items: DcaItem[] = derived.dcaItems ?? [];
-    if (items.length === 0) {
-      // No items in data — skip render assertion but confirm no crash
-      expect(() => render(React.createElement(SemaforoGatilhos, { items }))).not.toThrow();
-      return;
-    }
-
-    render(React.createElement(SemaforoGatilhos, { items }));
-
-    // The component renders "X ativos monitorados" in the collapsed header
-    // (or action rows). Either way it must not be blank.
-    const body = document.body.textContent ?? '';
-    expect(body.length).toBeGreaterThan(10);
-  });
-
-  it('crashes predictably when wrong prop name is used (documents the bug)', async () => {
-    const { default: SemaforoGatilhos } = await import(
-      '@/components/dashboard/SemaforoGatilhos'
-    );
-
-    const items: DcaItem[] = derived.dcaItems ?? [];
-
-    // Simulate Bug #1: wrong prop name `gatilhos` instead of `items`.
-    // TypeScript would reject this at compile time; here we verify it crashes
-    // at runtime too (undefined items → crash in component body).
-    //
-    // We cast to `any` to bypass TS — this simulates what happens when the
-    // caller uses an untyped variable or skips tsc.
-    expect(() => {
-      render(
-        React.createElement(SemaforoGatilhos as any, { gatilhos: items })
-      );
-    }).toThrow(); // items is undefined → component should throw
-  });
-
-  it('receives non-empty dcaItems from computeDerivedValues', () => {
-    // Validate that the data pipeline produces valid items for this component
-    expect(derived.dcaItems).toBeDefined();
-    expect(Array.isArray(derived.dcaItems)).toBe(true);
-
-    if (derived.dcaItems.length > 0) {
-      const first = derived.dcaItems[0];
-      // Validate required DcaItem fields
-      expect(typeof first.id).toBe('string');
-      expect(typeof first.nome).toBe('string');
-      expect(['rf_ipca', 'rf_renda', 'crypto']).toContain(first.categoria);
-      expect(['verde', 'amarelo', 'vermelho']).toContain(first.status);
-      expect(typeof first.dcaAtivo).toBe('boolean');
-      expect(typeof first.posicaoBrl).toBe('number');
-    }
-  });
-});
+// SemaforoGatilhos was deleted in a prior refactor (commit c93dd5e9).
+// Tests removed to avoid stale import errors.
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CashFlowSankey — uses useDashboardStore internally
@@ -263,16 +187,7 @@ describe('Props contract — page.tsx', () => {
     expect(pageSource).toMatch(/(?:derived|d)\.dcaItems/);
   });
 
-  it('SemaforoGatilhos component interface uses items: DcaItem[]', () => {
-    const componentPath = path.join(
-      __dirname,
-      '../components/dashboard/SemaforoGatilhos.tsx'
-    );
-    const source = fs.readFileSync(componentPath, 'utf-8');
-
-    // Interface must define `items` not `gatilhos`
-    expect(source).toMatch(/interface SemaforoGatilhosProps\s*\{[\s\S]{0,100}items:/);
-  });
+  // SemaforoGatilhos deleted (commit c93dd5e9) — test removed.
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
