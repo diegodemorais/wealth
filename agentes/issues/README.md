@@ -29,7 +29,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| DEV-mc-regime-switching-fx | MC Regime Switching FX — dep_BRL episódica vs constante | Dev+Quant | 🟡 Média |
 
 ### Doing
 > Issues em andamento
@@ -43,6 +42,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DEV-mc-regime-switching-fx | Dev+Quant | 2026-04-24 | ✅ Done — Hamilton (1989) Markov 2-regime FX em runCanonicalMC (fxRegime=true). 8 testes QA [REGIME-FX]. Achado: crises BRL AJUDAM (+11,5pp P(FIRE)) — dep episódica beneficia portfólio USD. "Câmbio Dinâmico" na FireScenariosTable. |
 | DEV-mc-bootstrapping | Dev+FIRE+Quant | 2026-04-24 | Won't Do — Bootstrap BRL: N/H=2.29x, bias ±2–4pp > ganho. Bootstrap USD ≡ cenário stress. Fat tails irrelevantes em 14a (CLT). Risco dominante é r=4.85%, não método. Incremento real → DEV-mc-regime-switching-fx. |
 | DEV-mc-canonico | Dev | 2026-04-24 | MC canônico lognormal GBM + Ito. runCanonicalMC() único. 19 testes QA (fórmula + calibração + proibição grep). P50≈R$11M, P(FIRE)≈72% anchor. 454 passing. v1.2.10. |
 | DEV-drawdown-extended | Dev | 2026-04-23 | Drawdown 4 períodos (7a/21a/31a) com seletores. Target vs VWRA. Max DD -53% (GFC). Quant validou fórmula + resultados. |

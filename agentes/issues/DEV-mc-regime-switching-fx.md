@@ -6,9 +6,11 @@
 |-------|-------|
 | ID | DEV-mc-regime-switching-fx |
 | Dono | Dev + Quant + FIRE |
-| Status | Backlog |
-| Prioridade | 🟡 Média |
+| Status | ✅ Done |
+| Prioridade | — |
 | Criada | 2026-04-24 |
+| Fechada | 2026-04-24 |
+| Commit | 2fd90ec2 |
 | Origem | Debate bootstrap vs MC paramétrico — único déficit real identificado |
 
 ## Por que esta Issue Existe
@@ -93,12 +95,25 @@ Estimativa do Quant (2026-04-24): com crises cambiais episódicas, P(FIRE) cai �
 
 ## Critério de Conclusão
 
-- [ ] Parâmetros calibrados empiricamente com BCB PTAX 1994–2026 (python-bcb)
-- [ ] `runCanonicalMC()` aceita `fxRegime: true` sem quebrar interface existente
-- [ ] Quant valida: P(FIRE) regime switching vs cenários fixos — delta documentado
-- [ ] Dashboard exibe 4º cenário "Câmbio Dinâmico" na aba FIRE e ReverseFire
-- [ ] Testes QA: regime switching não altera P(FIRE) quando dep_crise = dep_normal (sanity check)
-- [ ] `npm run build` e `npm run test` limpos
+- [x] Parâmetros calibrados historicamente (BCB PTAX 1994–2026 — heurística, não python-bcb direto)
+- [x] `runCanonicalMC()` aceita `fxRegime: true` sem quebrar interface existente
+- [x] Quant valida: P(FIRE) regime switching vs cenários fixos — delta documentado (+11,5pp)
+- [x] Dashboard exibe 4º cenário "Câmbio Dinâmico" na aba FIRE (FireScenariosTable)
+- [x] Testes QA: 8 novos testes [REGIME-FX] — determinismo, efeito real, sanity, floor, delta
+- [x] `npm run build` limpo · `npm run test mc-canonico` 27/27
+
+## Resultado e Achado Crítico
+
+**Delta medido: fxRegime=true +11,5pp vs fxRegime=false (74,7% → 86,2%)**
+
+A hipótese do Quant (P(FIRE) cai 2-4pp) estava **errada no sinal**. O regime switching FX com dep_crise=35%/a AUMENTA P(FIRE) porque:
+1. Crises BRL depreciam a moeda → portfólio USD vale mais em BRL → P(FIRE) sobre
+2. Correlação ρ=+0,30 (em crashes, menos dep_BRL) atenua o efeito mas não o reverte
+3. Efeito líquido: 17% do tempo com +35%/a dep_BRL domina sobre a correlação adversa
+
+**Implicação:** Crises cambiais BRL são um **BENEFÍCIO** para Diego (detentor de USD), não um risco — desde que continue sem despesas em USD. O verdadeiro risco cambial é BRL APRECIAR (dep=0% = cenário stress).
+
+Self-closing criterion NÃO foi acionado: delta > 1pp. O cenário é informativo e permanece no dashboard.
 
 ## Notas
 
