@@ -1094,6 +1094,19 @@ def _generate_core_jsons(rows: list[dict]):
         )
         print(f"  -> TWR nominal BRL CAGR: {twr_nominal_brl_cagr:.2f}% | IPCA CAGR: {ipca_cagr_periodo_pct:.2f}% | TWR real BRL: {twr_real_brl_pct:.2f}%")
 
+    # USD CAGR — compound apenas meses com dado USD (excluí Nones)
+    twr_usd_cagr = None
+    if n_meses >= 6:
+        acum_usd_full = 1.0
+        n_usd_full = 0
+        for r in twr_usd_pct:
+            if r is not None:
+                acum_usd_full *= (1 + r / 100)
+                n_usd_full += 1
+        if n_usd_full >= 6:
+            twr_usd_cagr = round((acum_usd_full ** (12 / n_usd_full) - 1) * 100, 2)
+            print(f"  -> TWR USD CAGR: {twr_usd_cagr:.2f}% ({n_usd_full} meses)")
+
     # ── Tabela de retornos anuais ─────────────────────────────────────
     # Agrupa retornos mensais por ano e calcula TWR anual (composto)
     from collections import OrderedDict as _OD
@@ -1255,6 +1268,19 @@ def _generate_core_jsons(rows: list[dict]):
 
     print(f"  -> Tabela anual: {len(annual_table)} anos ({annual_table[0]['year']}–{annual_table[-1]['year']})")
 
+    # VWRA CAGR — compound mensal sobre os mesmos meses do portfolio
+    vwra_usd_cagr = None
+    if dates and vwra_mensal_by_ym:
+        acum_vwra_full = 1.0
+        n_vwra_full = 0
+        for d in dates:
+            if d in vwra_mensal_by_ym:
+                acum_vwra_full *= (1 + vwra_mensal_by_ym[d] / 100)
+                n_vwra_full += 1
+        if n_vwra_full >= 6:
+            vwra_usd_cagr = round((acum_vwra_full ** (12 / n_vwra_full) - 1) * 100, 2)
+            print(f"  -> VWRA USD CAGR: {vwra_usd_cagr:.2f}% ({n_vwra_full} meses)")
+
     retornos = {
         "_generated": now_iso,
         "_source": "reconstruct_history.py → TWR (Modified Dietz, temporal-weighted inflows)",
@@ -1270,6 +1296,8 @@ def _generate_core_jsons(rows: list[dict]):
         },
         "twr_real_brl_pct":      twr_real_brl_pct,
         "twr_nominal_brl_cagr":  twr_nominal_brl_cagr,
+        "twr_usd_cagr":          twr_usd_cagr,
+        "vwra_usd_cagr":         vwra_usd_cagr,
         "ipca_cagr_periodo_pct": ipca_cagr_periodo_pct,
         "periodo_anos":          periodo_anos,
         "annual_returns":        annual_table,

@@ -115,6 +115,8 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
 
   const cagrReal: number | null = rm.twr_real_brl_pct ?? null;
   const cagrNominal: number | null = rm.twr_nominal_brl_cagr ?? null;
+  const cagrUsd: number | null = rm.twr_usd_cagr ?? null;
+  const cagrVwra: number | null = rm.vwra_usd_cagr ?? null;
   const alphaAnual: number | null = ir.active_return_anual_pct ?? null;
   const maxDd: number | null = ddSummary.real_max_dd_target ?? null;
   const annualReturns: AnnualReturn[] = rm.annual_returns ?? [];
@@ -326,8 +328,12 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                     {cagrReal != null ? `${cagrReal.toFixed(1)}%` : '--'}
                   </td>
                   <td style={tdC} />
-                  <td style={{ ...tdR, color: 'var(--muted)' }}>—</td>
-                  <td style={{ ...tdR, color: 'var(--muted)' }}>—</td>
+                  <td style={{ ...tdR, fontWeight: 800, color: returnColor(cagrUsd) }}>
+                    {cagrUsd != null ? `${cagrUsd.toFixed(1)}%` : '—'}
+                  </td>
+                  <td style={{ ...tdR, fontWeight: 800, color: returnColor(cagrVwra) }}>
+                    {cagrVwra != null ? `${cagrVwra.toFixed(1)}%` : '—'}
+                  </td>
                   <td
                     style={{
                       ...tdR,
