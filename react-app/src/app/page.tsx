@@ -5,7 +5,6 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import AporteDecisionPanel from '@/components/dashboard/AporteDecisionPanel';
-import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
 import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
@@ -241,6 +240,7 @@ export default function HomePage() {
         yearsToFire={d.fireMonthsAway / 12}
         patrimonioAtual={d.firePatrimonioAtual}
         patrimonioGatilho={d.firePatrimonioGatilho}
+        swrFireDay={d.swrFireDay}
       />
 
       {d && (
@@ -253,16 +253,6 @@ export default function HomePage() {
           firePatrimonioGatilho={d.firePatrimonioGatilho}
         />
       )}
-
-      <FireProgressWellness
-        firePercentage={d.firePercentage}
-        firePatrimonioAtual={d.firePatrimonioAtual}
-        firePatrimonioGatilho={d.firePatrimonioGatilho}
-        swrFireDay={d.swrFireDay}
-        wellnessScore={d.wellnessScore * 100}
-        wellnessLabel={d.wellnessLabel}
-        wellnessMetrics={d.wellnessMetrics}
-      />
 
       {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, CLOSED] */}
       {data?.wellness_config?.metrics && (
