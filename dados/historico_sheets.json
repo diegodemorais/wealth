@@ -1,0 +1,264 @@
+{
+  "_meta": {
+    "descricao": "Snapshots periódicos da Carteira Viva (Google Sheets). Cada entrada representa uma leitura da aba Historico. Fonte primária para cross-check vs dados/historico_carteira.csv (pipeline).",
+    "colunas_chave": {
+      "patrimonio_brl": "Total portfolio em BRL (Sheets live)",
+      "ibkr_usd": "IBKR equity em USD",
+      "ibkr_brl": "IBKR equity em BRL",
+      "rf_brl": "Renda Fixa total em BRL (IPCA+)",
+      "reserva_brl": "Reserva de Emergência em BRL",
+      "ptax": "PTAX BRL/USD calculada implicitamente",
+      "etfs": "Lista de ETFs com pesos atuais e metas"
+    }
+  },
+  "snapshots": [
+    {
+      "fetched_at": "2026-04-24T15:22:59Z",
+      "fonte": "sheets/Historico/live",
+      "sheet_id": "1LmxgmvIoGut6Bfzj7ibhXtFuR1H7cIPcJOkVmiTuzZs",
+      "data_snapshot": "2026-04-24",
+      "patrimonio_brl": 3726578.0,
+      "ibkr_usd": 647194.42,
+      "ibkr_brl": 3252281.0,
+      "rf_brl": 297105.0,
+      "reserva_brl": 172869.0,
+      "rf_extra_brl": 113111.0,
+      "ptax": 5.0252,
+      "refs": {
+        "incepção": {
+          "data": "2021-03-01",
+          "ptax": 5.03,
+          "patrimonio_brl": 1249203.26
+        },
+        "ultimo_sync": {
+          "data": "2025-12-15",
+          "ibkr_usd": 77669.51,
+          "ibkr_brl": 2456371.77,
+          "patrimonio_brl": 3495956.86
+        }
+      },
+      "etfs": [
+        {
+          "ticker": "LON:SWRD",
+          "ativo": true,
+          "gain_inception": 0.5183,
+          "weight_ibkr": 0.386,
+          "mtd": -0.0021,
+          "ytd": 0.066,
+          "target_ibkr": 0.425,
+          "target_total": 0.408,
+          "weight_total": 0.4083,
+          "gap_pp": -1.67
+        },
+        {
+          "ticker": "WRDUSW-USD",
+          "ativo": false,
+          "gain_inception": -0.0342,
+          "weight_ibkr": 0.0,
+          "mtd": -0.0028000000000000004,
+          "ytd": 0.067,
+          "target_ibkr": null,
+          "target_total": 0.0,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "F50A.DE",
+          "ativo": false,
+          "gain_inception": 0.049100000000000005,
+          "weight_ibkr": 0.0,
+          "mtd": null,
+          "ytd": null,
+          "target_ibkr": null,
+          "target_total": 0.0,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "LON:EIMI",
+          "ativo": false,
+          "gain_inception": 0.6898000000000001,
+          "weight_ibkr": 0.183,
+          "mtd": 0.0072,
+          "ytd": 0.102,
+          "target_ibkr": 0.17,
+          "target_total": 0.162,
+          "weight_total": 0.27399999999999997,
+          "gap_pp": 10.39
+        },
+        {
+          "ticker": "AVEM",
+          "ativo": true,
+          "gain_inception": null,
+          "weight_ibkr": 0.0,
+          "mtd": 0.0175,
+          "ytd": 0.10300000000000001,
+          "target_ibkr": null,
+          "target_total": 0.0,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "AVES",
+          "ativo": false,
+          "gain_inception": 0.4301,
+          "weight_ibkr": 0.077,
+          "mtd": 0.0118,
+          "ytd": 0.081,
+          "target_ibkr": null,
+          "target_total": 0.09300000000000001,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "DGS",
+          "ativo": false,
+          "gain_inception": 0.2748,
+          "weight_ibkr": 0.011000000000000001,
+          "mtd": 0.0078000000000000005,
+          "ytd": 0.061,
+          "target_ibkr": null,
+          "target_total": 0.019,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "LON:EMVL",
+          "ativo": false,
+          "gain_inception": null,
+          "weight_ibkr": 0.0,
+          "mtd": 0.0011,
+          "ytd": 0.111,
+          "target_ibkr": null,
+          "target_total": 0.0,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "USSC",
+          "ativo": false,
+          "gain_inception": 0.7715000000000001,
+          "weight_ibkr": 0.061,
+          "mtd": -0.0039000000000000003,
+          "ytd": 0.06,
+          "target_ibkr": 0.255,
+          "target_total": 0.05,
+          "weight_total": 0.31420000000000003,
+          "gap_pp": 5.92
+        },
+        {
+          "ticker": "AVUV",
+          "ativo": false,
+          "gain_inception": 0.45840000000000003,
+          "weight_ibkr": 0.08800000000000001,
+          "mtd": 0.0006,
+          "ytd": 0.075,
+          "target_ibkr": null,
+          "target_total": 0.10099999999999999,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "ZPRX.DE",
+          "ativo": false,
+          "gain_inception": 0.3286,
+          "weight_ibkr": 0.0,
+          "mtd": 0.0,
+          "ytd": 0.0,
+          "target_ibkr": null,
+          "target_total": 0.0,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "AVDV",
+          "ativo": false,
+          "gain_inception": 0.8040999999999999,
+          "weight_ibkr": 0.18899999999999997,
+          "mtd": 0.0005,
+          "ytd": 0.027999999999999997,
+          "target_ibkr": null,
+          "target_total": 0.153,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "AVGS",
+          "ativo": true,
+          "gain_inception": 0.0978,
+          "weight_ibkr": 0.002,
+          "mtd": -0.0042,
+          "ytd": 0.054000000000000006,
+          "target_ibkr": null,
+          "target_total": 0.01,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "LON:JPGL",
+          "ativo": true,
+          "gain_inception": 0.2481,
+          "weight_ibkr": 0.0,
+          "mtd": -0.0034999999999999996,
+          "ytd": 0.024,
+          "target_ibkr": 0.0,
+          "target_total": 0.0,
+          "weight_total": 0.0036,
+          "gap_pp": 0.36
+        },
+        {
+          "ticker": "LON:IWVL",
+          "ativo": false,
+          "gain_inception": 0.818,
+          "weight_ibkr": 0.004,
+          "mtd": 0.0022,
+          "ytd": 0.067,
+          "target_ibkr": null,
+          "target_total": 0.004,
+          "weight_total": null,
+          "gap_pp": null
+        },
+        {
+          "ticker": "LON:IWQU",
+          "ativo": false,
+          "gain_inception": null,
+          "weight_ibkr": 0.0,
+          "mtd": -0.0013,
+          "ytd": 0.061,
+          "target_ibkr": null,
+          "target_total": 0.0,
+          "weight_total": null,
+          "gap_pp": null
+        }
+      ]
+    },
+    {
+      "fetched_at": "2026-04-24T15:22:59Z",
+      "fonte": "sheets/Historico/sync",
+      "sheet_id": "1LmxgmvIoGut6Bfzj7ibhXtFuR1H7cIPcJOkVmiTuzZs",
+      "data_snapshot": "2025-12-15",
+      "patrimonio_brl": 3495392.55,
+      "ibkr_usd": null,
+      "ibkr_brl": 2456371.77,
+      "rf_brl": null,
+      "reserva_brl": null,
+      "rf_extra_brl": null,
+      "ptax": null,
+      "etfs": []
+    },
+    {
+      "fetched_at": "2026-04-24T15:22:59Z",
+      "fonte": "sheets/Historico/inception",
+      "sheet_id": "1LmxgmvIoGut6Bfzj7ibhXtFuR1H7cIPcJOkVmiTuzZs",
+      "data_snapshot": "2021-03-01",
+      "patrimonio_brl": 1248528.58,
+      "ibkr_usd": null,
+      "ibkr_brl": null,
+      "rf_brl": null,
+      "reserva_brl": null,
+      "rf_extra_brl": null,
+      "ptax": 5.03,
+      "etfs": []
+    }
+  ]
+}
