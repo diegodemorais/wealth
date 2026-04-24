@@ -666,7 +666,8 @@ def rodar_monte_carlo_com_trajetorias(premissas: dict, n_sim: int = 10_000,
     # Gerar datas (anos do FIRE até final)
     idade_fire = premissas["idade_fire_alvo"]
     ano_fire = int(premissas.get("ano_atual", 2024)) + anos_acum
-    datas = [str(ano_fire + i) for i in range(n_anos)]
+    # +1: inclui ano 0 (início do FIRE) que a trajetória armazena como pat_inicial
+    datas = [str(ano_fire + i) for i in range(n_anos + 1)]
 
     return {
         "trilha_p10": trilha_p10,

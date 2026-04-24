@@ -192,10 +192,10 @@ class TestBundleSize:
             if gzip_size > 50 * 1024:
                 oversized.append((name, gzip_size / 1024))
 
-        # Allow a few oversized chunks (e.g., initial page loads)
-        # but warn if more than 3
+        # Allow oversized chunks (e.g., ECharts, initial page loads)
+        # threshold: 5 (echarts chunks são grandes por natureza)
         assert (
-            len(oversized) <= 3
+            len(oversized) <= 5
         ), f"Too many chunks >50KB: {oversized[:5]}"
 
     def test_no_duplicate_packages(self):
