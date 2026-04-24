@@ -29,7 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-_(nenhuma no momento)_
+| DEV-mc-bootstrapping | MC Bootstrapping Histórico — metodologia superior ao paramétrico | Dev+FIRE+Quant | 🟡 Média — aguarda DEV-mc-canonico |
 
 ### Doing
 > Issues em andamento
@@ -40,6 +40,7 @@ _(nenhuma no momento)_
 |----|--------|------|------------|
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
+| DEV-mc-canonico | MC Canônico: Padronização Lognormal GBM + Ito + QA enforcement | Dev | 🔴 Alta |
 | DEV-twr-pipeline-fixes | Fix TWR: RF MtM, preços fim-de-mês, Modified Dietz | Dev | 🔴 Alta |
 
 ### Done (últimas 20)
