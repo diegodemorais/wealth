@@ -63,9 +63,7 @@ class TestFireMatrixTableSWRValidation:
 
         swr_percentis = data.get("fire_swr_percentis", {})
 
-        if not swr_percentis:
-            # skip se não existe
-            return
+        assert swr_percentis, "CRITICAL: fire_swr_percentis missing or empty"
 
         # Procurar por chaves com "swr" no nome
         swr_values = []
@@ -74,9 +72,8 @@ class TestFireMatrixTableSWRValidation:
                 if isinstance(val, (int, float)) and "swr" in label.lower():
                     swr_values.append((label, val))
 
-        if not swr_values:
-            # skip se nenhum SWR encontrado
-            return
+        assert len(swr_values) > 0, \
+            f"CRITICAL: No SWR fields found in fire_swr_percentis. Keys: {list(swr_percentis.keys())}"
 
         for label, swr_val in swr_values:
             assert not math.isnan(swr_val), f"SWR is NaN for {label}"
@@ -194,13 +191,12 @@ class TestFireMatrixTableSWRValidation:
                             f"Invalid SWR {swr_val} in fire_matrix"
 
     def test_swr_lower_when_drawdown_higher(self):
-        """Teste que SWR values seguem pattern de risco-retorno (conceitual)."""
+        """Teste que SWR percentis seguem pattern: P10 >= P50 >= P90."""
         data = self._load_data_json()
 
         swr_percentis = data.get("fire_swr_percentis", {})
 
-        if not swr_percentis:
-            return  # skip se estrutura diferente
+        assert swr_percentis, "CRITICAL: fire_swr_percentis missing"
 
         # Validar que P10, P50, P90 têm relação esperada
         # (P10 = patrimônio mais baixo = SWR mais alto, P90 = patrimônio mais alto = SWR mais baixo)
@@ -208,12 +204,14 @@ class TestFireMatrixTableSWRValidation:
         swr_p50 = swr_percentis.get("swr_p50")
         swr_p90 = swr_percentis.get("swr_p90")
 
-        if swr_p10 and swr_p50 and swr_p90:
-            # Esperado: P10 >= P50 >= P90 (SWR mais conservador em P10, mais agressivo em P90)
-            assert swr_p10 >= swr_p50, \
-                f"SWR P10 ({swr_p10:.4f}) should be >= P50 ({swr_p50:.4f})"
-            assert swr_p50 >= swr_p90, \
-                f"SWR P50 ({swr_p50:.4f}) should be >= P90 ({swr_p90:.4f})"
+        assert swr_p10 is not None and swr_p50 is not None and swr_p90 is not None, \
+            f"CRITICAL: Missing SWR percentile fields. Have: {list(swr_percentis.keys())}"
+
+        # Esperado: P10 >= P50 >= P90 (SWR mais conservador em P10, mais agressivo em P90)
+        assert swr_p10 >= swr_p50, \
+            f"SWR P10 ({swr_p10:.4f}) should be >= P50 ({swr_p50:.4f})"
+        assert swr_p50 >= swr_p90, \
+            f"SWR P50 ({swr_p50:.4f}) should be >= P90 ({swr_p90:.4f})"
 
 
 if __name__ == "__main__":

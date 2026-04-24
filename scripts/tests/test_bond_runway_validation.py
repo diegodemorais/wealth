@@ -77,7 +77,7 @@ class TestBondRunwayValidation:
                     assert isinstance(val, (int, float)), f"pool[{key}] should be numeric: {val}"
 
     def test_pool_total_brl_vs_alvo_adequacy(self):
-        """Teste que pool_total_brl é calculado vs alvo_pool_brl_2040 (gap analysis)."""
+        """Teste que pool_total_brl mantém adequacy >= 50% do alvo (avalia progress)."""
         data = self._load_data_json()
 
         runway = data.get("bond_pool_runway", {})
@@ -93,16 +93,11 @@ class TestBondRunwayValidation:
             final_pool = pool_total[-1]
 
         if isinstance(final_pool, (int, float)) and isinstance(alvo_pool, (int, float)):
-            # Calculate gap - shortfall is expected and flagged
-            # This is a known issue per FR-rebalance-desacumulacao
-            gap = alvo_pool - final_pool
-            # Gap should exist but be < 100% of alvo (otherwise model is broken)
-            assert gap < alvo_pool, \
-                f"Bond pool model broken: gap {gap:.0f} exceeds alvo {alvo_pool:.0f}"
-            # Log the gap for awareness
-            if gap > 0:
-                adequacy = (final_pool / alvo_pool) * 100
-                print(f"\nBond pool shortfall: {adequacy:.1f}% of target (gap R${gap:.0f})")
+            # CRITICAL: Bond pool deve manter adequacy >= 50% do alvo
+            # Abaixo de 50% indica insuficiência significativa
+            adequacy_pct = (final_pool / alvo_pool) * 100 if alvo_pool > 0 else 0
+            assert adequacy_pct >= 50, \
+                f"Bond pool inadequate: {adequacy_pct:.1f}% of target (final={final_pool:.0f}, alvo={alvo_pool:.0f})"
 
     def test_spending_piso_defined_and_reasonable(self):
         """Teste que spending piso existe e é R$180k (para Diego)."""

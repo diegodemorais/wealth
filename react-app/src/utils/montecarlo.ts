@@ -52,13 +52,25 @@ export function runMC(params: MCParams): MCResult {
 
   const successRate = endWealthDist.filter(w => w > params.initialCapital).length / endWealthDist.length;
 
+  // Compute percentiles correctly: iterate over months, not trajectories
+  const months = params.years * 12;
+  const p10Array: number[] = [];
+  const p50Array: number[] = [];
+  const p90Array: number[] = [];
+
+  for (let month = 0; month < months; month++) {
+    p10Array.push(getPercentileAtMonth(trajectories, 0.1, month));
+    p50Array.push(getPercentileAtMonth(trajectories, 0.5, month));
+    p90Array.push(getPercentileAtMonth(trajectories, 0.9, month));
+  }
+
   return {
     trajectories,
     endWealthDist,
     percentiles: {
-      p10: trajectories.map((_, i) => getPercentileAtMonth(trajectories, 0.1, i)),
-      p50: trajectories.map((_, i) => getPercentileAtMonth(trajectories, 0.5, i)),
-      p90: trajectories.map((_, i) => getPercentileAtMonth(trajectories, 0.9, i)),
+      p10: p10Array,
+      p50: p50Array,
+      p90: p90Array,
     },
     successRate,
     medianEndWealth: p50,
