@@ -1,673 +1,413 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Slider } from '@/components/primitives/Slider';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { usePageData } from '@/hooks/usePageData';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE, EC_TOOLTIP } from '@/utils/echarts-theme';
 import { EChartsOption } from 'echarts';
-import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type Perfil = 'essencial' | 'moderado' | 'balanceado' | 'confortavel' | 'affluente' | 'premium';
-type Mercado = 'base' | 'bull';
-
-interface PerfilConfig {
-  label: string;
-  gasto_anual: number;
-}
-
-interface MercadoConfig {
-  label: string;
-  retorno_anual: number; // as percentage (4.85, 6.0)
-}
+type Cond = 'solteiro' | 'casado' | 'filho';
+type Mkt = 'stress' | 'base' | 'fav' | 'aspiracional';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const PERFIS: Record<Perfil, PerfilConfig> = {
-  essencial: { label: 'Essencial', gasto_anual: 120000 },
-  moderado: { label: 'Moderado', gasto_anual: 180000 },
-  balanceado: { label: 'Balanceado', gasto_anual: 240000 },
-  confortavel: { label: 'Confortável', gasto_anual: 360000 },
-  affluente: { label: 'Affluente', gasto_anual: 480000 },
-  premium: { label: 'Premium', gasto_anual: 720000 },
+const COND_LABELS: Record<Cond, string> = {
+  solteiro: 'Solteiro',
+  casado:   'Casado',
+  filho:    'Filho',
 };
 
-const MERCADOS: Record<Mercado, MercadoConfig> = {
-  base: { label: 'Base (4.85%)', retorno_anual: 4.85 },
-  bull: { label: 'Bull (6.0%)', retorno_anual: 6.0 },
+const MKT_LABELS: Record<Exclude<Mkt, 'aspiracional'>, string> = {
+  stress: 'Stress',
+  base:   'Base',
+  fav:    'Favorável',
+};
+
+// Retornos reais BRL anuais por cenário (fração)
+const MKT_RETORNOS: Record<Exclude<Mkt, 'aspiracional'>, number> = {
+  stress: 0.0435,
+  base:   0.0485,
+  fav:    0.0585,
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Format a number as R$ with thousands separator, no decimals.
- * Round to nearest R$100.
- */
-function fmtBRL(value: number): string {
-  const rounded = Math.round(value / 100) * 100;
-  return `R$ ${rounded.toLocaleString('pt-BR')}`;
+function fmtBRL(value: number, privacyMode: boolean): string {
+  return fmtPrivacy(value, privacyMode);
 }
 
-/**
- * Calculate reverse FIRE: aporte mensal needed to reach target patrimonio
- *
- * Formula:
- *   r_m = (1 + r_anual)^(1/12) - 1
- *   patrimonio_alvo = gasto_anual / swr
- *   fator = (1 + r_m)^meses
- *   aporte = (patrimonio_alvo - patrimonio_atual * fator) / ((fator - 1) / r_m)
- */
-function calcReverseFireAporte(
-  patrimonio_atual: number,
-  idade_atual: number,
-  idade_fire: number,
-  gasto_anual: number,
-  retorno_anual_pct: number,
-  swr_pct: number
+function fmtM(value: number): string {
+  if (Math.abs(value) >= 1e6) return `R$${(value / 1e6).toFixed(2)}M`;
+  if (Math.abs(value) >= 1e3) return `R$${(value / 1e3).toFixed(0)}k`;
+  return `R$${Math.round(value).toLocaleString('pt-BR')}`;
+}
+
+/** Forward simulation: patrimônio projetado no FIRE Day dado aporte fixo */
+function calcForwardFire(
+  patrimonioAtual: number,
+  idadeAtual: number,
+  idadeFire: number,
+  aporteMensal: number,
+  retornoAnual: number,
 ): {
-  patrimonio_alvo: number;
-  aporte_mensal: number;
+  patrimonioFire: number;
   meses: number;
 } {
-  const retorno_anual = retorno_anual_pct / 100;
-  const swr = swr_pct / 100;
-  const meses = (idade_fire - idade_atual) * 12;
-
-  const patrimonio_alvo = gasto_anual / swr;
-
-  // Monthly return
-  const r_m = Math.pow(1 + retorno_anual, 1 / 12) - 1;
-
-  // Future value factor
+  const meses = (idadeFire - idadeAtual) * 12;
+  const r_m = Math.pow(1 + retornoAnual, 1 / 12) - 1;
   const fator = Math.pow(1 + r_m, meses);
-
-  // Aporte mensal
-  let aporte_mensal: number;
-  if (Math.abs(r_m) < 1e-10) {
-    // Edge case: r_m ≈ 0
-    aporte_mensal = (patrimonio_alvo - patrimonio_atual) / meses;
-  } else {
-    const numerador = patrimonio_alvo - patrimonio_atual * fator;
-    const denominador = (fator - 1) / r_m;
-    aporte_mensal = numerador / denominador;
-  }
-
-  return {
-    patrimonio_alvo,
-    aporte_mensal,
-    meses,
-  };
+  const patrimonioFire = patrimonioAtual * fator + aporteMensal * (fator - 1) / r_m;
+  return { patrimonioFire, meses };
 }
 
-/**
- * Build array of wealth growth year-by-year
- */
-function buildWealthGrowthData(
-  patrimonio_atual: number,
-  idade_atual: number,
-  idade_fire: number,
-  aporte_mensal: number,
-  retorno_anual_pct: number
-): Array<{ idade: number; patrimonio_acumulado: number }> {
-  const retorno_anual = retorno_anual_pct / 100;
-  const r_m = Math.pow(1 + retorno_anual, 1 / 12) - 1;
+/** Aporte mínimo para atingir meta (reverse) */
+function calcAporteMinimo(
+  patrimonioAtual: number,
+  idadeAtual: number,
+  idadeFire: number,
+  metaFire: number,
+  retornoAnual: number,
+): number {
+  const meses = (idadeFire - idadeAtual) * 12;
+  const r_m = Math.pow(1 + retornoAnual, 1 / 12) - 1;
+  const fator = Math.pow(1 + r_m, meses);
+  if (Math.abs(r_m) < 1e-10) return (metaFire - patrimonioAtual) / meses;
+  return (metaFire - patrimonioAtual * fator) / ((fator - 1) / r_m);
+}
 
-  const data: Array<{ idade: number; patrimonio_acumulado: number }> = [];
-
-  let patrimonio = patrimonio_atual;
-  let idade = idade_atual;
-
-  // Add initial point
-  data.push({ idade, patrimonio_acumulado: patrimonio });
-
-  // Year-by-year growth
-  while (idade < idade_fire) {
-    // 12 months of growth
+/** Evolução anual do patrimônio */
+function buildGrowthData(
+  patrimonioAtual: number,
+  idadeAtual: number,
+  idadeFire: number,
+  aporteMensal: number,
+  retornoAnual: number,
+): Array<{ idade: number; patrimonio: number }> {
+  const r_m = Math.pow(1 + retornoAnual, 1 / 12) - 1;
+  const result: Array<{ idade: number; patrimonio: number }> = [
+    { idade: idadeAtual, patrimonio: patrimonioAtual },
+  ];
+  let p = patrimonioAtual;
+  for (let age = idadeAtual + 1; age <= idadeFire; age++) {
     for (let m = 0; m < 12; m++) {
-      patrimonio = patrimonio * (1 + r_m) + aporte_mensal;
+      p = p * (1 + r_m) + aporteMensal;
     }
-    idade += 1;
-    data.push({ idade, patrimonio_acumulado: patrimonio });
+    result.push({ idade: age, patrimonio: p });
   }
-
-  return data;
+  return result;
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function ReverseFire() {
+  const { data, privacyMode } = usePageData();
+  const { pv, pvLabel } = useEChartsPrivacy();
+
+  // Dados fixos do sistema
+  const premissas = (data as any)?.premissas ?? {};
+  const fmPerfis  = (data as any)?.fire_matrix?.perfis ?? {};
+  const fmRetornos = (data as any)?.fire_matrix?.retornos_equity ?? {};
+
+  const patrimonioAtual: number = premissas.patrimonio_atual ?? 3570565;
+  const idadeAtual: number      = premissas.idade_atual ?? 39;
+  const swrGatilho: number      = premissas.swr_gatilho ?? 0.03;
+
+  // Custos de vida por condição
+  const custosPorCond: Record<Cond, number> = {
+    solteiro: fmPerfis.atual?.gasto_anual  ?? premissas.custo_vida_base   ?? 250000,
+    casado:   fmPerfis.casado?.gasto_anual ?? premissas.custo_vida_casado ?? 270000,
+    filho:    fmPerfis.filho?.gasto_anual  ?? premissas.custo_vida_filho  ?? 300000,
+  };
+
   // State
-  const [patrimonio_atual, setPatrimonio] = useState<number | string>('');
-  const [idade_atual, setIdadeAtual] = useState(40);
-  const [idade_fire, setIdadeFire] = useState(50);
-  const [perfil, setPerfil] = useState<Perfil>('balanceado');
-  const [mercado, setMercado] = useState<Mercado>('base');
-  const [swr, setSWR] = useState(4.0);
+  const [cond, setCond]           = useState<Cond>('solteiro');
+  const [mkt, setMkt]             = useState<Mkt>('base');
+  const [idadeFire, setIdadeFire] = useState(53);
+  const [aporte, setAporte]       = useState(25000);
 
-  const { privacyMode, pv, pvLabel } = useEChartsPrivacy();
-
-  // Parse patrimonio
-  const patrimonio_num =
-    typeof patrimonio_atual === 'number'
-      ? patrimonio_atual
-      : patrimonio_atual === ''
-        ? 0
-        : parseFloat(patrimonio_atual.replace(/\D/g, '')) || 0;
-
-  // Derived values
-  const gasto_anual = PERFIS[perfil].gasto_anual;
-  const retorno_anual_pct = MERCADOS[mercado].retorno_anual;
-
-  // Calculate
-  const calculo = useMemo(() => {
-    if (idade_fire <= idade_atual || swr <= 0) {
-      return null;
+  // Retorno real anual (fração)
+  const retornoAnual: number = useMemo(() => {
+    if (mkt === 'aspiracional') {
+      return fmRetornos.fav ? fmRetornos.fav : MKT_RETORNOS.fav;
     }
+    const mktKey = mkt as Exclude<Mkt, 'aspiracional'>;
+    return fmRetornos[mktKey] ? fmRetornos[mktKey] : MKT_RETORNOS[mktKey];
+  }, [mkt, fmRetornos]);
 
-    return calcReverseFireAporte(
-      patrimonio_num,
-      idade_atual,
-      idade_fire,
-      gasto_anual,
-      retorno_anual_pct,
-      swr
-    );
-  }, [patrimonio_num, idade_atual, idade_fire, gasto_anual, retorno_anual_pct, swr]);
+  // Cálculo principal
+  const custo = custosPorCond[cond];
+  const metaFire = custo / swrGatilho;
+  const { patrimonioFire } = calcForwardFire(patrimonioAtual, idadeAtual, idadeFire, aporte, retornoAnual);
+  const gap = metaFire - patrimonioFire; // positivo = falta, negativo = excede
+  const aporteMinimo = calcAporteMinimo(patrimonioAtual, idadeAtual, idadeFire, metaFire, retornoAnual);
+  const excedente = aporte - aporteMinimo; // quanto o aporte atual supera o mínimo
 
-  // Guardrails
-  const gap = calculo ? calculo.patrimonio_alvo - patrimonio_num : 0;
-  const meses = calculo?.meses ?? 0;
-  const aporte = calculo?.aporte_mensal ?? 0;
-  const anos = meses / 12;
+  const metaAtingida = patrimonioFire >= metaFire;
+  const anos = idadeFire - idadeAtual;
 
-  const metaAtingida = aporte <= 0;
-  const horizonteImpossivel = anos <= 0;
-  const aporteAlto = aporte > 150000;
-  const horizonteCurto = anos > 0 && anos < 3;
-  const swrAlto = swr >= 4.5 && anos >= 20;
+  // Status
+  const statusColor = metaAtingida ? EC.green : aporteMinimo > aporte * 2 ? EC.red : EC.yellow;
+  const statusText = metaAtingida
+    ? '✅ Meta atingida'
+    : aporteMinimo <= 0
+      ? '✅ Patrimônio já suficiente'
+      : `⚠️ Precisa mais R$${Math.round((aporteMinimo - aporte) / 1000)}k/mês`;
 
-  // Build chart data
-  const chartData = useMemo(() => {
-    if (!calculo || aporte < 0) return [];
-    return buildWealthGrowthData(
-      patrimonio_num,
-      idade_atual,
-      idade_fire,
-      aporte,
-      retorno_anual_pct
-    );
-  }, [patrimonio_num, idade_atual, idade_fire, aporte, retorno_anual_pct, calculo]);
+  // Gráfico
+  const growthData = useMemo(
+    () => buildGrowthData(patrimonioAtual, idadeAtual, idadeFire, aporte, retornoAnual),
+    [patrimonioAtual, idadeAtual, idadeFire, aporte, retornoAnual],
+  );
 
-  // Chart options
-  const chartOption: EChartsOption = useMemo(() => {
-    if (chartData.length === 0) {
-      return {};
-    }
-
-    const patrimonio_alvo = calculo?.patrimonio_alvo ?? 0;
-
-    return {
-      tooltip: {
-        ...EC_TOOLTIP,
-        formatter: (params: any) => {
-          if (Array.isArray(params)) {
-            return params.map(p => {
-              const idade = p.axisValue;
-              const valor = p.value;
-              return `Idade ${idade}: ${pv(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 })}`;
-            }).join('<br/>');
-          }
-          return '';
-        },
+  const chartOption: EChartsOption = useMemo(() => ({
+    tooltip: {
+      ...EC_TOOLTIP,
+      trigger: 'axis',
+      formatter: (params: any) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const age = params[0].axisValue;
+        return params.map((p: any) => {
+          const v = typeof p.value === 'number' ? p.value : 0;
+          const label = privacyMode ? pvLabel(v) : fmtM(v);
+          return `${p.marker}${p.seriesName}: ${label}`;
+        }).join('<br/>') + `<br/><span style="color:var(--muted);font-size:11px">Idade ${age}</span>`;
       },
-      xAxis: {
-        type: 'category',
-        data: chartData.map(d => `${Math.floor(d.idade)}`),
-        axisLabel: {
-          color: EC.muted,
-          fontSize: 10,
-        },
-        axisLine: EC_AXIS_LINE,
-        splitLine: { show: false },
+    },
+    xAxis: {
+      type: 'category',
+      data: growthData.map(d => `${d.idade}`),
+      axisLabel: { color: EC.muted, fontSize: 10 },
+      axisLine: EC_AXIS_LINE,
+      splitLine: { show: false },
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        color: EC.muted,
+        fontSize: 10,
+        formatter: (v: number) => privacyMode ? pvLabel(v) : `R$${(v / 1e6).toFixed(1)}M`,
       },
-      yAxis: {
-        type: 'value',
-        axisLabel: {
-          color: EC.muted,
-          fontSize: 10,
-          formatter: (v: number) => {
-            if (privacyMode) {
-              return pvLabel(v);
-            }
-            return `R$${(v / 1e6).toFixed(1)}M`;
-          },
-        },
-        axisLine: EC_AXIS_LINE,
-        splitLine: EC_SPLIT_LINE,
-      },
-      grid: {
-        left: 60,
-        right: 20,
-        top: 20,
-        bottom: 30,
-      },
-      series: [
-        {
-          name: 'Patrimônio',
-          type: 'line',
-          data: chartData.map(d => pv(d.patrimonio_acumulado)),
-          smooth: false,
-          areaStyle: {
-            color: EC.accent.replace('ff', '20'),
-          },
-          lineStyle: {
-            color: EC.accent,
-            width: 2,
-          },
-          itemStyle: {
-            color: EC.accent,
-          },
-          markPoint: {
-            data: [
-              {
-                name: 'FIRE Day',
-                xAxis: chartData.length - 1,
-                yAxis: pv(chartData[chartData.length - 1].patrimonio_acumulado),
-                symbol: 'circle',
-                symbolSize: 10,
-                itemStyle: { color: EC.green },
-                label: {
-                  formatter: () => `FIRE aos ${Math.floor(chartData[chartData.length - 1].idade)} anos`,
-                  position: 'top',
-                  distance: 8,
-                  fontSize: 11,
-                  color: EC.green,
-                  fontWeight: 'bold',
-                },
+      axisLine: EC_AXIS_LINE,
+      splitLine: EC_SPLIT_LINE,
+    },
+    grid: { left: 58, right: 16, top: 16, bottom: 28 },
+    series: [
+      {
+        name: 'Patrimônio',
+        type: 'line',
+        data: growthData.map(d => pv(d.patrimonio)),
+        smooth: false,
+        areaStyle: { color: EC.accent + '28' },
+        lineStyle: { color: EC.accent, width: 2 },
+        itemStyle: { color: EC.accent },
+        markPoint: {
+          data: [
+            {
+              name: 'FIRE Day',
+              xAxis: growthData.length - 1,
+              yAxis: pv(growthData[growthData.length - 1]?.patrimonio ?? 0),
+              symbol: 'circle',
+              symbolSize: 8,
+              itemStyle: { color: metaAtingida ? EC.green : EC.red },
+              label: {
+                formatter: () => `FIRE ${idadeFire}a`,
+                position: 'top',
+                distance: 8,
+                fontSize: 10,
+                color: metaAtingida ? EC.green : EC.red,
+                fontWeight: 'bold',
               },
-            ],
-          },
+            },
+          ],
         },
-        {
-          name: 'Patrimônio Alvo (FIRE)',
-          type: 'line',
-          data: Array(chartData.length).fill(pv(patrimonio_alvo)),
-          lineStyle: {
-            color: EC.green,
-            width: 2,
-            type: 'dashed',
-          },
-          itemStyle: { color: EC.green },
-        },
-      ],
-    };
-  }, [chartData, calculo, privacyMode, pv, pvLabel]);
+      },
+      {
+        name: 'Meta FIRE',
+        type: 'line',
+        data: Array(growthData.length).fill(pv(metaFire)),
+        lineStyle: { color: EC.green, width: 1.5, type: 'dashed' },
+        itemStyle: { color: EC.green },
+        symbol: 'none',
+      },
+    ],
+  }), [growthData, metaFire, metaAtingida, idadeFire, privacyMode, pv, pvLabel]);
+
+  // Aspiracional handler
+  const setAspiracional = () => {
+    setMkt('aspiracional');
+    const aspiracionalAporte = premissas.aporte_mensal;
+    if (aspiracionalAporte != null) setAporte(aspiracionalAporte);
+  };
 
   return (
     <div style={{ marginBottom: '40px' }}>
-      {/* Inputs Section */}
       <div
         style={{
           background: 'var(--card)',
           border: '1px solid var(--border)',
           borderRadius: '8px',
           padding: '20px',
-          marginBottom: '24px',
         }}
       >
-        <h3 style={{ marginBottom: '16px', color: 'var(--text)', fontSize: 'var(--text-lg)', fontWeight: '600' }}>
-          Parâmetros
-        </h3>
-
-        {/* Patrimonio Input */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', color: 'var(--muted)', fontSize: 'var(--text-sm)', fontWeight: '600' }}>
-            Patrimônio Atual (R$)
-          </label>
-          <Input
-            type="text"
-            placeholder="ex: 3.470.000"
-            value={patrimonio_atual}
-            onChange={(e) => setPatrimonio(e.target.value)}
-            style={{
-              fontFamily: 'monospace',
-              fontSize: '14px',
-            }}
-          />
-          <div style={{ marginTop: '4px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            Valor parseado: {fmtBRL(patrimonio_num)}
+        {/* Condição + Mercado — padrão seg-group */}
+        <div style={{ marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '58px' }}>Condição:</span>
+            <div className="seg-group">
+              {(['solteiro', 'casado', 'filho'] as Cond[]).map(c => (
+                <button key={c} className={`seg-btn${cond === c ? ' active' : ''}`} onClick={() => setCond(c)}>
+                  {COND_LABELS[c]}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '58px' }}>Mercado:</span>
+            <div className="seg-group">
+              {(['stress', 'base', 'fav'] as Exclude<Mkt, 'aspiracional'>[]).map(m => (
+                <button key={m} className={`seg-btn${mkt === m ? ' active' : ''}`} onClick={() => setMkt(m)}>
+                  {MKT_LABELS[m]}
+                </button>
+              ))}
+            </div>
+            <button
+              className="seg-btn"
+              style={{ borderRadius: '6px', border: `1px dashed var(--border)`, background: mkt === 'aspiracional' ? 'var(--accent-muted, rgba(88,166,255,0.1))' : 'transparent' }}
+              onClick={setAspiracional}
+            >
+              🎯 Aspiracional
+            </button>
           </div>
         </div>
 
-        {/* Sliders */}
-        <div style={{ marginBottom: '20px' }}>
-          <Slider
-            label="Idade Atual"
-            value={idade_atual}
-            min={25}
-            max={65}
-            step={1}
-            onChange={setIdadeAtual}
-          />
-        </div>
+        {/* Grid: sliders | resumo */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Coluna esquerda: dados fixos + sliders */}
+          <div>
+            {/* Dados fixos do sistema */}
+            <div style={{ display: 'flex', gap: '24px', marginBottom: '14px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+              <span>
+                Patrimônio atual:{' '}
+                <strong style={{ color: 'var(--text)' }}>{fmtBRL(patrimonioAtual, privacyMode)}</strong>
+              </span>
+              <span>
+                Idade atual:{' '}
+                <strong style={{ color: 'var(--text)' }}>{idadeAtual} anos</strong>
+              </span>
+            </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <Slider
-            label="Idade FIRE"
-            value={idade_fire}
-            min={Math.max(idade_atual + 1, 26)}
-            max={65}
-            step={1}
-            onChange={setIdadeFire}
-          />
-        </div>
+            {/* Slider: Idade FIRE */}
+            <div className="slider-row" style={{ marginBottom: '12px' }}>
+              <label>
+                <span>Idade FIRE</span>
+                <span style={{ fontWeight: 700, color: 'var(--accent)' }}>{idadeFire} anos</span>
+              </label>
+              <input
+                type="range"
+                min={idadeAtual + 1}
+                max={65}
+                step={1}
+                value={idadeFire}
+                onChange={e => setIdadeFire(+e.target.value)}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                <span>{idadeAtual + 1}</span><span>65</span>
+              </div>
+            </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <Slider
-            label="SWR (%)"
-            value={swr}
-            min={2.5}
-            max={5.0}
-            step={0.5}
-            unit="%"
-            onChange={setSWR}
-          />
-        </div>
+            {/* Slider: Aporte Mensal */}
+            <div className="slider-row">
+              <label>
+                <span>Aporte Mensal</span>
+                <span style={{ fontWeight: 700, color: 'var(--accent)' }}>{fmtBRL(aporte, privacyMode)}</span>
+              </label>
+              <input
+                type="range"
+                min={5000}
+                max={100000}
+                step={1000}
+                value={aporte}
+                onChange={e => setAporte(+e.target.value)}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                <span>R$5k</span><span>R$100k</span>
+              </div>
+            </div>
 
-        {/* Perfis Buttons (6) */}
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ marginBottom: '8px', color: 'var(--muted)', fontSize: 'var(--text-sm)', fontWeight: '600' }}>
-            Perfil (Gasto Anual)
+            {/* Nota SWR */}
+            <div style={{ marginTop: '10px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+              SWR fixo: {(swrGatilho * 100).toFixed(1)}% · Retorno real: {(retornoAnual * 100).toFixed(2)}%/ano · Horizonte: {anos} anos
+            </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px' }}>
-            {(Object.entries(PERFIS) as Array<[Perfil, PerfilConfig]>).map(([key, cfg]) => (
-              <Button
-                key={key}
-                onClick={() => setPerfil(key)}
-                variant={perfil === key ? 'default' : 'outline'}
-                style={{
-                  fontSize: 'var(--text-sm)',
-                  padding: '8px 12px',
-                  height: 'auto',
-                }}
-              >
-                <div style={{ lineHeight: '1.2' }}>
-                  <div>{cfg.label}</div>
-                  <div style={{ fontSize: '10px', opacity: 0.8 }}>
-                    {(cfg.gasto_anual / 1000).toFixed(0)}k/ano
-                  </div>
+
+          {/* Coluna direita: resumo de outputs */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {/* Patrimônio FIRE Day */}
+            <div style={{ background: 'var(--surface, var(--card))', border: '1px solid var(--border)', borderRadius: '6px', padding: '12px 14px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '3px' }}>Patrimônio no FIRE Day</div>
+              <div style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--accent)' }}>
+                {fmtBRL(patrimonioFire, privacyMode)}
+              </div>
+            </div>
+
+            {/* Meta FIRE */}
+            <div style={{ background: 'var(--surface, var(--card))', border: '1px solid var(--border)', borderRadius: '6px', padding: '12px 14px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '3px' }}>
+                Meta FIRE ({COND_LABELS[cond]})
+              </div>
+              <div style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text)' }}>
+                {fmtBRL(metaFire, privacyMode)}
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
+                R${Math.round(custo / 1000)}k/ano ÷ {(swrGatilho * 100).toFixed(1)}% SWR
+              </div>
+            </div>
+
+            {/* Gap */}
+            <div style={{ background: 'var(--surface, var(--card))', border: '1px solid var(--border)', borderRadius: '6px', padding: '12px 14px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '3px' }}>Gap</div>
+              <div style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: gap > 0 ? EC.red : EC.green }}>
+                {gap > 0 ? '-' : '+'}{fmtBRL(Math.abs(gap), privacyMode)}
+              </div>
+              {!metaAtingida && aporteMinimo > 0 && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
+                  Aporte mínimo: {fmtBRL(Math.max(0, aporteMinimo), privacyMode)}/mês
+                  {excedente < 0 && ` (faltam R$${Math.round(Math.abs(excedente) / 1000)}k/mês)`}
                 </div>
-              </Button>
-            ))}
+              )}
+              {metaAtingida && excedente > 0 && (
+                <div style={{ fontSize: 'var(--text-xs)', color: EC.green, marginTop: '2px' }}>
+                  Você aporta R${Math.round(excedente / 1000)}k/mês a mais que o necessário
+                </div>
+              )}
+            </div>
+
+            {/* Status */}
+            <div
+              style={{
+                padding: '10px 14px',
+                borderRadius: '6px',
+                border: `1px solid ${statusColor}40`,
+                background: `${statusColor}14`,
+                fontSize: 'var(--text-sm)',
+                fontWeight: 600,
+                color: statusColor,
+              }}
+            >
+              {statusText}
+            </div>
           </div>
         </div>
 
-        {/* Mercado Buttons (2) */}
-        <div>
-          <div style={{ marginBottom: '8px', color: 'var(--muted)', fontSize: 'var(--text-sm)', fontWeight: '600' }}>
-            Cenário de Mercado
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
-            {(Object.entries(MERCADOS) as Array<[Mercado, MercadoConfig]>).map(([key, cfg]) => (
-              <Button
-                key={key}
-                onClick={() => setMercado(key)}
-                variant={mercado === key ? 'default' : 'outline'}
-                style={{
-                  fontSize: 'var(--text-sm)',
-                  padding: '8px 12px',
-                  height: 'auto',
-                }}
-              >
-                {cfg.label}
-              </Button>
-            ))}
-          </div>
+        {/* Gráfico */}
+        <div style={{ marginTop: '20px', width: '100%', height: '220px' }}>
+          <EChart option={chartOption} />
         </div>
       </div>
-
-      {/* Guardrails / Warnings */}
-      {(metaAtingida || aporteAlto || horizonteCurto || swrAlto) && (
-        <div
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            padding: '16px',
-            marginBottom: '24px',
-          }}
-        >
-          <div style={{ marginBottom: '12px', color: 'var(--text)', fontWeight: '600', fontSize: 'var(--text-sm)' }}>
-            Alertas e Informações
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {metaAtingida && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 12px',
-                  background: 'rgba(62, 211, 129, 0.1)',
-                  border: '1px solid rgba(62, 211, 129, 0.3)',
-                  borderRadius: '4px',
-                  fontSize: 'var(--text-sm)',
-                  color: EC.green,
-                }}
-              >
-                <CheckCircle size={16} />
-                <span>Meta já atingida! Aporte necessário &le; 0.</span>
-              </div>
-            )}
-            {aporteAlto && !metaAtingida && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 12px',
-                  background: 'rgba(217, 119, 6, 0.1)',
-                  border: '1px solid rgba(217, 119, 6, 0.3)',
-                  borderRadius: '4px',
-                  fontSize: 'var(--text-sm)',
-                  color: EC.yellow,
-                }}
-              >
-                <AlertTriangle size={16} />
-                <span>Aporte muito alto (&gt; R$150k/mês). Verificar premissas.</span>
-              </div>
-            )}
-            {horizonteCurto && !metaAtingida && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 12px',
-                  background: 'rgba(217, 119, 6, 0.1)',
-                  border: '1px solid rgba(217, 119, 6, 0.3)',
-                  borderRadius: '4px',
-                  fontSize: 'var(--text-sm)',
-                  color: EC.yellow,
-                }}
-              >
-                <AlertTriangle size={16} />
-                <span>Horizonte curto (&lt; 3 anos). Objetivo muito próximo.</span>
-              </div>
-            )}
-            {swrAlto && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 12px',
-                  background: 'rgba(88, 166, 255, 0.1)',
-                  border: '1px solid rgba(88, 166, 255, 0.3)',
-                  borderRadius: '4px',
-                  fontSize: 'var(--text-sm)',
-                  color: EC.cyan,
-                }}
-              >
-                <AlertTriangle size={16} />
-                <span>SWR alto (&ge; 4.5%) com horizonte longo (&ge; 20 anos). Risco de sequência.</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Output: Números */}
-      {calculo && !horizonteImpossivel && (
-        <>
-          {aporte > 0 ? (
-            <div
-              style={{
-                background: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: '8px',
-                padding: '20px',
-                marginBottom: '24px',
-              }}
-            >
-              <h3 style={{ marginBottom: '16px', color: 'var(--text)', fontSize: 'var(--text-lg)', fontWeight: '600' }}>
-                Números
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-                <div>
-                  <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
-                    Patrimônio Necessário Hoje
-                  </div>
-                  <div style={{ color: 'var(--accent)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
-                    {fmtBRL(calculo.patrimonio_alvo)}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
-                    Patrimônio Atual Estimado
-                  </div>
-                  <div style={{ color: 'var(--text)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
-                    {fmtBRL(patrimonio_num)}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
-                    Gap
-                  </div>
-                  <div
-                    style={{
-                      color: gap >= 0 ? EC.positive : EC.negative,
-                      fontSize: 'var(--text-xl)',
-                      fontWeight: '700',
-                    }}
-                  >
-                    {fmtBRL(gap)}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
-                    Aporte Mensal Necessário
-                  </div>
-                  <div style={{ color: 'var(--green)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
-                    {fmtBRL(aporte)}/mês
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div
-              style={{
-                background: 'rgba(62, 211, 129, 0.1)',
-                border: '1px solid rgba(62, 211, 129, 0.3)',
-                borderRadius: '8px',
-                padding: '20px',
-                marginBottom: '24px',
-              }}
-            >
-              <div style={{ color: EC.green, fontSize: 'var(--text-lg)', fontWeight: '700', marginBottom: '8px' }}>
-                Seu patrimônio já atingiu a meta FIRE
-              </div>
-              <div style={{ color: 'rgba(62, 211, 129, 0.8)', fontSize: 'var(--text-sm)', lineHeight: '1.5' }}>
-                <p>Seu patrimônio atual ({fmtBRL(patrimonio_num)}) já supera o alvo necessário ({fmtBRL(calculo.patrimonio_alvo)}) para viver com {swr.toFixed(1)}% de SWR.</p>
-                <p style={{ marginTop: '8px' }}>
-                  Nenhum aporte adicional é necessário. Você pode considerar aumentar seus gastos ou optar por aposentadoria antecipada.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* EChart */}
-          {chartData.length > 0 && (
-            <div
-              style={{
-                background: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: '8px',
-                padding: '20px',
-                marginBottom: '24px',
-              }}
-            >
-              <h3 style={{ marginBottom: '16px', color: 'var(--text)', fontSize: 'var(--text-lg)', fontWeight: '600' }}>
-                Projeção de Patrimônio
-              </h3>
-              <div style={{ width: '100%', height: '300px' }}>
-                <EChart option={chartOption} />
-              </div>
-            </div>
-          )}
-
-          {/* Context */}
-          <div
-            style={{
-              background: 'var(--card)',
-              border: '1px solid var(--border)',
-              borderRadius: '8px',
-              padding: '20px',
-            }}
-          >
-            <h3 style={{ marginBottom: '16px', color: 'var(--text)', fontSize: 'var(--text-lg)', fontWeight: '600' }}>
-              Resumo
-            </h3>
-            <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', lineHeight: '1.6' }}>
-              <p>
-                Com gasto de <strong style={{ color: 'var(--accent)' }}>R${(gasto_anual / 12 / 1000).toFixed(0)}k/mês</strong>, você precisa de{' '}
-                <strong style={{ color: 'var(--accent)' }}>
-                  {fmtBRL(calculo.patrimonio_alvo)}
-                </strong>{' '}
-                (SWR {swr.toFixed(1)}%).
-              </p>
-              <p>
-                Faltam <strong style={{ color: 'var(--accent)' }}>{anos.toFixed(1)} anos</strong>. Aportes de{' '}
-                <strong style={{ color: 'var(--green)' }}>{fmtBRL(aporte)}/mês</strong> constantes chegam lá.
-              </p>
-              <p>
-                Taxa real assumida: <strong style={{ color: 'var(--accent)' }}>{retorno_anual_pct.toFixed(2)}%/ano</strong> (cenário{' '}
-                <strong>{MERCADOS[mercado].label}</strong>).
-              </p>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Error state: horizonte impossível */}
-      {horizonteImpossivel && (
-        <div
-          style={{
-            background: 'rgba(248, 81, 73, 0.1)',
-            border: '1px solid rgba(248, 81, 73, 0.3)',
-            borderRadius: '8px',
-            padding: '20px',
-            color: EC.red,
-            fontSize: 'var(--text-sm)',
-          }}
-        >
-          <strong>Horizonte Impossível:</strong> Idade FIRE deve ser maior que idade atual.
-        </div>
-      )}
     </div>
   );
 }
