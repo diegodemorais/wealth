@@ -18,7 +18,7 @@ describe('Monte Carlo Simulation', () => {
   describe('runMCTrajectories', () => {
     it('generates correct number of trajectories', () => {
       const trajectories = runMCTrajectories(defaultParams);
-      expect(trajectories).toHaveLength(100);
+      expect(trajectories).toHaveLength(defaultParams.numSims);  // 1000, not 100
     });
 
     it('generates trajectories with correct length', () => {

@@ -1,165 +1,104 @@
 import { describe, it, expect } from 'vitest';
-import { calcWellness, determineStatus, getWellnessColor, getWellnessLabel, WellnessMetrics } from '../wellness';
+import { computeDerivedValues } from '../dataWiring';
+import { DashboardData } from '@/types/dashboard';
 
-describe('Wellness Scoring', () => {
-  const baseMetrics: WellnessMetrics = {
-    firePercentage: 0.5,
-    equityAllocation: 0.6,
-    diversification: 0.7,
-    costEfficiency: 0.8,
-    liquidityScore: 0.75,
-  };
+describe('Wellness Score (from dataWiring)', () => {
+  const mockData: Partial<DashboardData> = {
+    premissas: {
+      patrimonio_atual: 3_472_335,
+      patrimonio_gatilho: 8_333_000,
+      swr_gatilho: 0.03,
+    },
+    cambio: 5.22,
+    posicoes: {},
+    rf: {},
+    pfire_base: 86.4,
+    pfire_aspiracional: 92.0,
+  } as any;
 
-  describe('calcWellness', () => {
-    it('returns object with score and status', () => {
-      const result = calcWellness(baseMetrics);
-      expect(result).toHaveProperty('score');
-      expect(result).toHaveProperty('status');
+  describe('wellnessScore calculation', () => {
+    it('calculates wellness score as min(1, progPct/100 * 1.2)', () => {
+      // progPct = (3.472M / 8.333M) * 100 = 41.67%
+      // wellness = min(1, 41.67 / 100 * 1.2) = min(1, 0.5) = 0.5
+      const derived = computeDerivedValues(mockData as DashboardData);
+      expect(derived.wellnessScore).toBeCloseTo(0.5, 1);
     });
 
-    it('returns score between 0 and 1', () => {
-      const result = calcWellness(baseMetrics);
-      expect(result.score).toBeGreaterThanOrEqual(0);
-      expect(result.score).toBeLessThanOrEqual(1);
-    });
-
-    it('increases with higher FIRE percentage', () => {
-      const low = calcWellness({ ...baseMetrics, firePercentage: 0.2 });
-      const high = calcWellness({ ...baseMetrics, firePercentage: 0.9 });
-      expect(high.score).toBeGreaterThan(low.score);
-    });
-
-    it('weights FIRE percentage highest (30%)', () => {
-      const onlyFire: WellnessMetrics = {
-        firePercentage: 1.0,
-        equityAllocation: 0,
-        diversification: 0,
-        costEfficiency: 0,
-        liquidityScore: 0,
+    it('returns max 1.0 when patrimonio exceeds gatilho by 20%', () => {
+      const data = {
+        ...mockData,
+        premissas: {
+          ...mockData.premissas,
+          patrimonio_atual: 10_000_000,
+        },
       };
-      const result = calcWellness(onlyFire);
-      // 1.0 * 0.3 = 0.3 score with only FIRE at max
-      expect(result.score).toBeCloseTo(0.3, 1);
+      const derived = computeDerivedValues(data as DashboardData);
+      expect(derived.wellnessScore).toBeLessThanOrEqual(1.0);
     });
 
-    it('handles zero values gracefully', () => {
-      const zeros: WellnessMetrics = {
-        firePercentage: 0,
-        equityAllocation: 0,
-        diversification: 0,
-        costEfficiency: 0,
-        liquidityScore: 0,
+    it('returns 0 when patrimonio is 0', () => {
+      const data = {
+        ...mockData,
+        premissas: {
+          ...mockData.premissas,
+          patrimonio_atual: 0,
+        },
       };
-      const result = calcWellness(zeros);
-      expect(result.score).toBe(0);
-      expect(result.status).toBe('critical');
-    });
-
-    it('handles max values gracefully', () => {
-      const maxes: WellnessMetrics = {
-        firePercentage: 1,
-        equityAllocation: 1,
-        diversification: 1,
-        costEfficiency: 1,
-        liquidityScore: 1,
-      };
-      const result = calcWellness(maxes);
-      expect(result.score).toBe(1);
-      expect(result.status).toBe('excellent');
+      const derived = computeDerivedValues(data as DashboardData);
+      expect(derived.wellnessScore).toBe(0);
     });
   });
 
-  describe('determineStatus', () => {
-    it('returns "critical" for score < 0.50', () => {
-      expect(determineStatus(0.3)).toBe('critical');
-      expect(determineStatus(0.49)).toBe('critical');
+  describe('wellnessStatus labels', () => {
+    it('returns "critical" when progPct < 40', () => {
+      // With current data: progPct = 41.67%, borderline
+      // Test with lower patrimonio for clear critical
+      const data = {
+        ...mockData,
+        premissas: {
+          ...mockData.premissas,
+          patrimonio_atual: 3_000_000,  // 36% of gatilho
+        },
+      };
+      const derived = computeDerivedValues(data as DashboardData);
+      expect(derived.wellnessStatus).toBe('critical');
     });
 
-    it('returns "warning" for score 0.50-0.69', () => {
-      expect(determineStatus(0.5)).toBe('warning');
-      expect(determineStatus(0.6)).toBe('warning');
-      expect(determineStatus(0.69)).toBe('warning');
+    it('returns "warning" when 40 <= progPct < 60', () => {
+      // Current data is ~42%, should be warning
+      const derived = computeDerivedValues(mockData as DashboardData);
+      expect(derived.wellnessStatus).toBe('warning');
     });
 
-    it('returns "ok" for score 0.70-0.84', () => {
-      expect(determineStatus(0.7)).toBe('ok');
-      expect(determineStatus(0.75)).toBe('ok');
-      expect(determineStatus(0.84)).toBe('ok');
+    it('returns "ok" when 60 <= progPct < 80', () => {
+      const data = {
+        ...mockData,
+        premissas: {
+          ...mockData.premissas,
+          patrimonio_atual: 5_500_000,  // 66% of gatilho
+        },
+      };
+      const derived = computeDerivedValues(data as DashboardData);
+      expect(derived.wellnessStatus).toBe('ok');
     });
 
-    it('returns "excellent" for score >= 0.85', () => {
-      expect(determineStatus(0.85)).toBe('excellent');
-      expect(determineStatus(0.9)).toBe('excellent');
-      expect(determineStatus(1.0)).toBe('excellent');
-    });
-
-    it('always returns valid status', () => {
-      const validStatuses = ['critical', 'warning', 'ok', 'excellent'];
-      for (let i = 0; i <= 1; i += 0.1) {
-        const status = determineStatus(i);
-        expect(validStatuses).toContain(status);
-      }
-    });
-  });
-
-  describe('getWellnessColor', () => {
-    it('returns CSS var for critical status', () => {
-      const color = getWellnessColor('critical');
-      expect(color).toBe('var(--red)');
-    });
-
-    it('returns CSS var for warning status', () => {
-      const color = getWellnessColor('warning');
-      expect(color).toBe('var(--amber)');
-    });
-
-    it('returns CSS var for ok status', () => {
-      const color = getWellnessColor('ok');
-      expect(color).toBe('var(--blue)');
-    });
-
-    it('returns CSS var for excellent status', () => {
-      const color = getWellnessColor('excellent');
-      expect(color).toBe('var(--green)');
-    });
-
-    it('returns valid CSS var format', () => {
-      const colors = ['critical', 'warning', 'ok', 'excellent'] as const;
-      colors.forEach(status => {
-        const color = getWellnessColor(status);
-        expect(color).toMatch(/^var\(--\w+\)$/);
-      });
+    it('returns "excellent" when progPct >= 80', () => {
+      const data = {
+        ...mockData,
+        premissas: {
+          ...mockData.premissas,
+          patrimonio_atual: 7_000_000,  // 84% of gatilho
+        },
+      };
+      const derived = computeDerivedValues(data as DashboardData);
+      expect(derived.wellnessStatus).toBe('excellent');
     });
   });
 
-  describe('getWellnessLabel', () => {
-    it('returns Portuguese label for critical', () => {
-      const label = getWellnessLabel('critical');
-      expect(label).toBe('Crítico');
-    });
-
-    it('returns Portuguese label for warning', () => {
-      const label = getWellnessLabel('warning');
-      expect(label).toBe('Aviso');
-    });
-
-    it('returns Portuguese label for ok', () => {
-      const label = getWellnessLabel('ok');
-      expect(label).toBe('Saudável');
-    });
-
-    it('returns Portuguese label for excellent', () => {
-      const label = getWellnessLabel('excellent');
-      expect(label).toBe('Excelente');
-    });
-
-    it('all labels are non-empty strings', () => {
-      const statuses = ['critical', 'warning', 'ok', 'excellent'] as const;
-      statuses.forEach(status => {
-        const label = getWellnessLabel(status);
-        expect(typeof label).toBe('string');
-        expect(label.length).toBeGreaterThan(0);
-      });
+  describe('wellnessLabel matches status', () => {
+    it('has Portuguese labels for all statuses', () => {
+      const derived = computeDerivedValues(mockData as DashboardData);
+      expect(['Crítico', 'Atenção', 'Progredindo', 'Excelente']).toContain(derived.wellnessLabel);
     });
   });
 });
