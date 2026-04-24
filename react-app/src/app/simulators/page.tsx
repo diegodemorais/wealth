@@ -14,7 +14,7 @@ import { Select, SelectItem } from '@/components/ui/select';
 import { calcFireYear, getAnoAtual, getIdadeAtual, pfireColor as pfireColorFn, HORIZONTE_VIDA } from '@/utils/fire';
 import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
 import { CheckCircle, AlertTriangle } from 'lucide-react';
-import { runMCYearly } from '@/utils/montecarlo';
+import { runMCYearly, runCanonicalMC } from '@/utils/montecarlo';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { useUiStore } from '@/store/uiStore';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
@@ -50,13 +50,14 @@ const _fmtPctFrac = fmtPctCanon; // re-export available if needed
 // ── Simulador FIRE — seção section-critical ───────────────────────────────────
 
 type FireCond = 'solteiro' | 'casamento' | 'filho';
-type FireMkt = 'stress' | 'base' | 'fav';
+type FireMkt = 'stress' | 'base' | 'fav' | 'cambio_dinamico';
 
 // Labels only — values are derived from data.fire_matrix.retornos_equity / perfis at runtime
 const MKT_LABELS: Record<FireMkt, string> = {
-  stress: 'Stress',
-  base:   'Base',
-  fav:    'Favorável',
+  stress:          'Stress',
+  base:            'Base',
+  fav:             'Favorável',
+  cambio_dinamico: '★ Câmbio',
 };
 
 const COND_LABELS: Record<FireCond, string> = {
@@ -77,9 +78,11 @@ function FireSimuladorSection() {
   const premissas  = (data as any)?.premissas ?? {};
 
   const MKT_PRESETS: Record<FireMkt, { retorno: number; label: string }> = {
-    stress: { retorno: fracToPct(fmRetornos.stress ?? premissas.retorno_equity_base ?? 0.0435) ?? 4.35, label: MKT_LABELS.stress },
-    base:   { retorno: fracToPct(fmRetornos.base   ?? premissas.retorno_equity_base ?? 0.0485) ?? 4.85, label: MKT_LABELS.base },
-    fav:    { retorno: fracToPct(fmRetornos.fav    ?? premissas.retorno_equity_base ?? 0.0585) ?? 5.85, label: MKT_LABELS.fav },
+    stress:          { retorno: fracToPct(fmRetornos.stress ?? premissas.retorno_equity_base ?? 0.0435) ?? 4.35, label: MKT_LABELS.stress },
+    base:            { retorno: fracToPct(fmRetornos.base   ?? premissas.retorno_equity_base ?? 0.0485) ?? 4.85, label: MKT_LABELS.base },
+    fav:             { retorno: fracToPct(fmRetornos.fav    ?? premissas.retorno_equity_base ?? 0.0585) ?? 5.85, label: MKT_LABELS.fav },
+    // Câmbio Dinâmico: r_USD base (sem dep_BRL embutida) — dep vem do fxRegime=true
+    cambio_dinamico: { retorno: fracToPct(fmRetornos.base   ?? premissas.retorno_equity_base ?? 0.0485) ?? 4.85, label: MKT_LABELS.cambio_dinamico },
   };
 
   const COND_PRESETS: Record<FireCond, { custo: number; label: string }> = {
@@ -201,6 +204,7 @@ function FireSimuladorSection() {
   const byProfile: any[] = (data as any)?.fire_matrix?.by_profile ?? [];
   const profileKey: Record<FireCond, string> = { solteiro: 'atual', casamento: 'casado', filho: 'filho' };
   const earliestFire = (data as any)?.earliest_fire ?? null;
+  const isCambioDinamico = fireMkt === 'cambio_dinamico';
   const isAspirPreset = !custom && fireCond === 'solteiro' && fireMkt === 'fav';
 
   // Detect if custom mode value matches a preset — use preset mode in that case
@@ -211,6 +215,26 @@ function FireSimuladorSection() {
 
   // Preset mode indicator (for UI label)
   const isPresetMode = !custom || retornoMatchesPreset;
+
+  // P(FIRE) com Câmbio Dinâmico — computa ao vivo quando botão ativo (DEV-mc-regime-switching-fx)
+  const pfireCambio = useMemo(() => {
+    const isCambio = fireMkt === 'cambio_dinamico';
+    if (!isCambio || !patrimonio || !currentAge) return null;
+    const swrGatilhoFrac = swrTarget ?? 0.03;
+    const custoAtual = custo ?? premissas.custo_vida_base ?? 250000;
+    const metaFireVal = custoAtual / swrGatilhoFrac;
+    const idadeFire = premissas.idade_cenario_base ?? 53;
+    const mesesFire = (idadeFire - currentAge) * 12;
+    if (mesesFire <= 0) return null;
+    const r_USD = (fmRetornos.base ?? premissas.retorno_equity_base ?? 0.0485) as number;
+    const result = runCanonicalMC({
+      P0: patrimonio, r_anual: r_USD, sigma_anual: 0.168,
+      aporte_mensal: aporte ?? premissas.aporte_mensal ?? 25000,
+      meses: mesesFire, N: 1_000, seed: 42,
+      metaFire: metaFireVal, fxRegime: true,
+    });
+    return result.pFire * 100;
+  }, [isCambioDinamico, patrimonio, currentAge, custo, aporte]); // eslint-disable-line react-hooks/exhaustive-deps
 
   type FireResult = { ano: number; idade: number; pat: number; swrAtFire: number };
   let result: FireResult | null = null;
@@ -223,6 +247,18 @@ function FireSimuladorSection() {
       if (earliestFire) {
         result = { ano: earliestFire.ano, idade: earliestFire.idade, pat: 0, swrAtFire: 0 };
         firePire = (data as any)?.pfire_aspiracional?.base ?? earliestFire.pfire ?? null;
+      }
+    } else if (isCambioDinamico) {
+      // Câmbio Dinâmico: FIRE year from base preset, P(FIRE) from fxRegime MC
+      const p = byProfile.find((x: any) => x.profile === profileKey[fireCond]);
+      if (p?.fire_year_threshold) {
+        result = {
+          ano: parseInt(p.fire_year_threshold, 10),
+          idade: p.fire_age_threshold,
+          pat: p.pat_mediano_threshold ?? 0,
+          swrAtFire: p.swr_at_fire ?? 0,
+        };
+        firePire = pfireCambio;  // computed by fxRegime MC above
       }
     } else {
       // Condição/Mercado preset: use by_profile precomputed threshold
@@ -398,7 +434,7 @@ function FireSimuladorSection() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '58px' }}>Mercado:</span>
           <div className="seg-group">
-            {(['stress', 'base', 'fav'] as FireMkt[]).map(m => (
+            {(['stress', 'base', 'fav'] as Exclude<FireMkt, 'cambio_dinamico'>[]).map(m => (
               <button
                 key={m}
                 className={`seg-btn${isPresetMode && fireMkt === m ? ' active' : ''}`}
@@ -414,6 +450,14 @@ function FireSimuladorSection() {
             onClick={setFire50Preset}
           >
             🎯 Aspiracional
+          </button>
+          <button
+            className="seg-btn"
+            style={{ borderRadius: '6px', border: `1px dashed var(--accent)`, background: isCambioDinamico ? 'rgba(99,179,237,.12)' : 'transparent', color: isCambioDinamico ? 'var(--accent)' : undefined }}
+            onClick={() => setMktPreset('cambio_dinamico')}
+            title="Markov Regime Switching FX: crises cambiais episódicas (17% freq, 35%/a)"
+          >
+            ★ Câmbio
           </button>
         </div>
       </div>

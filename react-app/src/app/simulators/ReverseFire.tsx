@@ -7,11 +7,12 @@ import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE, EC_TOOLTIP } from '@/utils/echarts-theme';
 import { EChartsOption } from 'echarts';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { runCanonicalMC } from '@/utils/montecarlo';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
 type Cond = 'solteiro' | 'casado' | 'filho';
-type Mkt = 'stress' | 'base' | 'fav' | 'aspiracional';
+type Mkt = 'stress' | 'base' | 'fav' | 'aspiracional' | 'cambio_dinamico';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -21,14 +22,15 @@ const COND_LABELS: Record<Cond, string> = {
   filho:    'Filho',
 };
 
-const MKT_LABELS: Record<Exclude<Mkt, 'aspiracional'>, string> = {
+const MKT_LABELS: Record<Exclude<Mkt, 'aspiracional' | 'cambio_dinamico'>, string> = {
   stress: 'Stress',
   base:   'Base',
   fav:    'Favorável',
 };
 
 // Retornos reais BRL anuais por cenário (fração)
-const MKT_RETORNOS: Record<Exclude<Mkt, 'aspiracional'>, number> = {
+// Nota: câmbio_dinâmico usa r_USD=0.0485 (sem dep embutida) + fxRegime=true
+const MKT_RETORNOS: Record<Exclude<Mkt, 'aspiracional' | 'cambio_dinamico'>, number> = {
   stress: 0.0435,
   base:   0.0485,
   fav:    0.0585,
@@ -204,14 +206,21 @@ export function ReverseFire() {
     setAporte(APORTE_PRESET[novaCond]);
   };
 
-  // Retorno real anual (fração)
+  // Câmbio Dinâmico: r_USD base (sem dep embutida) + fxRegime=true via Hamilton Markov
+  const isCambioDinamico = mkt === 'cambio_dinamico';
+
+  // Retorno real anual (fração) — câmbio dinâmico usa r_USD puro (dep vem do fxRegime)
   const retornoAnual: number = useMemo(() => {
     if (mkt === 'aspiracional') {
       return fmRetornos.fav ? fmRetornos.fav : MKT_RETORNOS.fav;
     }
-    const mktKey = mkt as Exclude<Mkt, 'aspiracional'>;
+    if (isCambioDinamico) {
+      // r_USD_real puro: sem dep_BRL embutida (dep é adicionada pelo fxRegime)
+      return fmRetornos.base ? fmRetornos.base : MKT_RETORNOS.base;
+    }
+    const mktKey = mkt as Exclude<Mkt, 'aspiracional' | 'cambio_dinamico'>;
     return fmRetornos[mktKey] ? fmRetornos[mktKey] : MKT_RETORNOS[mktKey];
-  }, [mkt, fmRetornos]);
+  }, [mkt, fmRetornos, isCambioDinamico]);
 
   // Cálculo principal (custo anual vem do slider custoMensal)
   const custo = custoMensal * 12;
@@ -224,11 +233,19 @@ export function ReverseFire() {
   const metaAtingida = patrimonioFire >= metaFire;
   const anos = idadeFire - idadeAtual;
 
-  // P(FIRE) Monte Carlo
-  const pFire = useMemo(
-    () => calcPFire(patrimonioAtual, meses, aporte, metaFire, retornoAnual),
-    [patrimonioAtual, meses, aporte, metaFire, retornoAnual],
-  );
+  // P(FIRE) Monte Carlo — câmbio dinâmico usa runCanonicalMC com fxRegime=true
+  const pFire = useMemo(() => {
+    if (isCambioDinamico) {
+      // runCanonicalMC com Hamilton Markov Switching FX (DEV-mc-regime-switching-fx)
+      const result = runCanonicalMC({
+        P0: patrimonioAtual, r_anual: retornoAnual, sigma_anual: SIGMA_ANUAL,
+        aporte_mensal: aporte, meses, N: 1_000, seed: 42,
+        metaFire, fxRegime: true,
+      });
+      return result.pFire;
+    }
+    return calcPFire(patrimonioAtual, meses, aporte, metaFire, retornoAnual);
+  }, [patrimonioAtual, meses, aporte, metaFire, retornoAnual, isCambioDinamico]);
 
   // Status
   const statusColor = metaAtingida ? EC.green : aporteMinimo > aporte * 2 ? EC.red : EC.yellow;
@@ -355,7 +372,7 @@ export function ReverseFire() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
             <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '58px' }}>Mercado:</span>
             <div className="seg-group">
-              {(['stress', 'base', 'fav'] as Exclude<Mkt, 'aspiracional'>[]).map(m => (
+              {(['stress', 'base', 'fav'] as Exclude<Mkt, 'aspiracional' | 'cambio_dinamico'>[]).map(m => (
                 <button key={m} className={`seg-btn${mkt === m ? ' active' : ''}`} onClick={() => setMkt(m)}>
                   {MKT_LABELS[m]}
                 </button>
@@ -368,10 +385,21 @@ export function ReverseFire() {
             >
               🎯 Aspiracional
             </button>
+            <button
+              className="seg-btn"
+              style={{ borderRadius: '6px', border: `1px dashed var(--accent)`, background: mkt === 'cambio_dinamico' ? 'rgba(99,179,237,.12)' : 'transparent', color: mkt === 'cambio_dinamico' ? 'var(--accent)' : undefined }}
+              onClick={() => setMkt('cambio_dinamico')}
+              title="Markov Regime Switching FX: crises cambiais episódicas (17% freq, 35%/a)"
+            >
+              ★ Câmbio Dinâmico
+            </button>
           </div>
           {/* Campo informativo de rentabilidade */}
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', paddingLeft: '66px' }}>
-            Retorno esperado: {(retornoAnual * 100).toFixed(2).replace('.', ',')}%/ano · σ {(SIGMA_ANUAL * 100).toFixed(1).replace('.', ',')}%/ano
+            {isCambioDinamico
+              ? 'r_USD 4,85%/ano + dep_BRL via Markov Switching (normal 0,5%/a · crise 35%/a, freq ~17%)'
+              : `Retorno esperado: ${(retornoAnual * 100).toFixed(2).replace('.', ',')}%/ano · σ ${(SIGMA_ANUAL * 100).toFixed(1).replace('.', ',')}%/ano`
+            }
           </div>
         </div>
 
@@ -477,6 +505,7 @@ export function ReverseFire() {
             {/* Nota SWR + parâmetros MC */}
             <div style={{ marginTop: '10px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
               SWR fixo: {(swrGatilho * 100).toFixed(1)}% · Retorno real: {(retornoAnual * 100).toFixed(2)}%/ano · Horizonte: {anos} anos · MC N=1.000 · σ 16,8%
+              {isCambioDinamico && ' · Câmbio: Hamilton Markov Switching (normal 0,5%/a · crise 35%/a, ρ=0,30)'}
             </div>
           </div>
 
