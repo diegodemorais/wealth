@@ -34,6 +34,9 @@ const MKT_RETORNOS: Record<Exclude<Mkt, 'aspiracional'>, number> = {
   fav:    0.0585,
 };
 
+// Volatilidade da carteira equity (carteira.md)
+const SIGMA_ANUAL = 0.168;
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmtBRL(value: number, privacyMode: boolean): string {
@@ -101,6 +104,58 @@ function buildGrowthData(
   return result;
 }
 
+// ── Monte Carlo P(FIRE) ───────────────────────────────────────────────────────
+
+/** Pseudo-RNG com seed fixo (mulberry32) — resultados determinísticos */
+function mulberry32(seed: number) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+/** Box-Muller com RNG determinístico */
+function gaussianPair(rand: () => number): [number, number] {
+  const u1 = rand(), u2 = rand();
+  const mag = Math.sqrt(-2 * Math.log(Math.max(u1, 1e-10)));
+  return [
+    mag * Math.cos(2 * Math.PI * u2),
+    mag * Math.sin(2 * Math.PI * u2),
+  ];
+}
+
+function calcPFire(
+  patrimonioAtual: number,
+  meses: number,
+  aporteMensal: number,
+  metaFire: number,
+  retornoAnual: number,
+  N = 1000,
+): number {
+  const sigma_m = SIGMA_ANUAL / Math.sqrt(12);
+  const mu_m = Math.log(1 + retornoAnual) / 12 - 0.5 * sigma_m * sigma_m;
+  const rand = mulberry32(42);
+  let hits = 0;
+  for (let i = 0; i < N; i++) {
+    let P = patrimonioAtual;
+    for (let t = 0; t < meses; t += 2) {
+      const [z1, z2] = gaussianPair(rand);
+      const z1c = Math.max(-4, Math.min(4, z1));
+      const r1 = Math.exp(mu_m + sigma_m * z1c) - 1;
+      P = P * (1 + r1) + aporteMensal;
+      if (t + 1 < meses) {
+        const z2c = Math.max(-4, Math.min(4, z2));
+        const r2 = Math.exp(mu_m + sigma_m * z2c) - 1;
+        P = P * (1 + r2) + aporteMensal;
+      }
+    }
+    if (P >= metaFire) hits++;
+  }
+  return hits / N;
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function ReverseFire() {
@@ -116,6 +171,9 @@ export function ReverseFire() {
   const idadeAtual: number      = premissas.idade_atual ?? 39;
   const swrGatilho: number      = premissas.swr_gatilho ?? 0.03;
 
+  // Ano atual (calculado uma vez; premissas.ano_atual como fallback para testes determinísticos)
+  const anoAtual = premissas.ano_atual ?? new Date().getFullYear();
+
   // Custos de vida por condição
   const custosPorCond: Record<Cond, number> = {
     solteiro: fmPerfis.atual?.gasto_anual  ?? premissas.custo_vida_base   ?? 250000,
@@ -123,11 +181,28 @@ export function ReverseFire() {
     filho:    fmPerfis.filho?.gasto_anual  ?? premissas.custo_vida_filho  ?? 300000,
   };
 
+  // Presets de aporte por perfil
+  const APORTE_PRESET: Record<Cond, number> = {
+    solteiro: premissas.aporte_mensal ?? 25000,
+    casado:   Math.round((premissas.aporte_mensal ?? 25000) * 0.85),
+    filho:    Math.round((premissas.aporte_mensal ?? 25000) * 0.70),
+  };
+
   // State
-  const [cond, setCond]           = useState<Cond>('solteiro');
-  const [mkt, setMkt]             = useState<Mkt>('base');
-  const [idadeFire, setIdadeFire] = useState(53);
-  const [aporte, setAporte]       = useState(25000);
+  const [cond, setCond]                 = useState<Cond>('solteiro');
+  const [mkt, setMkt]                   = useState<Mkt>('base');
+  const [idadeFire, setIdadeFire]       = useState(53);
+  const [aporte, setAporte]             = useState(25000);
+  const [custoMensal, setCustoMensal]   = useState<number>(
+    Math.round(custosPorCond['solteiro'] / 12)
+  );
+
+  // Handler: muda perfil e atualiza custoMensal + aporte automaticamente
+  const handleCondChange = (novaCond: Cond) => {
+    setCond(novaCond);
+    setCustoMensal(Math.round(custosPorCond[novaCond] / 12));
+    setAporte(APORTE_PRESET[novaCond]);
+  };
 
   // Retorno real anual (fração)
   const retornoAnual: number = useMemo(() => {
@@ -138,16 +213,22 @@ export function ReverseFire() {
     return fmRetornos[mktKey] ? fmRetornos[mktKey] : MKT_RETORNOS[mktKey];
   }, [mkt, fmRetornos]);
 
-  // Cálculo principal
-  const custo = custosPorCond[cond];
+  // Cálculo principal (custo anual vem do slider custoMensal)
+  const custo = custoMensal * 12;
   const metaFire = custo / swrGatilho;
-  const { patrimonioFire } = calcForwardFire(patrimonioAtual, idadeAtual, idadeFire, aporte, retornoAnual);
+  const { patrimonioFire, meses } = calcForwardFire(patrimonioAtual, idadeAtual, idadeFire, aporte, retornoAnual);
   const gap = metaFire - patrimonioFire; // positivo = falta, negativo = excede
   const aporteMinimo = calcAporteMinimo(patrimonioAtual, idadeAtual, idadeFire, metaFire, retornoAnual);
   const excedente = aporte - aporteMinimo; // quanto o aporte atual supera o mínimo
 
   const metaAtingida = patrimonioFire >= metaFire;
   const anos = idadeFire - idadeAtual;
+
+  // P(FIRE) Monte Carlo
+  const pFire = useMemo(
+    () => calcPFire(patrimonioAtual, meses, aporte, metaFire, retornoAnual),
+    [patrimonioAtual, meses, aporte, metaFire, retornoAnual],
+  );
 
   // Status
   const statusColor = metaAtingida ? EC.green : aporteMinimo > aporte * 2 ? EC.red : EC.yellow;
@@ -170,16 +251,22 @@ export function ReverseFire() {
       formatter: (params: any) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const age = params[0].axisValue;
+        // axisValue é a label formatada "53a/41", extraímos a idade do dado original
+        const ageNum = growthData[params[0].dataIndex]?.idade ?? age;
+        const ano = anoAtual + (ageNum - idadeAtual);
         return params.map((p: any) => {
           const v = typeof p.value === 'number' ? p.value : 0;
           const label = privacyMode ? pvLabel(v) : fmtM(v);
           return `${p.marker}${p.seriesName}: ${label}`;
-        }).join('<br/>') + `<br/><span style="color:var(--muted);font-size:11px">Idade ${age}</span>`;
+        }).join('<br/>') + `<br/><span style="color:var(--muted);font-size:11px">Idade ${ageNum} · ${ano}</span>`;
       },
     },
     xAxis: {
       type: 'category',
-      data: growthData.map(d => `${d.idade}`),
+      data: growthData.map(d => {
+        const ano = anoAtual + (d.idade - idadeAtual);
+        return `${d.idade}a/${String(ano).slice(2)}`;
+      }),
       axisLabel: { color: EC.muted, fontSize: 10 },
       axisLine: EC_AXIS_LINE,
       splitLine: { show: false },
@@ -234,7 +321,7 @@ export function ReverseFire() {
         symbol: 'none',
       },
     ],
-  }), [growthData, metaFire, metaAtingida, idadeFire, privacyMode, pv, pvLabel]);
+  }), [growthData, metaFire, metaAtingida, idadeFire, idadeAtual, anoAtual, privacyMode, pv, pvLabel]);
 
   // Aspiracional handler
   const setAspiracional = () => {
@@ -259,7 +346,7 @@ export function ReverseFire() {
             <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '58px' }}>Condição:</span>
             <div className="seg-group">
               {(['solteiro', 'casado', 'filho'] as Cond[]).map(c => (
-                <button key={c} className={`seg-btn${cond === c ? ' active' : ''}`} onClick={() => setCond(c)}>
+                <button key={c} className={`seg-btn${cond === c ? ' active' : ''}`} onClick={() => handleCondChange(c)}>
                   {COND_LABELS[c]}
                 </button>
               ))}
@@ -282,6 +369,10 @@ export function ReverseFire() {
               🎯 Aspiracional
             </button>
           </div>
+          {/* Campo informativo de rentabilidade */}
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', paddingLeft: '66px' }}>
+            Retorno esperado: {(retornoAnual * 100).toFixed(2).replace('.', ',')}%/ano · σ {(SIGMA_ANUAL * 100).toFixed(1).replace('.', ',')}%/ano
+          </div>
         </div>
 
         {/* Grid: sliders | resumo */}
@@ -300,11 +391,35 @@ export function ReverseFire() {
               </span>
             </div>
 
-            {/* Slider: Idade FIRE */}
+            {/* Slider: Idade FIRE — com botão Sugerir */}
             <div className="slider-row" style={{ marginBottom: '12px' }}>
-              <label>
-                <span>Idade FIRE</span>
-                <span style={{ fontWeight: 700, color: 'var(--accent)' }}>{idadeFire} anos</span>
+              <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <span style={{ fontWeight: 600, fontSize: 'var(--text-sm)' }}>Idade FIRE</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontWeight: 700, color: 'var(--accent)', fontSize: 'var(--text-lg)' }}>
+                    {idadeFire} anos ({anoAtual + (idadeFire - idadeAtual)})
+                  </span>
+                  {!metaAtingida && aporteMinimo > 0 && (
+                    <button
+                      onClick={() => setAporte(Math.max(0, Math.round(aporteMinimo)))}
+                      style={{
+                        fontSize: 'var(--text-xs)',
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        background: 'var(--accent)',
+                        color: 'white',
+                        border: 'none',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Sugerir →
+                    </button>
+                  )}
+                  {metaAtingida && (
+                    <span style={{ fontSize: 'var(--text-xs)', color: EC.green }}>✓ Atingido</span>
+                  )}
+                </div>
               </label>
               <input
                 type="range"
@@ -319,11 +434,11 @@ export function ReverseFire() {
               </div>
             </div>
 
-            {/* Slider: Aporte Mensal */}
-            <div className="slider-row">
+            {/* Slider: Aporte Mensal — hierarquia secundária */}
+            <div className="slider-row" style={{ marginBottom: '8px' }}>
               <label>
-                <span>Aporte Mensal</span>
-                <span style={{ fontWeight: 700, color: 'var(--accent)' }}>{fmtBRL(aporte, privacyMode)}</span>
+                <span style={{ color: 'var(--muted)' }}>Aporte Mensal</span>
+                <span style={{ fontWeight: 500, color: 'var(--text)' }}>{fmtBRL(aporte, privacyMode)}</span>
               </label>
               <input
                 type="range"
@@ -332,15 +447,36 @@ export function ReverseFire() {
                 step={1000}
                 value={aporte}
                 onChange={e => setAporte(+e.target.value)}
+                style={{ opacity: 0.85 }}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
                 <span>R$5k</span><span>R$100k</span>
               </div>
             </div>
 
-            {/* Nota SWR */}
+            {/* Slider: Custo Mensal — hierarquia secundária */}
+            <div className="slider-row" style={{ marginBottom: '8px' }}>
+              <label>
+                <span style={{ color: 'var(--muted)' }}>Custo Mensal</span>
+                <span style={{ fontWeight: 500, color: 'var(--text)' }}>{fmtBRL(custoMensal, privacyMode)}</span>
+              </label>
+              <input
+                type="range"
+                min={5000}
+                max={50000}
+                step={500}
+                value={custoMensal}
+                onChange={e => setCustoMensal(+e.target.value)}
+                style={{ opacity: 0.85 }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                <span>R$5k</span><span>R$50k</span>
+              </div>
+            </div>
+
+            {/* Nota SWR + parâmetros MC */}
             <div style={{ marginTop: '10px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-              SWR fixo: {(swrGatilho * 100).toFixed(1)}% · Retorno real: {(retornoAnual * 100).toFixed(2)}%/ano · Horizonte: {anos} anos
+              SWR fixo: {(swrGatilho * 100).toFixed(1)}% · Retorno real: {(retornoAnual * 100).toFixed(2)}%/ano · Horizonte: {anos} anos · MC N=1.000 · σ 16,8%
             </div>
           </div>
 
@@ -351,6 +487,17 @@ export function ReverseFire() {
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '3px' }}>Patrimônio no FIRE Day</div>
               <div style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--accent)' }}>
                 {fmtBRL(patrimonioFire, privacyMode)}
+              </div>
+            </div>
+
+            {/* P(FIRE) Monte Carlo */}
+            <div style={{ background: 'var(--surface, var(--card))', border: '1px solid var(--border)', borderRadius: '6px', padding: '12px 14px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '3px' }}>P(FIRE)</div>
+              <div style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: pFire >= 0.8 ? EC.green : pFire >= 0.6 ? EC.yellow : EC.red }}>
+                {privacyMode ? '••%' : `${Math.round(pFire * 100)}%`}
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
+                probabilidade de atingir FIRE · N=1000 sims
               </div>
             </div>
 
