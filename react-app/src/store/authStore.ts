@@ -12,7 +12,8 @@ function setCookie(name: string, value: string, days: number) {
   const maxAge = days * 24 * 60 * 60;
   // Secure flag só em HTTPS (GitHub Pages). Em localhost HTTP não funciona.
   const secure = typeof window !== 'undefined' && window.location.protocol === 'https:' ? '; Secure' : '';
-  document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAge}; SameSite=Strict${secure}; Path=/`;
+  // SameSite=Lax: mais compatível com iOS Safari que Strict (Strict bloqueia em navegações cross-site)
+  document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAge}; SameSite=Lax${secure}; Path=/`;
 }
 
 function getCookie(name: string): string | null {
@@ -119,23 +120,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     });
   },
 
-  // Valida token em memória (expiry check)
+  // Valida token — reler cookie do browser (resolve hydration mismatch no Next.js)
   validateToken: (): boolean => {
-    const state = get();
+    // Reler do cookie agora que estamos no browser com document disponível
+    const fresh = readInitialAuthState();
 
-    if (!state.authToken || !state.authExpiry) {
-      if (state.isAuthenticated) {
-        set({ isAuthenticated: false, authToken: null, authExpiry: null });
-      }
-      return false;
-    }
-
-    if (state.authExpiry <= Date.now()) {
-      deleteCookie('dashboard_auth');
+    if (!fresh.isAuthenticated) {
       set({ isAuthenticated: false, authToken: null, authExpiry: null });
       return false;
     }
 
+    // Cookie válido — atualiza estado
+    set({
+      isAuthenticated: true,
+      authToken: fresh.authToken,
+      authExpiry: fresh.authExpiry,
+    });
     return true;
   },
 
