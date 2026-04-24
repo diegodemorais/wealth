@@ -214,6 +214,103 @@ def _fetch_ntnb_pu(ref_date: date, maturity: date, cache: dict) -> float | None:
     return None
 
 
+def build_coe_xp_by_month() -> dict[str, float]:
+    """
+    Build COE XP net position by month from Google Sheets Histórico tab.
+
+    Fetches gviz CSV (newest-first rows). For each month, takes the first
+    occurrence (= most recent daily value = end-of-month proxy).
+
+    col[8]  = COE asset value (BRL)
+    col[12] = XP loan liability (BRL, already negative in the sheet)
+
+    Returns {YYYY-MM: net_brl} where net = COE + loan.
+    Missing months → caller uses 0 (not in dict).
+    """
+    import urllib.request
+    import io
+
+    SHEETS_ID = "1LmxgmvIoGut6Bfzj7ibhXtFuR1H7cIPcJOkVmiTuzZs"
+    url = (
+        f"https://docs.google.com/spreadsheets/d/{SHEETS_ID}"
+        "/gviz/tq?tqx=out:csv&sheet=Hist%C3%B3rico"
+    )
+
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            raw = resp.read().decode("utf-8")
+    except Exception as e:
+        print(f"    WARNING: COE fetch failed ({e}), skipping COE")
+        return {}
+
+    reader = csv.reader(io.StringIO(raw))
+    rows = list(reader)
+
+    coe_by_month: dict[str, float] = {}
+
+    def _parse_brl(val: str) -> float:
+        """Parse BRL value like 'R$ 172.869,00' or '-R$ 108.788,48'."""
+        v = val.strip().strip('"').replace("\xa0", "").replace(" ", "")
+        # Strip currency prefix R$, keeping sign
+        negative = v.startswith("-")
+        v = v.lstrip("-").lstrip("+")
+        if v.startswith("R$"):
+            v = v[2:]
+        if v.startswith("$"):
+            v = v[1:]
+        v = v.strip()
+        # Handle Brazilian format: 1.234.567,89
+        if "," in v and "." in v:
+            if v.rfind(",") > v.rfind("."):
+                # comma is decimal separator: 1.234,56
+                v = v.replace(".", "").replace(",", ".")
+            else:
+                # dot is decimal separator: 1,234.56
+                v = v.replace(",", "")
+        elif "," in v:
+            v = v.replace(",", ".")
+        try:
+            result = float(v)
+            return -result if negative else result
+        except ValueError:
+            return 0.0
+
+    for row in rows:
+        # Skip header row(s) or short rows
+        if len(row) < 13:
+            continue
+        date_str = row[0].strip().strip('"')
+        # Expect dd/mm/yy or dd/mm/yyyy
+        for fmt in ("%d/%m/%y", "%d/%m/%Y"):
+            try:
+                dt = datetime.strptime(date_str, fmt).date()
+                break
+            except ValueError:
+                continue
+        else:
+            continue  # not a date row
+
+        month = dt.strftime("%Y-%m")
+        if month in coe_by_month:
+            continue  # first occurrence = most recent = end-of-month
+
+        coe_raw = row[8].strip().strip('"') if len(row) > 8 else ""
+        loan_raw = row[12].strip().strip('"') if len(row) > 12 else ""
+
+        coe_val = _parse_brl(coe_raw) if coe_raw else 0.0
+        loan_val = _parse_brl(loan_raw) if loan_raw else 0.0
+        # loan is already negative in sheet (liability), but parse gives absolute
+        # We need: net = coe_val + loan_val where loan_val < 0
+        # The sheet stores loan as negative, so _parse_brl gives a negative number
+        net = coe_val + loan_val
+
+        if net != 0.0:
+            coe_by_month[month] = net
+
+    return coe_by_month
+
+
 def build_nubank_rf_by_month() -> dict[str, float]:
     """
     Build Nubank RF total by month using mark-to-market from ANBIMA PU (PYield).
@@ -535,6 +632,10 @@ def main():
     nubank_rf = build_nubank_rf_by_month()
     print(f"   {len(nubank_rf)} months")
 
+    print("\n3b. Building COE XP (Histórico Sheets)...")
+    coe_xp = build_coe_xp_by_month()
+    print(f"   {len(coe_xp)} months with COE net position")
+
     # ── Step 2: Determine all symbols needed ──────────────────────────────
     all_symbols = set()
     for month_pos in ibkr_positions.values():
@@ -547,7 +648,7 @@ def main():
     usd_symbols = [s for s in all_symbols if s not in BRL_TICKERS]
     brl_symbols = [s for s in all_symbols if s in BRL_TICKERS]
 
-    all_months = sorted(set(ibkr_positions.keys()) | set(xp_positions.keys()) | set(nubank_rf.keys()))
+    all_months = sorted(set(ibkr_positions.keys()) | set(xp_positions.keys()) | set(nubank_rf.keys()) | set(coe_xp.keys()))
     if not all_months:
         print("ERROR: No months to process")
         return
@@ -644,6 +745,7 @@ def main():
     rows = []
     prev_pat = None
     prev_equity_usd = None
+    prev_coe_net = 0.0  # track COE to detect first appearance as aporte
 
     for month in all_months:
         cambio = fx.get(month)
@@ -683,13 +785,23 @@ def main():
         # Nubank RF (BRL — applied amount proxy)
         rf_brl = nubank_rf.get(month, 0)
 
+        # COE XP net position (asset + loan liability from Sheets Histórico)
+        coe_net_brl = coe_xp.get(month, 0.0)
+
         # Total
-        patrimonio_brl = equity_brl + xp_brl + rf_brl
+        patrimonio_brl = equity_brl + xp_brl + rf_brl + coe_net_brl
 
         # Modified Dietz TWR BRL: temporal-weighted inflows
         month_flows_brl = aportes_by_month.get(month, [])
         aporte_mes_brl = _total_inflows(month_flows_brl)
         weighted_brl = _weighted_inflows(month_flows_brl, month)
+
+        # COE first appearance: treat as mid-month aporte (weight=0.5) to avoid TWR inflation
+        if coe_net_brl != 0.0 and prev_coe_net == 0.0:
+            aporte_mes_brl += coe_net_brl
+            weighted_brl += 0.5 * coe_net_brl  # assume mid-month appearance
+
+        prev_coe_net = coe_net_brl
         twr_pct = ""
         if prev_pat and prev_pat > 0:
             denominator = prev_pat + weighted_brl
@@ -719,12 +831,14 @@ def main():
             "patrimonio_brl": round(patrimonio_brl, 2),
             "patrimonio_var": twr_pct,
             "aporte_brl": round(aporte_mes_brl, 2),
+            "_weighted_brl": weighted_brl,  # for TWR recalc after zero-filtering
             "equity_usd": round(equity_usd, 2),
             "equity_var_usd": twr_usd_pct,
             "aporte_usd": round(aporte_mes_usd, 2),
             "equity_brl": round(equity_brl, 2),
             "xp_brl": round(xp_brl, 2),
             "rf_brl": round(rf_brl, 2),
+            "coe_brl": round(coe_net_brl, 2),
             "usdbrl": cambio,
         })
 
@@ -737,7 +851,7 @@ def main():
     print(f"\n8. Writing {OUTPUT_CSV.relative_to(ROOT)}...")
     fieldnames = ["data", "patrimonio_brl", "patrimonio_var", "aporte_brl",
                   "equity_usd", "equity_var_usd", "aporte_usd",
-                  "equity_brl", "xp_brl", "rf_brl", "usdbrl"]
+                  "equity_brl", "xp_brl", "rf_brl", "coe_brl", "usdbrl"]
 
     # Recalculate TWR (Modified Dietz) after filtering zeros
     for i, row in enumerate(rows):
@@ -747,10 +861,8 @@ def main():
         else:
             prev_brl = rows[i-1]["patrimonio_brl"]
             aporte_brl = row.get("aporte_brl", 0)
-            month_str = row["data"][:7]
-            # Use temporal weighting for recalculation too
-            flows_brl = aportes_by_month.get(month_str, [])
-            w_brl = _weighted_inflows(flows_brl, month_str)
+            # Use pre-computed weighted flows (includes COE first-appearance adjustment)
+            w_brl = row.get("_weighted_brl", 0.0)
             if prev_brl > 0:
                 denom = prev_brl + w_brl
                 if denom > 0:
@@ -762,6 +874,7 @@ def main():
 
             prev_usd = rows[i-1]["equity_usd"]
             aporte_usd = row.get("aporte_usd", 0)
+            month_str = row["data"][:7]
             flows_usd = ibkr_aportes_usd_by_month.get(month_str, [])
             w_usd = _weighted_inflows(flows_usd, month_str)
             if prev_usd > 0:
@@ -774,7 +887,7 @@ def main():
                 row["equity_var_usd"] = ""
 
     with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 

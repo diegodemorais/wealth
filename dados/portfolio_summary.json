@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-24T19:09:12",
+  "_generated": "2026-04-24T20:50:19",
   "_source": "reconstruct_history.py",
   "periodo": {
     "inicio": "2021-04-28",
@@ -9,28 +9,28 @@
   },
   "patrimonio": {
     "inicio_brl": 257684.36,
-    "fim_brl": 3603807.15,
-    "total_aportes_brl": 2342218.25,
-    "ganho_mercado_brl": 1003904.54
+    "fim_brl": 3667887.77,
+    "total_aportes_brl": 2377607.79,
+    "ganho_mercado_brl": 1032595.62
   },
   "retorno_twr": {
-    "acumulado_pct": 85.0,
-    "cagr_pct": 13.09,
-    "media_mensal_pct": 1.16
+    "acumulado_pct": 81.55,
+    "cagr_pct": 12.67,
+    "media_mensal_pct": 1.12
   },
   "risco": {
-    "max_drawdown_pct": -21.71,
+    "max_drawdown_pct": -21.62,
     "max_drawdown_date": "2022-09",
-    "volatilidade_anual_pct": 18.05
+    "volatilidade_anual_pct": 17.33
   },
   "distribuicao": {
     "melhor_mes": {
       "date": "2025-04",
-      "twr_pct": 24.28
+      "twr_pct": 23.83
     },
     "pior_mes": {
       "date": "2025-09",
-      "twr_pct": -14.41
+      "twr_pct": -14.29
     },
     "meses_positivos": 36,
     "meses_negativos": 24,
