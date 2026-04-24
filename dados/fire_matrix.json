@@ -1,7 +1,7 @@
 {
   "_generated": "2026-04-18T22:12:36",
-  "_source": "reconstruct_fire_data.py \u2192 fire_montecarlo.simular_trajetoria",
-  "_spec": "DEV-fire-matrix-v2: eixos Patrim\u00f4nio\u00d7Gasto, 3 cen\u00e1rios",
+  "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
+  "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
   "patrimonios": [
     7000000,
     9000000,
@@ -212,5 +212,6 @@
     "16000000_300000": 0.9654,
     "16000000_350000": 0.9472
   },
-  "_by_profile_generated": ""
+  "_by_profile_generated": "",
+  "_by_profile_n_sim": 10000
 }

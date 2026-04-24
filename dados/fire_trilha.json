@@ -1602,5 +1602,7 @@
     18150395.0,
     18179174.0
   ],
-  "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
+  "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)",
+  "_âncora_patrimônio_atual": 3472335,
+  "_patrimonio_realizado_último": null
 }
