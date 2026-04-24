@@ -164,7 +164,7 @@ export function runMCYearly(params: MCYearlyParams): MCYearlyResult {
  * Compute percentile at specific month across trajectories
  */
 function getPercentileAtMonth(trajectories: number[][], percentile: number, month: number): number {
-  const values = trajectories.map(t => t[month] || t[t.length - 1]).sort((a, b) => a - b);
+  const values = trajectories.map(t => t[month] !== undefined ? t[month] : 0).sort((a, b) => a - b);
   const idx = Math.floor(values.length * percentile);
   return values[idx];
 }
