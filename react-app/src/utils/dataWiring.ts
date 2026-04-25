@@ -517,6 +517,8 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const aporteMensal = data.premissas?.aporte_mensal ?? 0;
   const ultimoAporte = data.premissas?.ultimo_aporte_brl ?? 0;
   const ultimoAporteData = data.premissas?.ultimo_aporte_data ?? '';
+  // Média real histórica — vem do pipeline (aporte_brl CSV, fx histórica, sem double-count)
+  const aporteMediaHistorica: number = (data as any)?.premissas_vs_realizado?.aporte_mensal?.realizado_media_brl ?? 0;
 
   // Estimate accumulated values (simplified — actual implementation would parse minilog)
   const acumuladoMes = ultimoAporte * (ultimoAporteData.includes(today.toISOString().substring(0, 7)) ? 1 : 0) || aporteMensal;
@@ -608,6 +610,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     aporteMensal,
     ultimoAporte,
     ultimoAporteData,
+    aporteMediaHistorica,
     acumuladoMes,
     acumuladoAno,
 

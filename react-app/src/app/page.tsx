@@ -214,8 +214,8 @@ export default function HomePage() {
         })()}
         <MetricCard
           label="Aporte do Mês"
-          value={d.aporteMensal ? fmtPrivacy(d.aporteMensal, privacyMode) : '—'}
-          sub="meta mensal"
+          value={d.ultimoAporte ? fmtPrivacy(d.ultimoAporte, privacyMode) : '—'}
+          sub={d.aporteMediaHistorica ? `${d.ultimoAporteData || 'último'} · média ${fmtPrivacy(d.aporteMediaHistorica, privacyMode)}/mês` : (d.ultimoAporteData || 'último aporte')}
         />
       </div>
 

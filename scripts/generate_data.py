@@ -1785,65 +1785,58 @@ def compute_premissas_vs_realizado(
             primeira_ibkr = datetime.strptime(datas_ibkr[0], "%Y-%m-%d")
             ultima_ibkr = datetime.strptime(datas_ibkr[-1], "%Y-%m-%d")
 
-            # ─ Aportes IBKR (USD → BRL) ─
-            total_usd = aportes.get("total_usd", sum(d["usd"] for d in depositos))
-            total_ibkr_brl = total_usd * cambio
-
-            # ─ Aportes RF (BRL direto) ─
-            total_rf_brl = 0
-            data_primeira_rf = None
-            data_ultima_rf = None
+            # ─ Aportes totais via historico_carteira.csv (fonte canônica) ─
+            # CSV.aporte_brl = equity (USD × PTAX histórica) + RF (BRL direto) — sem double-count
+            # NÃO somar total_ibkr_usd × cambio_atual pois já está embutido no CSV a fx histórico.
+            total_usd = aportes.get("total_usd", sum(d["usd"] for d in depositos))  # informativo
+            total_aporte_brl = 0
+            meses_com_aporte = 0
+            data_primeira_csv = None
+            data_ultima_csv = None
+            por_ano_brl: dict[str, int] = {}
             if csv_rows:
                 for row in csv_rows:
                     try:
                         aporte_brl_val = float(row.get("aporte_brl", "0").replace(",", ".").replace(" ", ""))
                         if aporte_brl_val > 0:
-                            total_rf_brl += aporte_brl_val
+                            total_aporte_brl += aporte_brl_val
+                            meses_com_aporte += 1
                             row_data = row.get("data", "")
                             if row_data:
-                                if not data_primeira_rf:
-                                    data_primeira_rf = row_data
-                                data_ultima_rf = row_data
+                                if not data_primeira_csv:
+                                    data_primeira_csv = row_data
+                                data_ultima_csv = row_data
+                                ano = row_data[:4]
+                                por_ano_brl[ano] = por_ano_brl.get(ano, 0) + round(aporte_brl_val)
                     except (ValueError, KeyError, TypeError):
                         pass
 
-            # ─ Período combinado: min(primeira IBKR, primeira RF) até max(ultima IBKR, ultima RF) ─
-            datas_todas = datas_ibkr.copy()
-            if data_primeira_rf:
-                datas_todas.append(data_primeira_rf)
-            if data_ultima_rf:
-                datas_todas.append(data_ultima_rf)
-            datas_todas_sorted = sorted(datas_todas)
-            primeira = datetime.strptime(datas_todas_sorted[0], "%Y-%m-%d")
-            ultima = datetime.strptime(datas_todas_sorted[-1], "%Y-%m-%d")
-            meses_span = max(1, round((ultima - primeira).days / 30.44))
+            # Denominator = meses com aporte real (não período calendário)
+            media_mensal_brl = round(total_aporte_brl / meses_com_aporte) if meses_com_aporte > 0 else 0
 
-            # ─ Total de aportes (IBKR + RF) ─
-            total_aporte_brl = total_ibkr_brl + total_rf_brl
-            media_mensal_brl = round(total_aporte_brl / meses_span)
-
-            # Por ano (apenas IBKR, pois RF não tem breakdown por ano neste momento)
-            por_ano_brl = {}
-            for ano, val_usd in aportes.get("por_ano", {}).items():
-                por_ano_brl[ano] = round(val_usd * cambio)
+            # Período via CSV; fallback para IBKR se CSV vazio
+            datas_ref = []
+            if data_primeira_csv:
+                datas_ref.append(data_primeira_csv)
+            if data_ultima_csv:
+                datas_ref.append(data_ultima_csv)
+            if not datas_ref:
+                datas_ref = [datas_ibkr[0], datas_ibkr[-1]]
+            datas_ref_sorted = sorted(datas_ref)
 
             result["aporte_mensal"] = {
                 "premissa_brl": premissa_aporte,
                 "realizado_media_brl": media_mensal_brl,
                 "delta_brl": media_mensal_brl - premissa_aporte,
-                "delta_pct": round((media_mensal_brl / premissa_aporte - 1) * 100, 1),
-                "periodo": f"{datas_todas_sorted[0]} a {datas_todas_sorted[-1]}",
-                "meses_span": meses_span,
+                "delta_pct": round((media_mensal_brl / premissa_aporte - 1) * 100, 1) if premissa_aporte else 0,
+                "periodo": f"{datas_ref_sorted[0]} a {datas_ref_sorted[-1]}",
+                "meses_com_aporte": meses_com_aporte,
                 "total_ibkr_usd": round(total_usd),
-                "total_ibkr_brl": round(total_ibkr_brl),
-                "total_rf_brl": round(total_rf_brl),
                 "total_aporte_brl": round(total_aporte_brl),
-                "cambio_conversao": round(cambio, 4),
                 "por_ano_brl": por_ano_brl,
                 "nota": (
-                    "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). "
-                    "Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). "
-                    "Período: primeiro aporte até último aporte (IBKR ou RF)."
+                    "Fonte canônica: historico_carteira.csv.aporte_brl = equity (USD × PTAX histórica do mês) + RF (BRL direto). "
+                    "Média = total / meses com aporte real. Sem double-count de USD vs BRL."
                 ),
             }
 
