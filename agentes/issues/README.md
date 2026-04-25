@@ -43,6 +43,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DASH-2026-04-25-consistency | Dev+Quant | 2026-04-25 | ✅ Done — **6 High-Priority Fixes** implementados. TER corrigido (AVGS 0.25%→0.39%, AVEM 0.18%→0.35%), pctAlvo dinâmico (12%/3%), CAUTELA styling, Renda+ taxa unificada, alpha drought caveat. Health 6.5/10→7.5/10. **Changelog:** [Performance TER](react-app/src/app/performance/page.tsx) · [Home pctAlvo](react-app/src/app/page.tsx) · [GuardrailsRetirada style](react-app/src/components/dashboard/GuardrailsRetirada.tsx) · [generate_data taxa](scripts/generate_data.py) · [Performance caveat](react-app/src/app/performance/page.tsx) |
 | DEV-decisao-mes-redesign | Dev+CIO+UX | 2026-04-25 | ✅ Done — DecisaoDoMes.tsx (340 linhas) substitui 3 componentes (557 linhas). Hierarquia Decisão→Gatilhos→Macro→Execução. Score removido, redundâncias eliminadas. 3 bugs corrigidos no ciclo. 495 testes passando. |
 | DEV-coe-hodl11-classificacao | Dev | 2026-04-25 | ✅ Done — COE R$64k net + Empréstimo XP no pipeline. HODL11 reclassificado como Cripto Global (BTC/USD). brasil_pct: 12%→10.6%, cripto_pct: novo 2.9%. Seção COE no dash portfolio. |
 | DEV-semaforo-action-text | Dev | 2026-04-24 | ✅ Done — "→ ação" explícita em RFStatusPanel (por instrumento vs gatilho) e MacroUnificado (Selic + CDS). Puro TypeScript, sem nova fonte de dados. |
