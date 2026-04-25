@@ -3,7 +3,8 @@ ID: DEV-coe-hodl11-classificacao
 Título: COE + Empréstimo na fonte de verdade e HODL11 reclassificação geográfica
 Tipo: Dev
 Prioridade: 🔴 Alta
-Status: Doing
+Status: Done
+Fechada em: 2026-04-25
 Dono: Dev
 Aberta em: 2026-04-24
 ---
@@ -59,3 +60,20 @@ Dois problemas de classificação identificados após auditoria das fontes de ve
 | COE no dash | invisível | linha própria |
 
 ## Conclusão
+
+Implementado em 2026-04-25. Resultados reais vs esperados:
+
+| Métrica | Esperado | Real |
+|---------|----------|------|
+| brasil_pct | ~9% | **10.6%** (RF R$329k + COE R$64k + crypto_legado R$4k) |
+| cripto_pct | ~3% | **2.9%** (HODL11 R$109k) |
+| exposicao_cambial_pct | ~85% | **~86.5%** (sem mudança) |
+| Patrimônio total | — | **R$3.73M** (inclui COE net R$64k) |
+
+### Arquivos modificados
+- `scripts/generate_data.py`: `compute_concentracao_brasil()` + `compute_drift()` + early CSV read + JSON output
+- `scripts/reconstruct_history.py`: `build_coe_xp_by_month()` + integração pipeline (commit anterior)
+- `react-app/src/components/charts/ConcentrationChart.tsx`: 3 KPIs + COE no pie
+- `react-app/src/components/dashboard/BrasilConcentrationCard.tsx`: hodl11→coeNet
+- `react-app/src/app/portfolio/page.tsx`: seção COE + Empréstimo XP (3 cards)
+- `agentes/contexto/carteira.md`: HODL11 e COE documentados

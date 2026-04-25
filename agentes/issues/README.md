@@ -35,7 +35,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| DEV-coe-hodl11-classificacao | COE + Empréstimo na fonte de verdade e HODL11 reclassificação geográfica | Dev | 🔴 Alta |
 | DEV-twr-pipeline-fixes | Fix TWR: RF MtM, preços fim-de-mês, Modified Dietz | Dev | 🔴 Alta |
 | DEV-ux-prototipo | Avaliação design: protótipo HTML vs dashboard React | Dev+Time | 🟡 Média |
 
@@ -44,6 +43,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DEV-coe-hodl11-classificacao | Dev | 2026-04-25 | ✅ Done — COE R$64k net + Empréstimo XP no pipeline. HODL11 reclassificado como Cripto Global (BTC/USD). brasil_pct: 12%→10.6%, cripto_pct: novo 2.9%. Seção COE no dash portfolio. |
 | DEV-semaforo-action-text | Dev | 2026-04-24 | ✅ Done — "→ ação" explícita em RFStatusPanel (por instrumento vs gatilho) e MacroUnificado (Selic + CDS). Puro TypeScript, sem nova fonte de dados. |
 | DEV-home-ia-reorganizacao | Dev | 2026-04-24 | ✅ Done — Home reorganizada: Status → Decisão do Mês → Evolução. AporteDecisionPanel+AporteDoMes sobem, MacroUnificado desce, grid 2-col desmembrado. |
 | DEV-mc-regime-switching-fx | Dev+Quant | 2026-04-24 | ✅ Done — Hamilton (1989) Markov 2-regime FX em runCanonicalMC (fxRegime=true). 8 testes QA [REGIME-FX]. Achado: crises BRL AJUDAM (+11,5pp P(FIRE)) — dep episódica beneficia portfólio USD. "Câmbio Dinâmico" na FireScenariosTable. |
