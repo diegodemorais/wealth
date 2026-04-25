@@ -1,0 +1,45 @@
+{
+  "fire": {
+    "pfire_base": 86.3,
+    "pfire_fav": 92.4,
+    "pfire_stress": 81.3,
+    "pat_mediano_fire": 11694745.0,
+    "pat_p10_fire": 7148935.0,
+    "pat_p90_fire": 18395582.0,
+    "mc_date": "2026-04-25",
+    "pfire_base_base": 86.3,
+    "pfire_base_fav": 92.4,
+    "pfire_base_stress": 81.3,
+    "pat_mediano_base": 11694745.0,
+    "pat_p10_base": 7148935.0,
+    "pat_p90_base": 18395582.0,
+    "tornado": [
+      {
+        "variavel": "Volatilidade equity (+/-10%)",
+        "mais10": -4.9,
+        "menos10": 3.4
+      },
+      {
+        "variavel": "Custo de vida (+/-10%)",
+        "mais10": -4.0,
+        "menos10": 1.9
+      },
+      {
+        "variavel": "Retorno equity (+/-10%)",
+        "mais10": 3.8,
+        "menos10": -6.6
+      },
+      {
+        "variavel": "Aporte mensal (+/-10%)",
+        "mais10": 1.3,
+        "menos10": -3.1
+      }
+    ]
+  },
+  "_meta": {
+    "generated": "2026-04-25",
+    "last_update_section": "fire",
+    "last_update_generator": "fire_montecarlo.py",
+    "version": 1
+  }
+}

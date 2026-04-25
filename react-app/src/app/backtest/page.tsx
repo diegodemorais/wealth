@@ -681,7 +681,7 @@ export default function BacktestPage() {
           <CollapsibleSection
             id="section-drawdown-extended"
             title="Drawdown Histórico — Multi-Período (Target vs VWRA)"
-            defaultOpen={true}
+            defaultOpen={secOpen('backtest', 'drawdown-extended')}
           >
             <div style={{ padding: '0 16px 16px' }}>
               <DrawdownExtendedChart periods={ext.periods} summary={ext.summary ?? {}} />

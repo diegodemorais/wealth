@@ -1,4 +1,5 @@
 'use client';
+// privacy-ok — fmtBrt formats timestamps only, not monetary values
 
 import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
