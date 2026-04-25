@@ -171,9 +171,11 @@ export default function DecisaoDoMes({
     ? { text: '→ Risco soberano elevado — IPCA+ como hedge natural', color: 'var(--yellow)' }
     : null;
 
-  // ── Concentração Brasil fora de faixa (55%–65%) ───────────────────────────
+  // ── Concentração Brasil — informacional (sem faixa alvo: Diego tem carteira global, ~10% Brasil intencional)
   const brazilPct = concentrationBrazil != null ? concentrationBrazil * 100 : null;
-  const brazilFora = brazilPct != null && (brazilPct < 55 || brazilPct > 65);
+  // Alerta real: só se Brasil > 25% (excesso de risco soberano) ou < 5% (RF zerada)
+  const brazilAlerta = brazilPct != null && (brazilPct > 25 || brazilPct < 5);
+  const brazilFora = brazilPct != null; // sempre mostra quando há dado
 
   return (
     <>
@@ -390,21 +392,21 @@ export default function DecisaoDoMes({
           </div>
         </div>
 
-        {/* Exposição Brasil (fora de faixa) — compacto, dentro do card */}
+        {/* Exposição Brasil — informacional */}
         {brazilFora && brazilPct != null && (
           <>
             <div style={{ borderTop: '1px solid rgba(100,116,139,0.2)', margin: '12px 0' }} />
             <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
-              Exposição Brasil <span style={{ color: 'var(--yellow)' }}>⚠ fora de faixa</span>
+              Exposição Brasil{brazilAlerta && <span style={{ color: 'var(--yellow)' }}> ⚠ fora de faixa</span>}
             </div>
             <div className="bg-slate-700/40 rounded p-3">
               <div className="flex justify-between items-start flex-wrap gap-2">
                 <div>
                   <div className="text-xs text-muted">Total Brasil</div>
-                  <div className="text-lg font-bold mt-0.5" style={{ color: brazilPct > 65 ? 'var(--red)' : 'var(--yellow)' }}>
+                  <div className="text-lg font-bold mt-0.5" style={{ color: brazilAlerta ? 'var(--yellow)' : 'var(--text)' }}>
                     {brazilPct.toFixed(1)}%
                   </div>
-                  <div className="text-xs text-muted mt-0.5">Exp. cambial ~{exposicaoCambialPct.toFixed(0)}% · faixa alvo 55–65%</div>
+                  <div className="text-xs text-muted mt-0.5">Exp. cambial ~{exposicaoCambialPct.toFixed(0)}%</div>
                 </div>
                 <div className="text-sm text-muted text-right">
                   <div>Cripto: {fmtPrivacy(((hodl11Brl ?? 0) + (cryptoLegadoBrl ?? 0)) / 1000, privacyMode)}</div>

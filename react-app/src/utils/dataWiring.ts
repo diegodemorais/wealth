@@ -628,7 +628,10 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
     // Geographic diversification
     internationalPercentage: (geoUS + geoDM + geoEM) / totalEquityUsd,
-    concentrationBrazil: ipcaTotalBrl / totalBrl,
+    // brasil_pct from pipeline (RF soberano + COE) — fallback to ipcaTotalBrl se pipeline não rodou
+    concentrationBrazil: data.concentracao_brasil?.brasil_pct != null
+      ? data.concentracao_brasil.brasil_pct / 100
+      : ipcaTotalBrl / totalBrl,
 
     // Cost metrics
     costIndexBps: data.drift?.['Custo']?.atual ?? 0,
