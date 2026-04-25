@@ -31,15 +31,34 @@ if (fs.existsSync(tempDash)) {
   }
 }
 
-// 2. Copy public assets to final output
+// 2. Link public assets to final output (or copy if symlink fails)
 if (fs.existsSync(publicDir)) {
   const files = fs.readdirSync(publicDir);
   files.forEach(file => {
     if (file.endsWith('.json') || file.endsWith('.svg') || file.endsWith('.txt')) {
       const src = path.join(publicDir, file);
       const dest = path.join(finalDash, file);
-      fs.copyFileSync(src, dest);
-      console.log(`✅ Copied ${file}`);
+
+      // Remove existing file/symlink if it exists
+      if (fs.existsSync(dest) || fs.lstatSync(dest)?.isSymbolicLink?.()) {
+        fs.unlinkSync(dest);
+      }
+
+      // For data.json, create relative symlink to preserve single source of truth
+      if (file === 'data.json') {
+        try {
+          const relativePath = path.relative(finalDash, src);
+          fs.symlinkSync(relativePath, dest);
+          console.log(`✅ Symlinked ${file} → ${relativePath}`);
+        } catch (err) {
+          // Fallback to copy if symlink fails (Windows)
+          fs.copyFileSync(src, dest);
+          console.log(`⚠️  Copied ${file} (symlink unsupported)`);
+        }
+      } else {
+        fs.copyFileSync(src, dest);
+        console.log(`✅ Copied ${file}`);
+      }
     }
   });
 }
