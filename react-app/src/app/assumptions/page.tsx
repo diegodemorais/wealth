@@ -827,6 +827,18 @@ export default function AssumptionsPage() {
               </p>
             </Block>
 
+            <Block title="Focus Expectations (BCB)" note="Projeções de mercado sincronizadas com Banco Central.">
+              <Table rows={[
+                { label: 'Selic Terminal', value: `${((macro.selic_terminal ?? macro.selic_meta ?? 0) / 100).toFixed(2)}%/ano`, muted: macro.selic_terminal == null },
+                { label: 'IPCA Projeção (2026)', value: `${fmtPctRaw(macro.ipca_focus ?? 4.8)}/ano`, muted: macro.ipca_focus == null },
+                { label: 'Status Ciclo', value: 'Cortes em curso', muted: true },
+                { label: 'Última Sincronização', value: macro.focus_update ?? '—', muted: true },
+              ]} />
+              <p style={{ margin: '8px 0 0', padding: '7px 9px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 5, fontSize: 10, color: 'var(--muted)', lineHeight: 1.5 }}>
+                Informações derivadas do Focus da Secretaria de Política Econômica. Atualizado periodicamente com projeções de mercado do BCB.
+              </p>
+            </Block>
+
             {bondPoolRows.length > 0 && (
               <Block title="Bond Pool" note={`Meta: ${bondPool.meta_anos ?? 7} anos de gastos em RF. DCA até ~2039.`}>
                 <Table rows={bondPoolRows} />
