@@ -452,15 +452,15 @@ def get_pfire_tornado():
             norm_tornado
         )
 
-    # Rodar Cenário Aspiracional (--anos 10 --aporte 30000) com tornado
-    print("  ▶ fire_montecarlo.py --anos 10 --aporte 30000 --tornado ...")
-    out_aspiracional, err_aspiracional = run([VENV_PY, "scripts/fire_montecarlo.py", "--anos", "10", "--aporte", "30000", "--tornado"], cwd=ROOT)
+    # Rodar Cenário Aspiracional (--anos 10 --aporte 30000) com tornado e by-profile
+    print("  ▶ fire_montecarlo.py --anos 10 --aporte 30000 --tornado --by-profile ...")
+    out_aspiracional, err_aspiracional = run([VENV_PY, "scripts/fire_montecarlo.py", "--anos", "10", "--aporte", "30000", "--tornado", "--by-profile"], cwd=ROOT)
     if err_aspiracional:
         print(f"  ⚠️ stderr aspiracional: {err_aspiracional[:200]}")
 
-    # Rodar Cenário Base (default, sem --anos)
-    print("  ▶ fire_montecarlo.py (Cenário Base default) ...")
-    out_base, err_base = run([VENV_PY, "scripts/fire_montecarlo.py"], cwd=ROOT)
+    # Rodar Cenário Base (default, sem --anos) com by-profile
+    print("  ▶ fire_montecarlo.py --by-profile (Cenário Base default) ...")
+    out_base, err_base = run([VENV_PY, "scripts/fire_montecarlo.py", "--by-profile"], cwd=ROOT)
 
     def parse_pfire(out, idade):
         """Parseia P(FIRE@{idade}) do output do fire_montecarlo."""
