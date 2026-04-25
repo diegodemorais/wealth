@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-24T22:45:35",
-  "_generated_brt": "2026-04-24T22:45:35-03:00",
+  "_generated": "2026-04-24T22:54:45",
+  "_generated_brt": "2026-04-24T22:54:45-03:00",
   "date": "2026-04-24",
   "timestamps": {
     "posicoes_ibkr": "2026-04-22",
@@ -1083,7 +1083,10 @@
       3.76,
       -7.67,
       9.02
-    ]
+    ],
+    "twr_usd_cagr": 10.7,
+    "vwra_usd_cagr": 10.51,
+    "cdi_cagr": 11.73
   },
   "rolling_sharpe": {
     "dates": [
@@ -2259,7 +2262,7 @@
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -2512,7 +2515,7 @@
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -2523,7 +2526,7 @@
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -2864,23 +2867,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 77612.69,
+      "btc_atual_usd": 77583.0,
       "hodl11_brl_atual": 109510,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.03,
-          "valor_fire_brl": 112878
+          "valor_fire_brl": 112921
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.22,
-          "valor_fire_brl": 352745
+          "valor_fire_brl": 352880
         },
         "bull": {
           "btc_target_usd": 500000,
           "upside_factor": 6.44,
-          "valor_fire_brl": 705489
+          "valor_fire_brl": 705759
         }
       }
     }
@@ -8119,7 +8122,7 @@
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 84.1,
     "cds_brazil_5y_bps": 123.9,
-    "bitcoin_usd": 77612.69,
+    "bitcoin_usd": 77583.0,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -8137,9 +8140,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.9793,
-    "btc_usd": 77612.69,
+    "btc_usd": 77583.0,
     "cambio_mtd_pct": -3.43,
-    "btc_mtd_pct": 7.98,
+    "btc_mtd_pct": 7.94,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -8706,8 +8709,8 @@
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
-    "brasil_pct": 10.6,
-    "cripto_pct": 2.9,
+    "brasil_pct": 10.5,
+    "cripto_pct": 3.0,
     "composicao": {
       "hodl11_brl": 109510,
       "rf_total_brl": 329063,
@@ -8720,10 +8723,10 @@
       "coe_net_brl": 64081,
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 397155,
-    "total_cripto_brl": 109510,
+    "total_brasil_brl": 393144,
+    "total_cripto_brl": 113521,
     "total_portfolio_brl": 3729481,
-    "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado) + crypto legado. HODL11 = cripto global (BTC/USD) — categoria própria, não Brasil. Três categorias: brasil + cambial(equity IBKR) + cripto(HODL11) = 100%."
+    "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
   },
   "premissas_vs_realizado": {
     "retorno_equity": {
@@ -10394,7 +10397,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-24T22:45:22",
+    "_generated": "2026-04-24T22:54:28",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",

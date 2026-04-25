@@ -28,14 +28,16 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
 
     const rfBrl = conc.composicao?.rf_total_brl ?? 0;
     const coeBrl = conc.composicao?.coe_net_brl ?? 0;
+    // hodl11 e legado separados no pie (total_cripto_brl = soma dos dois)
+    const hodl11Brl = conc.composicao?.hodl11_brl ?? 0;
     const cryptoLegadoBrl = conc.composicao?.crypto_legado_brl ?? 0;
 
     const segments = [
       { name: 'Intl (ETFs)', value: internacionalBrl, color: EC.accent },
       { name: 'RF Brasil (TD)', value: rfBrl, color: EC.green },
       { name: 'COE XP', value: coeBrl, color: '#60a5fa' },
-      { name: 'HODL11 (BTC)', value: criptoBrl, color: EC.orange },
-      { name: 'Crypto Legado', value: cryptoLegadoBrl, color: '#a371f7' },
+      { name: 'HODL11 (BTC)', value: hodl11Brl, color: EC.orange },
+      { name: 'Binance (legado)', value: cryptoLegadoBrl, color: '#a371f7' },
     ].filter(s => s.value > 0);
 
     const cambialPct = totalBrl > 0 ? ((internacionalBrl / totalBrl) * 100).toFixed(0) : '0';

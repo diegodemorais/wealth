@@ -121,7 +121,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
 
         {/* Risk note */}
         <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px' }}>
-          <strong>Nota:</strong> HODL11 reclassificado como Cripto Global (BTC/USD) — não Brasil soberano. Brasil = RF Tesouro Direto + COE XP (produto estruturado BRL) + crypto legado.
+          <strong>Nota:</strong> Brasil = RF Tesouro Direto + COE XP. Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB). Nenhum cripto conta como soberano BR.
         </div>
       </div>
     </div>

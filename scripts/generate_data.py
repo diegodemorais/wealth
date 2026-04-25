@@ -1647,42 +1647,38 @@ def compute_tax_diferido(posicoes, cambio_atual):
 def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float, coe_net_brl: float = 0.0) -> dict | None:
     """Calcula exposição total a Brasil (Tesouro Direto + COE XP).
 
-    Composição corrigida (DEV-coe-hodl11-classificacao 2026-04-24):
-      - HODL11: EXCLUÍDO do brasil_pct. BTC é ativo global precificado em USD.
-        Wrapper B3 tem risco operacional XP/B3, mas NÃO risco soberano/fiscal BR.
-        HODL11 aparece como categoria própria: cripto_pct.
-      - RF total (Tesouro Direto): risco soberano BR direto.
-      - COE + Empréstimo XP (net): produto estruturado BRL, risco XP/BR.
-      - Crypto legado (spot BRL): pequeno, risco operacional BR.
+    Composição corrigida (2026-04-25):
+      - HODL11: EXCLUÍDO do brasil_pct. BTC global, cripto_pct.
+      - Crypto legado (Binance: BTC/ETH/BNB/ADA): EXCLUÍDO do brasil_pct. Cripto global.
+      - RF total (Tesouro Direto): risco soberano BR.
+      - COE + Empréstimo XP (net): BRL estruturado XP, risco BR.
 
     Três categorias que somam 100%:
-      brasil_pct (RF + COE + crypto_legado) + exposicao_cambial_pct (equity IBKR) + cripto_pct (HODL11) = 100%
-
-    Retorna dict com brasil_pct, cripto_pct e composição detalhada, ou None se dados insuficientes.
+      brasil_pct (RF + COE) + exposicao_cambial_pct (equity IBKR USD) + cripto_pct (HODL11 + Binance) = 100%
     """
     if total_brl is None or total_brl <= 0:
         return None
 
-    # RF: somar todos os títulos (excl. hodl11 que já foi extraído do dict rf)
+    # RF: somar todos os títulos (excl. hodl11)
     rf_total_brl = 0.0
     rf_composicao = {}
     for key, item in rf.items():
         if key == "hodl11":
-            continue  # hodl11 agora é cripto_pct, não brasil
+            continue
         valor = item.get("valor", item.get("valor_brl", 0)) or 0
         rf_total_brl += valor
         rf_composicao[key] = round(valor)
 
-    # Crypto legado (spot fora da B3 — BTC/ETH/BNB/ADA em carteiras pessoais)
+    # Crypto legado (Binance: BTC/ETH/BNB/ADA — global, não Brasil soberano)
     crypto_legado = load_state().get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
 
-    # Brasil = RF soberano + COE XP (BRL estruturado) + crypto legado
-    # HODL11 foi removido: é global/cripto, não Brasil soberano
-    brasil_total = rf_total_brl + coe_net_brl + crypto_legado
+    # Brasil = RF soberano + COE XP — crypto_legado removido (é cripto global)
+    brasil_total = rf_total_brl + coe_net_brl
     brasil_pct = round(brasil_total / total_brl * 100, 1)
 
-    # Cripto = HODL11 (categoria própria — global/BTC, sem geografica)
-    cripto_pct = round(hodl11_brl / total_brl * 100, 1) if hodl11_brl > 0 else 0.0
+    # Cripto = HODL11 + crypto_legado (Binance) — ambos cripto global
+    cripto_total = hodl11_brl + crypto_legado
+    cripto_pct = round(cripto_total / total_brl * 100, 1) if cripto_total > 0 else 0.0
 
     return {
         "brasil_pct": brasil_pct,
@@ -1695,12 +1691,12 @@ def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float, c
             "crypto_legado_brl": round(crypto_legado),
         },
         "total_brasil_brl": round(brasil_total),
-        "total_cripto_brl": round(hodl11_brl),
+        "total_cripto_brl": round(cripto_total),
         "total_portfolio_brl": round(total_brl),
         "nota": (
-            "Brasil = RF soberano (TD) + COE XP (BRL estruturado) + crypto legado. "
-            "HODL11 = cripto global (BTC/USD) — categoria própria, não Brasil. "
-            "Três categorias: brasil + cambial(equity IBKR) + cripto(HODL11) = 100%."
+            "Brasil = RF soberano (TD) + COE XP (BRL estruturado). "
+            "Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). "
+            "Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
         ),
     }
 
@@ -2932,6 +2928,25 @@ def main():
         # Timeline ainda vem do CSV (patrimônio absoluto para o gráfico)
         timeline, _ = get_timeline_retornos()
         print(f"  ✓ Retornos core: {len(retornos_mensais['dates'])} meses (TWR), {len(retornos_mensais['annual_returns'])} anos")
+
+        # CAGR de USD, VWRA e CDI — computados do annual_returns (produto geométrico)
+        _ann = retornos_mensais.get("annual_returns", [])
+        if _ann:
+            _acum_usd, _acum_vwra, _acum_cdi, _total_m = 1.0, 1.0, 1.0, 0
+            for _r in _ann:
+                _m = _r.get("months", 12)
+                _total_m += _m
+                if _r.get("twr_usd") is not None:
+                    _acum_usd  *= (1 + _r["twr_usd"]  / 100)
+                if _r.get("vwra_usd") is not None:
+                    _acum_vwra *= (1 + _r["vwra_usd"] / 100)
+                if _r.get("cdi") is not None:
+                    _acum_cdi  *= (1 + _r["cdi"]      / 100)
+            if _total_m > 0:
+                _yrs = _total_m / 12
+                retornos_mensais["twr_usd_cagr"]  = round((_acum_usd  ** (1/_yrs) - 1) * 100, 2)
+                retornos_mensais["vwra_usd_cagr"] = round((_acum_vwra ** (1/_yrs) - 1) * 100, 2)
+                retornos_mensais["cdi_cagr"]      = round((_acum_cdi  ** (1/_yrs) - 1) * 100, 2)
 
         # Enriquecer annual_returns com alpha do backtest (vs VWRA)
         if backtest_data and backtest_data.get("backtest"):
