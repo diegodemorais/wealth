@@ -608,32 +608,56 @@ export default function PerformancePage() {
                   const wSwrd = pt.SWRD ?? 0.395;
                   const wAvgs = pt.AVGS ?? 0.237;
                   const wAvem = pt.AVEM ?? 0.158;
+                  const wHodl11 = pt.HODL11 ?? 0.03;
                   const equityTotal = wSwrd + wAvgs + wAvem;
                   const terSwrd = 0.0012;
                   const terAvgs = 0.0039;
                   const terAvem = 0.0035;
+                  const terHodl11 = 0.0020;
                   const terVwra = 0.0022;
-                  const terPortfolio = equityTotal > 0
+                  const terEquityPortfolio = equityTotal > 0
                     ? (wSwrd * terSwrd + wAvgs * terAvgs + wAvem * terAvem) / equityTotal
+                    : 0.00171;
+                  const totalAlloc = equityTotal + wHodl11;
+                  const terFullPortfolio = totalAlloc > 0
+                    ? (wSwrd * terSwrd + wAvgs * terAvgs + wAvem * terAvem + wHodl11 * terHodl11) / totalAlloc
                     : 0.00171;
                   const pat = (data as any)?.fire_swr_percentis?.patrimonio_p50_2040 ?? 11500000;
                   const patMedio = pat / 2;
                   const fmtM = (v: number) => fmtPrivacy(v, privacyMode);
-                  const custoPortfolio14a = patMedio * terPortfolio * 14;
+                  const custoEquity14a = patMedio * terEquityPortfolio * 14;
+                  const custoFull14a = patMedio * terFullPortfolio * 14;
+                  const custoHodl14a = patMedio * terHodl11 * 14;
                   const custoVwra14a = patMedio * terVwra * 14;
                   const alpha14a = patMedio * 0.0016 * 14;
-                  const netPortfolio = alpha14a - custoPortfolio14a;
+                  const netFull = alpha14a - custoFull14a;
                   const rows = [
                     {
-                      name: 'Portfolio Target (SWRD/AVGS/AVEM)',
-                      ter: terPortfolio,
-                      custo_14a: fmtM(custoPortfolio14a),
+                      name: 'Portfolio Equity (SWRD/AVGS/AVEM)',
+                      ter: terEquityPortfolio,
+                      custo_14a: fmtM(custoEquity14a),
                       alpha_14a: `+${fmtM(alpha14a)}`,
-                      net_vs_vwra: `+${fmtM(netPortfolio - (-custoVwra14a))}`,
+                      net_vs_vwra: `+${fmtM((alpha14a - custoEquity14a) - (-custoVwra14a))}`,
+                      highlight: false,
+                    },
+                    {
+                      name: 'HODL11 (Bitcoin)',
+                      ter: terHodl11,
+                      custo_14a: fmtM(custoHodl14a),
+                      alpha_14a: '—',
+                      net_vs_vwra: '—',
+                      highlight: false,
+                    },
+                    {
+                      name: 'Full Portfolio (incl. HODL11)',
+                      ter: terFullPortfolio,
+                      custo_14a: fmtM(custoFull14a),
+                      alpha_14a: `+${fmtM(alpha14a)}`,
+                      net_vs_vwra: `+${fmtM(netFull - (-custoVwra14a))}`,
                       highlight: true,
                     },
                     {
-                      name: 'VWRA (benchmark)',
+                      name: 'VWRA (equity benchmark)',
                       ter: terVwra,
                       custo_14a: fmtM(custoVwra14a),
                       alpha_14a: '—',

@@ -96,7 +96,8 @@
       "max": 5,
       "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
       "benchmark_ter": 0.220,
-      "current_ter": 0.247,
+      "current_ter": 0.211,
+      "equity_block_ter": 0.247,
       "shadow_c_ter": 0.207,
       "alpha_anual": 0.00160,
       "thresholds": [
@@ -105,7 +106,7 @@
         { "max_delta_pp": 999, "pts": 0 }
       ],
       "colors": { "good": 5, "warn": 3 },
-      "_note": "Atualizar current_ter se composição mudar (ex: entrada USSC, saída JPGL)."
+      "_note": "current_ter (0.211%) = full portfolio TER (SWRD 39.5% × 0.12% + AVGS 23.7% × 0.39% + AVEM 15.8% × 0.35% + HODL11 3% × 0.20% + RF ~6.1% × 0.10%). equity_block_ter (0.247%) = equity holdings only. Atualizar se composição mudar."
     },
     {
       "id": "human_capital",
