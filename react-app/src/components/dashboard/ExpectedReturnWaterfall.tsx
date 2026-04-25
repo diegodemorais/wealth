@@ -289,6 +289,21 @@ export function ExpectedReturnWaterfall() {
         Haircut {haircutDisplay} pós-publicação (McLean &amp; Pontiff 2016). Alpha líquido real: ~0.16%/ano.
         Loadings estimados: AVGS proxy FF5 via w_EUA×AVUV + (1−w)×AVDV.
       </p>
+
+      {/* Alpha drought caveat */}
+      <div style={{
+        marginTop: 12,
+        padding: '10px 12px',
+        background: 'rgba(249,158,11,0.08)',
+        border: '1px solid rgba(249,158,11,0.25)',
+        borderRadius: 6,
+        fontSize: 10,
+        color: 'var(--muted)',
+        lineHeight: 1.4,
+      }}>
+        <strong style={{ color: '#f59e0b' }}>⚠ Factor Droughts:</strong> Prêmios de valor e tamanho (AVGS) não são garantidos.
+        Períodos de 8–10 anos de underperformance vs SWRD são comuns. Não confundir com alpha garantido.
+      </div>
     </div>
   );
 }

@@ -9,6 +9,7 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 interface BtcIndicatorsData {
   ma200w?: { zone?: string };
   mvrv_zscore?: { current_value?: number; signal?: string };
+  correlation_90d?: number;
 }
 
 interface HODL11PositionPanelProps {
@@ -117,6 +118,21 @@ export default function HODL11PositionPanel({ hodl11 }: HODL11PositionPanelProps
             {label}
           </span>
         ))}
+      </div>
+
+      {/* BTC/SWRD 90-day rolling correlation */}
+      <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)', fontSize: 11, color: 'var(--muted)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>BTC/SWRD Correlação (90d)</span>
+          <span style={{ fontFamily: 'monospace', fontWeight: 600, color: btcData?.correlation_90d != null ? 'var(--text)' : 'var(--muted)' }}>
+            {btcData?.correlation_90d != null
+              ? `${(btcData.correlation_90d * 100).toFixed(0)}%`
+              : '—'}
+          </span>
+        </div>
+        <p style={{ margin: '4px 0 0', fontSize: 10, color: 'var(--muted)', fontStyle: 'italic' }}>
+          Diversificador quando {'<'} 40%; Risco sistêmico quando {'>'} 60%
+        </p>
       </div>
     </div>
   );

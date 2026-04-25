@@ -20,6 +20,31 @@
 
 ---
 
+## 🔍 Metodologia de Duration (Reconciliação)
+
+### Por que 43,6 anos em vez de 21,79 anos?
+
+**Macaulay Duration Simplificada (21,79 anos):**
+- Calcula o fluxo de caixa médio ponderado até a **maturidade nominal** (2065, 39 anos de agora)
+- Assume que a estratégia termina em 2065
+- Duration típica para títulos de prazo fixo
+
+**Full Product Duration (43,6 anos):**
+- Incorpora a **fase de anuidade** (2065–2104, 67 anos adicionais)
+- Renda+ oferece pagamentos perpétuos a partir de 2065
+- Duration ponderada reflete toda a vida econômica do fluxo de renda
+- Para um portfólio com horizonte para além de 2065 (ex: herança, patrimônio dinástico), 43,6 é mais apropriado
+
+### Impacto MtM (Mark-to-Market) da Duration
+
+Mudança de taxa de **+1pp** (ex: 7% → 8%):
+- Usando D=21,79y: **−20,4%** no valor da posição
+- Usando D=43,6y: **−37,0%** no valor da posição
+
+**Conclusão:** Os cenários C6/C7/C8 com r₁ ≥ 7,5% refletem o risco completo da duration estendida. O carrego de 41,8–220% em N=3–10 anos foi dimensionado para absorver este risco.
+
+---
+
 ## Fórmula de Precificação (MtM na venda)
 
 ```
