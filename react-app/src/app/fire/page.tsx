@@ -14,6 +14,7 @@ import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
 import { NetWorthProjectionChart } from '@/components/charts/NetWorthProjectionChart';
 import { GlidePathChart } from '@/components/charts/GlidePathChart';
 import { FireScenariosTable } from '@/components/fire/FireScenariosTable';
+import { SequenceOfReturnsRisk } from '@/components/fire/SequenceOfReturnsRisk';
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
@@ -675,10 +676,26 @@ export default function FirePage() {
         );
       })()}
 
+      {/* ── Cenários & Risco ───────────────────────────────────────────────── */}
+      <SectionDivider label="Cenários & Risco" />
+
+      {/* Sequence of Returns Risk — SoRR Narrative + P(FIRE) ↔ Guardrails */}
+      <CollapsibleSection
+        id="sequence-returns"
+        title={secTitle('fire', 'sequence-returns', 'Sequence of Returns — Risco e Guardrails')}
+        defaultOpen={secOpen('fire', 'sequence-returns', false)}
+      >
+        <SequenceOfReturnsRisk
+          pfire={(data as any)?.pfire_base ?? null}
+          premissas={(data as any)?.premissas ?? {}}
+          gastoPiso={(data as any)?.gasto_piso ?? 184000}
+          privacyMode={privacyMode}
+        />
+      </CollapsibleSection>
+
       {/* Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
       {(data as any)?.premissas?.tem_conjuge === true && (
         <>
-          <SectionDivider label="Cenários & Risco" />
           <CollapsibleSection id="section-surviving-spouse" title={secTitle('fire', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('fire', 'section-surviving-spouse')} icon={<Heart size={18} />}>
           <div style={{ padding: '0 16px 16px' }}>
             <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: 12 }}>

@@ -2,30 +2,46 @@
 /**
  * Post-build script for GitHub Pages deployment
  *
- * With page.tsx now rendering the dashboard at the root (/),
- * Next.js automatically generates index.html as the landing page.
- * No redirect needed - clean structure!
- *
- * This script ensures public assets (like data.json) are copied to the build output.
+ * 1. Moves build output from .dash (Turbopack-compatible) to ../dash
+ * 2. Copies public assets (data.json, etc.) to final output
  */
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
-// Copy public data files to dash output
-const publicDir = path.join(__dirname, '../public');
-const dashDir = path.join(__dirname, '../../dash');
+const projectRoot = path.join(__dirname, '..');
+const tempDash = path.join(projectRoot, '.dash');
+const finalDash = path.join(projectRoot, '..', 'dash');
+const publicDir = path.join(projectRoot, 'public');
 
+// 1. Move .dash to ../dash
+if (fs.existsSync(tempDash)) {
+  try {
+    // Remove old dash if exists
+    if (fs.existsSync(finalDash)) {
+      execSync(`rm -rf ${finalDash}`);
+    }
+    // Move temp to final
+    execSync(`mv ${tempDash} ${finalDash}`);
+    console.log('✅ Moved .dash → ../dash/');
+  } catch (err) {
+    console.error('❌ Failed to move .dash:', err.message);
+    process.exit(1);
+  }
+}
+
+// 2. Copy public assets to final output
 if (fs.existsSync(publicDir)) {
   const files = fs.readdirSync(publicDir);
   files.forEach(file => {
     if (file.endsWith('.json') || file.endsWith('.svg') || file.endsWith('.txt')) {
       const src = path.join(publicDir, file);
-      const dest = path.join(dashDir, file);
+      const dest = path.join(finalDash, file);
       fs.copyFileSync(src, dest);
       console.log(`✅ Copied ${file}`);
     }
   });
 }
 
-console.log('✅ Post-build: Dashboard files ready in /dash/');
+console.log('✅ Post-build: Dashboard ready in /dash/');

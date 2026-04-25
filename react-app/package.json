@@ -1,12 +1,12 @@
 {
   "name": "react-app",
-  "version": "1.2.29",
+  "version": "1.2.30",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "sync-data": "echo '✅ data.json: single source of truth in public/ (dashboard/data.json is a symlink)'",
-    "build": "npm run sync-data && node scripts/increment-version.js && npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
-    "build:no-test": "npm run sync-data && node scripts/increment-version.js && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
+    "build": "PUPPETEER_SKIP_DOWNLOAD=true CYPRESS_INSTALL_BINARY=0 npm run sync-data && node scripts/increment-version.js && npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
+    "build:no-test": "PUPPETEER_SKIP_DOWNLOAD=true CYPRESS_INSTALL_BINARY=0 npm run sync-data && node scripts/increment-version.js && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",

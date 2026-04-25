@@ -1,10 +1,8 @@
-import type { NextConfig } from "next";
-
 const basePath = '/wealth';
 
-const nextConfig: NextConfig = {
+module.exports = {
   output: process.env.NODE_ENV === 'development' ? undefined : 'export',
-  distDir: process.env.NODE_ENV === 'development' ? undefined : '../dash',
+  distDir: process.env.NODE_ENV === 'development' ? undefined : '.dash',
   basePath,
   images: {
     unoptimized: process.env.NODE_ENV !== 'development',
@@ -16,5 +14,3 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
 };
-
-export default nextConfig;
