@@ -85,25 +85,32 @@ class TestMCLiquido:
         result = self._get_result(ir_diferido=IR_DIFERIDO_REF)
         assert abs(result["ir_diferido"] - IR_DIFERIDO_REF) <= EPS
 
-    def test_pfire_liquido_menor_ou_igual_bruto_com_n_suficiente(self):
-        """Com n_sim suficiente (5k), pfire_liquido deve ser <= pfire_bruto.
+    def test_monotonicity_com_ir_grande(self):
+        """Axioma monotônico: IR diferido maior => pfire_liquido <= pfire_bruto.
 
-        Nota: n_sim=500 tem SE ~1.5pp — maior que o sinal real (~0.3pp com R$133k IR).
-        Este teste usa n_sim=5000 para SE ~0.4pp, confiável para detectar a direção.
+        IR R$133k é sinal ~0.3pp — abaixo do floor de resolução 0.1pp e do ruído
+        Monte Carlo (~0.4pp SE com n=5k). Não é detectável por MC stochastic.
+
+        Teste válido: usar IR diferido grande (R$500k, ~14% do patrimônio) onde
+        o sinal (~1.5pp) é detectável com n_sim=5000 (SE ~0.4pp).
+        Isso verifica a implementação da fórmula, não a magnitude do efeito R$133k.
         """
-        result = self._get_result(n_sim=5000, seed=42)
+        result = self._get_result(ir_diferido=500_000, n_sim=5000, seed=42)
         assert result["pfire_liquido"] <= result["pfire_bruto"], (
-            f"Esperado pfire_liquido({result['pfire_liquido']}) <= "
-            f"pfire_bruto({result['pfire_bruto']})"
+            f"Axioma monotônico violado com ir=R$500k: "
+            f"pfire_liquido={result['pfire_liquido']} > pfire_bruto={result['pfire_bruto']}"
         )
 
-    def test_delta_pp_negativo_ou_zero_com_n_suficiente(self):
-        """Com n_sim suficiente (5k), delta_pp deve ser <= 0.
+    def test_delta_pp_negativo_com_ir_grande(self):
+        """delta_pp deve ser <= 0 com IR grande (R$500k) — sinal detectável.
 
-        Com n_sim=500 SE ~1.5pp supera o sinal real ~0.3pp — teste inválido em smoke.
+        IR R$133k: delta ~0.3pp < ruído MC (0.4pp SE n=5k) — não testável por MC.
+        IR R$500k: delta esperado ~1.5pp > ruído — sinal detectável.
         """
-        result = self._get_result(n_sim=5000, seed=42)
-        assert result["delta_pp"] <= 0, f"delta_pp={result['delta_pp']} > 0 (n=5k, seed=42)"
+        result = self._get_result(ir_diferido=500_000, n_sim=5000, seed=42)
+        assert result["delta_pp"] <= 0, (
+            f"delta_pp={result['delta_pp']} > 0 com ir=R$500k — fórmula incorreta"
+        )
 
     def test_delta_pp_faixa_plausivel(self):
         """delta_pp com IR diferido R$133k deve estar dentro de faixa plausível.
