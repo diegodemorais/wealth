@@ -201,8 +201,6 @@ export default function HomePage() {
         hodl11Brl={(data as Record<string, any>)?.hodl11?.valor ?? 0}
         rfBrl={d.rfBrl ?? 0}
         exposicaoCambialPct={(data as Record<string, any>)?.macro?.exposicao_cambial_pct ?? 87.9}
-        patrimonioAtual={(data as Record<string, any>)?.premissas?.patrimonio_atual ?? d.networth}
-        equityPctUsd={((data as Record<string, any>)?.macro?.exposicao_cambial_pct ?? 87.9) / 100}
       />
 
       {/* ── CAMADA 3: Evolução e Contexto ── */}

@@ -13,6 +13,7 @@ import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
 import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
+import BRLPurchasingPowerTimeline from '@/components/dashboard/BRLPurchasingPowerTimeline';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
 import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
@@ -319,7 +320,7 @@ export default function PortfolioPage() {
           <CollapsibleSection
             id="section-lotes-ibkr"
             title="Lotes IBKR — FIFO Individual (213 lotes)"
-            defaultOpen={false}
+            defaultOpen={secOpen('portfolio', 'section-lotes-ibkr', false)}
           >
             <div style={{ padding: '0 16px 16px' }}>
               <LotesTable
@@ -368,6 +369,34 @@ export default function PortfolioPage() {
           </div>
         </CollapsibleSection>
       )}
+
+      {/* 8b. Sensibilidade Cambial — movido de Decisão do Mês (contexto de risco, não de aporte) */}
+      {(() => {
+        const cambio = data?.mercado?.cambio_brl_usd ?? null;
+        const exposicaoCambialPct = (data as any)?.macro?.exposicao_cambial_pct ?? 87.9;
+        const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? null;
+        const equityPctUsd = exposicaoCambialPct / 100;
+        if (cambio == null || patrimonioAtual == null) return null;
+        return (
+          <CollapsibleSection
+            id="section-brl-fx-portfolio"
+            title={secTitle('portfolio', 'brl-fx', 'Sensibilidade Cambial — Equity USD em BRL')}
+            defaultOpen={secOpen('portfolio', 'brl-fx', false)}
+            icon="💱"
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <BRLPurchasingPowerTimeline
+                cambio={cambio}
+                equityPctUsd={equityPctUsd}
+                patrimonioAtual={patrimonioAtual}
+              />
+              <div className="text-xs text-muted mt-2">
+                Projeção do valor da equity em BRL sob diferentes cenários cambiais. Retorno USD nominal: 7% a.a.
+              </div>
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
 
       {/* 8e. Real Yield Gauge — rendimento real líquido de IR das NTN-Bs (defaultOpen=true) */}
       {data?.rf && (

@@ -2,14 +2,11 @@
 
 import { useUiStore } from '@/store/uiStore';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { SimpleProgressBar } from '@/components/primitives/SimpleProgressBar';
 import { CheckCircle } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { getStatusStyle } from '@/utils/statusStyles';
 import { DcaItem } from '@/types/dashboard';
-import BRLPurchasingPowerTimeline from './BRLPurchasingPowerTimeline';
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface AporteEtf {
@@ -42,8 +39,6 @@ export interface DecisaoDoMesProps {
   hodl11Brl?: number | null;
   rfBrl?: number | null;
   exposicaoCambialPct?: number;
-  patrimonioAtual?: number | null;
-  equityPctUsd?: number | null;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -113,8 +108,6 @@ export default function DecisaoDoMes({
   hodl11Brl,
   rfBrl,
   exposicaoCambialPct = 87.9,
-  patrimonioAtual,
-  equityPctUsd,
 }: DecisaoDoMesProps) {
   const { privacyMode } = useUiStore();
   const data = useDashboardStore(s => s.data);
@@ -420,28 +413,6 @@ export default function DecisaoDoMes({
           </>
         )}
 
-        {/* Collapsible: Sensibilidade Cambial */}
-        {patrimonioAtual != null && equityPctUsd != null && cambio != null && (
-          <div className="mt-3">
-            <CollapsibleSection
-              id="section-brl-fx-decisao"
-              title="Sensibilidade Cambial — Equity USD em BRL"
-              defaultOpen={false}
-              icon="💱"
-            >
-              <div style={{ padding: '0 16px 16px' }}>
-                <BRLPurchasingPowerTimeline
-                  cambio={cambio}
-                  equityPctUsd={equityPctUsd}
-                  patrimonioAtual={patrimonioAtual}
-                />
-                <div className="text-xs text-muted mt-2">
-                  Projeção do valor da equity em BRL sob diferentes cenários cambiais. Retorno USD nominal: 7% a.a.
-                </div>
-              </div>
-            </CollapsibleSection>
-          </div>
-        )}
       </div>
 
       {/* ── Strip de Execução (fora do card) ── */}
