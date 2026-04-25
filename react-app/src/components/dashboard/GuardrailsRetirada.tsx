@@ -1,5 +1,7 @@
 "use client"
 
+import { fmtPrivacy } from '@/utils/privacyTransform';
+
 interface Guardrail {
   id: string
   guardrail: string

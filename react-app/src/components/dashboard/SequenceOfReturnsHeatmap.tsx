@@ -1,5 +1,7 @@
 'use client';
 
+import { fmtPrivacy } from '@/utils/privacyTransform';
+
 export interface SequenceOfReturnsHeatmapProps {
   /** Array of 'YYYY-MM' date strings from fire_trilha */
   dates: string[];

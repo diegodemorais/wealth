@@ -1,7 +1,9 @@
 'use client';
 
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import React from 'react';
 import { CheckCircle, AlertTriangle, AlertCircle } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import { useUiStore } from '@/store/uiStore';
 
 interface DriftItem {
