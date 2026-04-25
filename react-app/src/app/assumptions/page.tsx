@@ -834,6 +834,95 @@ export default function AssumptionsPage() {
         </div>
       </CollapsibleSection>
 
+      {/* Dashboard Updates / Changelog */}
+      <CollapsibleSection
+        id="dashboard-updates"
+        title={secTitle('assumptions', 'dashboard-updates', '📊 Dashboard Updates')}
+        defaultOpen={secOpen('assumptions', 'dashboard-updates')}
+      >
+        <div style={{ padding: '12px 0' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 12 }}>
+            <strong>2026-04-25:</strong> 6 High-Priority Consistency Fixes (Health Score 6.5/10 → 7.5/10)
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Fix</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Component</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>TER Correction</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <a href="https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/performance/page.tsx#L610"
+                     target="_blank" rel="noopener noreferrer"
+                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+                    performance/page.tsx:610-611 ↗
+                  </a>
+                </td>
+                <td style={{ padding: '8px 6px' }}>AVGS 0.25%→0.39%, AVEM 0.18%→0.35%</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>pctAlvo Dynamic</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <a href="https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/page.tsx#L95"
+                     target="_blank" rel="noopener noreferrer"
+                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+                    page.tsx:95,106 ↗
+                  </a>
+                </td>
+                <td style={{ padding: '8px 6px' }}>Hardcoded 8%/7% → dynamic 12%/3%</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>CAUTELA Style</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <a href="https://github.com/diegodemorais/wealth/blob/main/react-app/src/components/dashboard/GuardrailsRetirada.tsx#L8"
+                     target="_blank" rel="noopener noreferrer"
+                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+                    GuardrailsRetirada.tsx:8,19 ↗
+                  </a>
+                </td>
+                <td style={{ padding: '8px 6px' }}>Added yellow styling (yellow border/bg)</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Renda+ Taxa</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <a href="https://github.com/diegodemorais/wealth/blob/main/scripts/generate_data.py#L1437"
+                     target="_blank" rel="noopener noreferrer"
+                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+                    generate_data.py:1437 ↗
+                  </a>
+                </td>
+                <td style={{ padding: '8px 6px' }}>Use mercado_mtd as primary source</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Alpha Drought</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <a href="https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/performance/page.tsx#L254"
+                     target="_blank" rel="noopener noreferrer"
+                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+                    performance/page.tsx:254+ ↗
+                  </a>
+                </td>
+                <td style={{ padding: '8px 6px' }}>⚠️ Factor drought caveat added</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>FIRE Trigger</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--green)' }}>
+                  ✓ Verified
+                </td>
+                <td style={{ padding: '8px 6px' }}>Drawdown-based (no P(FIRE) conflict)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--border)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+            <strong>Commit:</strong> <code>ef68818b</code> · <strong>Branch:</strong> main
+          </div>
+        </div>
+      </CollapsibleSection>
+
       {/* Footer */}
       <p style={{ marginTop: 10, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
         Fonte: <code>carteira_params.json</code> · Para alterar: <code>carteira.md</code> → <code>parse_carteira.py</code> → <code>generate_data.py</code>
