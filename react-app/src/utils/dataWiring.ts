@@ -113,7 +113,9 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
   const cryptoLegado = data.cryptoLegado ?? 3000;
   const cryptoBrl = (data.hodl11?.valor ?? 0) + cryptoLegado;
-  const totalBrl = totalEquityUsd * CAMBIO + rfBrl + cryptoBrl;
+  // QUANT-004: Include COE (Capital de Próprio) for complete patrimônio
+  const coeBrl = data.coe_net_brl ?? 0;
+  const totalBrl = totalEquityUsd * CAMBIO + rfBrl + cryptoBrl + coeBrl;
 
   // IPCA total
   const ipcaTotalBrl =
@@ -513,7 +515,10 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
   // Estimate accumulated values (simplified — actual implementation would parse minilog)
   const acumuladoMes = ultimoAporte * (ultimoAporteData.includes(today.toISOString().substring(0, 7)) ? 1 : 0) || aporteMensal;
-  const acumuladoAno = data.aporte_mensal?.total_aporte_brl ?? aporteMensal * 12; // Approximate
+  // QUANT-008: Use actual YTD from premissas_vs_realizado instead of field that doesn't exist
+  const anoAtual = today.getFullYear();
+  const acumuladoAnoYtd = (data as any)?.premissas_vs_realizado?.aporte_mensal?.por_ano_brl?.[anoAtual];
+  const acumuladoAno = acumuladoAnoYtd ?? aporteMensal * 12; // Fallback to annual target if YTD not available
 
   // Compute top wellness actions from wellness_config
   const topAcoes = (() => {

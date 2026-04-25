@@ -159,7 +159,9 @@ export default function HomePage() {
         {/* TWR CAGR Real BRL — igual ao card do /performance: chip de delta + progress + sub com metodologia */}
         {(() => {
           const twrReal: number | null = (data as any)?.retornos_mensais?.twr_real_brl_pct ?? null;
-          const premissa: number = (data as any)?.premissas_vs_realizado?.retorno_equity?.premissa_real_brl_pct ?? 4.5;
+          // QUANT-005: fallback should use correct premissa (4.85%, not 4.5%)
+          const premissaFallback = ((data as any)?.premissas?.retorno_equity_base ?? 0.0485) * 100;
+          const premissa: number = (data as any)?.premissas_vs_realizado?.retorno_equity?.premissa_real_brl_pct ?? premissaFallback;
           const periodoAnos: number | null = (data as any)?.retornos_mensais?.periodo_anos ?? null;
           const accent = twrReal == null ? 'var(--muted)'
             : twrReal >= 4.5 ? 'var(--green)'
@@ -271,8 +273,9 @@ export default function HomePage() {
             const pfireBaseVal = d.pfireBase;
             const aporteMensalVal = data.premissas?.aporte_mensal ?? 0;
             const custoVidaBase = data.premissas?.custo_vida_base ?? 0;
-            const custoMensal = custoVidaBase / 12;
-            const savingsRate = aporteMensalVal > 0 ? (aporteMensalVal / (aporteMensalVal + custoMensal)) * 100 : 0;
+            const rendaMensalLiquida = data.premissas?.renda_mensal_liquida ?? (data.premissas?.renda_estimada ?? 0);
+            // QUANT-003: Savings rate = aporte / renda (not aporte / (aporte+custo))
+            const savingsRate = rendaMensalLiquida > 0 ? (aporteMensalVal / rendaMensalLiquida) * 100 : 0;
             const maxDriftVal = maxDriftPp(data?.drift as Record<string, any> ?? {}, ['Custo']);
             const ipcaGapPp = data.dca_status?.ipca_longo?.gap_alvo_pp ?? null;
             const dcaAtivo = data.dca_status?.ipca_longo?.ativo ?? false;
@@ -477,21 +480,19 @@ export default function HomePage() {
             const posicoes = (data as any)?.posicoes ?? {};
             const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 1;
             const pesosTarget = (data as any)?.pesosTarget ?? {};
-            const cambio = d.CAMBIO ?? 5.15;
-            const bucketPct = (bucketName: string) => {
-              const total = Object.values(posicoes as Record<string, any>)
-                .filter((pos: any) => pos?.bucket === bucketName && pos?.qty && pos?.price)
-                .reduce((sum: number, pos: any) => sum + pos.qty * pos.price * cambio, 0);
-              return patrimonioAtual > 0 ? (total / patrimonioAtual) * 100 : 0;
-            };
+            const drift = (data as any)?.drift ?? {};
+            // QUANT-007: Use centralized drift data instead of recalculating
+            const swrdCurrent = drift.SWRD?.atual ?? 0;
+            const avgsCurrent = drift.AVGS?.atual ?? 0;
+            const avemCurrent = drift.AVEM?.atual ?? 0;
             return (
               <RebalancingStatus
                 swrdTarget={(pesosTarget.SWRD ?? 0.50) * 100}
-                swrdCurrent={bucketPct('SWRD')}
+                swrdCurrent={swrdCurrent}
                 avgsTarget={(pesosTarget.AVGS ?? 0.30) * 100}
-                avgsCurrent={bucketPct('AVGS')}
+                avgsCurrent={avgsCurrent}
                 avemTarget={(pesosTarget.AVEM ?? 0.20) * 100}
-                avemCurrent={bucketPct('AVEM')}
+                avemCurrent={avemCurrent}
                 ipcaTarget={15}
                 ipcaCurrent={patrimonioAtual > 0 ? (((data as any)?.rf?.ipca2040?.valor ?? (data as any)?.rf?.ipca2040?.valor_brl ?? 0) + ((data as any)?.rf?.ipca2050?.valor ?? (data as any)?.rf?.ipca2050?.valor_brl ?? 0)) / patrimonioAtual * 100 : 0}
                 hodl11Target={3}

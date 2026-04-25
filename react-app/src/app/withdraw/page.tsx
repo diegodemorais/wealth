@@ -329,14 +329,9 @@ export default function WithdrawPage() {
     p90: swrPercentis.p90_patrimonio != null ? activeScenarioCfg.custo_vida_base / swrPercentis.p90_patrimonio : null,
   } : undefined;
 
-  // P(FIRE) por perfil — de fire_matrix.by_profile (mesmo MC run, sem precisar reprocessar)
-  const byProfile = (data as any)?.fire_matrix?.by_profile ?? [];
-  const pfireByProfile: Record<ScenarioKey, number | null> = {
-    atual:  byProfile.find((p: any) => p.profile === 'atual')?.p_fire_53  ?? (data as any)?.spending_guardrails?.pfire_atual ?? null,
-    casado: byProfile.find((p: any) => p.profile === 'casado')?.p_fire_53 ?? null,
-    filho:  byProfile.find((p: any) => p.profile === 'filho')?.p_fire_53  ?? null,
-  };
-  const pfireAtual: number | null = pfireByProfile[withdrawScenario as ScenarioKey] ?? pfireByProfile.atual;
+  // P(FIRE) base — fonte única (pfire_base.base) para evitar divergência
+  // Centralizado em pfire_base.base (86.4%) gerado por fire_montecarlo.py
+  const pfireBase = (data as any)?.pfire_base?.base ?? 0;
 
   return (
     <div>
@@ -458,7 +453,8 @@ export default function WithdrawPage() {
           {(() => {
             const sg = safeData.spending_guardrails ?? (safeData as any).fire?.spending_guardrails;
             if (!sg) return null;
-            const pfire = pfireAtual ?? sg.pfire_atual ?? 0;
+            // Usar fonte única: pfire_base.base (centralizado, sem divergência)
+            const pfire = pfireBase ?? 0;
             const zona = sg.zona ?? 'verde';
             const zonaColor = zona === 'verde' ? 'var(--green)' : zona === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
             const statusLabel = zona === 'verde' ? 'No caminho certo' : zona === 'amarelo' ? 'Atenção' : 'Zona de risco';

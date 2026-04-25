@@ -1,14 +1,14 @@
 {
-  "_generated": "2026-04-23T19:19:52",
-  "_generated_brt": "2026-04-23T16:19:52-03:00",
-  "date": "2026-04-23",
+  "_generated": "2026-04-25T11:11:33",
+  "_generated_brt": "2026-04-25T08:11:33-03:00",
+  "date": "2026-04-25",
   "timestamps": {
     "posicoes_ibkr": "2026-04-23",
-    "precos_yfinance": "2026-04-23",
+    "precos_yfinance": null,
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-23",
     "fire_mc": "2026-04-23",
-    "geral": "2026-04-23"
+    "geral": "2026-04-25"
   },
   "cambio": 5.156,
   "posicoes": {
@@ -154,9 +154,54 @@
     "ultimo_aporte_brl": 78194,
     "ultimo_aporte_data": "2026-04"
   },
-  "guardrails": [],
+  "guardrails": [
+    {
+      "ddMin": 0.0,
+      "ddMax": 0.15,
+      "corte": 0.0,
+      "retirada": 250000,
+      "desc": "Normal — sem corte"
+    },
+    {
+      "ddMin": 0.15,
+      "ddMax": 0.25,
+      "corte": 0.1,
+      "retirada": 225000,
+      "desc": "Corte 10%"
+    },
+    {
+      "ddMin": 0.25,
+      "ddMax": 0.35,
+      "corte": 0.2,
+      "retirada": 200000,
+      "desc": "Corte 20%"
+    },
+    {
+      "ddMin": 0.35,
+      "ddMax": 1.0,
+      "corte": 0.28,
+      "retirada": 180000,
+      "desc": "Piso"
+    }
+  ],
   "gasto_piso": 180000,
-  "spendingSmile": {},
+  "spendingSmile": {
+    "go_go": {
+      "gasto": 242000,
+      "inicio": 0,
+      "fim": 15
+    },
+    "slow_go": {
+      "gasto": 200000,
+      "inicio": 15,
+      "fim": 30
+    },
+    "no_go": {
+      "gasto": 187000,
+      "inicio": 30,
+      "fim": 99
+    }
+  },
   "spendingSensibilidade": [
     {
       "label": "R$250k",
@@ -356,10 +401,165 @@
     },
     "nota_scenarios_pat": "Pat. mediano no FIRE Day (base): R$11.53M (@53) / R$10.16M (@49). Fonte: fire_montecarlo.py MC 10k sims."
   },
-  "trilha_p10": [],
-  "trilha_p50": [],
-  "trilha_p90": [],
-  "trilha_datas": [],
+  "trilha_p10": [
+    7245052.800457527,
+    7078018.588915402,
+    6894679.357997196,
+    6758811.436847916,
+    6634735.686024491,
+    6481400.901788577,
+    6273389.688820661,
+    6175088.333575885,
+    5906240.202489746,
+    5672609.093937319,
+    5375457.780837719,
+    5090796.385817568,
+    4781253.893838611,
+    4590482.796104938,
+    4352547.319545434,
+    4049398.01950377,
+    3839844.5288583995,
+    3647546.795125834,
+    3401091.75307959,
+    3177431.276974234,
+    2978775.1311839824,
+    2701056.4721149607,
+    2498095.864154929,
+    2248797.763889561,
+    1998462.9543874606,
+    1796505.0619975012,
+    1539561.2800427899,
+    1253808.705809014,
+    1032628.399845557,
+    749489.4974607573,
+    472732.3841224281,
+    302678.11045818875,
+    74453.81153609203,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "trilha_p50": [
+    11873544.430046283,
+    12028148.80564575,
+    12245933.983274698,
+    12418013.17290743,
+    12719858.550784834,
+    12958675.157454006,
+    13215542.54517563,
+    13429319.230111416,
+    13407768.700547334,
+    13386941.604010684,
+    13437153.142027147,
+    13455081.22829315,
+    13458962.57058829,
+    13467116.39791318,
+    13464928.102881137,
+    13446246.00817597,
+    13415938.191214139,
+    13408980.53741194,
+    13364546.082617428,
+    13263342.45942303,
+    13329525.128916424,
+    13255385.390493002,
+    13318496.739335317,
+    13248133.234235678,
+    13211135.062028244,
+    13127299.305803388,
+    13017386.328153018,
+    12939055.377565473,
+    12824193.379579285,
+    12857151.317308899,
+    12664020.245055646,
+    12679126.33194143,
+    12673682.269166991,
+    12786217.828883136,
+    12752483.22549186,
+    12725003.641447857,
+    12764884.559376897,
+    12718690.208534986
+  ],
+  "trilha_p90": [
+    18705767.341753755,
+    19693118.756970122,
+    20777064.946770176,
+    21908822.856495686,
+    23002829.56259336,
+    24320135.96200031,
+    25255733.5162912,
+    26874107.5378077,
+    28057191.416314676,
+    28678705.809070006,
+    29624291.84604863,
+    30830102.590922933,
+    31553601.08397605,
+    32594113.58358155,
+    33641579.39688598,
+    34706128.90335318,
+    35561738.64410462,
+    36877438.579861425,
+    38084593.96230762,
+    38974011.49978562,
+    40272964.84901455,
+    41450378.332139194,
+    42548674.97323419,
+    44000183.983429246,
+    45404094.44982906,
+    46824213.993998624,
+    48026137.81931568,
+    49402651.68161221,
+    50907662.25360387,
+    51920444.88656564,
+    53432205.1308513,
+    54915279.439438395,
+    57173103.81637335,
+    58444360.2576554,
+    59296055.93906107,
+    60614389.164065205,
+    62913118.08182002,
+    64428819.517007545
+  ],
+  "trilha_datas": [
+    "2038",
+    "2039",
+    "2040",
+    "2041",
+    "2042",
+    "2043",
+    "2044",
+    "2045",
+    "2046",
+    "2047",
+    "2048",
+    "2049",
+    "2050",
+    "2051",
+    "2052",
+    "2053",
+    "2054",
+    "2055",
+    "2056",
+    "2057",
+    "2058",
+    "2059",
+    "2060",
+    "2061",
+    "2062",
+    "2063",
+    "2064",
+    "2065",
+    "2066",
+    "2067",
+    "2068",
+    "2069",
+    "2070",
+    "2071",
+    "2072",
+    "2073",
+    "2074"
+  ],
   "timeline": {
     "labels": [
       "2021-04",
@@ -2774,24 +2974,43 @@
   ],
   "guardrails_retirada": [
     {
-      "id": "guardrail_high",
-      "guardrail": "High Guardrail",
-      "condicao": "P(FIRE) ≥ 95%",
-      "acao": "Acelere retirada (2.5% real mínimo)",
+      "id": "guardrail_expansivo",
+      "guardrail": "Expansivo — Upside",
+      "condicao": "Portfolio +25% acima do pico real",
+      "retirada_sugerida": 275000,
+      "acao": "Aumentar retirada 10% permanente vs base (teto R$350k)",
       "prioridade": "EXPANSIVO"
     },
     {
       "id": "guardrail_normal",
-      "guardrail": "Normal Guardrail",
-      "condicao": "80% ≤ P(FIRE) < 95%",
-      "acao": "Mantenha SWR base (3.0%)",
+      "guardrail": "Normal",
+      "condicao": "Drawdown 0-15%",
+      "retirada_sugerida": 250000,
+      "acao": "Sem ajuste — manter retirada base",
       "prioridade": "MANTÉM"
     },
     {
-      "id": "guardrail_low",
-      "guardrail": "Low Guardrail",
-      "condicao": "P(FIRE) < 80%",
-      "acao": "Reduza gastos 10% ou pausar retirada",
+      "id": "guardrail_cautela_1",
+      "guardrail": "Cautela 1",
+      "condicao": "Drawdown 15-25%",
+      "retirada_sugerida": 225000,
+      "acao": "Corte 10% vs base",
+      "prioridade": "CAUTELA"
+    },
+    {
+      "id": "guardrail_cautela_2",
+      "guardrail": "Cautela 2",
+      "condicao": "Drawdown 25-35%",
+      "retirada_sugerida": 200000,
+      "acao": "Corte 20% vs base",
+      "prioridade": "CAUTELA"
+    },
+    {
+      "id": "guardrail_defesa",
+      "guardrail": "Defesa — Piso Essencial",
+      "condicao": "Drawdown >35%",
+      "retirada_sugerida": 180000,
+      "acao": "Piso essencial (moradia + saúde + alimentação); avaliar renda part-time",
       "prioridade": "DEFESA"
     }
   ],
@@ -7880,7 +8099,7 @@
     "pct_retorno": 35.7,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
-    "updated": "2026-04-23"
+    "updated": "2026-04-25"
   },
   "shadows": {
     "q1_2026": {
@@ -7931,7 +8150,7 @@
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
     "fonte": "yfinance BTC-USD + PTAX BCB",
-    "updated": "2026-04-23"
+    "updated": "2026-04-25"
   },
   "minilog": [
     {
@@ -8554,9 +8773,9 @@
     "pfire_atual": 90.4,
     "spending_atual": 250000,
     "upper_guardrail_spending": 275000,
-    "safe_target_spending": 250000,
-    "lower_guardrail_spending": 250000,
-    "nota": "P(FIRE@53) = 90.4% com spending atual R$250k/ano. Teto de expansão R$275k (+10%) — ativado quando P(FIRE) sustentado acima de 90%. Safe target R$250k (−10%). Piso de emergência R$250k (−20%)."
+    "safe_target_spending": 225000,
+    "lower_guardrail_spending": 200000,
+    "nota": "P(FIRE@53) = 90.4% com spending atual R$250k/ano. Teto de expansão R$275k (+10%) — ativado quando P(FIRE) sustentado acima de 90%. Safe target R$225k (−10%). Piso de emergência R$200k (−20%)."
   },
   "spending_breakdown": {
     "periodo": "2025-08 a 2026-03",
@@ -8628,7 +8847,7 @@
         "total": 22050
       }
     ],
-    "updated_at": "2026-04-23",
+    "updated_at": "2026-04-25",
     "fonte": "All-Accounts_03abril26.csv"
   },
   "head_relay": {
