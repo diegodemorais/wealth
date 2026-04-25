@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { usePageData } from '@/hooks/usePageData';
 import { useUiStore } from '@/store/uiStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
@@ -856,64 +858,62 @@ export default function AssumptionsPage() {
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '8px 6px', fontWeight: 600 }}>TER Correction</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <a href="https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/performance/page.tsx#L610"
-                     target="_blank" rel="noopener noreferrer"
-                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-                    performance/page.tsx:610-611 ↗
-                  </a>
+                  <Link href="/performance#section-fee-analysis"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Fee Analysis ↗
+                  </Link>
                 </td>
-                <td style={{ padding: '8px 6px' }}>AVGS 0.25%→0.39%, AVEM 0.18%→0.35%</td>
+                <td style={{ padding: '8px 6px' }}>AVGS 0.25%→0.39%, AVEM 0.18%→0.35%, added HODL11 0.20%</td>
               </tr>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '8px 6px', fontWeight: 600 }}>pctAlvo Dynamic</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <a href="https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/page.tsx#L95"
-                     target="_blank" rel="noopener noreferrer"
-                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-                    page.tsx:95,106 ↗
-                  </a>
+                  <Link href="/"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    RF Status (Home) ↗
+                  </Link>
                 </td>
-                <td style={{ padding: '8px 6px' }}>Hardcoded 8%/7% → dynamic 12%/3%</td>
+                <td style={{ padding: '8px 6px' }}>Hardcoded 8%/7% → dynamic from DCA status</td>
               </tr>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '8px 6px', fontWeight: 600 }}>CAUTELA Style</td>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>CAUTELA Status</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <a href="https://github.com/diegodemorais/wealth/blob/main/react-app/src/components/dashboard/GuardrailsRetirada.tsx#L8"
-                     target="_blank" rel="noopener noreferrer"
-                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-                    GuardrailsRetirada.tsx:8,19 ↗
-                  </a>
+                  <Link href="/withdraw#section-guardrails-table"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Withdrawal Guardrails ↗
+                  </Link>
                 </td>
-                <td style={{ padding: '8px 6px' }}>Added yellow styling (yellow border/bg)</td>
+                <td style={{ padding: '8px 6px' }}>Added yellow (CAUTELA) priority level</td>
               </tr>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '8px 6px', fontWeight: 600 }}>Renda+ Taxa</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <a href="https://github.com/diegodemorais/wealth/blob/main/scripts/generate_data.py#L1437"
-                     target="_blank" rel="noopener noreferrer"
-                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-                    generate_data.py:1437 ↗
-                  </a>
+                  <Link href="/portfolio#section-rf-status"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    RF Status ↗
+                  </Link>
                 </td>
-                <td style={{ padding: '8px 6px' }}>Use mercado_mtd as primary source</td>
+                <td style={{ padding: '8px 6px' }}>Use mercado_mtd as primary rate source</td>
               </tr>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '8px 6px', fontWeight: 600 }}>Alpha Drought</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <a href="https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/performance/page.tsx#L254"
-                     target="_blank" rel="noopener noreferrer"
-                     style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-                    performance/page.tsx:254+ ↗
-                  </a>
+                  <Link href="/performance#section-expected-return-waterfall"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Factor Waterfall ↗
+                  </Link>
                 </td>
                 <td style={{ padding: '8px 6px' }}>⚠️ Factor drought caveat added</td>
               </tr>
               <tr>
                 <td style={{ padding: '8px 6px', fontWeight: 600 }}>FIRE Trigger</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--green)' }}>
-                  ✓ Verified
+                  <Link href="/withdraw#section-guardrails-table"
+                        style={{ color: 'var(--green)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Withdrawal Guardrails ↗
+                  </Link>
                 </td>
-                <td style={{ padding: '8px 6px' }}>Drawdown-based (no P(FIRE) conflict)</td>
+                <td style={{ padding: '8px 6px' }}>✓ Drawdown-based (no P(FIRE) conflict)</td>
               </tr>
             </tbody>
           </table>
