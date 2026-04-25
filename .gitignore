@@ -2,8 +2,12 @@
 *.lock
 
 # Python
-scripts/__pycache__/
-analysis/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
 
 # Imagens geradas por scripts
 analysis/backtest_output/*.png
