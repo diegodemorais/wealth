@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { KpiHero } from '@/components/primitives/KpiHero';
-import AporteDecisionPanel from '@/components/dashboard/AporteDecisionPanel';
-import AporteDoMes from '@/components/dashboard/AporteDoMes';
+import DecisaoDoMes from '@/components/dashboard/DecisaoDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
 import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
@@ -17,7 +16,6 @@ import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
 import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
 import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
-import MacroUnificado from '@/components/dashboard/MacroUnificado';
 import RFStatusPanel from '@/components/dashboard/RFStatusPanel';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Trophy, Target, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
@@ -50,7 +48,7 @@ export default function HomePage() {
   // pageStateElement guarantees derived is non-null past this point
   const d = derived!;
 
-  // Aporte ETFs for AporteDecisionPanel
+  // Aporte ETFs for DecisaoDoMes
   // retornos_por_etf schema: { SWRD: { retorno_usd_real: 0.037, fonte: '...' }, ... } (decimal, não %)
   const retornos = (data as any)?.premissas?.retornos_por_etf ?? {};
   const erPct = (ticker: string, fallback: number): number => {
@@ -69,10 +67,6 @@ export default function HomePage() {
 
   // Compute max drift
   const maxDrift = maxDriftPp(data?.drift as Record<string, any> ?? {});
-
-  // Get IPCA and Renda+ semaforo taxa from rf
-  const ipcaTaxa = data?.rf?.ipca2040?.taxa ?? null;
-  const rendaTaxa = data?.rf?.renda2065?.taxa ?? null;
 
   // Build RF Status rows (consolidated from IpcaTaxaProgress + DCA Status)
   const rfRows = (() => {
@@ -189,47 +183,26 @@ export default function HomePage() {
       {/* ── CAMADA 2: Decisão do Mês ── */}
       <SectionDivider label="Decisão do Mês" />
 
-      {/* Próximo Aporte — Equity & Gatilhos RF (decisão mais imediata) */}
-      {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
-        <div style={{ marginBottom: 14 }}>
-          <AporteDecisionPanel
-            etfs={aporteEtfs}
-            dcaItems={d.dcaItems}
-          />
-        </div>
-      )}
-
-      {/* Aporte do Mês — contexto do aporte */}
-      {d && (
-        <div style={{ marginBottom: 14 }}>
-          <AporteDoMes
-            aporteMensal={d.aporteMensal}
-            ultimoAporte={d.ultimoAporte}
-            ultimoAporteData={d.ultimoAporteData}
-            acumuladoMes={d.acumuladoMes}
-            acumuladoAno={d.acumuladoAno}
-          />
-        </div>
-      )}
-
-      {/* Macro — contexto de suporte à decisão */}
-      <MacroUnificado
-        selic={(data as any)?.macro?.selic_meta ?? null}
-        ipca12m={(data as any)?.macro?.ipca_12m ?? null}
-        fedFunds={(data as any)?.macro?.fed_funds ?? null}
+      <DecisaoDoMes
+        etfs={aporteEtfs}
+        dcaItems={d.dcaItems}
+        aporteMensal={d.aporteMensal}
+        ultimoAporte={d.ultimoAporte}
+        ultimoAporteData={d.ultimoAporteData}
+        acumuladoMes={d.acumuladoMes}
+        acumuladoAno={d.acumuladoAno}
+        selic={(data as Record<string, any>)?.macro?.selic_meta ?? null}
+        ipca12m={(data as Record<string, any>)?.macro?.ipca_12m ?? null}
+        fedFunds={(data as Record<string, any>)?.macro?.fed_funds ?? null}
         cambio={d.CAMBIO}
         cambioMtdPct={data?.mercado?.cambio_mtd_pct ?? null}
-        ipcaTaxa={ipcaTaxa}
-        ipcaDescricao={data?.rf?.ipca2040?.descricao}
-        rendaTaxa={rendaTaxa}
-        rendaDescricao={data?.rf?.renda2065?.descricao}
+        cdsBrazil5y={(data as Record<string, any>)?.macro?.cds_brazil_5y_bps ?? null}
         concentrationBrazil={d.concentrationBrazil ?? null}
-        hodl11Brl={(data as any)?.hodl11?.valor ?? 0}
+        hodl11Brl={(data as Record<string, any>)?.hodl11?.valor ?? 0}
         rfBrl={d.rfBrl ?? 0}
-        exposicaoCambialPct={(data as any)?.macro?.exposicao_cambial_pct ?? 87.9}
-        patrimonioAtual={(data as any)?.premissas?.patrimonio_atual ?? d.networth}
-        equityPctUsd={((data as any)?.macro?.exposicao_cambial_pct ?? 87.9) / 100}
-        cdsBrazil5y={(data as any)?.macro?.cds_brazil_5y_bps ?? null}
+        exposicaoCambialPct={(data as Record<string, any>)?.macro?.exposicao_cambial_pct ?? 87.9}
+        patrimonioAtual={(data as Record<string, any>)?.premissas?.patrimonio_atual ?? d.networth}
+        equityPctUsd={((data as Record<string, any>)?.macro?.exposicao_cambial_pct ?? 87.9) / 100}
       />
 
       {/* ── CAMADA 3: Evolução e Contexto ── */}

@@ -92,7 +92,7 @@ describe('2b. Privacy Mode CSS', () => {
   it('components that use fmtBrl/fmtShort must also use privacyMode or PrivacyMask', () => {
     // This is a warning scan — fails only if a known-critical component has no privacy
     const criticalComponents = [
-      'AporteDoMes.tsx',
+      'DecisaoDoMes.tsx',
       'KpiHero.tsx',
     ];
 
@@ -111,14 +111,17 @@ describe('2b. Privacy Mode CSS', () => {
     }
   });
 
-  it('privacy masking pattern (••••) must appear in critical components', () => {
-    const criticalComponents = ['AporteDoMes.tsx', 'KpiHero.tsx'];
+  it('privacy masking: critical components must use fmtPrivacy or ••••', () => {
+    // fmtPrivacy is the approved approach (transforms values, preserves proportions)
+    // Legacy ••••-style masking is also accepted but deprecated
+    const criticalComponents = ['DecisaoDoMes.tsx', 'KpiHero.tsx'];
 
     for (const name of criticalComponents) {
       const files = collectComponentFiles(COMPONENTS_DIR).filter(f => f.endsWith(name));
       if (files.length === 0) continue;
       const content = readFileSync(files[0], 'utf-8');
-      expect(content).toContain('••••');
+      const hasPrivacyMask = content.includes('••••') || content.includes('fmtPrivacy');
+      expect(hasPrivacyMask).toBe(true);
     }
   });
 });
