@@ -105,6 +105,11 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   });
 
   // Total BRL = equity + RF + crypto
+  // NOTE: COE (~R$64k) is excluded here — não está em dashboard_state.json.
+  // generate_data.py popula data.coe_net_brl lendo historico_carteira.csv (coluna coe_brl).
+  // Quando o pipeline completo roda, coe_net_brl aparece no JSON e é incluído via
+  // concentracao_brasil. A discrepância de ~R$64k entre este total e o histórico CSV é
+  // esperada: CSV = snapshot congelado (reconstruct_history.py); aqui = preços live (yfinance).
   const rfBrl =
     (data.rf.ipca2029?.valor ?? 0) +
     (data.rf.ipca2040?.valor ?? 0) +

@@ -49,7 +49,9 @@ export function RFCryptoComposition() {
 
   const totalRFValue = rfComposition.reduce((sum, item) => sum + item.valor, 0);
   const hodlValue = (data?.hodl11?.valor || 0) + ((data as any)?.concentracao_brasil?.composicao?.crypto_legado_brl ?? 0);
-  const totalDerivatives = totalRFValue + hodlValue;
+  // coe_net_brl: top-level field populated by generate_data.py (lê historico_carteira.csv)
+  const coeNetBrl: number = (data as any)?.coe_net_brl ?? 0;
+  const totalDerivatives = totalRFValue + coeNetBrl + hodlValue;
 
   if (!data) {
     return (
@@ -107,6 +109,41 @@ export function RFCryptoComposition() {
         </div>
       </div>
 
+      {/* COE Row — só exibe quando pipeline popula coe_net_brl */}
+      {coeNetBrl > 0 && (
+        <div style={styles.section}>
+          <h4 style={styles.sectionTitle}>Estruturados (COE)</h4>
+          <div style={styles.tableWrapper}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <th style={{ textAlign: 'left', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Instrument</th>
+                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Type</th>
+                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Value (BRL)</th>
+                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Quotes</th>
+                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: 'var(--space-2)', ...styles.instrumentName }}>COE XP0121A3C3W</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>COE</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
+                    {formatCurrency(coeNetBrl)}
+                  </td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>—</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style={styles.subtotalRow}>
+            <span>Total Estruturados</span>
+            <span style={styles.subtotalValue}>{formatCurrency(coeNetBrl)}</span>
+          </div>
+        </div>
+      )}
+
       {/* Crypto Table */}
       <div style={styles.section}>
         <h4 style={styles.sectionTitle}>Crypto (HODL)</h4>
@@ -162,16 +199,24 @@ export function RFCryptoComposition() {
       {/* Total Summary */}
       <div style={styles.totalSection}>
         <div style={styles.totalRow}>
-          <span style={styles.totalLabel}>RF + Crypto Total</span>
+          <span style={styles.totalLabel}>RF + COE + Crypto Total</span>
           <span style={styles.totalValue}>{formatCurrency(totalDerivatives)}</span>
         </div>
-        <div className="grid grid-cols-2 gap-3" style={styles.percentages}>
+        <div className={`grid gap-3 ${coeNetBrl > 0 ? 'grid-cols-3' : 'grid-cols-2'}`} style={styles.percentages}>
           <div style={styles.percentItem}>
             <span>Fixed Income</span>
             <span style={styles.percentValue}>
               {`${((totalRFValue / totalDerivatives) * 100).toFixed(1)}%`}
             </span>
           </div>
+          {coeNetBrl > 0 && (
+            <div style={styles.percentItem}>
+              <span>COE</span>
+              <span style={styles.percentValue}>
+                {`${((coeNetBrl / totalDerivatives) * 100).toFixed(1)}%`}
+              </span>
+            </div>
+          )}
           <div style={styles.percentItem}>
             <span>Crypto</span>
             <span style={styles.percentValue}>
