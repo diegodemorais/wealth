@@ -43,6 +43,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DEV-decisao-mes-redesign | Dev+CIO+UX | 2026-04-25 | ✅ Done — DecisaoDoMes.tsx (340 linhas) substitui 3 componentes (557 linhas). Hierarquia Decisão→Gatilhos→Macro→Execução. Score removido, redundâncias eliminadas. 3 bugs corrigidos no ciclo. 495 testes passando. |
 | DEV-coe-hodl11-classificacao | Dev | 2026-04-25 | ✅ Done — COE R$64k net + Empréstimo XP no pipeline. HODL11 reclassificado como Cripto Global (BTC/USD). brasil_pct: 12%→10.6%, cripto_pct: novo 2.9%. Seção COE no dash portfolio. |
 | DEV-semaforo-action-text | Dev | 2026-04-24 | ✅ Done — "→ ação" explícita em RFStatusPanel (por instrumento vs gatilho) e MacroUnificado (Selic + CDS). Puro TypeScript, sem nova fonte de dados. |
 | DEV-home-ia-reorganizacao | Dev | 2026-04-24 | ✅ Done — Home reorganizada: Status → Decisão do Mês → Evolução. AporteDecisionPanel+AporteDoMes sobem, MacroUnificado desce, grid 2-col desmembrado. |
