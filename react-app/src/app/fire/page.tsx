@@ -368,7 +368,7 @@ export default function FirePage() {
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>Patrimônio Alvo</div>
           <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>
             {patrimonioAlvoHero != null
-              ? (fmtPrivacy(patrimonioAlvoHero / 1e6, privacyMode))
+              ? fmtPrivacy(patrimonioAlvoHero, privacyMode)
               : '—'}
           </div>
         </div>
@@ -394,8 +394,8 @@ export default function FirePage() {
         const patrimonioAtual = prem.patrimonio_atual ?? 0;
         const patrimonioLiquido = patrimonioAtual - irDiferido;
 
-        const fmtBrl = (v: number) => fmtPrivacy(v / 1e3, privacyMode);
-        const fmtM = (v: number) => fmtPrivacy(v / 1e6, privacyMode);
+        const fmtBrl = (v: number) => fmtPrivacy(v, privacyMode);
+        const fmtM = (v: number) => fmtPrivacy(v, privacyMode);
 
         return (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5" style={{ marginBottom: 12 }}>
@@ -725,7 +725,7 @@ export default function FirePage() {
                     </div>
                     <div>
                       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio necessário (3% SWR)</div>
-                      <div style={{ fontWeight: 700 }}>{fmtPrivacy(patrimonioNecessario / 1e6, privacyMode)}</div>
+                      <div style={{ fontWeight: 700 }}>{fmtPrivacy(patrimonioNecessario, privacyMode)}</div>
                     </div>
                     <div>
                       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cobertura estimada</div>
