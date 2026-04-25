@@ -22,11 +22,12 @@
 
 ---
 
-## Snapshot Abril/2026 (revalidado 22/04/2026)
+## Snapshot Abril/2026 (revalidado 25/04/2026 — Auditoria Fase 2 Macro)
 
 > **Data do snapshot original:** 2026-04-03
-> **Revalidacao:** 2026-04-22 (WebSearch: BCB Focus, IBGE, Investidor10, Trading Economics, CNBC, Tax Foundation)
-> **Resultado:** dados atualizados — delta relevante em Renda+ 2065 (-26 bps), BRL/USD (-3,7%), Focus IPCA 2026 (+49 bps acima do teto da meta), VIX (-5 pts)
+> **Revalidacao anterior:** 2026-04-22
+> **Revalidacao atual:** 2026-04-25 (WebSearch: TradingEconomics, RioTimesOnline/BCB Focus, Investidor10, COPOM agenda)
+> **Resultado:** PTAX atualizado ~4.997 (lag reduzido). Renda+ 6.86% (23/abr). IPCA+ 2040 7.10% (10/abr). Focus IPCA 4.80% (6a semana acima teto). COPOM 29/abr: nao decidido ainda.
 
 ### Delta vs Snapshot 03/Abr/2026 → 22/Abr/2026
 
