@@ -15,6 +15,7 @@ export interface CollapsibleSectionProps {
   children: ReactNode;
   defaultOpen?: boolean;
   icon?: ReactNode;
+  summary?: ReactNode;  // shown in header when collapsed
   className?: string;
 }
 
@@ -24,6 +25,7 @@ export function CollapsibleSection({
   children,
   defaultOpen = true,
   icon,
+  summary,
   className,
 }: CollapsibleSectionProps) {
   const collapseState = useUiStore(s => s.collapseState);
@@ -75,6 +77,9 @@ export function CollapsibleSection({
               {isCollapsed ? '▸' : '▾'}
             </span>
           </h2>
+          {isCollapsed && summary && (
+            <div style={{ flexShrink: 0 }}>{summary}</div>
+          )}
         </button>
       </CollapsibleTrigger>
 

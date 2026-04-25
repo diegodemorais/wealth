@@ -67,6 +67,42 @@ export default function HomePage() {
   // Compute max drift
   const maxDrift = maxDriftPp(data?.drift as Record<string, any> ?? {});
 
+  // Pre-compute wellness score for collapsed header summary
+  const wellnessSummary = (() => {
+    const wc = data?.wellness_config;
+    if (!wc?.metrics) return null;
+    const aporteMensalVal = data?.premissas?.aporte_mensal ?? 0;
+    const custoMensal = (data?.premissas?.custo_vida_base ?? 0) / 12;
+    const savingsRate = aporteMensalVal > 0 ? (aporteMensalVal / (aporteMensalVal + custoMensal)) * 100 : 0;
+    const maxDriftVal = maxDriftPp(data?.drift as Record<string, any> ?? {}, ['Custo']);
+    const ipcaGapPp = data?.dca_status?.ipca_longo?.gap_alvo_pp ?? null;
+    const dcaAtivo = data?.dca_status?.ipca_longo?.ativo ?? false;
+    const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
+    const terAtual = data?.drift?.['Custo']?.atual ?? (terCfg?.current_ter ?? 0.247);
+    const humanStatus = wc.metrics.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
+    const pts = (id: string, val: number | null, thresholds: any[], key: string) =>
+      (thresholds ?? []).find((t: any) => val != null && val >= (t[key] ?? -Infinity))?.pts ?? 0;
+    const pfirePts = pts('pfire', d.pfireBase, wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [], 'min');
+    const srPts = pts('sr', savingsRate, wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? [], 'min_pct');
+    const driftThresh = wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [];
+    const driftPts = driftThresh.find((t: any) => maxDriftVal <= t.max_pp)?.pts ?? 0;
+    const ipcaThresh = wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [];
+    const ipcaPts = ipcaGapPp == null ? 5 : ipcaThresh.find((t: any) => ipcaGapPp <= t.max_pp)?.pts ?? (dcaAtivo ? 5 : 3);
+    const reservaBrl = data?.rf?.ipca2029?.valor ?? 0;
+    const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
+    const emergThresh = wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? [];
+    const emergPts = emergThresh.find((t: any) => months >= t.min_months)?.pts ?? 0;
+    const terDelta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22);
+    const terThresh = terCfg?.thresholds ?? [];
+    const terPts = terThresh.find((t: any) => terDelta <= t.max_delta_pp)?.pts ?? 0;
+    const humanPts = (wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? []).find((t: any) => t.status === humanStatus)?.pts ?? 5;
+    const total = pfirePts + srPts + driftPts + ipcaPts + 7 + emergPts + terPts + humanPts;
+    const maxScores = [35, 15, 15, 10, 10, 5, 5, 5];
+    const allPts = [pfirePts, srPts, driftPts, ipcaPts, 7, emergPts, terPts, humanPts];
+    const badCount = allPts.filter((p, i) => p / maxScores[i] < 0.85).length;
+    return { total, badCount };
+  })();
+
   return (
     <div>
       <SectionDivider label="Status" />
@@ -180,7 +216,32 @@ export default function HomePage() {
 
       {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, CLOSED] */}
       {data?.wellness_config?.metrics && (
-        <CollapsibleSection id="section-wellness" title={secTitle('now', 'wellness', 'Financial Wellness Score (indicador secundário)')} defaultOpen={secOpen('now', 'wellness', false)} icon={<Trophy size={18} />}>
+        <CollapsibleSection
+          id="section-wellness"
+          title={secTitle('now', 'wellness', 'Financial Wellness Score (indicador secundário)')}
+          defaultOpen={secOpen('now', 'wellness', false)}
+          icon={<Trophy size={18} />}
+          summary={wellnessSummary != null ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{
+                fontSize: '1.4rem', fontWeight: 800, fontFamily: 'monospace', lineHeight: 1,
+                color: wellnessSummary.total >= 80 ? 'var(--green)' : wellnessSummary.total >= 60 ? 'var(--yellow)' : 'var(--red)',
+              }}>
+                {wellnessSummary.total}
+              </span>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginRight: 4 }}>/100</span>
+              {wellnessSummary.badCount > 0 && (
+                <span style={{
+                  fontSize: '0.65rem', fontWeight: 600,
+                  background: 'rgba(234,179,8,0.12)', color: 'var(--yellow)',
+                  border: '1px solid rgba(234,179,8,0.25)', borderRadius: 4, padding: '1px 6px',
+                }}>
+                  {wellnessSummary.badCount} atenç{wellnessSummary.badCount === 1 ? 'ão' : 'ões'}
+                </span>
+              )}
+            </div>
+          ) : undefined}
+        >
           {(() => {
             const wc = data.wellness_config;
             const pfireBaseVal = d.pfireBase;
@@ -362,7 +423,29 @@ export default function HomePage() {
 
 
       {/* Patrimônio Líquido de IR — collapsed */}
-      <CollapsibleSection id="section-patrimonio-liquido-ir" title={secTitle('now', 'patrimonio-liquido-ir', 'Patrimônio Líquido de IR')} defaultOpen={secOpen('now', 'patrimonio-liquido-ir', false)}>
+      <CollapsibleSection
+        id="section-patrimonio-liquido-ir"
+        title={secTitle('now', 'patrimonio-liquido-ir', 'Patrimônio Líquido de IR')}
+        defaultOpen={secOpen('now', 'patrimonio-liquido-ir', false)}
+        summary={(() => {
+          const irDiferido = (data as any)?.tax?.ir_diferido_total_brl ?? 0;
+          const patrimonioFin = (data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual ?? 0;
+          if (!patrimonioFin) return undefined;
+          const liquido = patrimonioFin - irDiferido;
+          const pct = (irDiferido / patrimonioFin * 100).toFixed(1);
+          return (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 'var(--text-xs)' }}>
+              <span style={{ fontWeight: 700, fontSize: '1rem', fontFamily: 'monospace', color: 'var(--text)' }}>
+                {fmtPrivacy(liquido, privacyMode)}
+              </span>
+              <span style={{ color: 'var(--muted)' }}>líq.</span>
+              <span style={{ color: 'var(--red)', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 4, padding: '1px 7px', fontWeight: 600 }}>
+                IR {fmtPrivacy(irDiferido, privacyMode)} ({pct}%)
+              </span>
+            </div>
+          );
+        })()}
+      >
         <div style={{ padding: '0 16px 16px' }}>
           <PatrimonioLiquidoIR
             irDiferido={(data as any)?.tax?.ir_diferido_total_brl ?? 0}
