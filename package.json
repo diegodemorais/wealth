@@ -5,7 +5,9 @@
   "scripts": {
     "test:responsive": "node scripts/test_responsive.js",
     "validate-data": "python3 scripts/validate_data.py",
-    "test:pre-commit": "cd react-app && npm run test:ci && npm run validate-data"
+    "test:pre-commit": "cd react-app && npm run test:ci && npm run validate-data",
+    "test:python": "python3 -m pytest scripts/tests/ -q",
+    "test:integration": "python3 scripts/generate_data.py && npm run test:python && npm run validate-data"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
