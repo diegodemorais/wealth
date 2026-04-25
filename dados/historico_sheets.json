@@ -13,17 +13,17 @@
   },
   "snapshots": [
     {
-      "fetched_at": "2026-04-24T15:22:59Z",
+      "fetched_at": "2026-04-24T22:44:35Z",
       "fonte": "sheets/Historico/live",
       "sheet_id": "1LmxgmvIoGut6Bfzj7ibhXtFuR1H7cIPcJOkVmiTuzZs",
       "data_snapshot": "2026-04-24",
-      "patrimonio_brl": 3726578.0,
-      "ibkr_usd": 647194.42,
-      "ibkr_brl": 3252281.0,
-      "rf_brl": 297105.0,
+      "patrimonio_brl": 3698436.0,
+      "ibkr_usd": 647312.53,
+      "ibkr_brl": 3224005.0,
+      "rf_brl": 297680.0,
       "reserva_brl": 172869.0,
-      "rf_extra_brl": 113111.0,
-      "ptax": 5.0252,
+      "rf_extra_brl": 112671.0,
+      "ptax": 4.9806,
       "refs": {
         "incepção": {
           "data": "2021-03-01",
@@ -47,8 +47,8 @@
           "ytd": 0.066,
           "target_ibkr": 0.425,
           "target_total": 0.408,
-          "weight_total": 0.4083,
-          "gap_pp": -1.67
+          "weight_total": 0.4082,
+          "gap_pp": -1.68
         },
         {
           "ticker": "WRDUSW-USD",
@@ -84,15 +84,15 @@
           "target_ibkr": 0.17,
           "target_total": 0.162,
           "weight_total": 0.27399999999999997,
-          "gap_pp": 10.39
+          "gap_pp": 10.38
         },
         {
           "ticker": "AVEM",
           "ativo": true,
           "gain_inception": null,
           "weight_ibkr": 0.0,
-          "mtd": 0.0175,
-          "ytd": 0.10300000000000001,
+          "mtd": 0.0183,
+          "ytd": 0.105,
           "target_ibkr": null,
           "target_total": 0.0,
           "weight_total": null,
@@ -101,9 +101,9 @@
         {
           "ticker": "AVES",
           "ativo": false,
-          "gain_inception": 0.4301,
+          "gain_inception": 0.4294,
           "weight_ibkr": 0.077,
-          "mtd": 0.0118,
+          "mtd": 0.011399999999999999,
           "ytd": 0.081,
           "target_ibkr": null,
           "target_total": 0.09300000000000001,
@@ -113,9 +113,9 @@
         {
           "ticker": "DGS",
           "ativo": false,
-          "gain_inception": 0.2748,
+          "gain_inception": 0.2752,
           "weight_ibkr": 0.011000000000000001,
-          "mtd": 0.0078000000000000005,
+          "mtd": 0.008100000000000001,
           "ytd": 0.061,
           "target_ibkr": null,
           "target_total": 0.019,
@@ -143,8 +143,8 @@
           "ytd": 0.06,
           "target_ibkr": 0.255,
           "target_total": 0.05,
-          "weight_total": 0.31420000000000003,
-          "gap_pp": 5.92
+          "weight_total": 0.3144,
+          "gap_pp": 5.94
         },
         {
           "ticker": "AVUV",
@@ -173,10 +173,10 @@
         {
           "ticker": "AVDV",
           "ativo": false,
-          "gain_inception": 0.8040999999999999,
-          "weight_ibkr": 0.18899999999999997,
-          "mtd": 0.0005,
-          "ytd": 0.027999999999999997,
+          "gain_inception": 0.8067,
+          "weight_ibkr": 0.19,
+          "mtd": 0.0019,
+          "ytd": 0.03,
           "target_ibkr": null,
           "target_total": 0.153,
           "weight_total": null,
@@ -230,14 +230,16 @@
           "weight_total": null,
           "gap_pp": null
         }
-      ]
+      ],
+      "coe_brl": 172869.1,
+      "emprestimo_xp_brl": -108788.48
     },
     {
-      "fetched_at": "2026-04-24T15:22:59Z",
+      "fetched_at": "2026-04-24T22:44:35Z",
       "fonte": "sheets/Historico/sync",
       "sheet_id": "1LmxgmvIoGut6Bfzj7ibhXtFuR1H7cIPcJOkVmiTuzZs",
       "data_snapshot": "2025-12-15",
-      "patrimonio_brl": 3495392.55,
+      "patrimonio_brl": 3471854.17,
       "ibkr_usd": null,
       "ibkr_brl": 2456371.77,
       "rf_brl": null,
@@ -247,18 +249,310 @@
       "etfs": []
     },
     {
-      "fetched_at": "2026-04-24T15:22:59Z",
+      "fetched_at": "2026-04-24T22:44:35Z",
       "fonte": "sheets/Historico/inception",
       "sheet_id": "1LmxgmvIoGut6Bfzj7ibhXtFuR1H7cIPcJOkVmiTuzZs",
       "data_snapshot": "2021-03-01",
-      "patrimonio_brl": 1248528.58,
+      "patrimonio_brl": 1220387.26,
       "ibkr_usd": null,
       "ibkr_brl": null,
       "rf_brl": null,
       "reserva_brl": null,
       "rf_extra_brl": null,
-      "ptax": 5.03,
+      "ptax": 4.98,
       "etfs": []
     }
-  ]
+  ],
+  "coe_by_month": {
+    "2026-04": {
+      "coe_brl": 172869.1,
+      "emprestimo_brl": -108788.48,
+      "net_brl": 64080.62000000001
+    },
+    "2026-03": {
+      "coe_brl": 172869.1,
+      "emprestimo_brl": -108788.48,
+      "net_brl": 64080.62000000001
+    },
+    "2026-02": {
+      "coe_brl": 172869.1,
+      "emprestimo_brl": -108788.48,
+      "net_brl": 64080.62000000001
+    },
+    "2026-01": {
+      "coe_brl": 172869.1,
+      "emprestimo_brl": -108788.48,
+      "net_brl": 64080.62000000001
+    },
+    "2025-12": {
+      "coe_brl": 172869.1,
+      "emprestimo_brl": -108788.48,
+      "net_brl": 64080.62000000001
+    },
+    "2025-11": {
+      "coe_brl": 156303.07,
+      "emprestimo_brl": -106768.84,
+      "net_brl": 49534.23000000001
+    },
+    "2025-10": {
+      "coe_brl": 156303.07,
+      "emprestimo_brl": -106768.84,
+      "net_brl": 49534.23000000001
+    },
+    "2025-09": {
+      "coe_brl": 156303.07,
+      "emprestimo_brl": -104671.24,
+      "net_brl": 51631.83
+    },
+    "2025-08": {
+      "coe_brl": 153452.83,
+      "emprestimo_brl": -98293.2,
+      "net_brl": 55159.62999999999
+    },
+    "2025-07": {
+      "coe_brl": 153452.83,
+      "emprestimo_brl": -98293.2,
+      "net_brl": 55159.62999999999
+    },
+    "2025-06": {
+      "coe_brl": 144637.97,
+      "emprestimo_brl": -98293.2,
+      "net_brl": 46344.770000000004
+    },
+    "2025-05": {
+      "coe_brl": 144637.97,
+      "emprestimo_brl": -98293.2,
+      "net_brl": 46344.770000000004
+    },
+    "2025-04": {
+      "coe_brl": 144637.97,
+      "emprestimo_brl": -98293.2,
+      "net_brl": 46344.770000000004
+    },
+    "2025-03": {
+      "coe_brl": 144637.97,
+      "emprestimo_brl": -98293.2,
+      "net_brl": 46344.770000000004
+    },
+    "2025-02": {
+      "coe_brl": 156323.11,
+      "emprestimo_brl": -94524.59,
+      "net_brl": 61798.51999999999
+    },
+    "2025-01": {
+      "coe_brl": 156323.11,
+      "emprestimo_brl": -94524.59,
+      "net_brl": 61798.51999999999
+    },
+    "2024-12": {
+      "coe_brl": 156323.11,
+      "emprestimo_brl": -94524.59,
+      "net_brl": 61798.51999999999
+    },
+    "2024-11": {
+      "coe_brl": 156323.11,
+      "emprestimo_brl": -94524.59,
+      "net_brl": 61798.51999999999
+    },
+    "2024-10": {
+      "coe_brl": 145047.17,
+      "emprestimo_brl": -92275.28,
+      "net_brl": 52771.890000000014
+    },
+    "2024-09": {
+      "coe_brl": 145047.17,
+      "emprestimo_brl": -92275.28,
+      "net_brl": 52771.890000000014
+    },
+    "2024-08": {
+      "coe_brl": 145047.17,
+      "emprestimo_brl": -92275.28,
+      "net_brl": 52771.890000000014
+    },
+    "2024-07": {
+      "coe_brl": 149188.68,
+      "emprestimo_brl": -91087.44,
+      "net_brl": 58101.23999999999
+    },
+    "2024-06": {
+      "coe_brl": 143104.95,
+      "emprestimo_brl": -90339.51,
+      "net_brl": 52765.44000000002
+    },
+    "2024-05": {
+      "coe_brl": 138087.26,
+      "emprestimo_brl": -88773.15,
+      "net_brl": 49314.110000000015
+    },
+    "2024-04": {
+      "coe_brl": 138087.26,
+      "emprestimo_brl": -88773.15,
+      "net_brl": 49314.110000000015
+    },
+    "2024-03": {
+      "coe_brl": 136663.92,
+      "emprestimo_brl": -88304.57,
+      "net_brl": 48359.350000000006
+    },
+    "2024-02": {
+      "coe_brl": 131490.58,
+      "emprestimo_brl": -87750.68,
+      "net_brl": 43739.899999999994
+    },
+    "2024-01": {
+      "coe_brl": 117931.6,
+      "emprestimo_brl": -85793.1,
+      "net_brl": 32138.5
+    },
+    "2023-12": {
+      "coe_brl": 117931.6,
+      "emprestimo_brl": -85793.1,
+      "net_brl": 32138.5
+    },
+    "2023-11": {
+      "coe_brl": 117153.3,
+      "emprestimo_brl": -83376.84,
+      "net_brl": 33776.46000000001
+    },
+    "2023-10": {
+      "coe_brl": 117153.3,
+      "emprestimo_brl": -83376.84,
+      "net_brl": 33776.46000000001
+    },
+    "2023-09": {
+      "coe_brl": 117153.3,
+      "emprestimo_brl": -83376.84,
+      "net_brl": 33776.46000000001
+    },
+    "2023-08": {
+      "coe_brl": 119829.01,
+      "emprestimo_brl": -82237.26,
+      "net_brl": 37591.75
+    },
+    "2023-07": {
+      "coe_brl": 119829.01,
+      "emprestimo_brl": -82237.26,
+      "net_brl": 37591.75
+    },
+    "2023-06": {
+      "coe_brl": 112830.19,
+      "emprestimo_brl": -81323.74,
+      "net_brl": 31506.449999999997
+    },
+    "2023-05": {
+      "coe_brl": 98450.47,
+      "emprestimo_brl": -79084.08,
+      "net_brl": 19366.39
+    },
+    "2023-04": {
+      "coe_brl": 98450.47,
+      "emprestimo_brl": -79084.08,
+      "net_brl": 19366.39
+    },
+    "2023-03": {
+      "coe_brl": 94371.46,
+      "emprestimo_brl": -77730.53,
+      "net_brl": 16640.930000000008
+    },
+    "2023-02": {
+      "coe_brl": 94371.46,
+      "emprestimo_brl": -77730.53,
+      "net_brl": 16640.930000000008
+    },
+    "2023-01": {
+      "coe_brl": 92556.64,
+      "emprestimo_brl": -77179.94,
+      "net_brl": 15376.699999999997
+    },
+    "2022-12": {
+      "coe_brl": 92324.99,
+      "emprestimo_brl": -75436.46,
+      "net_brl": 16888.53
+    },
+    "2022-11": {
+      "coe_brl": 92324.99,
+      "emprestimo_brl": -75436.46,
+      "net_brl": 16888.53
+    },
+    "2022-10": {
+      "coe_brl": 95593.16,
+      "emprestimo_brl": -71107.93,
+      "net_brl": 24485.23000000001
+    },
+    "2022-09": {
+      "coe_brl": 95593.16,
+      "emprestimo_brl": -71107.93,
+      "net_brl": 24485.23000000001
+    },
+    "2022-08": {
+      "coe_brl": 95593.16,
+      "emprestimo_brl": -71107.93,
+      "net_brl": 24485.23000000001
+    },
+    "2022-07": {
+      "coe_brl": 93008.25,
+      "emprestimo_brl": -71107.93,
+      "net_brl": 21900.320000000007
+    },
+    "2022-06": {
+      "coe_brl": 93008.25,
+      "emprestimo_brl": -71107.93,
+      "net_brl": 21900.320000000007
+    },
+    "2022-05": {
+      "coe_brl": 91664.12,
+      "emprestimo_brl": -70739.17,
+      "net_brl": 20924.949999999997
+    },
+    "2022-04": {
+      "coe_brl": 94600.24,
+      "emprestimo_brl": -70185.43,
+      "net_brl": 24414.810000000012
+    },
+    "2022-03": {
+      "coe_brl": 103840.8,
+      "emprestimo_brl": -69604.7,
+      "net_brl": 34236.100000000006
+    },
+    "2022-02": {
+      "coe_brl": 98976.42,
+      "emprestimo_brl": -68942.59,
+      "net_brl": 30033.83
+    },
+    "2022-01": {
+      "coe_brl": 99792.45,
+      "emprestimo_brl": -68484.64,
+      "net_brl": 31307.809999999998
+    },
+    "2021-12": {
+      "coe_brl": 111912.22,
+      "emprestimo_brl": -67963.17,
+      "net_brl": 43949.05
+    },
+    "2021-11": {
+      "coe_brl": 111728.77,
+      "emprestimo_brl": -67369.3,
+      "net_brl": 44359.47
+    },
+    "2021-10": {
+      "coe_brl": 105040.09,
+      "emprestimo_brl": -67054.72,
+      "net_brl": 37985.369999999995
+    },
+    "2021-09": {
+      "coe_brl": 104126.18,
+      "emprestimo_brl": -66702.53,
+      "net_brl": 37423.649999999994
+    },
+    "2021-08": {
+      "coe_brl": 104660.38,
+      "emprestimo_brl": -66442.97,
+      "net_brl": 38217.41
+    },
+    "2021-07": {
+      "coe_brl": 101551.89,
+      "emprestimo_brl": -66162.35,
+      "net_brl": 35389.53999999999
+    }
+  }
 }

@@ -216,99 +216,27 @@ def _fetch_ntnb_pu(ref_date: date, maturity: date, cache: dict) -> float | None:
 
 def build_coe_xp_by_month() -> dict[str, float]:
     """
-    Build COE XP net position by month from Google Sheets Histórico tab.
+    Lê COE XP net position por mês de dados/historico_sheets.json.
+    Fonte primária: fetch_historico_sheets.py (roda antes no pipeline).
 
-    Fetches gviz CSV (newest-first rows). For each month, takes the first
-    occurrence (= most recent daily value = end-of-month proxy).
-
-    col[8]  = COE asset value (BRL)
-    col[12] = XP loan liability (BRL, already negative in the sheet)
-
-    Returns {YYYY-MM: net_brl} where net = COE + loan.
-    Missing months → caller uses 0 (not in dict).
+    Raises FileNotFoundError se o JSON não existir — sem fallback HTTP.
     """
-    import urllib.request
-    import io
-
-    SHEETS_ID = "1LmxgmvIoGut6Bfzj7ibhXtFuR1H7cIPcJOkVmiTuzZs"
-    url = (
-        f"https://docs.google.com/spreadsheets/d/{SHEETS_ID}"
-        "/gviz/tq?tqx=out:csv&sheet=Hist%C3%B3rico"
-    )
-
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            raw = resp.read().decode("utf-8")
-    except Exception as e:
-        print(f"    WARNING: COE fetch failed ({e}), skipping COE")
+    json_path = ROOT / "dados" / "historico_sheets.json"
+    if not json_path.exists():
+        raise FileNotFoundError(
+            f"dados/historico_sheets.json não encontrado. "
+            f"Execute fetch_historico_sheets.py antes de reconstruct_history.py."
+        )
+    store = json.loads(json_path.read_text())
+    coe_by_month_raw = store.get("coe_by_month", {})
+    if not coe_by_month_raw:
+        print("    WARNING: coe_by_month vazio em historico_sheets.json — COE zerado")
         return {}
-
-    reader = csv.reader(io.StringIO(raw))
-    rows = list(reader)
-
-    coe_by_month: dict[str, float] = {}
-
-    def _parse_brl(val: str) -> float:
-        """Parse BRL value like 'R$ 172.869,00' or '-R$ 108.788,48'."""
-        v = val.strip().strip('"').replace("\xa0", "").replace(" ", "")
-        # Strip currency prefix R$, keeping sign
-        negative = v.startswith("-")
-        v = v.lstrip("-").lstrip("+")
-        if v.startswith("R$"):
-            v = v[2:]
-        if v.startswith("$"):
-            v = v[1:]
-        v = v.strip()
-        # Handle Brazilian format: 1.234.567,89
-        if "," in v and "." in v:
-            if v.rfind(",") > v.rfind("."):
-                # comma is decimal separator: 1.234,56
-                v = v.replace(".", "").replace(",", ".")
-            else:
-                # dot is decimal separator: 1,234.56
-                v = v.replace(",", "")
-        elif "," in v:
-            v = v.replace(",", ".")
-        try:
-            result = float(v)
-            return -result if negative else result
-        except ValueError:
-            return 0.0
-
-    for row in rows:
-        # Skip header row(s) or short rows
-        if len(row) < 13:
-            continue
-        date_str = row[0].strip().strip('"')
-        # Expect dd/mm/yy or dd/mm/yyyy
-        for fmt in ("%d/%m/%y", "%d/%m/%Y"):
-            try:
-                dt = datetime.strptime(date_str, fmt).date()
-                break
-            except ValueError:
-                continue
-        else:
-            continue  # not a date row
-
-        month = dt.strftime("%Y-%m")
-        if month in coe_by_month:
-            continue  # first occurrence = most recent = end-of-month
-
-        coe_raw = row[8].strip().strip('"') if len(row) > 8 else ""
-        loan_raw = row[12].strip().strip('"') if len(row) > 12 else ""
-
-        coe_val = _parse_brl(coe_raw) if coe_raw else 0.0
-        loan_val = _parse_brl(loan_raw) if loan_raw else 0.0
-        # loan is already negative in sheet (liability), but parse gives absolute
-        # We need: net = coe_val + loan_val where loan_val < 0
-        # The sheet stores loan as negative, so _parse_brl gives a negative number
-        net = coe_val + loan_val
-
-        if net != 0.0:
-            coe_by_month[month] = net
-
-    return coe_by_month
+    return {
+        month: entry["net_brl"]
+        for month, entry in coe_by_month_raw.items()
+        if entry.get("net_brl", 0) != 0
+    }
 
 
 def build_nubank_rf_by_month() -> dict[str, float]:

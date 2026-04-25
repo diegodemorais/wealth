@@ -38,6 +38,11 @@ GVZ_URL   = (
     f"https://docs.google.com/spreadsheets/d/{SHEET_ID}"
     f"/gviz/tq?tqx=out:csv&sheet={TAB_NAME}"
 )
+# Daily historical tab (gid=459933219): col[0]=date, col[8]=COE BRL, col[12]=loan BRL
+GVZ_URL_DAILY = (
+    f"https://docs.google.com/spreadsheets/d/{SHEET_ID}"
+    "/gviz/tq?tqx=out:csv&sheet=Hist%C3%B3rico"
+)
 
 
 # ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -111,6 +116,49 @@ def fetch_csv(url: str) -> list[list[str]]:
     return [row for row in reader]
 
 
+# ─── Parse COE from daily tab ────────────────────────────────────────────────
+def parse_coe_from_daily_rows(rows: list[list[str]]) -> dict[str, dict]:
+    """
+    Parse COE XP e empréstimo XP do tab Histórico (diário, 1700+ linhas).
+
+    Estrutura (col base-0):
+      col[0]  = data dd/mm/yy (daily row)
+      col[8]  = COE asset BRL (ex: "R$ 172.869,10")
+      col[12] = empréstimo XP BRL (ex: "-R$ 108.788,48", negativo = liability)
+
+    Retorna {YYYY-MM: {coe_brl, emprestimo_brl, net_brl}}.
+    Primeiro row de cada mês = mais recente = proxy end-of-month.
+    """
+    coe_by_month: dict[str, dict] = {}
+
+    for row in rows:
+        if not row or len(row) < 13:
+            continue
+        c = [_clean(x) for x in row]
+        # Daily rows: col[0] = date, col[1] is empty or non-date
+        if not c[0] or c[0] in ("TRUE", "FALSE"):
+            continue
+        d = _parse_date_ddmmyy(c[0])
+        if not d:
+            continue
+
+        month = d[:7]  # YYYY-MM
+        if month in coe_by_month:
+            continue  # first occurrence = most recent = end-of-month proxy
+
+        coe_val  = _parse_brl(c[8])  if len(c) > 8  else None
+        loan_val = _parse_brl(c[12]) if len(c) > 12 else None
+
+        if coe_val or loan_val:
+            coe_by_month[month] = {
+                "coe_brl":        coe_val  or 0.0,
+                "emprestimo_brl": loan_val or 0.0,
+                "net_brl":        (coe_val or 0.0) + (loan_val or 0.0),
+            }
+
+    return coe_by_month
+
+
 # ─── Parse ───────────────────────────────────────────────────────────────────
 def _make_snap(data: str, fonte_detalhe: str = "live") -> dict:
     return {
@@ -131,7 +179,7 @@ def _make_snap(data: str, fonte_detalhe: str = "live") -> dict:
 
 def parse_all_snapshots(rows: list[list[str]]) -> list[dict]:
     """
-    Extrai TODAS as datas temporais da aba Historico.
+    Extrai TODAS as datas temporais da aba Historico (sem acento, 68 linhas).
 
     Estrutura conhecida (col índices base-0):
       Row 0 : Inception  — col[3]=data, col[5]=ptax, col[8]=patrimônio_incepção
@@ -139,7 +187,9 @@ def parse_all_snapshots(rows: list[list[str]]) -> list[dict]:
       Row 15: Hoje (live)— col[1]=data_ddmmyy, col[2]=total_brl, col[4]=rf_brl,
                            col[6]=reserva_brl, col[7]=equity_brl, col[8]=ibkr_usd
       ETF rows: col[0] in (TRUE/FALSE), col[1]=ticker, ...
+
     Retorna lista de snapshots (1 por data única detectada).
+    COE data vem da aba Histórico (com acento) via parse_coe_from_daily_rows().
     """
     snapshots: dict[str, dict] = {}  # data → snap
     etfs: list[dict] = []
@@ -233,7 +283,11 @@ def parse_all_snapshots(rows: list[list[str]]) -> list[dict]:
 def load_existing() -> dict:
     if SNAPSHOTS_JSON.exists():
         with open(SNAPSHOTS_JSON) as f:
-            return json.load(f)
+            store = json.load(f)
+        # Migrate: ensure coe_by_month key exists (added in refactor to consolidate fetches)
+        if "coe_by_month" not in store:
+            store["coe_by_month"] = {}
+        return store
     return {
         "_meta": {
             "descricao": "Snapshots periódicos da Carteira Viva (Google Sheets). "
@@ -247,8 +301,12 @@ def load_existing() -> dict:
                 "reserva_brl": "Reserva de Emergência em BRL",
                 "ptax": "PTAX BRL/USD calculada implicitamente",
                 "etfs": "Lista de ETFs com pesos atuais e metas",
+                "coe_brl": "COE XP asset value em BRL (snapshot ao vivo, da daily row mais recente)",
+                "emprestimo_xp_brl": "Empréstimo XP liability em BRL (negativo, snapshot ao vivo)",
+                "coe_by_month": "COE XP net position por mês {YYYY-MM: {coe_brl, emprestimo_brl, net_brl}}",
             },
         },
+        "coe_by_month": {},
         "snapshots": [],
     }
 
@@ -280,6 +338,23 @@ def upsert_snapshots(store: dict, snaps: list[dict]) -> tuple[int, int]:
 
     # Manter ordenado: mais recente primeiro (mesma ordem da aba)
     store["snapshots"].sort(key=lambda s: s.get("data_snapshot", ""), reverse=True)
+    return n_new, n_upd
+
+
+def upsert_coe_by_month(store: dict, coe_by_month: dict[str, dict]) -> tuple[int, int]:
+    """
+    Insere ou substitui entradas em store['coe_by_month'].
+    Sempre sobrescreve: valores MtM do Sheets — fetch mais recente é mais correto.
+    Retorna (n_novos, n_atualizados).
+    """
+    existing = store.setdefault("coe_by_month", {})
+    n_new, n_upd = 0, 0
+    for month, entry in coe_by_month.items():
+        if month in existing:
+            n_upd += 1
+        else:
+            n_new += 1
+        existing[month] = entry
     return n_new, n_upd
 
 
@@ -373,8 +448,22 @@ def main():
               f"R${s['patrimonio_brl']:,.0f}" if s['patrimonio_brl'] else
               f"    {s['data_snapshot']}  ({s['fonte'].split('/')[-1]})  N/A")
 
+    # Fetch daily historical tab (Histórico com acento) for COE/loan data
+    print(f"\nFetching Histórico (diário) tab para COE/empréstimo XP...")
+    daily_rows = fetch_csv(GVZ_URL_DAILY)
+    print(f"  {len(daily_rows)} linhas recebidas.")
+    coe_by_month = parse_coe_from_daily_rows(daily_rows)
+    print(f"  {len(coe_by_month)} meses com posição COE/empréstimo detectados.")
+
     # Snapshot live (hoje) para cross-check e display detalhado
     live = next((s for s in snaps if "live" in s["fonte"]), snaps[0] if snaps else None)
+
+    # Enrich live snapshot with COE/loan from most recent coe_by_month entry
+    if live and coe_by_month:
+        latest_month = max(coe_by_month.keys())
+        latest_entry = coe_by_month[latest_month]
+        live["coe_brl"]           = latest_entry["coe_brl"]
+        live["emprestimo_xp_brl"] = latest_entry["emprestimo_brl"]
 
     if live:
         print(f"\nSnapshot ao vivo ({live['data_snapshot']}):")
@@ -384,6 +473,8 @@ def main():
         print(f"  RF BRL         : R${live['rf_brl']:,.0f}" if live['rf_brl'] else "  RF BRL         : N/A")
         print(f"  Reserva BRL    : R${live['reserva_brl']:,.0f}" if live['reserva_brl'] else "  Reserva BRL    : N/A")
         print(f"  PTAX           : {live['ptax']:.4f}" if live['ptax'] else "  PTAX           : N/A")
+        print(f"  COE BRL        : R${live['coe_brl']:,.0f}" if live.get('coe_brl') else "  COE BRL        : N/A")
+        print(f"  Empr. XP BRL   : R${live['emprestimo_xp_brl']:,.0f}" if live.get('emprestimo_xp_brl') else "  Empr. XP BRL   : N/A")
 
         etfs_ativos = [e for e in live.get("etfs", []) if e["ativo"]]
         if etfs_ativos:
@@ -394,12 +485,21 @@ def main():
                 gap = f"{e['gap_pp']:+.2f}pp" if e['gap_pp'] is not None else ""
                 print(f"    {e['ticker']:<16} atual={wt}  meta={tgt}  gap={gap}")
 
+    if coe_by_month:
+        print(f"\nCOE XP por mês ({len(coe_by_month)} meses):")
+        for month in sorted(coe_by_month.keys(), reverse=True)[:3]:
+            e = coe_by_month[month]
+            print(f"    {month}  COE=R${e['coe_brl']:,.0f}  Empr=R${e['emprestimo_brl']:,.0f}  Net=R${e['net_brl']:,.0f}")
+
     # Persist — incremental
     store = load_existing()
     n_new, n_upd = upsert_snapshots(store, snaps)
+    n_coe_new, n_coe_upd = upsert_coe_by_month(store, coe_by_month)
     save(store)
     total = len(store["snapshots"])
-    print(f"\n  dados/historico_sheets.json: +{n_new} novo(s), {n_upd} atualizado(s) → {total} total")
+    total_coe = len(store.get("coe_by_month", {}))
+    print(f"\n  dados/historico_sheets.json: +{n_new} novo(s), {n_upd} atualizado(s) → {total} snapshots")
+    print(f"  coe_by_month: +{n_coe_new} novo(s), {n_coe_upd} atualizado(s) → {total_coe} meses")
 
     # Cross-check com pipeline
     if live:
