@@ -141,6 +141,63 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 ---
 
+## Bold Budget Integration (aprovado 2026-04-25)
+
+Contexto: análise comparativa entre guardrails de drawdown e Bold Budget (Boldin) realizada em FR-bold-budget-integration.md (2026-04-25). Conclusão: abordagens complementares. Adotados elementos A e B; elemento C (SWR contínuo) descartado. Decisões abaixo são consequência direta dessa análise.
+
+---
+
+### FR-guardrails-p-fire-integração — P(FIRE) Annual Gate (Janeiro)
+
+**Aprovado:** 2026-04-25
+**Contexto:** FR-bold-budget-integration.md, Elemento A
+**Implementação:** Janeiro 2027 (primeira execução)
+
+**Trigger:** Rodar `fire_montecarlo.py --strategy guardrails --n-sim 10000` com premissas de janeiro atualizadas (aportes, patrimônio, spending smile, taxa IPCA+, câmbio).
+
+| Condição P(FIRE) Base | Ação | Detalhe |
+|-----------------------|------|---------|
+| P(FIRE) > 90% | Expandir guardrails: R$250k → R$300k permanente | Atualizar tabela de guardrails e `custo_vida_base` nos Parâmetros para Scripts. Registrar data e valor do MC em carteira.md |
+| P(FIRE) 80–90% | Manter guardrails atuais | Nenhuma ação. Registrar resultado do MC em carteira.md (linha única) |
+| P(FIRE) < 80% | Acionar revisão de guardrails | Avaliar apertar limiares de drawdown (ex: banda 0-15% vira 0-10%). Abrir issue FR-guardrails-revisao com resultado MC e proposta de novo threshold. Decisão requer aprovação Head |
+
+**Regras de execução:**
+- Gate roda obrigatoriamente em janeiro de cada ano pós-FIRE (a partir de jan/2027 se FIRE 2040; ou jan do primeiro ano de desacumulação se FIRE antecipado)
+- Usar sempre o cenário base (não favorável) como critério primário. Favorável e stress são registrados como contexto
+- Expansão P(FIRE) > 90% é permanente: novo baseline de retirada passa a ser R$300k. Guardrails de drawdown permanecem relativos ao novo baseline
+- Compressão P(FIRE) < 80%: revisar limiares mas não alterar piso essencial R$184k (ver FR-guardrails-categoria-elasticidade abaixo) sem análise separada
+- Decisão e resultado do MC registrados ao final da seção Guardrails de Retirada em carteira.md com data e assinatura ("Gate jan/AAAA: P(FIRE) XX% → [ação]")
+
+---
+
+### FR-guardrails-categoria-elasticidade — Despesas Segregadas por Elasticidade
+
+**Aprovado:** 2026-04-25
+**Contexto:** FR-bold-budget-integration.md, Elemento B
+**Implementação:** Imediato (vigente a partir desta data)
+
+**Estrutura de gastos (R$250k/ano base, solteiro/FIRE Day):**
+
+| Prioridade de corte | Categoria | Valor/ano | Elasticidade | Regra de corte |
+|--------------------:|-----------|-----------|--------------|----------------|
+| 1 (inelástico) | Hipoteca SAC | R$60k | 0% | Contrato — NUNCA cortar |
+| 2 (quase inelástico) | Saúde | R$24k | < 10% | Copay pode aumentar; taxa base protegida |
+| 3 (inelástico) | Essencial (alimentação + moradia corrente) | R$100k | < 5% | Inelástico; corte apenas em piso extremo |
+| 4 (elástico) | Discricionário (viagens + lifestyle) | R$66k | Até 50% | Primeira linha de corte nos guardrails |
+
+**Piso revisado:** R$184k essencial (hipoteca R$60k + saúde R$24k + essencial R$100k) + discricionário R$66k = R$250k total. Em crise extrema (drawdown > 35%), cortar até 50% do discricionário → piso efetivo R$184k (alinhado com guardrail de piso, substitui R$180k como referência analítica mais detalhada).
+
+**Regras operacionais:**
+- Guardrails de drawdown aplicam-se ao discricionário (R$66k) primeiro. Hipoteca e saúde são intocáveis
+- Em drawdown 15–25% (corte 10% = R$25k): cortar integralmente do discricionário (R$66k → R$41k). Hipoteca e saúde inalteradas
+- Em drawdown 25–35% (corte 20% = R$50k): cortar do discricionário (R$66k → R$16k). Se insuficiente, cortar até 5% do essencial (R$100k → R$95k). Hipoteca e saúde intocáveis
+- Em drawdown > 35% (piso): discricionário mínimo (R$0–R$10k operacional). Piso efetivo R$184k. Hipoteca e saúde intocáveis
+- Ao recalibrar custo de vida pós-casamento / filho: reclassificar categorias e atualizar tabela acima. Não assumir R$250k estático
+
+**Impacto no MC:** segregação não altera P(FIRE) (MC usa custo de vida agregado). Função é comportamental e operacional: proteger saúde e hipoteca de cortes, forçar compressão do discricionário primeiro.
+
+---
+
 ## Premissas de Projecao (aprovadas 2026-03-22, HD-006 final)
 
 ### Retornos por ETF (fontes academicas)

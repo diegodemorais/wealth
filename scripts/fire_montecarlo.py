@@ -912,6 +912,99 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
     return results
 
 
+# ─── MC LÍQUIDO (IR DIFERIDO DESCONTADO) ─────────────────────────────────────
+
+def run_canonical_mc_with_ir_discount(ir_diferido: float,
+                                       n_sim: int = 10_000,
+                                       seed: int = 42) -> dict:
+    """
+    Roda Monte Carlo canônico (P(FIRE@53), cenário base) com patrimônio líquido.
+
+    Metodologia: IR diferido descontado antes da simulação, per Lei 14.754/2023.
+    O imposto latente sobre ganhos acumulados nos ETFs UCITS é uma obrigação
+    econômica presente — reduz o patrimônio disponível para desacumulação.
+
+    Fórmula:
+        patrimonio_liquido = patrimonio_atual (de dashboard_state.json) - ir_diferido
+
+    Args:
+        ir_diferido: IR latente total em BRL (fonte: tax_snapshot.json,
+                     campo ir_diferido_total_brl). Ex: 133_075.41
+        n_sim: número de simulações (default 10k para consistência com MC bruto)
+        seed: seed para reproducibilidade (default 42, mesmo do MC canônico)
+
+    Returns:
+        {
+          "patrimonio_bruto":    float,   # patrimônio antes do desconto
+          "ir_diferido":         float,   # desconto aplicado
+          "patrimonio_liquido":  float,   # patrimônio_bruto - ir_diferido
+          "pfire_bruto":         float,   # P(FIRE@53) base sem desconto (%)
+          "pfire_liquido":       float,   # P(FIRE@53) base com desconto (%)
+          "delta_pp":            float,   # pfire_liquido - pfire_bruto (pp, negativo)
+          "n_sim":               int,
+          "seed":                int,
+          "cenario":             "base",
+          "metodologia":         str,
+          "_generated":          str,
+        }
+    """
+    from datetime import date as _date
+
+    # ── Patrimônio bruto (fonte canônica: dashboard_state.json) ──────────────
+    pat_bruto = _load_patrimonio_atual()
+
+    # ── Patrimônio líquido ────────────────────────────────────────────────────
+    pat_liquido = pat_bruto - ir_diferido
+
+    if pat_liquido <= 0:
+        raise ValueError(
+            f"patrimonio_liquido={pat_liquido:.0f} <= 0. "
+            f"ir_diferido={ir_diferido:.0f} >= patrimonio_bruto={pat_bruto:.0f}. "
+            "Verificar tax_snapshot.json."
+        )
+
+    # ── MC bruto (patrimônio original) ───────────────────────────────────────
+    premissas_bruto = dict(PREMISSAS)
+    premissas_bruto["idade_fire_alvo"] = IDADE_CENARIO_BASE  # 53
+    premissas_bruto["anos_simulacao"]  = HORIZONTE_VIDA - IDADE_CENARIO_BASE
+    # Garantir que usamos o patrimônio carregado (sem override externo)
+    premissas_bruto["patrimonio_atual"] = pat_bruto
+
+    r_bruto = rodar_monte_carlo(premissas_bruto, n_sim=n_sim, cenario="base", seed=seed)
+
+    # ── MC líquido (patrimônio descontado de IR diferido) ────────────────────
+    premissas_liquido = dict(premissas_bruto)
+    premissas_liquido["patrimonio_atual"] = pat_liquido
+
+    r_liquido = rodar_monte_carlo(premissas_liquido, n_sim=n_sim, cenario="base", seed=seed)
+
+    pfire_bruto   = round(r_bruto["p_sucesso"]   * 100, 1)
+    pfire_liquido = round(r_liquido["p_sucesso"] * 100, 1)
+    delta_pp      = round(pfire_liquido - pfire_bruto, 1)
+
+    return {
+        "patrimonio_bruto":   round(pat_bruto, 2),
+        "ir_diferido":        round(ir_diferido, 2),
+        "patrimonio_liquido": round(pat_liquido, 2),
+        "pfire_bruto":        pfire_bruto,
+        "pfire_liquido":      pfire_liquido,
+        "delta_pp":           delta_pp,
+        "pat_mediana_fire_bruto":  round(r_bruto["pat_mediana_fire"], 0),
+        "pat_mediana_fire_liquido": round(r_liquido["pat_mediana_fire"], 0),
+        "n_sim":              n_sim,
+        "seed":               seed,
+        "cenario":            "base",
+        "metodologia": (
+            "IR diferido descontado antes de simulação per Lei 14.754/2023. "
+            "patrimonio_liquido = patrimonio_atual - ir_diferido_total_brl "
+            "(fonte: tax_snapshot.json). Todas as demais premissas idênticas "
+            "ao MC canônico (seed=42, 10k sims, spending smile, guardrails, "
+            "bond tent, INSS R$18k/ano@65, VCMH 5.0%)."
+        ),
+        "_generated": str(_date.today()),
+    }
+
+
 # ─── OUTPUT ───────────────────────────────────────────────────────────────────
 
 def imprimir_resultados(resultados: list, premissas: dict):

@@ -3813,6 +3813,33 @@ def main():
         print(f"  ⚠️ Trajetórias MC failed: {e}")
         trilhas_data = {}
 
+    # ─── MC Líquido (IR diferido descontado) ─────────────────────────────────
+    # Roda MC canônico com patrimônio_liquido = patrimônio_bruto - IR diferido.
+    # Metodologia: Lei 14.754/2023 — IR latente sobre ETFs UCITS é obrigação presente.
+    fire_montecarlo_liquido = None
+    ir_diferido_val = (tax_data or {}).get("ir_diferido_total_brl", 0.0)
+    if not args.skip_scripts and ir_diferido_val and ir_diferido_val > 0:
+        print(f"  ▶ MC Líquido (IR diferido R${ir_diferido_val:,.0f}) ...")
+        try:
+            import importlib.util as _ilu
+            _spec = _ilu.spec_from_file_location("fire_mc_liq", ROOT / "scripts" / "fire_montecarlo.py")
+            _mod  = _ilu.module_from_spec(_spec)
+            _spec.loader.exec_module(_mod)
+            fire_montecarlo_liquido = _mod.run_canonical_mc_with_ir_discount(
+                ir_diferido=ir_diferido_val, n_sim=10_000, seed=42
+            )
+            print(
+                f"  ✓ MC Líquido: P(FIRE) bruto={fire_montecarlo_liquido['pfire_bruto']}% "
+                f"→ líquido={fire_montecarlo_liquido['pfire_liquido']}% "
+                f"(delta={fire_montecarlo_liquido['delta_pp']:+.1f}pp)"
+            )
+        except Exception as _e:
+            print(f"  ⚠️ MC Líquido failed: {_e}")
+    elif args.skip_scripts:
+        print("  ⊘ MC Líquido (skip-scripts)")
+    else:
+        print("  ⚠️ MC Líquido: ir_diferido_val=0 ou tax_data ausente — pulando")
+
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -3900,6 +3927,10 @@ def main():
 
         # Backtest Regime 7 — série longa 1994-2026
         "backtest_r7":             backtest_r7_data,
+
+        # MC Líquido — P(FIRE) com patrimônio descontado de IR diferido (Lei 14.754/2023)
+        # Paralelo a fire_montecarlo (bruto). Desconta IR latente antes da simulação.
+        "fire_montecarlo_liquido": fire_montecarlo_liquido,
 
         # HD-perplexity-review: novos datasets
         "fire_matrix":             fire_matrix_data,

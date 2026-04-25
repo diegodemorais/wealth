@@ -1,9 +1,10 @@
 # FR-bold-budget-integration: Avaliar Integração de Elementos Boldin
 
-**Status:** 🟡 BLOQUEADO PARA AVALIAÇÃO (Head)  
-**Data de Criação:** 2026-04-25  
-**Prioridade:** MÉDIA  
-**Assignado:** Head  
+**Status:** 🟢 PARCIALMENTE IMPLEMENTADO (Elementos A e B)
+**Data de Criação:** 2026-04-25
+**Data de Implementação A+B:** 2026-04-25
+**Prioridade:** MÉDIA
+**Assignado:** Head
 
 ---
 
@@ -171,8 +172,8 @@ Bold Budget é melhor para:
 **Curto prazo (próximo mês):**
 - [ ] HEAD — validar se elementos A+B fazem sentido para Diego
 - [ ] HEAD — decidir se "P(FIRE) gate anual" substitui "revisão manual janeiro"
-- [ ] FIRE agent — criar decisão **FR-guardrails-p-fire-integração**
-- [ ] FIRE agent — criar decisão **FR-guardrails-categoria-elasticidade**
+- [x] FIRE agent — criar decisão **FR-guardrails-p-fire-integração** (implementado 2026-04-25 em carteira.md §Bold Budget Integration)
+- [x] FIRE agent — criar decisão **FR-guardrails-categoria-elasticidade** (implementado 2026-04-25 em carteira.md §Bold Budget Integration)
 
 **Médio prazo:**
 - [ ] Adicionar P(FIRE) gate no dashboard (visual de monitoramento)
