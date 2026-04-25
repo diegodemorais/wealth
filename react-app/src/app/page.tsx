@@ -16,7 +16,6 @@ import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
 import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
 import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
-import RFStatusPanel from '@/components/dashboard/RFStatusPanel';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Trophy, Target, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
@@ -67,52 +66,6 @@ export default function HomePage() {
 
   // Compute max drift
   const maxDrift = maxDriftPp(data?.drift as Record<string, any> ?? {});
-
-  // Build RF Status rows (consolidated from IpcaTaxaProgress + DCA Status)
-  const rfRows = (() => {
-    const rf = (data as any)?.rf ?? {};
-    const dcaStatus = (data as any)?.dca_status ?? {};
-    const patAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 0;
-    const pct = (v: number) => patAtual > 0 ? (v / patAtual) * 100 : 0;
-    const ipca2040V = rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0;
-    const ipca2050V = rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0;
-    const renda2065V = rf.renda2065?.valor ?? rf.renda2065?.valor_brl ?? 0;
-    return [
-      {
-        id: 'ipca2040',
-        label: 'IPCA+ 2040',
-        taxaAtual: rf.ipca2040?.taxa,
-        piso: dcaStatus.ipca_longo?.piso,
-        gap: dcaStatus.ipca_longo?.gap_alvo_pp,
-        pctAtual: pct(ipca2040V),
-        pctAlvo: 8,
-        valor: ipca2040V,
-        dcaAtivo: dcaStatus.ipca_longo?.ativo ?? dcaStatus.ipca2040?.ativo,
-      },
-      {
-        id: 'ipca2050',
-        label: 'IPCA+ 2050',
-        taxaAtual: rf.ipca2050?.taxa,
-        piso: dcaStatus.ipca2050?.piso,
-        gap: dcaStatus.ipca2050?.gap_alvo_pp,
-        pctAtual: pct(ipca2050V),
-        pctAlvo: 7,
-        valor: ipca2050V,
-        dcaAtivo: dcaStatus.ipca2050?.ativo,
-      },
-      {
-        id: 'renda2065',
-        label: 'Renda+ 2065',
-        taxaAtual: rf.renda2065?.distancia_gatilho?.taxa_atual ?? rf.renda2065?.taxa,
-        piso: rf.renda2065?.distancia_gatilho?.piso_venda,
-        gap: rf.renda2065?.distancia_gatilho?.gap_pp,
-        pctAtual: pct(renda2065V),
-        pctAlvo: 0,
-        valor: renda2065V,
-        dcaAtivo: dcaStatus.renda_plus?.ativo,
-      },
-    ];
-  })();
 
   return (
     <div>
@@ -407,17 +360,6 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
-      {/* RF STATUS PANEL — merge de IpcaTaxaProgress + DCA Status + DCAStatusGrid */}
-      <CollapsibleSection
-        id="section-rf-status"
-        title={secTitle('now', 'rf-status', 'RF Status — IPCA+ & Renda+ por Instrumento')}
-        defaultOpen={secOpen('now', 'rf-status', false)}
-        icon={<Target size={18} />}
-      >
-        <div style={{ padding: '0 16px 16px' }}>
-          <RFStatusPanel rows={rfRows} />
-        </div>
-      </CollapsibleSection>
 
       {/* Patrimônio Líquido de IR — collapsed */}
       <CollapsibleSection id="section-patrimonio-liquido-ir" title={secTitle('now', 'patrimonio-liquido-ir', 'Patrimônio Líquido de IR')} defaultOpen={secOpen('now', 'patrimonio-liquido-ir', false)}>

@@ -14,6 +14,7 @@ import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
 import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
 import BRLPurchasingPowerTimeline from '@/components/dashboard/BRLPurchasingPowerTimeline';
+import RFStatusPanel from '@/components/dashboard/RFStatusPanel';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
 import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
@@ -419,7 +420,35 @@ export default function PortfolioPage() {
         </CollapsibleSection>
       )}
 
-      {/* 8f. COE + Empréstimo XP (DEV-coe-hodl11-classificacao 2026-04-24) */}
+      {/* 8f. RF Status — drill-down por instrumento (movido do home, pertence ao contexto RF) */}
+      {data?.rf && (() => {
+        const rf = (data as any).rf ?? {};
+        const dcaStatus = (data as any).dca_status ?? {};
+        const patAtual = (data as any)?.premissas?.patrimonio_atual ?? 0;
+        const pct = (v: number) => patAtual > 0 ? (v / patAtual) * 100 : 0;
+        const ipca2040V = rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0;
+        const ipca2050V = rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0;
+        const renda2065V = rf.renda2065?.valor ?? rf.renda2065?.valor_brl ?? 0;
+        const rfRows = [
+          { id: 'ipca2040', label: 'IPCA+ 2040', taxaAtual: rf.ipca2040?.taxa, piso: dcaStatus.ipca_longo?.piso, gap: dcaStatus.ipca_longo?.gap_alvo_pp, pctAtual: pct(ipca2040V), pctAlvo: 8, valor: ipca2040V, dcaAtivo: dcaStatus.ipca_longo?.ativo ?? dcaStatus.ipca2040?.ativo },
+          { id: 'ipca2050', label: 'IPCA+ 2050', taxaAtual: rf.ipca2050?.taxa, piso: dcaStatus.ipca2050?.piso, gap: dcaStatus.ipca2050?.gap_alvo_pp, pctAtual: pct(ipca2050V), pctAlvo: 7, valor: ipca2050V, dcaAtivo: dcaStatus.ipca2050?.ativo },
+          { id: 'renda2065', label: 'Renda+ 2065', taxaAtual: rf.renda2065?.distancia_gatilho?.taxa_atual ?? rf.renda2065?.taxa, piso: rf.renda2065?.distancia_gatilho?.piso_venda, gap: rf.renda2065?.distancia_gatilho?.gap_pp, pctAtual: pct(renda2065V), pctAlvo: 0, valor: renda2065V, dcaAtivo: dcaStatus.renda_plus?.ativo },
+        ];
+        return (
+          <CollapsibleSection
+            id="section-rf-status"
+            title={secTitle('portfolio', 'rf-status', 'RF Status — IPCA+ & Renda+ por Instrumento')}
+            defaultOpen={secOpen('portfolio', 'rf-status', false)}
+            icon={<BarChart3 size={18} />}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <RFStatusPanel rows={rfRows} />
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
+
+      {/* 8g. COE + Empréstimo XP (DEV-coe-hodl11-classificacao 2026-04-24) */}
       {(data as any)?.coe_net_brl > 0 && (() => {
         const coeNet = (data as any).coe_net_brl;
         // Valores brutos da composição (disponíveis via concentracao_brasil.composicao)
