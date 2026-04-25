@@ -236,7 +236,7 @@ export default function PerformancePage() {
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
                   Alpha líquido esperado
                   <span
-                    title="Alpha líquido negativo no curto prazo é esperado — factor premiums emergem em horizontes >10 anos (McLean & Pontiff 2016, post-publication decay ~58%). O objetivo é capturar prêmios fatoriais, não superar o benchmark todo ano."
+                    title="QUANT-006 validado by Factor: +0.16%/ano é esperado LONGO prazo (10+ anos) pós-haircut. CURTO prazo (1-3 anos) pode ser negativo — factor drought aceito explicitamente (>5pp underperformance em 24m dispara revisão). Spread total AVGS-SWRD ~130bps inclui small cap + value + alpha fatorial. McLean & Pontiff 2016: post-publication decay ~58%."
                     style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 14, height: 14, borderRadius: '50%', background: 'rgba(148,163,184,.2)', color: 'var(--muted)', fontSize: 10, cursor: 'help', flexShrink: 0, fontStyle: 'normal' }}
                   >
                     ⓘ
