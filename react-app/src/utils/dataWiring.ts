@@ -116,7 +116,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     (data.rf.ipca2050?.valor ?? 0) +
     (data.rf.renda2065?.valor ?? 0);
 
-  const cryptoLegado = data.cryptoLegado ?? 3000;
+  const cryptoLegado = data.cryptoLegado ?? data.crypto_legado_brl ?? 4000;
   const cryptoBrl = (data.hodl11?.valor ?? 0) + cryptoLegado;
   const totalBrl = totalEquityUsd * CAMBIO + rfBrl + cryptoBrl;
 
@@ -689,3 +689,35 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     moInt,
   };
 }
+
+// ── Schema fields presentes em data.json mas ainda sem UI ──────────────────
+// Documentados aqui para evitar "por que esse campo existe?" em futuras sessões.
+//
+// data.equity_attribution  — { total_aportado_usd, patrimonio_equity_usd, retorno_usd,
+//                              pct_aportes, pct_retorno }
+//                            Candidato: tabela de atribuição de retorno na aba /performance.
+//                            Aguarda feature request formal.
+//
+// data.fire_aporte_sensitivity — { aportes_brl[], pfire_2040[], aporte_base }
+//                            Candidato: gráfico de sensibilidade aporte→P(FIRE) na aba /fire.
+//                            Aguarda feature request formal.
+//
+// data.passivos            — { hipoteca_brl, hipoteca_vencimento, ir_diferido_brl, total_brl }
+//                            Já consumido por PatrimonioLiquidoIR e BalancoHolistico via
+//                            data.passivos diretamente — não precisa de wiring adicional.
+//
+// data.semaforo_triggers   — lista de 4 triggers (renda_plus_taxa, ipca_longo_taxa, etc.)
+//                            Funcionalidade coberta por derived.dcaItems (fonte única v2).
+//                            Campo é duplicata — mantido no JSON por compatibilidade com
+//                            scripts Python; não usar diretamente no React.
+//
+// data.shadows             — { q1_2026, delta_vwra, delta_ipca, delta_shadow_c, periodo }
+//                            Retorno shadow portfolio para comparação interna.
+//                            Sem consumer ativo; aguarda definição de onde exibir.
+//
+// data.withdraw_cenarios   — usado em /withdraw (withdrawCenarios) — já consumido.
+//
+// data.spendingSensibilidade — [ { label, custo, base, fav, stress } × 3 ]
+//                            Candidato: tabela de sensibilidade gasto→P(FIRE) na aba /fire.
+//                            Aguarda feature request formal.
+

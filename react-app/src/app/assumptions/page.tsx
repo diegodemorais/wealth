@@ -540,9 +540,17 @@ export default function AssumptionsPage() {
     },
     {
       title: 'Renda+ vender se taxa < 6.0%',
-      status: (rf.renda2065?.taxa ?? 7) >= 6.5 ? 'SEGURO' : (rf.renda2065?.taxa ?? 7) >= 6.0 ? 'ATENÇÃO' : 'VENDER',
-      statusColor: (rf.renda2065?.taxa ?? 7) >= 6.5 ? 'var(--green)' : (rf.renda2065?.taxa ?? 7) >= 6.0 ? 'var(--yellow)' : 'var(--red)',
-      detail: `taxa atual: ${rf.renda2065?.taxa?.toFixed(2) ?? '—'}%`,
+      // Usa distancia_gatilho.status do schema quando disponível (verde/amarelo/vermelho)
+      status: rf.renda2065?.distancia_gatilho?.status === 'verde' ? 'SEGURO'
+            : rf.renda2065?.distancia_gatilho?.status === 'amarelo' ? 'ATENÇÃO'
+            : rf.renda2065?.distancia_gatilho?.status === 'vermelho' ? 'VENDER'
+            // fallback: recalcula com thresholds definidos na regra de negócio
+            : (rf.renda2065?.taxa ?? 7) >= 6.5 ? 'SEGURO' : (rf.renda2065?.taxa ?? 7) >= 6.0 ? 'ATENÇÃO' : 'VENDER',
+      statusColor: rf.renda2065?.distancia_gatilho?.status === 'verde' ? 'var(--green)'
+                 : rf.renda2065?.distancia_gatilho?.status === 'amarelo' ? 'var(--yellow)'
+                 : rf.renda2065?.distancia_gatilho?.status === 'vermelho' ? 'var(--red)'
+                 : (rf.renda2065?.taxa ?? 7) >= 6.5 ? 'var(--green)' : (rf.renda2065?.taxa ?? 7) >= 6.0 ? 'var(--yellow)' : 'var(--red)',
+      detail: `taxa atual: ${rf.renda2065?.taxa?.toFixed(2) ?? '—'}% (gap: ${rf.renda2065?.distancia_gatilho?.gap_pp?.toFixed(1) ?? '—'}pp)`,
       icon: <Shield size={16} />,
     },
     {

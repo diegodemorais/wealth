@@ -480,9 +480,9 @@ export default function HomePage() {
                 avgsCurrent={bucketPct('AVGS')}
                 avemTarget={(pesosTarget.AVEM ?? 0.20) * 100}
                 avemCurrent={bucketPct('AVEM')}
-                ipcaTarget={15}
+                ipcaTarget={(data as any)?.drift?.IPCA?.alvo ?? 15}
                 ipcaCurrent={patrimonioAtual > 0 ? (((data as any)?.rf?.ipca2040?.valor ?? (data as any)?.rf?.ipca2040?.valor_brl ?? 0) + ((data as any)?.rf?.ipca2050?.valor ?? (data as any)?.rf?.ipca2050?.valor_brl ?? 0)) / patrimonioAtual * 100 : 0}
-                hodl11Target={3}
+                hodl11Target={(data as any)?.drift?.HODL11?.alvo ?? 3}
                 hodl11Current={patrimonioAtual > 0 ? (((data as any)?.hodl11?.valor ?? 0) + ((data as any)?.concentracao_brasil?.composicao?.crypto_legado_brl ?? 0)) / patrimonioAtual * 100 : 0}
                 lastRebalanceDate={(data as any)?.premissas?.ultima_revisao}
                 driftThresholdPp={5}

@@ -21,6 +21,9 @@ export interface BondStrategyPanelProps {
   custo_vida_base: number;
   rf: any;
   privacyMode: boolean;
+  /** Alvos de alocação vindos de data.drift (substituem hardcodes) */
+  ipcaAlvo?: number;
+  hodl11Alvo?: number;
 }
 
 export default function BondStrategyPanel({
@@ -35,15 +38,17 @@ export default function BondStrategyPanel({
   custo_vida_base,
   rf,
   privacyMode,
+  ipcaAlvo,
+  hodl11Alvo,
 }: BondStrategyPanelProps) {
-  const anoAtual = 2026;
+  const anoAtual = new Date().getFullYear();
   const anosAteFire = idadeFire - idadeAtual;
   const anoFire = anoAtual + anosAteFire;
   const idadeCompraIPCAcurto = 50;
   const anoCompraIPCAcurto = anoAtual + (idadeCompraIPCAcurto - idadeAtual);
   const anosAteCompra = anoCompraIPCAcurto - anoAtual;
 
-  const TIMELINE_START = 2026;
+  const TIMELINE_START = anoAtual;
   const TIMELINE_END = 2042;
   const span = TIMELINE_END - TIMELINE_START;
   const toLeft = (ano: number) => Math.min(98, Math.max(2, ((ano - TIMELINE_START) / span) * 100));
@@ -54,7 +59,7 @@ export default function BondStrategyPanel({
       label: 'IPCA+ Longo (TD2040)',
       nota: 'Hold to maturity · vence FIRE Day',
       pctAtual: rfPctAtual,
-      pctAlvo: 15,
+      pctAlvo: ipcaAlvo ?? 15,
       status: 'ATIVO' as const,
     },
     {
@@ -62,7 +67,7 @@ export default function BondStrategyPanel({
       label: 'IPCA+ Curto (~2036/37)',
       nota: `SoRR buffer · Comprar em ${anoCompraIPCAcurto} (idade ${idadeCompraIPCAcurto}) · duration ~2 anos`,
       pctAtual: 0,
-      pctAlvo: 3,
+      pctAlvo: hodl11Alvo ?? 3,
       status: 'AGUARDANDO' as const,
     },
     {

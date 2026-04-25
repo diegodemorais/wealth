@@ -1,21 +1,21 @@
 {
-  "_generated": "2026-04-24T22:54:45",
-  "_generated_brt": "2026-04-24T22:54:45-03:00",
-  "date": "2026-04-24",
+  "_generated": "2026-04-25T06:44:30",
+  "_generated_brt": "2026-04-25T06:44:30-03:00",
+  "date": "2026-04-25",
   "timestamps": {
     "posicoes_ibkr": "2026-04-22",
-    "precos_yfinance": "2026-04-24",
+    "precos_yfinance": "2026-04-25",
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-22",
-    "fire_mc": "2026-04-24",
-    "geral": "2026-04-24"
+    "fire_mc": "2026-04-25",
+    "geral": "2026-04-25"
   },
   "cambio": 4.9793,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 50.04,
+      "price": 49.935,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -23,7 +23,7 @@
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 27.485,
+      "price": 27.37,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -47,7 +47,7 @@
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 87.44,
+      "price": 87.1,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -55,7 +55,7 @@
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 51.59,
+      "price": 51.96,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -71,7 +71,7 @@
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 63.898,
+      "price": 63.9,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -79,7 +79,7 @@
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 68.06,
+      "price": 68.09,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -112,7 +112,7 @@
     "stress": 82.5
   },
   "premissas": {
-    "patrimonio_atual": 3729481,
+    "patrimonio_atual": 3729678,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -891,7 +891,7 @@
         "alpha_pp": 4.27,
         "ipca": 1.92,
         "cdi": 4.26,
-        "alpha_vs_vwra": 3.99
+        "alpha_vs_vwra": 4.47
       }
     ],
     "twr_real_brl_pct": 6.39,
@@ -1637,7 +1637,7 @@
       231.31,
       239.2,
       222.65,
-      242.13
+      242.85
     ],
     "shadowA": [
       96.75,
@@ -1720,107 +1720,107 @@
       219.2,
       222.31,
       205.09,
-      225.95
+      225.62
     ],
     "metrics": {
       "target": {
-        "cagr": 14.0,
+        "cagr": 14.05,
         "sharpe": 0.58,
-        "sortino": 0.79,
+        "sortino": 0.8,
         "maxdd": -27.23,
-        "vol": 17.04
+        "vol": 17.06
       },
       "shadowA": {
-        "cagr": 12.84,
+        "cagr": 12.81,
         "sharpe": 0.55,
         "sortino": 0.86,
         "maxdd": -24.29,
-        "vol": 15.32
+        "vol": 15.31
       }
     },
     "nota_proxy": "⚠️ 2019-08–2026-04: 2 proxies UCITS ativos (AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos.",
     "metrics_by_period": {
       "all": {
         "target": {
-          "cagr": 14.74,
+          "cagr": 14.79,
           "sharpe": 0.9,
-          "vol": 17.06,
+          "vol": 17.08,
           "maxdd": -27.22
         },
         "shadowA": {
-          "cagr": 13.57,
+          "cagr": 13.54,
           "sharpe": 0.91,
-          "vol": 15.32,
+          "vol": 15.31,
           "maxdd": -24.29
         }
       },
       "since2009": {
         "target": {
-          "cagr": 14.74,
+          "cagr": 14.79,
           "sharpe": 0.9,
-          "vol": 17.06,
+          "vol": 17.08,
           "maxdd": -27.22
         },
         "shadowA": {
-          "cagr": 13.57,
+          "cagr": 13.54,
           "sharpe": 0.91,
-          "vol": 15.32,
+          "vol": 15.31,
           "maxdd": -24.29
         }
       },
       "since2013": {
         "target": {
-          "cagr": 14.74,
+          "cagr": 14.79,
           "sharpe": 0.9,
-          "vol": 17.06,
+          "vol": 17.08,
           "maxdd": -27.22
         },
         "shadowA": {
-          "cagr": 13.57,
+          "cagr": 13.54,
           "sharpe": 0.91,
-          "vol": 15.32,
+          "vol": 15.31,
           "maxdd": -24.29
         }
       },
       "since2020": {
         "target": {
-          "cagr": 14.26,
+          "cagr": 14.31,
           "sharpe": 0.86,
-          "vol": 17.45,
+          "vol": 17.48,
           "maxdd": -24.51
         },
         "shadowA": {
-          "cagr": 12.74,
+          "cagr": 12.71,
           "sharpe": 0.84,
-          "vol": 15.76,
+          "vol": 15.74,
           "maxdd": -24.29
         }
       },
       "5y": {
         "target": {
-          "cagr": 13.4,
+          "cagr": 13.46,
           "sharpe": 0.95,
-          "vol": 14.44,
+          "vol": 14.47,
           "maxdd": -23.09
         },
         "shadowA": {
-          "cagr": 11.89,
+          "cagr": 11.86,
           "sharpe": 0.88,
-          "vol": 13.83,
+          "vol": 13.81,
           "maxdd": -24.29
         }
       },
       "3y": {
         "target": {
-          "cagr": 18.89,
+          "cagr": 19.0,
           "sharpe": 1.43,
-          "vol": 12.77,
+          "vol": 12.83,
           "maxdd": -9.99
         },
         "shadowA": {
-          "cagr": 18.65,
+          "cagr": 18.6,
           "sharpe": 1.44,
-          "vol": 12.49,
+          "vol": 12.46,
           "maxdd": -9.68
         }
       }
@@ -2341,7 +2341,7 @@
       689.73,
       701.37,
       660.44,
-      715.92
+      721.44
     ],
     "shadowA": [
       98.02,
@@ -2526,7 +2526,7 @@
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -2599,22 +2599,22 @@
       646.9,
       654.74,
       614.61,
-      662.93
+      668.66
     ],
     "metrics": {
       "target": {
-        "cagr": 9.67,
+        "cagr": 9.71,
         "sharpe": 0.36,
-        "sortino": 0.46,
+        "sortino": 0.47,
         "maxdd": -53.3,
-        "vol": 16.23
+        "vol": 16.25
       },
       "shadowA": {
-        "cagr": 9.27,
+        "cagr": 9.32,
         "sharpe": 0.35,
-        "sortino": 0.45,
+        "sortino": 0.46,
         "maxdd": -53.39,
-        "vol": 15.15
+        "vol": 15.17
       }
     },
     "note": "IVV ⚠️ proxy de SWRD.L (S&P 500 ≠ MSCI World — sem DM ex-US no Target); VBR ⚠️ proxy de AVGS.L (Vanguard SC Value US — sem Intl SC value); EEM ⚠️ proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
@@ -2867,23 +2867,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 77583.0,
+      "btc_atual_usd": 77761.53,
       "hodl11_brl_atual": 109510,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.03,
-          "valor_fire_brl": 112921
+          "valor_fire_brl": 112662
         },
         "base": {
           "btc_target_usd": 250000,
-          "upside_factor": 3.22,
-          "valor_fire_brl": 352880
+          "upside_factor": 3.21,
+          "valor_fire_brl": 352069
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.44,
-          "valor_fire_brl": 705759
+          "upside_factor": 6.43,
+          "valor_fire_brl": 704139
         }
       }
     }
@@ -2953,13 +2953,13 @@
       "label": "Equity SWRD — Drift",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -4.1,
+      "valor": -4.2,
       "unidade": "pp",
       "piso": -2.0,
-      "gap": -2.1,
-      "posicao_r": 1320236,
+      "gap": -2.2,
+      "posicao_r": 1316576,
       "acao": "Rebalancear",
-      "detalhe": "drift: -4.10pp (atual 35.4% vs alvo 39.5%) · posição R$1320k"
+      "detalhe": "drift: -4.20pp (atual 35.3% vs alvo 39.5%) · posição R$1317k"
     },
     {
       "id": "hodl11_banda",
@@ -2979,7 +2979,7 @@
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.657020373612307,
+      "valor": -11.657196948369268,
       "unidade": "pp",
       "piso": -2.0,
       "gap": -9.66,
@@ -3057,7 +3057,7 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 35.4,
+      "atual": 35.3,
       "alvo": 39.5
     },
     "AVGS": {
@@ -3065,7 +3065,7 @@
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 23.6,
+      "atual": 23.7,
       "alvo": 15.8
     },
     "IPCA": {
@@ -3099,7 +3099,7 @@
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 87.44,
+      "price": 87.1,
       "ucits": "AVGS.L"
     },
     {
@@ -3107,7 +3107,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 51.59,
+      "price": 51.96,
       "ucits": "AVEM.L"
     },
     {
@@ -3123,7 +3123,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 63.898,
+      "price": 63.9,
       "ucits": "AVEM.L"
     },
     {
@@ -3131,7 +3131,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 68.06,
+      "price": 68.09,
       "ucits": "JPGL.L"
     }
   ],
@@ -8090,13 +8090,13 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 647243,
-    "retorno_usd": 256199,
+    "patrimonio_equity_usd": 647282,
+    "retorno_usd": 256239,
     "pct_aportes": 60.4,
     "pct_retorno": 39.6,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
-    "updated": "2026-04-24"
+    "updated": "2026-04-25"
   },
   "shadows": {
     "q1_2026": {
@@ -8122,7 +8122,7 @@
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 84.1,
     "cds_brazil_5y_bps": 123.9,
-    "bitcoin_usd": 77583.0,
+    "bitcoin_usd": 77761.53,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -8140,14 +8140,14 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.9793,
-    "btc_usd": 77583.0,
+    "btc_usd": 77761.53,
     "cambio_mtd_pct": -3.43,
-    "btc_mtd_pct": 7.94,
+    "btc_mtd_pct": 8.19,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
     "fonte": "yfinance BTC-USD + PTAX BCB",
-    "updated": "2026-04-24"
+    "updated": "2026-04-25"
   },
   "minilog": [
     {
@@ -8697,7 +8697,7 @@
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3729481,
+    "financeiro_brl": 3729678,
     "imovel_equity_brl": 367875.3,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 452124.7,
@@ -8705,7 +8705,7 @@
     "capital_humano_vp": 3129022.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 7659378.3,
+    "total_brl": 7659575.3,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
@@ -8725,7 +8725,7 @@
     },
     "total_brasil_brl": 393144,
     "total_cripto_brl": 113521,
-    "total_portfolio_brl": 3729481,
+    "total_portfolio_brl": 3729678,
     "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
   },
   "premissas_vs_realizado": {
@@ -8735,8 +8735,8 @@
       "twr_nominal_brl_cagr_pct": 12.67,
       "ipca_cagr_periodo_pct": 5.9,
       "periodo_anos": 5.0,
-      "backtest_nominal_usd_pct": 14.0,
-      "benchmark_vwra_nominal_usd_pct": 12.84,
+      "backtest_nominal_usd_pct": 14.05,
+      "benchmark_vwra_nominal_usd_pct": 12.81,
       "nota": "Premissa = retorno real em BRL (pós-IPCA, pós-depreciação cambial 0.5%/ano). Realizado = TWR anualizado BRL deflacionado pelo IPCA do período (comparação correta). Backtest USD = nominal em USD (inclui inflação US ~2-3%/ano, referência apenas)."
     },
     "aporte_mensal": {
@@ -8848,7 +8848,7 @@
         "total": 22050
       }
     ],
-    "updated_at": "2026-04-24",
+    "updated_at": "2026-04-25",
     "fonte": "All-Accounts_03abril26.csv"
   },
   "head_relay": {
@@ -10397,7 +10397,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-24T22:54:28",
+    "_generated": "2026-04-25T06:44:15",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",

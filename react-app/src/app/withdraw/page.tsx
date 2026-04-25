@@ -555,6 +555,8 @@ export default function WithdrawPage() {
               custo_vida_base={activeScenarioCfg.custo_vida_base}
               rf={(safeData as any).rf ?? {}}
               privacyMode={privacyMode}
+              ipcaAlvo={(safeData.drift as any)?.IPCA?.alvo ?? 15}
+              hodl11Alvo={(safeData.drift as any)?.HODL11?.alvo ?? 3}
             />
           </div>
         </CollapsibleSection>
