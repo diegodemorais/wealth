@@ -89,6 +89,7 @@ ETF_COMP_PATH           = ROOT / "dados" / "etf_composition.json"
 BOND_POOL_RUNWAY_PATH   = ROOT / "dados" / "bond_pool_runway.json"
 LUMPY_EVENTS_PATH       = ROOT / "dados" / "lumpy_events.json"
 FIRE_BY_PROFILE_PATH    = ROOT / "dados" / "fire_by_profile.json"   # MC 10k sims — never overwritten by pipeline
+REALIZED_PNL_PATH       = ROOT / "react-app" / "public" / "data" / "realized_pnl.json"  # IBKR realized P&L → DARF obligations
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
@@ -3978,6 +3979,10 @@ def main():
         # Human Capital Crossover — VP capital humano vs patrimônio financeiro
         # (já calculado acima para uso no patrimônio holístico)
         "human_capital": human_capital_data,
+
+        # Realized P&L for DARF obligations (Lei 14.754/2023 compliance)
+        # Fonte: IBKR flex query → processed by ibkr_sync.py
+        "realized_pnl": json.loads(REALIZED_PNL_PATH.read_text()) if REALIZED_PNL_PATH.exists() else None,
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)
