@@ -5,6 +5,13 @@ import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
+// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
+const handleChartResize = (containerRef: any) => {
+  if (containerRef?.current?.offsetWidth > 0) {
+    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
+  }
+};
+
 interface AlphaVsSWRDChartProps {
   oneYear: { targetReturn: number; swrdReturn: number };
   threeYear: { targetReturn: number; swrdReturn: number };

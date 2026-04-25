@@ -9,6 +9,13 @@ import { createDualLineChartOption, CHART_COLORS } from '@/utils/chartSetup';
 import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { ChartCard } from '@/components/primitives/ChartCard';
 
+// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
+const handleChartResize = (containerRef: any) => {
+  if (containerRef?.current?.offsetWidth > 0) {
+    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
+  }
+};
+
 export interface TimelineChartProps {
   data: DashboardData;
   period?: string;

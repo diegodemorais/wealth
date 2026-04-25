@@ -8,6 +8,13 @@ import { DashboardData } from '@/types/dashboard';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
+// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
+const handleChartResize = (containerRef: any) => {
+  if (containerRef?.current?.offsetWidth > 0) {
+    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
+  }
+};
+
 export interface BacktestChartProps {
   data: DashboardData;
   period?: string; // '3y' | '5y' | 'since2020' | 'since2013' | 'since2009' | 'all'

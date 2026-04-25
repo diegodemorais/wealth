@@ -3239,8 +3239,8 @@ def main():
     # Premissas vs Realizado (Advocate dataset)
     premissas_vs_realizado = compute_premissas_vs_realizado(premissas, backtest_data, cambio, csv_rows=_csv_rows)
     if premissas_vs_realizado:
-        _pvr_aporte = premissas_vs_realizado.get("aporte_mensal", {})
-        _pvr_ret = premissas_vs_realizado.get("retorno_equity", {})
+        _pvr_aporte = premissas_vs_realizado.get("aporte_mensal") or {}
+        _pvr_ret = premissas_vs_realizado.get("retorno_equity") or {}
         print(f"  -> premissas vs realizado: aporte R${_pvr_aporte.get('realizado_media_brl', 0)/1e3:.0f}k/mês vs premissa R${premissas.get('aporte_mensal', 0)/1e3:.0f}k | backtest CAGR {_pvr_ret.get('backtest_nominal_usd_pct', 'N/A')}% (nominal USD)")
 
     # Guardrails — suporta lista de tuples (dd_min, dd_max, corte, desc) ou dicts

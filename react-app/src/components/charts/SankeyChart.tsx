@@ -7,6 +7,13 @@ import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { createSankeyChartOption } from '@/utils/chartSetup';
 
+// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
+const handleChartResize = (containerRef: any) => {
+  if (containerRef?.current?.offsetWidth > 0) {
+    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
+  }
+};
+
 interface SankeyChartProps {
   data: DashboardData;
 }

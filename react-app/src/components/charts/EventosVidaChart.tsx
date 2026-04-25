@@ -5,6 +5,13 @@ import { DashboardData } from '@/types/dashboard';
 import { EC } from '@/utils/echarts-theme';
 import { ChartCard } from '@/components/primitives/ChartCard';
 
+// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
+const handleChartResize = (containerRef: any) => {
+  if (containerRef?.current?.offsetWidth > 0) {
+    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
+  }
+};
+
 export interface EventosVidaChartProps {
   data: DashboardData;
 }

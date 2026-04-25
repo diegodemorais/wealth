@@ -6,6 +6,13 @@ import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 import { createDeltaBarChartOption } from '@/utils/chartSetup';
 
+// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
+const handleChartResize = (containerRef: any) => {
+  if (containerRef?.current?.offsetWidth > 0) {
+    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
+  }
+};
+
 export interface DeltaBarChartProps {
   data: DashboardData;
   title?: string;

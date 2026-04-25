@@ -7,6 +7,13 @@ import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
+// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
+const handleChartResize = (containerRef: any) => {
+  if (containerRef?.current?.offsetWidth > 0) {
+    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
+  }
+};
+
 export interface InformationRatioChartProps {
   data: DashboardData;
 }

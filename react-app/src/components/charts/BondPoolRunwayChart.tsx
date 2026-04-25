@@ -7,6 +7,13 @@ import { useChartResize } from '@/hooks/useChartResize';
 import { createBondPoolProbabilisticOption, createBondPoolDeterministicOption } from '@/utils/chartSetup';
 import { ChartCard } from '@/components/primitives/ChartCard';
 
+// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
+const handleChartResize = (containerRef: any) => {
+  if (containerRef?.current?.offsetWidth > 0) {
+    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
+  }
+};
+
 interface BondPoolRunwayData {
   anos_pre_fire?: number[];
   pool_total_brl?: number[];
