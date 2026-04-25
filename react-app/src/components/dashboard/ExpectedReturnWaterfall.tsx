@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface FactorStep {

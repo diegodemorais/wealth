@@ -5,6 +5,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface DrawdownHistoryChartProps {
   dates: string[];

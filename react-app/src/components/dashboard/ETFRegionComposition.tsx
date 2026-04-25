@@ -1,5 +1,6 @@
 'use client';
 
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import React, { useState, useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 

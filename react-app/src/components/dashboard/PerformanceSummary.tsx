@@ -14,6 +14,7 @@
 
 import React from 'react';
 import { KpiCard } from '@/components/primitives/KpiCard';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface AnnualReturn {
   year: number;

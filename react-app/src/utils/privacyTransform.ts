@@ -42,13 +42,19 @@ export function fmtPrivacy(value: number, privacyMode: boolean, opts?: {
   const { prefix = 'R$', suffix = '', decimals = 0, compact = true } = opts ?? {};
 
   const v = privacyMode ? pvMoney(value) : value;
+  const isNegative = v < 0;
+  const absV = Math.abs(v);
 
+  let formatted: string;
   if (compact) {
-    if (Math.abs(v) >= 1_000_000) return `${prefix}${(v / 1_000_000).toFixed(2)}M${suffix}`;
-    if (Math.abs(v) >= 1_000) return `${prefix}${(v / 1_000).toFixed(decimals)}k${suffix}`;
+    if (absV >= 1_000_000) formatted = `${prefix}${(absV / 1_000_000).toFixed(2)}M${suffix}`;
+    else if (absV >= 1_000) formatted = `${prefix}${(absV / 1_000).toFixed(decimals)}k${suffix}`;
+    else formatted = `${prefix}${absV.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}${suffix}`;
+  } else {
+    formatted = `${prefix}${absV.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}${suffix}`;
   }
 
-  return `${prefix}${v.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}${suffix}`;
+  return isNegative ? `−${formatted}` : formatted;
 }
 
 /**

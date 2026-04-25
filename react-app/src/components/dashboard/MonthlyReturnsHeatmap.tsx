@@ -1,5 +1,6 @@
 'use client';
 
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import React, { useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 
