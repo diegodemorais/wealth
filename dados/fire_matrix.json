@@ -1,0 +1,89 @@
+{
+  "perfis": {
+    "atual": {
+      "label": "Atual (Solteiro)",
+      "gasto_anual": 250000,
+      "descricao": "Diego solo, custo de vida base"
+    },
+    "casado": {
+      "label": "Casado",
+      "gasto_anual": 270000,
+      "descricao": "Diego + parceira, custos compartilhados, saúde 2p"
+    },
+    "filho": {
+      "label": "Casado + Filho",
+      "gasto_anual": 300000,
+      "descricao": "Diego + parceira + criança(s), educação e saúde expandidas"
+    }
+  },
+  "by_profile": [
+    {
+      "profile": "atual",
+      "label": "Atual (Solteiro)",
+      "gasto_anual": 250000,
+      "fire_age_50": "2037",
+      "p_fire_50": 76.3,
+      "pat_mediano_50": 9456055.0,
+      "p_fire_50_fav": 85.7,
+      "p_fire_50_stress": 70.0,
+      "fire_age_53": "2040",
+      "p_fire_53": 86.3,
+      "pat_mediano_53": 11694745.0,
+      "p_fire_53_fav": 92.4,
+      "p_fire_53_stress": 81.3,
+      "fire_age_threshold": 53,
+      "fire_year_threshold": "2040",
+      "p_at_threshold": 86.3,
+      "p_at_threshold_fav": 92.4,
+      "p_at_threshold_stress": 81.3,
+      "swr_at_fire": 0.0214,
+      "pat_mediano_threshold": 11694745.0
+    },
+    {
+      "profile": "casado",
+      "label": "Casado",
+      "gasto_anual": 270000,
+      "fire_age_50": "2037",
+      "p_fire_50": 73.8,
+      "pat_mediano_50": 9456055.0,
+      "p_fire_50_fav": 84.4,
+      "p_fire_50_stress": 67.2,
+      "fire_age_53": "2040",
+      "p_fire_53": 84.4,
+      "pat_mediano_53": 11694745.0,
+      "p_fire_53_fav": 91.0,
+      "p_fire_53_stress": 79.5,
+      "fire_age_threshold": 54,
+      "fire_year_threshold": "2041",
+      "p_at_threshold": 86.9,
+      "p_at_threshold_fav": 92.5,
+      "p_at_threshold_stress": 82.4,
+      "swr_at_fire": 0.0217,
+      "pat_mediano_threshold": 12445255.0
+    },
+    {
+      "profile": "filho",
+      "label": "Casado + Filho",
+      "gasto_anual": 300000,
+      "fire_age_50": "2037",
+      "p_fire_50": 69.4,
+      "pat_mediano_50": 9456055.0,
+      "p_fire_50_fav": 81.2,
+      "p_fire_50_stress": 62.7,
+      "fire_age_53": "2040",
+      "p_fire_53": 81.1,
+      "pat_mediano_53": 11694745.0,
+      "p_fire_53_fav": 89.6,
+      "p_fire_53_stress": 76.5,
+      "fire_age_threshold": 55,
+      "fire_year_threshold": "2042",
+      "p_at_threshold": 86.4,
+      "p_at_threshold_fav": 92.5,
+      "p_at_threshold_stress": 82.2,
+      "swr_at_fire": 0.0227,
+      "pat_mediano_threshold": 13210249.0
+    }
+  ],
+  "_by_profile_generated": "2026-04-25",
+  "_by_profile_n_sim": 10000
+}
