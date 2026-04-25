@@ -148,7 +148,7 @@
       },
       "AVEM": {
         "retorno_usd_real": 0.05,
-        "fonte": "Média 4 fontes: AQR/JPM/GMO/RA arredondado conserv."
+        "fonte": "M\u00e9dia 4 fontes: AQR/JPM/GMO/RA arredondado conserv."
       }
     },
     "ultimo_aporte_brl": 78194,
@@ -160,7 +160,7 @@
       "ddMax": 0.15,
       "corte": 0.0,
       "retirada": 250000,
-      "desc": "Normal — sem corte"
+      "desc": "Normal \u2014 sem corte"
     },
     {
       "ddMin": 0.15,
@@ -273,10 +273,10 @@
     "mc_date": "2026-04-25",
     "plano_status": {
       "status": "MONITORAR",
-      "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
+      "gatilho_ativo": "Drift 8.0pp entre 5\u201310pp \u2014 MONITORAR",
       "todos_gatilhos": [
-        "Drift 8.0pp entre 5–10pp — MONITORAR",
-        "DCA IPCA+ ativo — 7.20% ≥ 6.0%"
+        "Drift 8.0pp entre 5\u201310pp \u2014 MONITORAR",
+        "DCA IPCA+ ativo \u2014 7.20% \u2265 6.0%"
       ],
       "inputs": {
         "pfire": 0.864,
@@ -1402,7 +1402,7 @@
     },
     "rf_usd": {
       "taxa_anual": 3.64,
-      "nome": "US T-Bill 3m (≈ Fed Funds)"
+      "nome": "US T-Bill 3m (\u2248 Fed Funds)"
     },
     "information_ratio": {
       "benchmark": "VWRA.L",
@@ -1468,7 +1468,7 @@
           0.2394,
           0.2464
         ],
-        "nota": "N=25 pontos — baixa robustez estatística"
+        "nota": "N=25 pontos \u2014 baixa robustez estat\u00edstica"
       }
     }
   },
@@ -1738,7 +1738,7 @@
         "vol": 15.31
       }
     },
-    "nota_proxy": "⚠️ 2019-08–2026-04: 2 proxies UCITS ativos (AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos.",
+    "nota_proxy": "\u26a0\ufe0f 2019-08\u20132026-04: 2 proxies UCITS ativos (AVUV/AVDV\u2192AVGS, AVEM US-listed\u2192AVEM.L). Resultados indicativos \u2014 conclus\u00e3o definitiva requer hist\u00f3rico UCITS \u22653 anos.",
     "metrics_by_period": {
       "all": {
         "target": {
@@ -2617,7 +2617,7 @@
         "vol": 15.17
       }
     },
-    "note": "IVV ⚠️ proxy de SWRD.L (S&P 500 ≠ MSCI World — sem DM ex-US no Target); VBR ⚠️ proxy de AVGS.L (Vanguard SC Value US — sem Intl SC value); EEM ⚠️ proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
+    "note": "IVV \u26a0\ufe0f proxy de SWRD.L (S&P 500 \u2260 MSCI World \u2014 sem DM ex-US no Target); VBR \u26a0\ufe0f proxy de AVGS.L (Vanguard SC Value US \u2014 sem Intl SC value); EEM \u26a0\ufe0f proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
   },
   "factor_rolling": {
     "dates": [
@@ -2649,7 +2649,7 @@
     "excess_since_launch_pp": 12.58,
     "avgs_launch_date": "2024-10-14",
     "meses_desde_launch": 17.9,
-    "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
+    "fonte": "yfinance \u00b7 SWRD.L + AVGS.L \u00b7 pre\u00e7os di\u00e1rios",
     "updated": "2026-04-11"
   },
   "factor_loadings": {
@@ -2800,7 +2800,7 @@
       "valor": 86554.71,
       "taxa": 7.58,
       "tipo": "reserva",
-      "notas": "Reserva · Nubank · migrar 2029",
+      "notas": "Reserva \u00b7 Nubank \u00b7 migrar 2029",
       "custo_base_brl": 76859.95,
       "total_aplicado_brl": 117438.37,
       "total_resgatado_brl": 40578.42,
@@ -2811,7 +2811,7 @@
       "valor": 113015.08,
       "taxa": 7.2,
       "tipo": "estrutural",
-      "notas": "DCA ativo · XP · HTM SEMPRE",
+      "notas": "DCA ativo \u00b7 XP \u00b7 HTM SEMPRE",
       "custo_base_brl": 66533.56,
       "total_aplicado_brl": 66533.56,
       "total_resgatado_brl": 0.0,
@@ -2822,7 +2822,7 @@
       "valor": 117832.62,
       "taxa": 6.8,
       "tipo": "tatico",
-      "notas": "Tático · Nubank · Vender ≤6.0%",
+      "notas": "T\u00e1tico \u00b7 Nubank \u00b7 Vender \u22646.0%",
       "custo_base_brl": 108553.71,
       "total_aplicado_brl": 108553.71,
       "total_resgatado_brl": 0.0,
@@ -2937,7 +2937,7 @@
   "semaforo_triggers": [
     {
       "id": "renda_plus_taxa",
-      "label": "Renda+ 2065 — Taxa",
+      "label": "Renda+ 2065 \u2014 Taxa",
       "category": "taxa",
       "status": "verde",
       "valor": 6.8,
@@ -2946,11 +2946,11 @@
       "gap": 0.8,
       "posicao_r": 117833.0,
       "acao": "Monitorar",
-      "detalhe": "taxa: 6.80% · piso venda 6.0% · gap 0.8pp · posição R$118k"
+      "detalhe": "taxa: 6.80% \u00b7 piso venda 6.0% \u00b7 gap 0.8pp \u00b7 posi\u00e7\u00e3o R$118k"
     },
     {
       "id": "swrd_drift",
-      "label": "Equity SWRD — Drift",
+      "label": "Equity SWRD \u2014 Drift",
       "category": "posicao",
       "status": "vermelho",
       "valor": -4.2,
@@ -2959,11 +2959,11 @@
       "gap": -2.2,
       "posicao_r": 1316576,
       "acao": "Rebalancear",
-      "detalhe": "drift: -4.20pp (atual 35.3% vs alvo 39.5%) · posição R$1317k"
+      "detalhe": "drift: -4.20pp (atual 35.3% vs alvo 39.5%) \u00b7 posi\u00e7\u00e3o R$1317k"
     },
     {
       "id": "hodl11_banda",
-      "label": "Crypto HODL11 — Banda",
+      "label": "Crypto HODL11 \u2014 Banda",
       "category": "crypto",
       "status": "verde",
       "valor": -0.06,
@@ -2972,11 +2972,11 @@
       "gap": 0.06,
       "posicao_r": 109510.0,
       "acao": "No alvo",
-      "detalhe": "drift: -0.06pp (atual 2.9% vs alvo 3.0%) · posição R$110k"
+      "detalhe": "drift: -0.06pp (atual 2.9% vs alvo 3.0%) \u00b7 posi\u00e7\u00e3o R$110k"
     },
     {
       "id": "drift_ipca_max",
-      "label": "Drift Máximo IPCA",
+      "label": "Drift M\u00e1ximo IPCA",
       "category": "posicao",
       "status": "vermelho",
       "valor": -11.657196948369268,
@@ -2985,13 +2985,13 @@
       "gap": -9.66,
       "posicao_r": 124676.0,
       "acao": "Aportar urgente",
-      "detalhe": "drift: -11.66pp vs alvo 15% · posição R$125k"
+      "detalhe": "drift: -11.66pp vs alvo 15% \u00b7 posi\u00e7\u00e3o R$125k"
     }
   ],
   "guardrails_retirada": [
     {
       "id": "guardrail_expansivo",
-      "guardrail": "Expansivo — Upside",
+      "guardrail": "Expansivo \u2014 Upside",
       "condicao": "Portfolio +25% acima do pico real",
       "retirada_sugerida": 275000,
       "acao": "Aumentar retirada 10% permanente vs base (teto R$350k)",
@@ -3002,8 +3002,8 @@
       "guardrail": "Normal",
       "condicao": "Drawdown 0-15%",
       "retirada_sugerida": 250000,
-      "acao": "Sem ajuste — manter retirada base",
-      "prioridade": "MANTÉM"
+      "acao": "Sem ajuste \u2014 manter retirada base",
+      "prioridade": "MANT\u00c9M"
     },
     {
       "id": "guardrail_cautela_1",
@@ -3023,10 +3023,10 @@
     },
     {
       "id": "guardrail_defesa",
-      "guardrail": "Defesa — Piso Essencial",
+      "guardrail": "Defesa \u2014 Piso Essencial",
       "condicao": "Drawdown >35%",
       "retirada_sugerida": 180000,
-      "acao": "Piso essencial (moradia + saúde + alimentação); avaliar renda part-time",
+      "acao": "Piso essencial (moradia + sa\u00fade + alimenta\u00e7\u00e3o); avaliar renda part-time",
       "prioridade": "DEFESA"
     }
   ],
@@ -7759,7 +7759,7 @@
     "crescReal": 3472335,
     "cagr_total": 7.870000000000001,
     "_estimativa": false,
-    "_fonte": "retornos_mensais.json decomposicao (desde início)",
+    "_fonte": "retornos_mensais.json decomposicao (desde in\u00edcio)",
     "_inicio": "2021-04",
     "por_bucket": {
       "SWRD": 397796,
@@ -7777,11 +7777,11 @@
         "value_pct": 22.9
       },
       {
-        "label": "RF Doméstica",
+        "label": "RF Dom\u00e9stica",
         "value_pct": 9.6
       },
       {
-        "label": "Câmbio",
+        "label": "C\u00e2mbio",
         "value_pct": 8.6
       },
       {
@@ -8113,8 +8113,8 @@
     "retorno_usd": 256239,
     "pct_aportes": 60.4,
     "pct_retorno": 39.6,
-    "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
-    "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
+    "nota": "Equity IBKR only \u2014 exclui RF, HODL11, Nubank",
+    "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes \u00d7 precos IBKR",
     "updated": "2026-04-25"
   },
   "shadows": {
@@ -8144,10 +8144,10 @@
     "bitcoin_usd": null,
     "plano_status": {
       "status": "MONITORAR",
-      "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
+      "gatilho_ativo": "Drift 8.0pp entre 5\u201310pp \u2014 MONITORAR",
       "todos_gatilhos": [
-        "Drift 8.0pp entre 5–10pp — MONITORAR",
-        "DCA IPCA+ ativo — 7.20% ≥ 6.0%"
+        "Drift 8.0pp entre 5\u201310pp \u2014 MONITORAR",
+        "DCA IPCA+ ativo \u2014 7.20% \u2265 6.0%"
       ],
       "inputs": {
         "pfire": 0.864,
@@ -8171,28 +8171,28 @@
   "minilog": [
     {
       "data": "2026-04-10",
-      "tipo": "Aplicação NB",
+      "tipo": "Aplica\u00e7\u00e3o NB",
       "ativo": "IPCA+ 2040",
       "valor": "R$ 46,498",
       "corretora": "Nubank"
     },
     {
       "data": "2026-04-10",
-      "tipo": "Aplicação NB",
+      "tipo": "Aplica\u00e7\u00e3o NB",
       "ativo": "IPCA+ 2050",
       "valor": "R$ 11,661",
       "corretora": "Nubank"
     },
     {
       "data": "2026-04-06",
-      "tipo": "Aplicação NB",
+      "tipo": "Aplica\u00e7\u00e3o NB",
       "ativo": "IPCA+ 2040",
       "valor": "R$ 20,035",
       "corretora": "Nubank"
     },
     {
       "data": "2026-03-13",
-      "tipo": "Depósito IBKR",
+      "tipo": "Dep\u00f3sito IBKR",
       "ativo": "USD",
       "valor": "$5,600",
       "corretora": "IBKR"
@@ -8201,19 +8201,19 @@
       "data": "2026-03-13",
       "tipo": "Compra",
       "ativo": "AVGS",
-      "valor": "233 × $24.93",
+      "valor": "233 \u00d7 $24.93",
       "corretora": "IBKR"
     },
     {
       "data": "2026-03-09",
       "tipo": "Compra",
       "ativo": "SWRD",
-      "valor": "361 × $46.84",
+      "valor": "361 \u00d7 $46.84",
       "corretora": "IBKR"
     },
     {
       "data": "2026-03-06",
-      "tipo": "Depósito IBKR",
+      "tipo": "Dep\u00f3sito IBKR",
       "ativo": "USD",
       "valor": "$5,000",
       "corretora": "IBKR"
@@ -8227,7 +8227,7 @@
     },
     {
       "data": "2026-01-29",
-      "tipo": "Depósito IBKR",
+      "tipo": "Dep\u00f3sito IBKR",
       "ativo": "USD",
       "valor": "$3,750",
       "corretora": "IBKR"
@@ -8241,17 +8241,17 @@
     }
   ],
   "wellness_config": {
-    "_doc": "Fonte de verdade do Wellness Score. Lido por generate_data.py e embutido em data.json. Dashboard lê de DATA.wellness_config.",
+    "_doc": "Fonte de verdade do Wellness Score. Lido por generate_data.py e embutido em data.json. Dashboard l\u00ea de DATA.wellness_config.",
     "version": "2.1",
     "updated": "2026-04-17",
-    "rationale": "Score mede disciplina operacional + saúde financeira — não duplica P(FIRE). P(FIRE) é o KPI terminal standalone. Wellness captura o que o MC não captura: comportamento, proteção, execução, alavancagem.",
+    "rationale": "Score mede disciplina operacional + sa\u00fade financeira \u2014 n\u00e3o duplica P(FIRE). P(FIRE) \u00e9 o KPI terminal standalone. Wellness captura o que o MC n\u00e3o captura: comportamento, prote\u00e7\u00e3o, execu\u00e7\u00e3o, alavancagem.",
     "total_max": 110,
     "metrics": [
       {
         "id": "pfire",
         "label": "P(FIRE) base",
         "max": 35,
-        "description": "Métrica terminal — incorpora patrimônio, aportes, retorno, inflação, spending via MC 10k sims. Peso dominante porque responde a única pergunta que importa.",
+        "description": "M\u00e9trica terminal \u2014 incorpora patrim\u00f4nio, aportes, retorno, infla\u00e7\u00e3o, spending via MC 10k sims. Peso dominante porque responde a \u00fanica pergunta que importa.",
         "thresholds": [
           {
             "min": 95,
@@ -8283,8 +8283,8 @@
         "id": "savings_rate",
         "label": "Savings rate",
         "max": 15,
-        "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / custo_vida_mensal — múltiplo de cobertura. Mais significativo que % da renda quando renda PJ é volátil.",
-        "_note_thresholds": "Thresholds em % — definição padrão: aporte/(aporte+custo_vida). Ex: R$25k/(R$25k+R$20.8k) = 54.6%. ≥50% = excelente, ≥40% = ok, ≥25% = atenção.",
+        "description": "Driver #1 da acumula\u00e7\u00e3o (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / custo_vida_mensal \u2014 m\u00faltiplo de cobertura. Mais significativo que % da renda quando renda PJ \u00e9 vol\u00e1til.",
+        "_note_thresholds": "Thresholds em % \u2014 defini\u00e7\u00e3o padr\u00e3o: aporte/(aporte+custo_vida). Ex: R$25k/(R$25k+R$20.8k) = 54.6%. \u226550% = excelente, \u226540% = ok, \u226525% = aten\u00e7\u00e3o.",
         "thresholds": [
           {
             "min_pct": 50,
@@ -8310,9 +8310,9 @@
       },
       {
         "id": "drift",
-        "label": "Drift máximo",
+        "label": "Drift m\u00e1ximo",
         "max": 15,
-        "description": "Maior desvio absoluto entre % atual e % alvo (SWRD 50/AVGS 30/AVEM 20). Única métrica 100% actionable — Diego pode corrigir via próximo aporte.",
+        "description": "Maior desvio absoluto entre % atual e % alvo (SWRD 50/AVGS 30/AVEM 20). \u00danica m\u00e9trica 100% actionable \u2014 Diego pode corrigir via pr\u00f3ximo aporte.",
         "thresholds": [
           {
             "max_pp": 5,
@@ -8340,7 +8340,7 @@
         "id": "ipca_gap",
         "label": "IPCA+ gap vs alvo",
         "max": 10,
-        "description": "Gap entre % IPCA+ atual e alvo. DCA ativo (taxa >= piso) atenua penalidade — gap se fecha com o tempo, comportamento correto.",
+        "description": "Gap entre % IPCA+ atual e alvo. DCA ativo (taxa >= piso) atenua penalidade \u2014 gap se fecha com o tempo, comportamento correto.",
         "thresholds": [
           {
             "max_pp": 2,
@@ -8363,9 +8363,9 @@
       },
       {
         "id": "execution_fidelity",
-        "label": "Fidelidade de execução",
+        "label": "Fidelidade de execu\u00e7\u00e3o",
         "max": 10,
-        "description": "Dos últimos 6 meses, quantos tiveram aporte >= 80% do target mensal. Mede comportamento real, não intenção.",
+        "description": "Dos \u00faltimos 6 meses, quantos tiveram aporte >= 80% do target mensal. Mede comportamento real, n\u00e3o inten\u00e7\u00e3o.",
         "target_aporte_mensal": "DATA.premissas.aporte_mensal",
         "lookback_months": 6,
         "threshold_pct": 0.8,
@@ -8395,11 +8395,11 @@
       },
       {
         "id": "emergency_fund",
-        "label": "Fundo de emergência",
+        "label": "Fundo de emerg\u00eancia",
         "max": 5,
-        "description": "Meses de cobertura em ativos líquidos (Tesouro IPCA+ curto + conta corrente). Renda PJ volátil exige 6+ meses (Vanguard 2021). Choque sem reserva = venda ETF em drawdown + IR.",
+        "description": "Meses de cobertura em ativos l\u00edquidos (Tesouro IPCA+ curto + conta corrente). Renda PJ vol\u00e1til exige 6+ meses (Vanguard 2021). Choque sem reserva = venda ETF em drawdown + IR.",
         "custo_vida_mensal": 20833,
-        "_custo_nota": "R$250k/ano FIRE base ÷ 12 = R$20.8k. Usar config.py CUSTO_VIDA_BASE como fonte. Atualizar ao revisar spending.",
+        "_custo_nota": "R$250k/ano FIRE base \u00f7 12 = R$20.8k. Usar config.py CUSTO_VIDA_BASE como fonte. Atualizar ao revisar spending.",
         "thresholds": [
           {
             "min_months": 6,
@@ -8424,7 +8424,7 @@
         "id": "ter",
         "label": "Custo total (TER)",
         "max": 5,
-        "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
+        "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrim\u00f4nio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
         "benchmark_ter": 0.22,
         "current_ter": 0.211,
         "equity_block_ter": 0.247,
@@ -8448,19 +8448,19 @@
           "good": 5,
           "warn": 3
         },
-        "_note": "current_ter (0.211%) = full portfolio TER (SWRD 39.5% × 0.12% + AVGS 23.7% × 0.39% + AVEM 15.8% × 0.35% + HODL11 3% × 0.20% + RF ~6.1% × 0.10%). equity_block_ter (0.247%) = equity holdings only. Atualizar se composição mudar."
+        "_note": "current_ter (0.211%) = full portfolio TER (SWRD 39.5% \u00d7 0.12% + AVGS 23.7% \u00d7 0.39% + AVEM 15.8% \u00d7 0.35% + HODL11 3% \u00d7 0.20% + RF ~6.1% \u00d7 0.10%). equity_block_ter (0.247%) = equity holdings only. Atualizar se composi\u00e7\u00e3o mudar."
       },
       {
         "id": "human_capital",
-        "label": "Proteção capital humano",
+        "label": "Prote\u00e7\u00e3o capital humano",
         "max": 5,
-        "description": "Seguro de vida/DI adequado. P(FIRE) assume Diego vivo e trabalhando até 2037. Sem seguro com casamento iminente + filho ~2028, o plano familiar depende de premissa frágil que o MC ignora.",
+        "description": "Seguro de vida/DI adequado. P(FIRE) assume Diego vivo e trabalhando at\u00e9 2037. Sem seguro com casamento iminente + filho ~2028, o plano familiar depende de premissa fr\u00e1gil que o MC ignora.",
         "status": "solteiro_sem_dependentes",
         "thresholds": [
           {
             "status": "solteiro_sem_dependentes",
             "pts": 5,
-            "note": "Grátis enquanto solteiro sem dependentes. Muda ao casar."
+            "note": "Gr\u00e1tis enquanto solteiro sem dependentes. Muda ao casar."
           },
           {
             "status": "casado_com_seguro",
@@ -8483,13 +8483,13 @@
           "good": 5,
           "warn": 0
         },
-        "_note": "Atualizar status ao casar (2026-2027 estimado). Seguro adequado = cobertura 10x renda anual ou patrimônio suficiente para sustento família até FIRE."
+        "_note": "Atualizar status ao casar (2026-2027 estimado). Seguro adequado = cobertura 10x renda anual ou patrim\u00f4nio suficiente para sustento fam\u00edlia at\u00e9 FIRE."
       },
       {
         "id": "debt_ratio",
-        "label": "Ratio dívida/patrimônio",
+        "label": "Ratio d\u00edvida/patrim\u00f4nio",
         "max": 5,
-        "description": "Passivos totais (hipoteca + IR diferido) como % do patrimônio financeiro. Alto nível de dívida vs patrimônio aumenta risco de distress em drawdown.",
+        "description": "Passivos totais (hipoteca + IR diferido) como % do patrim\u00f4nio financeiro. Alto n\u00edvel de d\u00edvida vs patrim\u00f4nio aumenta risco de distress em drawdown.",
         "_fonte": "data.passivos.total_brl / data.patrimonio.total_brl",
         "thresholds": [
           {
@@ -8512,9 +8512,9 @@
       },
       {
         "id": "housing_ratio",
-        "label": "Hipoteca/Patrimônio",
+        "label": "Hipoteca/Patrim\u00f4nio",
         "max": 5,
-        "description": "Saldo devedor hipoteca como % do patrimônio financeiro. Housing ratio alto = concentração de risco em ativo ilíquido financiado.",
+        "description": "Saldo devedor hipoteca como % do patrim\u00f4nio financeiro. Housing ratio alto = concentra\u00e7\u00e3o de risco em ativo il\u00edquido financiado.",
         "_fonte": "data.passivos.hipoteca_brl / data.patrimonio.total_brl",
         "thresholds": [
           {
@@ -8539,27 +8539,27 @@
     "removed_metrics": [
       {
         "id": "trajetoria_fire",
-        "label": "Trajetória FIRE",
-        "reason": "Redundante com P(FIRE). FV determinístico do mesmo input (patrimônio + aportes). Correlação ~0.9+ com P(FIRE). Removido em v2.0."
+        "label": "Trajet\u00f3ria FIRE",
+        "reason": "Redundante com P(FIRE). FV determin\u00edstico do mesmo input (patrim\u00f4nio + aportes). Correla\u00e7\u00e3o ~0.9+ com P(FIRE). Removido em v2.0."
       },
       {
         "id": "tlh_opps",
         "label": "TLH oportunidades",
-        "reason": "Premiava sorte de mercado (todos com lucro = 5pts), não comportamento. Lógica invertida: oportunidade de TLH é boa (economia fiscal), não ruim. Removido em v2.0."
+        "reason": "Premiava sorte de mercado (todos com lucro = 5pts), n\u00e3o comportamento. L\u00f3gica invertida: oportunidade de TLH \u00e9 boa (economia fiscal), n\u00e3o ruim. Removido em v2.0."
       },
       {
         "id": "geo_div",
-        "label": "Diversificação geográfica",
-        "reason": "Tautológica com drift. Se Diego está no target (SWRD/AVGS/AVEM), geo está automaticamente no range. Double-counting com drift. Removido em v2.0."
+        "label": "Diversifica\u00e7\u00e3o geogr\u00e1fica",
+        "reason": "Tautol\u00f3gica com drift. Se Diego est\u00e1 no target (SWRD/AVGS/AVEM), geo est\u00e1 automaticamente no range. Double-counting com drift. Removido em v2.0."
       },
       {
         "id": "staleness",
         "label": "Dados atualizados",
-        "reason": "Meta do dashboard, não saúde financeira. Movido para badge visual. Removido em v2.0."
+        "reason": "Meta do dashboard, n\u00e3o sa\u00fade financeira. Movido para badge visual. Removido em v2.0."
       },
       {
         "id": "execucoes_pendentes",
-        "label": "Execuções pendentes",
+        "label": "Execu\u00e7\u00f5es pendentes",
         "reason": "Subsumido por execution_fidelity + drift. Removido em v2.0."
       }
     ]
@@ -8571,7 +8571,7 @@
       "impacto": "+R$20-50k/ano custo de vida",
       "status": "planejado",
       "acoes": [
-        "Seguro de vida (gap crítico)",
+        "Seguro de vida (gap cr\u00edtico)",
         "Testamento",
         "Estrutura patrimonial"
       ]
@@ -8579,7 +8579,7 @@
     {
       "evento": "Filho",
       "data_est": "~2028",
-      "impacto": "+R$30-50k/ano (escola, saúde, cuidado)",
+      "impacto": "+R$30-50k/ano (escola, sa\u00fade, cuidado)",
       "status": "planejado",
       "acoes": [
         "P(FIRE) cai ~4pp (R$300k/ano)",
@@ -8675,17 +8675,17 @@
         "ir_estimado": 0.0
       }
     },
-    "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
+    "regime": "ACC UCITS \u2014 diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na aliena\u00e7\u00e3o)",
     "badges": {
-      "SWRD": "ACC — diferimento fiscal",
-      "EIMI": "ACC — diferimento fiscal",
-      "USSC": "ACC — diferimento fiscal",
-      "IWVL": "ACC — diferimento fiscal",
-      "AVDV": "ACC — diferimento fiscal",
-      "AVUV": "ACC — diferimento fiscal",
-      "DGS": "ACC — diferimento fiscal",
-      "AVES": "ACC — diferimento fiscal",
-      "AVGS": "ACC — diferimento fiscal"
+      "SWRD": "ACC \u2014 diferimento fiscal",
+      "EIMI": "ACC \u2014 diferimento fiscal",
+      "USSC": "ACC \u2014 diferimento fiscal",
+      "IWVL": "ACC \u2014 diferimento fiscal",
+      "AVDV": "ACC \u2014 diferimento fiscal",
+      "AVUV": "ACC \u2014 diferimento fiscal",
+      "DGS": "ACC \u2014 diferimento fiscal",
+      "AVES": "ACC \u2014 diferimento fiscal",
+      "AVGS": "ACC \u2014 diferimento fiscal"
     },
     "ptax_source": "BCB PTAX ask",
     "ptax_atual": 5.156,
@@ -8703,8 +8703,8 @@
         "DGS": 11.33,
         "Cash_USD_IBKR": 0.028
       },
-      "estrategia_diluicao": "Novos aportes em ETFs UCITS (SWRD, AVGS, AVEM). US-listed (AVUV, AVDV, EIMI, DGS) são transitórios — diluir via aportes. Vender em drawdown (TLH) ou no usufruto (FIRE 50+).",
-      "consideracoes": "Isenção NRA reduz exposição de $222.039 para $162.039 tributável. Estate tax real: ~$64.8k USD (~R$340k). Pendente: avaliar seguro de vida para herdeiros.",
+      "estrategia_diluicao": "Novos aportes em ETFs UCITS (SWRD, AVGS, AVEM). US-listed (AVUV, AVDV, EIMI, DGS) s\u00e3o transit\u00f3rios \u2014 diluir via aportes. Vender em drawdown (TLH) ou no usufruto (FIRE 50+).",
+      "consideracoes": "Isen\u00e7\u00e3o NRA reduz exposi\u00e7\u00e3o de $222.039 para $162.039 tribut\u00e1vel. Estate tax real: ~$64.8k USD (~R$340k). Pendente: avaliar seguro de vida para herdeiros.",
       "fonte": "agentes/memoria/05-wealth.md (dados auditados 2026-03-31)",
       "ultima_atualizacao": "2026-04-17"
     }
@@ -8746,7 +8746,7 @@
     "total_brasil_brl": 393144,
     "total_cripto_brl": 113521,
     "total_portfolio_brl": 3729678,
-    "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
+    "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Tr\u00eas categorias: brasil + cambial(equity IBKR) + cripto = 100%."
   },
   "premissas_vs_realizado": {
     "retorno_equity": {
@@ -8757,29 +8757,22 @@
       "periodo_anos": 5.0,
       "backtest_nominal_usd_pct": 14.05,
       "benchmark_vwra_nominal_usd_pct": 12.81,
-      "nota": "Premissa = retorno real em BRL (pós-IPCA, pós-depreciação cambial 0.5%/ano). Realizado = TWR anualizado BRL deflacionado pelo IPCA do período (comparação correta). Backtest USD = nominal em USD (inclui inflação US ~2-3%/ano, referência apenas)."
+      "nota": "Premissa = retorno real em BRL (p\u00f3s-IPCA, p\u00f3s-deprecia\u00e7\u00e3o cambial 0.5%/ano). Realizado = TWR anualizado BRL deflacionado pelo IPCA do per\u00edodo (compara\u00e7\u00e3o correta). Backtest USD = nominal em USD (inclui infla\u00e7\u00e3o US ~2-3%/ano, refer\u00eancia apenas)."
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 73178,
-      "delta_brl": 48178,
-      "delta_pct": 192.7,
+      "realizado_media_brl": null,
+      "delta_brl": null,
+      "delta_pct": null,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
       "total_ibkr_brl": 1947123,
       "total_rf_brl": 2443549,
-      "total_aporte_brl": 4390671,
+      "total_aporte_brl": null,
       "cambio_conversao": 4.9793,
-      "por_ano_brl": {
-        "2026": 94607,
-        "2025": 281194,
-        "2024": 370817,
-        "2023": 391908,
-        "2022": 479972,
-        "2021": 328625
-      },
-      "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
+      "por_ano_brl": {},
+      "nota": "Inclui dep\u00f3sitos IBKR (USD \u2192 BRL) + aportes RF (BRL direto). Convers\u00e3o USD\u2192BRL pelo c\u00e2mbio atual (aproxima\u00e7\u00e3o; c\u00e2mbio variou ao longo do per\u00edodo). Per\u00edodo: primeiro aporte at\u00e9 \u00faltimo aporte (IBKR ou RF)."
     }
   },
   "coe_net_brl": 64081,
@@ -8796,7 +8789,7 @@
     "upper_guardrail_spending": 275000,
     "safe_target_spending": 225000,
     "lower_guardrail_spending": 200000,
-    "nota": "P(FIRE@53) = 86.4% com spending atual R$250k/ano. Teto de expansão R$275k (+10%) — ativado quando P(FIRE) sustentado acima de 90%. Safe target R$225k (−10%). Piso de emergência R$200k (−20%)."
+    "nota": "P(FIRE@53) = 86.4% com spending atual R$250k/ano. Teto de expans\u00e3o R$275k (+10%) \u2014 ativado quando P(FIRE) sustentado acima de 90%. Safe target R$225k (\u221210%). Piso de emerg\u00eancia R$200k (\u221220%)."
   },
   "spending_breakdown": {
     "periodo": "2025-08 a 2026-03",
@@ -8874,7 +8867,7 @@
   "head_relay": {
     "from": "Head",
     "ts": "2026-04-09T13:15:00-03:00",
-    "text": "Dashboard atualizado. Dois modos disponíveis: ⚡ Fast (haiku) para consultas rápidas, 🧠 Head (sonnet) para análise profunda com o time completo. Para enviar uma mensagem ao Head desta sessão, use o /dashboard e descreva o que quer comunicar.",
+    "text": "Dashboard atualizado. Dois modos dispon\u00edveis: \u26a1 Fast (haiku) para consultas r\u00e1pidas, \ud83e\udde0 Head (sonnet) para an\u00e1lise profunda com o time completo. Para enviar uma mensagem ao Head desta sess\u00e3o, use o /dashboard e descreva o que quer comunicar.",
     "msg_id": "init-001"
   },
   "backtest_r7": {
@@ -8905,12 +8898,12 @@
     "factor_drought": {
       "max_meses": 74,
       "window_meses": 36,
-      "nota": "Pior período de underperformance acumulada em janela 36m vs benchmark"
+      "nota": "Pior per\u00edodo de underperformance acumulada em janela 36m vs benchmark"
     },
     "drawdown_recovery": {
       "max_meses": 43,
       "p90_meses": 22,
-      "nota": "Meses para recuperar pico após drawdown. Bond pool atual: 7 anos (84 meses)."
+      "nota": "Meses para recuperar pico ap\u00f3s drawdown. Bond pool atual: 7 anos (84 meses)."
     },
     "cagr_por_decada": [
       {
@@ -10104,13 +10097,13 @@
     "n_sim": 10000,
     "seed": 42,
     "cenario": "base",
-    "metodologia": "IR diferido descontado antes de simulação per Lei 14.754/2023. patrimonio_liquido = patrimonio_atual - ir_diferido_total_brl (fonte: tax_snapshot.json). Todas as demais premissas idênticas ao MC canônico (seed=42, 10k sims, spending smile, guardrails, bond tent, INSS R$18k/ano@65, VCMH 5.0%).",
+    "metodologia": "IR diferido descontado antes de simula\u00e7\u00e3o per Lei 14.754/2023. patrimonio_liquido = patrimonio_atual - ir_diferido_total_brl (fonte: tax_snapshot.json). Todas as demais premissas id\u00eanticas ao MC can\u00f4nico (seed=42, 10k sims, spending smile, guardrails, bond tent, INSS R$18k/ano@65, VCMH 5.0%).",
     "_generated": "2026-04-25"
   },
   "fire_matrix": {
     "_generated": "2026-04-18T22:12:36",
-    "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
-    "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
+    "_source": "reconstruct_fire_data.py \u2192 fire_montecarlo.simular_trajetoria",
+    "_spec": "DEV-fire-matrix-v2: eixos Patrim\u00f4nio\u00d7Gasto, 3 cen\u00e1rios",
     "patrimonios": [
       7000000,
       9000000,
@@ -10394,7 +10387,7 @@
   },
   "fire_swr_percentis": {
     "_generated": "2026-04-17T06:02:45",
-    "_source": "reconstruct_fire_data.py → dashboard_state.json fire section",
+    "_source": "reconstruct_fire_data.py \u2192 dashboard_state.json fire section",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 6834909.0,
     "patrimonio_p50_2040": 11527476.0,
@@ -10409,7 +10402,7 @@
   },
   "fire_aporte_sensitivity": {
     "_generated": "2026-04-13T08:41:44",
-    "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
+    "_source": "reconstruct_fire_data.py \u2192 fire_montecarlo.py",
     "aportes_brl": [
       15000,
       20000,
@@ -12039,7 +12032,7 @@
   },
   "drawdown_history": {
     "_generated": "2026-04-17T06:02:45",
-    "_source": "reconstruct_fire_data.py → historico_carteira.csv",
+    "_source": "reconstruct_fire_data.py \u2192 historico_carteira.csv",
     "dates": [
       "2021-04",
       "2021-05",
@@ -12678,7 +12671,7 @@
           -7.75,
           0.0
         ],
-        "note": "AVUV 58% + AVDV 42% ⚠️ proxy de AVGS.L; AVEM (US-listed) ⚠️ proxy de AVEM.L"
+        "note": "AVUV 58% + AVDV 42% \u26a0\ufe0f proxy de AVGS.L; AVEM (US-listed) \u26a0\ufe0f proxy de AVEM.L"
       },
       "long": {
         "label": "Backtest 21 anos (2005+)",
@@ -13456,10 +13449,10 @@
           -6.13,
           0.0
         ],
-        "note": "IVV ⚠️ proxy de SWRD.L (S&P 500 ≠ MSCI World — sem DM ex-US no Target); VBR ⚠️ proxy de AVGS.L (Vanguard SC Value US — sem Intl SC value); EEM ⚠️ proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
+        "note": "IVV \u26a0\ufe0f proxy de SWRD.L (S&P 500 \u2260 MSCI World \u2014 sem DM ex-US no Target); VBR \u26a0\ufe0f proxy de AVGS.L (Vanguard SC Value US \u2014 sem Intl SC value); EEM \u26a0\ufe0f proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
       },
       "academic": {
-        "label": "Série Longa 31 anos (1995+, proxies acadêmicos)",
+        "label": "S\u00e9rie Longa 31 anos (1995+, proxies acad\u00eamicos)",
         "dates": [
           "1995-01",
           "1995-02",
@@ -14588,7 +14581,7 @@
           -6.11,
           -1.57
         ],
-        "note": "1995-01 a 2026-04 — proxies: DFSVX/DISVX/DFEMX + Ken French factors"
+        "note": "1995-01 a 2026-04 \u2014 proxies: DFSVX/DISVX/DFEMX + Ken French factors"
       }
     },
     "summary": {
@@ -14611,7 +14604,7 @@
         "regioes": {
           "EUA": 0.65,
           "Europa": 0.22,
-          "Japão": 0.06,
+          "Jap\u00e3o": 0.06,
           "Outros DM": 0.07
         },
         "fatores": {
@@ -14627,7 +14620,7 @@
         "regiao_primaria": "Global Developed Markets",
         "regioes": {
           "Europa": 0.45,
-          "Japão": 0.25,
+          "Jap\u00e3o": 0.25,
           "EUA": 0.15,
           "Outros": 0.15
         },
@@ -14785,11 +14778,11 @@
       "td2040_real_pct": 7.1,
       "td2050_real_pct": 6.85
     },
-    "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
+    "nota": "td2050 baseado em opera\u00e7\u00e3o pendente 2026-04-10 (liquida\u00e7\u00e3o 13/04). Atualizar ap\u00f3s confirma\u00e7\u00e3o."
   },
   "lumpy_events": {
     "_generated": "2026-04-13T08:41:44",
-    "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
+    "_source": "reconstruct_fire_data.py \u2192 fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.8994,
       "spending_brl": 250000
@@ -14827,7 +14820,7 @@
       }
     ],
     "n_sim": 5000,
-    "nota": "Casamento e filho modelados como spending permanente override. Impacto de timing (2027 vs 2030) não capturado — conservador (pior caso)."
+    "nota": "Casamento e filho modelados como spending permanente override. Impacto de timing (2027 vs 2030) n\u00e3o capturado \u2014 conservador (pior caso)."
   },
   "bond_pool_runway_by_profile": {
     "atual": {
