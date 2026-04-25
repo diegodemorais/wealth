@@ -520,10 +520,11 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
   // Estimate accumulated values (simplified — actual implementation would parse minilog)
   const acumuladoMes = ultimoAporte * (ultimoAporteData.includes(today.toISOString().substring(0, 7)) ? 1 : 0) || aporteMensal;
-  // QUANT-008: Use actual YTD from premissas_vs_realizado instead of field that doesn't exist
+  // QUANT-008: Use actual YTD from premissas_vs_realizado, then aporte_mensal.total_aporte_brl, then fallback
   const anoAtual = today.getFullYear();
   const acumuladoAnoYtd = (data as any)?.premissas_vs_realizado?.aporte_mensal?.por_ano_brl?.[anoAtual];
-  const acumuladoAno = acumuladoAnoYtd ?? aporteMensal * 12; // Fallback to annual target if YTD not available
+  const acumuladoAnoFromAporte = (data as any)?.aporte_mensal?.total_aporte_brl;
+  const acumuladoAno = acumuladoAnoYtd ?? acumuladoAnoFromAporte ?? aporteMensal * 12;
 
   // Compute top wellness actions from wellness_config
   const topAcoes = (() => {
