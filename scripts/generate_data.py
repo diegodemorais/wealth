@@ -1432,10 +1432,12 @@ def get_rf(state):
         }
 
     # Atualizar taxas do holdings.md (mais atualizado que o state)
+    # Usar mercado_mtd como fonte primária se disponível (mais atual que holdings.md)
+    mercado_mtd = state.get("mercado_mtd", {})
     if taxa_ipca and "ipca2040" in rf:
-        rf["ipca2040"]["taxa"] = taxa_ipca
+        rf["ipca2040"]["taxa"] = mercado_mtd.get("ipca2040_taxa") or taxa_ipca
     if taxa_renda and "renda2065" in rf:
-        rf["renda2065"]["taxa"] = taxa_renda
+        rf["renda2065"]["taxa"] = mercado_mtd.get("renda2065_taxa") or taxa_renda
 
     # ── Custo base RF da Nubank (dados/nubank/resumo_td.json) ───────────────
     # Enriquece cada título com total_aplicado e liquido_aplicado (custo base)

@@ -252,6 +252,9 @@ export default function PerformancePage() {
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2, fontStyle: 'italic' }}>
                   haircut 58% pós-publicação
                 </div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--orange)', marginTop: 6, borderTop: '1px solid var(--muted)', paddingTop: 4 }}>
+                  ⚠️ Factor droughts common: 30-40% prob underperform by 10y
+                </div>
               </div>
             </div>
           );
@@ -607,8 +610,8 @@ export default function PerformancePage() {
                   const wAvem = pt.AVEM ?? 0.158;
                   const equityTotal = wSwrd + wAvgs + wAvem;
                   const terSwrd = 0.0012;
-                  const terAvgs = 0.0025;
-                  const terAvem = 0.0018;
+                  const terAvgs = 0.0039;
+                  const terAvem = 0.0035;
                   const terVwra = 0.0022;
                   const terPortfolio = equityTotal > 0
                     ? (wSwrd * terSwrd + wAvgs * terAvgs + wAvem * terAvem) / equityTotal

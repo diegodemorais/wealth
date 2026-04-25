@@ -5,7 +5,7 @@ interface Guardrail {
   guardrail: string
   condicao: string
   acao: string
-  prioridade: "EXPANSIVO" | "MANTÉM" | "DEFESA"
+  prioridade: "EXPANSIVO" | "MANTÉM" | "DEFESA" | "CAUTELA"
 }
 
 interface GuardrailsRetiradaProps {
@@ -16,6 +16,7 @@ const priorityStyle = {
   EXPANSIVO: { color: 'rgba(34, 197, 94, 0.8)', bg: 'rgba(34,197,94,0.2)', border: 'rgba(34,197,94,0.3)', rowBg: 'rgba(34,197,94,0.05)' },
   MANTÉM: { color: 'var(--cyan)', bg: 'rgba(6,182,212,0.2)', border: 'rgba(6,182,212,0.3)', rowBg: 'rgba(59,130,246,0.05)' },
   DEFESA: { color: 'rgba(239, 68, 68, 0.7)', bg: 'rgba(239,68,68,0.2)', border: 'rgba(239,68,68,0.3)', rowBg: 'rgba(239,68,68,0.05)' },
+  CAUTELA: { color: 'rgba(234, 179, 8, 0.8)', bg: 'rgba(234,179,8,0.2)', border: 'rgba(234,179,8,0.3)', rowBg: 'rgba(234,179,8,0.05)' },
 } as const
 
 export function GuardrailsRetirada({ guardrails }: GuardrailsRetiradaProps) {

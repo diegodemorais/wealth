@@ -103,6 +103,56 @@ export default function HomePage() {
     return { total, badCount };
   })();
 
+  // Get IPCA and Renda+ semaforo taxa from rf
+  const ipcaTaxa = data?.rf?.ipca2040?.taxa ?? null;
+  const rendaTaxa = data?.rf?.renda2065?.taxa ?? null;
+
+  // Build RF Status rows (consolidated from IpcaTaxaProgress + DCA Status)
+  const rfRows = (() => {
+    const rf = (data as any)?.rf ?? {};
+    const dcaStatus = (data as any)?.dca_status ?? {};
+    const patAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 0;
+    const pct = (v: number) => patAtual > 0 ? (v / patAtual) * 100 : 0;
+    const ipca2040V = rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0;
+    const ipca2050V = rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0;
+    const renda2065V = rf.renda2065?.valor ?? rf.renda2065?.valor_brl ?? 0;
+    return [
+      {
+        id: 'ipca2040',
+        label: 'IPCA+ 2040',
+        taxaAtual: rf.ipca2040?.taxa,
+        piso: dcaStatus.ipca_longo?.piso,
+        gap: dcaStatus.ipca_longo?.gap_alvo_pp,
+        pctAtual: pct(ipca2040V),
+        pctAlvo: dcaStatus.ipca2040?.alvo_pct ?? 12,
+        valor: ipca2040V,
+        dcaAtivo: dcaStatus.ipca_longo?.ativo ?? dcaStatus.ipca2040?.ativo,
+      },
+      {
+        id: 'ipca2050',
+        label: 'IPCA+ 2050',
+        taxaAtual: rf.ipca2050?.taxa,
+        piso: dcaStatus.ipca2050?.piso,
+        gap: dcaStatus.ipca2050?.gap_alvo_pp,
+        pctAtual: pct(ipca2050V),
+        pctAlvo: dcaStatus.ipca2050?.alvo_pct ?? 3,
+        valor: ipca2050V,
+        dcaAtivo: dcaStatus.ipca2050?.ativo,
+      },
+      {
+        id: 'renda2065',
+        label: 'Renda+ 2065',
+        taxaAtual: rf.renda2065?.distancia_gatilho?.taxa_atual ?? rf.renda2065?.taxa,
+        piso: rf.renda2065?.distancia_gatilho?.piso_venda,
+        gap: rf.renda2065?.distancia_gatilho?.gap_pp,
+        pctAtual: pct(renda2065V),
+        pctAlvo: 0,
+        valor: renda2065V,
+        dcaAtivo: dcaStatus.renda_plus?.ativo,
+      },
+    ];
+  })();
+
   return (
     <div>
       <SectionDivider label="Status" />
