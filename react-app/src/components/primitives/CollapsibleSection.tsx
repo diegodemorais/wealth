@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { cn } from '@/lib/utils';
 import {
@@ -33,6 +33,18 @@ export function CollapsibleSection({
 
   const isCollapsed = collapseState[id] ?? !defaultOpen;
   const isOpen = !isCollapsed;
+
+  useEffect(() => {
+    const hash = window.location.hash.slice(1); // Remove '#' prefix
+    if (hash === id && isCollapsed) {
+      setCollapse(id, false);
+      // Scroll into view after opening
+      setTimeout(() => {
+        const element = document.getElementById(`content-${id}`);
+        element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  }, [id, isCollapsed, setCollapse]);
 
   const handleOpenChange = (open: boolean) => {
     setCollapse(id, !open);
