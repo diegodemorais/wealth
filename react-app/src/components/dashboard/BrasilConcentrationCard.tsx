@@ -3,16 +3,17 @@ import { useUiStore } from '@/store/uiStore';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface BrasilConcentrationCardProps {
-  hodl11: number;
+  // DEV-coe-hodl11-classificacao: hodl11 removido do brasil (agora é cripto global)
+  coeNet: number;
   ipcaTotal: number;
   rendaPlus: number;
   cryptoLegado: number;
-  totalBrl: number;
-  concentrationBrazil: number;
+  totalBrl: number;          // brasil total (RF + COE + crypto_legado)
+  concentrationBrazil: number; // brasil_pct / 100
 }
 
 const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
-  hodl11,
+  coeNet,
   ipcaTotal,
   rendaPlus,
   cryptoLegado,
@@ -21,16 +22,9 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
 }) => {
   const { privacyMode } = useUiStore();
 
-  const fmtBrl = (val: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      maximumFractionDigits: 0,
-    }).format(val);
-  };
-
   const fmtPct = (val: number) => {
-    return (val * 100).toFixed(1);
+    if (!totalBrl) return '0.0';
+    return (val / totalBrl * 100).toFixed(1);
   };
 
   const concentrationColor = concentrationBrazil > 0.65 ? 'var(--red)' : concentrationBrazil > 0.55 ? 'var(--yellow)' : 'var(--green)';
@@ -57,7 +51,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             Brasil Concentration
           </div>
           <div style={{ fontSize: 'var(--text-4xl)', fontWeight: 800, marginBottom: '4px', color: concentrationColor }}>
-            {`${fmtPct(concentrationBrazil)}%`}
+            {`${(concentrationBrazil * 100).toFixed(1)}%`}
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
             {concentrationBrazil > 0.65
@@ -71,7 +65,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
         {/* Breakdown by asset class */}
         <div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
-            Composição
+            Composição Brasil (RF Soberano + COE)
           </div>
 
           <div style={rowStyle}>
@@ -81,7 +75,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             </div>
             <div style={subStyle}>
               <span>IPCA+ 2029/2040/2050</span>
-              <span>{`${fmtPct(ipcaTotal / totalBrl)}%`}</span>
+              <span>{`${fmtPct(ipcaTotal)}%`}</span>
             </div>
           </div>
 
@@ -92,38 +86,42 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             </div>
             <div style={subStyle}>
               <span>Título prefixado</span>
-              <span>{`${fmtPct(rendaPlus / totalBrl)}%`}</span>
+              <span>{`${fmtPct(rendaPlus)}%`}</span>
             </div>
           </div>
 
-          <div style={rowStyle}>
-            <div style={labelStyle}>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Criptoativos (HODL11)</span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{fmtPrivacy(hodl11, privacyMode)}</span>
+          {coeNet > 0 && (
+            <div style={rowStyle}>
+              <div style={labelStyle}>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>COE XP (estruturado)</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{fmtPrivacy(coeNet, privacyMode)}</span>
+              </div>
+              <div style={subStyle}>
+                <span>COE XP0121A3C3W net (ativo – empréstimo)</span>
+                <span>{`${fmtPct(coeNet)}%`}</span>
+              </div>
             </div>
-            <div style={subStyle}>
-              <span>Bitcoin + Crypto Legado</span>
-              <span>{`${fmtPct(hodl11 / totalBrl)}%`}</span>
-            </div>
-          </div>
+          )}
 
-          <div style={rowStyle}>
-            <div style={labelStyle}>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Crypto Legado</span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{fmtPrivacy(cryptoLegado, privacyMode)}</span>
+          {cryptoLegado > 0 && (
+            <div style={rowStyle}>
+              <div style={labelStyle}>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Crypto Legado</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{fmtPrivacy(cryptoLegado, privacyMode)}</span>
+              </div>
+              <div style={subStyle}>
+                <span>Posições anteriores</span>
+                <span>{`${fmtPct(cryptoLegado)}%`}</span>
+              </div>
             </div>
-            <div style={subStyle}>
-              <span>Posições anteriores</span>
-              <span>{`${fmtPct(cryptoLegado / totalBrl)}%`}</span>
-            </div>
-          </div>
+          )}
         </div>
 
         <div style={{ borderTop: '1px solid var(--border)' }} />
 
         {/* Risk note */}
         <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px' }}>
-          <strong>Nota:</strong> Concentração acima de 65% em Brasil aumenta risco de taxa (Selic), câmbio e inflação. Meta: reduzir para 50-60% via alocação internacional.
+          <strong>Nota:</strong> HODL11 reclassificado como Cripto Global (BTC/USD) — não Brasil soberano. Brasil = RF Tesouro Direto + COE XP (produto estruturado BRL) + crypto legado.
         </div>
       </div>
     </div>

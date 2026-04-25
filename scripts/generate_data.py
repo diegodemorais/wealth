@@ -1644,21 +1644,21 @@ def compute_tax_diferido(posicoes, cambio_atual):
 
 
 # ─── 7c. CONCENTRAÇÃO BRASIL ─────────────────────────────────────────────────
-def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float) -> dict | None:
-    """Calcula exposição total a Brasil (ativos BRL na B3 + Tesouro Direto).
+def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float, coe_net_brl: float = 0.0) -> dict | None:
+    """Calcula exposição total a Brasil (Tesouro Direto + COE XP).
 
-    Composição:
-      - HODL11 (B3, cripto): wrapper B3, risco operacional BR (custódia, regulação).
-        Ativo subjacente é BTC global -- NÃO é risco fiscal BR.
-        Incluído porque: custódia B3, jurisdição BR, bloqueável por regulador local.
+    Composição corrigida (DEV-coe-hodl11-classificacao 2026-04-24):
+      - HODL11: EXCLUÍDO do brasil_pct. BTC é ativo global precificado em USD.
+        Wrapper B3 tem risco operacional XP/B3, mas NÃO risco soberano/fiscal BR.
+        HODL11 aparece como categoria própria: cripto_pct.
       - RF total (Tesouro Direto): risco soberano BR direto.
-        Inclui: IPCA+ 2029 (reserva), IPCA+ 2040, IPCA+ 2050, Renda+ 2065.
-      - Crypto legado (spot BRL): pequeno, estimativa de config.py.
+      - COE + Empréstimo XP (net): produto estruturado BRL, risco XP/BR.
+      - Crypto legado (spot BRL): pequeno, risco operacional BR.
 
-    Retorna dict com brasil_pct e composição detalhada, ou None se dados insuficientes.
+    Três categorias que somam 100%:
+      brasil_pct (RF + COE + crypto_legado) + exposicao_cambial_pct (equity IBKR) + cripto_pct (HODL11) = 100%
 
-    Fonte da regra: agentes/memoria/10-advocate.md — HODL11 é wrapper B3 de BTC,
-    risco Brasil é operacional (custódia), não fiscal. RF é risco soberano direto.
+    Retorna dict com brasil_pct, cripto_pct e composição detalhada, ou None se dados insuficientes.
     """
     if total_brl is None or total_brl <= 0:
         return None
@@ -1668,33 +1668,39 @@ def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float) -
     rf_composicao = {}
     for key, item in rf.items():
         if key == "hodl11":
-            continue  # hodl11 tratado separadamente
+            continue  # hodl11 agora é cripto_pct, não brasil
         valor = item.get("valor", item.get("valor_brl", 0)) or 0
         rf_total_brl += valor
         rf_composicao[key] = round(valor)
 
     # Crypto legado (spot fora da B3 — BTC/ETH/BNB/ADA em carteiras pessoais)
-    # Fonte primária: dashboard_state.json; fallback: config.py CRYPTO_LEGADO_BRL
     crypto_legado = load_state().get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
 
-    # Total Brasil = HODL11 + RF total + crypto legado
-    brasil_total = hodl11_brl + rf_total_brl + crypto_legado
+    # Brasil = RF soberano + COE XP (BRL estruturado) + crypto legado
+    # HODL11 foi removido: é global/cripto, não Brasil soberano
+    brasil_total = rf_total_brl + coe_net_brl + crypto_legado
     brasil_pct = round(brasil_total / total_brl * 100, 1)
+
+    # Cripto = HODL11 (categoria própria — global/BTC, sem geografica)
+    cripto_pct = round(hodl11_brl / total_brl * 100, 1) if hodl11_brl > 0 else 0.0
 
     return {
         "brasil_pct": brasil_pct,
+        "cripto_pct": cripto_pct,
         "composicao": {
             "hodl11_brl": round(hodl11_brl),
             "rf_total_brl": round(rf_total_brl),
             "rf_detalhe": rf_composicao,
+            "coe_net_brl": round(coe_net_brl),
             "crypto_legado_brl": round(crypto_legado),
         },
         "total_brasil_brl": round(brasil_total),
+        "total_cripto_brl": round(hodl11_brl),
         "total_portfolio_brl": round(total_brl),
         "nota": (
-            "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). "
-            "RF = risco soberano BR direto. "
-            "Crypto legado = spot BRL (estimativa)."
+            "Brasil = RF soberano (TD) + COE XP (BRL estruturado) + crypto legado. "
+            "HODL11 = cripto global (BTC/USD) — categoria própria, não Brasil. "
+            "Três categorias: brasil + cambial(equity IBKR) + cripto(HODL11) = 100%."
         ),
     }
 
@@ -1975,13 +1981,13 @@ def _compute_human_capital_crossover(fire_trilha, premissas):
 
 
 # ─── 8. DRIFT ─────────────────────────────────────────────────────────────────
-def compute_drift(posicoes, rf, hodl11_brl, cambio):
-    # Total
+def compute_drift(posicoes, rf, hodl11_brl, cambio, coe_net_brl: float = 0.0):
+    # Total — inclui COE net (DEV-coe-hodl11-classificacao 2026-04-24)
     eq_usd = sum(p["qty"] * p.get("price", p.get("avg_cost", 0)) for p in posicoes.values())
     rf_brl = sum(v.get("valor", 0) for k, v in rf.items() if k != "hodl11")
-    # Crypto legado: precisa estar consistente com concentracao_brasil (para brasil_pct + exposicao_cambial_pct = 100%)
+    # Crypto legado: precisa estar consistente com concentracao_brasil
     crypto_legado = load_state().get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
-    total  = eq_usd * cambio + rf_brl + hodl11_brl + crypto_legado
+    total  = eq_usd * cambio + rf_brl + hodl11_brl + crypto_legado + coe_net_brl
 
     # Bucket USD sums
     buckets = {}
@@ -3041,8 +3047,22 @@ def main():
         "pnl_pct":      pnl_pct,
     }
 
+    # DEV-coe-hodl11-classificacao: lê coe_brl da última linha do CSV antes de compute_drift
+    _coe_net_brl_early = 0.0
+    if CSV_PATH.exists():
+        try:
+            with open(CSV_PATH) as _f_early:
+                _rows_early = list(csv.DictReader(_f_early))
+            if _rows_early:
+                _last_early = _rows_early[-1]
+                _coe_col_early = next((k for k in _last_early if k == 'coe_brl'), None)
+                if _coe_col_early:
+                    try: _coe_net_brl_early = float(_last_early[_coe_col_early].replace(',', '.').replace(' ', ''))
+                    except ValueError: pass
+        except Exception: pass
+
     # Drift
-    drift, total_brl = compute_drift(posicoes, rf, hodl11_brl, cambio)
+    drift, total_brl = compute_drift(posicoes, rf, hodl11_brl, cambio, coe_net_brl=_coe_net_brl_early)
 
     # ── Bandas visuais HODL11 ────────────────────────────────────────────────────
     # Política: piso 1.5% / alvo 3% / teto 5% do portfolio total.
@@ -3137,10 +3157,12 @@ def main():
         },
     }
 
-    # Último aporte mensal (última linha do CSV historico_carteira.csv)
+    # Último aporte mensal + COE net — lidos da última linha do CSV historico_carteira.csv
     _ultimo_aporte_brl  = None
     _ultimo_aporte_data = None
     _csv_rows = None
+    _coe_net_brl = 0.0  # DEV-coe-hodl11-classificacao: COE + empréstimo XP net
+    _emprestimo_xp_brl = 0.0
     if CSV_PATH.exists():
         try:
             with open(CSV_PATH) as _f:
@@ -3150,10 +3172,15 @@ def main():
                 _last = _rows[-1]
                 _keys = list(_last.keys())
                 _dc   = next((k for k in _keys if 'data' in k.lower() or 'date' in k.lower()), _keys[0] if _keys else None)
-                _ac   = next((k for k in _keys if 'aporte' in k.lower()), None)
+                _ac   = next((k for k in _keys if k == 'aporte_brl'), None)
                 if _dc: _ultimo_aporte_data = _last[_dc].strip()[:7]
                 if _ac:
                     try: _ultimo_aporte_brl = float(_last[_ac].replace(',', '.').replace(' ', ''))
+                    except ValueError: pass
+                # COE net (coe_brl coluna = COE asset + empréstimo XP net)
+                _coe_col = next((k for k in _keys if k == 'coe_brl'), None)
+                if _coe_col:
+                    try: _coe_net_brl = float(_last[_coe_col].replace(',', '.').replace(' ', ''))
                     except ValueError: pass
         except Exception: pass
     if _ultimo_aporte_brl is not None:
@@ -3161,9 +3188,10 @@ def main():
         premissas["ultimo_aporte_data"] = _ultimo_aporte_data
 
     # Concentração Brasil (Advocate dataset)
-    concentracao_brasil = compute_concentracao_brasil(rf, hodl11_brl, total_brl)
+    # DEV-coe-hodl11-classificacao: HODL11 removido de brasil_pct → cripto_pct próprio; COE adicionado
+    concentracao_brasil = compute_concentracao_brasil(rf, hodl11_brl, total_brl, coe_net_brl=_coe_net_brl)
     if concentracao_brasil:
-        print(f"  -> concentração Brasil: {concentracao_brasil['brasil_pct']}% (RF R${concentracao_brasil['composicao']['rf_total_brl']/1e3:.0f}k + HODL11 R${hodl11_brl/1e3:.0f}k)")
+        print(f"  -> concentração Brasil: {concentracao_brasil['brasil_pct']}% (RF R${concentracao_brasil['composicao']['rf_total_brl']/1e3:.0f}k + COE net R${_coe_net_brl/1e3:.0f}k) | Cripto: {concentracao_brasil['cripto_pct']}% (HODL11)")
 
     # Premissas vs Realizado (Advocate dataset)
     premissas_vs_realizado = compute_premissas_vs_realizado(premissas, backtest_data, cambio, csv_rows=_csv_rows)
@@ -3816,6 +3844,10 @@ def main():
         # Advocate datasets — concentração Brasil + premissas vs realizado
         "concentracao_brasil": concentracao_brasil,
         "premissas_vs_realizado": premissas_vs_realizado,
+
+        # COE + Empréstimo XP (DEV-coe-hodl11-classificacao 2026-04-24)
+        # Fonte: última linha de historico_carteira.csv (pipeline lê do Sheets gviz)
+        "coe_net_brl": round(_coe_net_brl) if _coe_net_brl else 0,
 
         # FIRE planner
         "earliest_fire":        earliest_fire,

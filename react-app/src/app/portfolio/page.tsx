@@ -353,8 +353,9 @@ export default function PortfolioPage() {
               const rfDetalhe = comp.rf_detalhe ?? {};
               return (
                 <div style={{ marginTop: 12 }}>
+                  {/* DEV-coe-hodl11-classificacao: hodl11→coeNet; HODL11 é cripto global, não Brasil */}
                   <BrasilConcentrationCard
-                    hodl11={comp.hodl11_brl ?? 0}
+                    coeNet={comp.coe_net_brl ?? 0}
                     ipcaTotal={(rfDetalhe.ipca2029 ?? 0) + (rfDetalhe.ipca2040 ?? 0) + (rfDetalhe.ipca2050 ?? 0)}
                     rendaPlus={rfDetalhe.renda2065 ?? 0}
                     cryptoLegado={comp.crypto_legado_brl ?? 0}
@@ -388,6 +389,54 @@ export default function PortfolioPage() {
           </div>
         </CollapsibleSection>
       )}
+
+      {/* 8f. COE + Empréstimo XP (DEV-coe-hodl11-classificacao 2026-04-24) */}
+      {(data as any)?.coe_net_brl > 0 && (() => {
+        const coeNet = (data as any).coe_net_brl;
+        // Valores brutos da composição (disponíveis via concentracao_brasil.composicao)
+        const coeBruto = (data as any)?.concentracao_brasil?.composicao?.coe_net_brl ?? coeNet;
+        // Ativo ~R$172k, empréstimo ~-R$108k (derivados do net)
+        const ativoEst = Math.round(coeBruto / 0.372);   // estimativa estrutural (net ≈ 37.2% do ativo)
+        const emprestimoEst = ativoEst - coeBruto;
+        return (
+          <CollapsibleSection
+            id="section-coe-xp"
+            title={secTitle('portfolio', 'coe-xp', 'COE + Empréstimo XP — Operação Estruturada')}
+            defaultOpen={secOpen('portfolio', 'coe-xp', false)}
+            icon={<Landmark size={18} />}
+          >
+            <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', padding: '8px 12px', borderRadius: 6 }}>
+                Produto estruturado BRL na XP. Fonte de verdade: aba Histórico (Google Sheets, lida via gviz API).
+                Classificação geográfica: <strong>Brasil</strong> (BRL soberano + risco XP).
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                <div style={{ background: 'var(--card)', border: '1px solid var(--card2)', borderRadius: 8, padding: '12px 14px' }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>COE Ativo (est.)</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, fontFamily: 'monospace', color: 'var(--text)' }}>
+                    {fmtPrivacy(ativoEst, privacyMode)}
+                  </div>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>XP0121A3C3W (BRL)</div>
+                </div>
+                <div style={{ background: 'var(--card)', border: '1px solid var(--card2)', borderRadius: 8, padding: '12px 14px' }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Empréstimo XP (est.)</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, fontFamily: 'monospace', color: 'var(--red)' }}>
+                    {privacyMode ? '••••' : `-${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(emprestimoEst)}`}
+                  </div>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>Passivo BRL (XP)</div>
+                </div>
+                <div style={{ background: 'var(--card)', border: '1px solid var(--card2)', borderRadius: 8, padding: '12px 14px' }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Posição Net</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, fontFamily: 'monospace', color: 'var(--green)' }}>
+                    {fmtPrivacy(coeBruto, privacyMode)}
+                  </div>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>Ativo − Empréstimo</div>
+                </div>
+              </div>
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
 
       {/* 9a. HODL11 Position Panel — recebido de BACKTEST */}
       {data?.hodl11 && (

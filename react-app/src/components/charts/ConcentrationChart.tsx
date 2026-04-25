@@ -20,21 +20,25 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
 
   const option = useMemo(() => {
     if (!conc) return {};
-    const brasilPct = conc.brasil_pct ?? 0;
-    const internacionalBrl = conc.total_portfolio_brl - conc.total_brasil_brl;
+    const totalBrl = conc.total_portfolio_brl ?? 0;
+    const brasilBrl = conc.total_brasil_brl ?? 0;
+    // cripto = HODL11 (global/cripto, não Brasil)
+    const criptoBrl = conc.total_cripto_brl ?? (conc.composicao?.hodl11_brl ?? 0);
+    const internacionalBrl = Math.max(0, totalBrl - brasilBrl - criptoBrl);
+
     const rfBrl = conc.composicao?.rf_total_brl ?? 0;
-    const hodl11Brl = conc.composicao?.hodl11_brl ?? 0;
+    const coeBrl = conc.composicao?.coe_net_brl ?? 0;
     const cryptoLegadoBrl = conc.composicao?.crypto_legado_brl ?? 0;
 
     const segments = [
       { name: 'Intl (ETFs)', value: internacionalBrl, color: EC.accent },
-      { name: 'RF Brasil', value: rfBrl, color: EC.green },
-      { name: 'HODL11 (BTC)', value: hodl11Brl, color: EC.orange },
-      { name: 'Crypto', value: cryptoLegadoBrl, color: '#a371f7' },
+      { name: 'RF Brasil (TD)', value: rfBrl, color: EC.green },
+      { name: 'COE XP', value: coeBrl, color: '#60a5fa' },
+      { name: 'HODL11 (BTC)', value: criptoBrl, color: EC.orange },
+      { name: 'Crypto Legado', value: cryptoLegadoBrl, color: '#a371f7' },
     ].filter(s => s.value > 0);
 
-    const fmt = (v: number) =>
-      fmtPrivacy(v / 1e6, privacyMode);
+    const cambialPct = totalBrl > 0 ? ((internacionalBrl / totalBrl) * 100).toFixed(0) : '0';
 
     return {
       backgroundColor: 'transparent',
@@ -62,7 +66,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           left: 'center',
           top: '38%',
           style: {
-            text: `${(100 - brasilPct).toFixed(0)}%`,
+            text: `${cambialPct}%`,
             fontSize: 16,
             fontWeight: 700,
             fill: EC.accent,
@@ -74,7 +78,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           left: 'center',
           top: `calc(38% + 20px)`,
           style: {
-            text: 'Intl',
+            text: 'Cambial',
             fontSize: 9,
             fill: EC.muted,
             textAlign: 'center',
@@ -110,7 +114,9 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
   if (!conc) return null;
 
   const brasilPct = conc.brasil_pct ?? 0;
-  const internacionalPct = 100 - brasilPct;
+  // DEV-coe-hodl11-classificacao: cripto_pct = HODL11 (global/cripto, não Brasil)
+  const criptoPct = conc.cripto_pct ?? 0;
+  const cambialPct = Math.max(0, 100 - brasilPct - criptoPct);
 
   return (
     <div style={styles.container}>
@@ -123,15 +129,21 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           </span>
         </div>
         <div style={styles.kpi}>
-          <span style={styles.kpiLabel}>Internacional</span>
+          <span style={styles.kpiLabel}>Cambial (IBKR)</span>
           <span style={{ ...styles.kpiValue, color: EC.accent }}>
-            {`${internacionalPct.toFixed(1)}%`}
+            {`${cambialPct.toFixed(1)}%`}
+          </span>
+        </div>
+        <div style={styles.kpi}>
+          <span style={styles.kpiLabel}>Cripto (HODL11)</span>
+          <span style={{ ...styles.kpiValue, color: EC.orange }}>
+            {`${criptoPct.toFixed(1)}%`}
           </span>
         </div>
       </div>
       <EChart option={option} style={{ height: 260 }} />
       <div style={styles.footnote}>
-        HODL11 = wrapper B3 de BTC
+        HODL11 = Cripto Global (BTC/USD) — categoria própria, não Brasil soberano. Brasil = RF Tesouro + COE XP.
       </div>
     </div>
   );

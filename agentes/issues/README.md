@@ -35,6 +35,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
+| DEV-coe-hodl11-classificacao | COE + Empréstimo na fonte de verdade e HODL11 reclassificação geográfica | Dev | 🔴 Alta |
 | DEV-twr-pipeline-fixes | Fix TWR: RF MtM, preços fim-de-mês, Modified Dietz | Dev | 🔴 Alta |
 | DEV-ux-prototipo | Avaliação design: protótipo HTML vs dashboard React | Dev+Time | 🟡 Média |
 
