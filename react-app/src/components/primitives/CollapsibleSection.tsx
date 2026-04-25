@@ -36,14 +36,34 @@ export function CollapsibleSection({
 
   useEffect(() => {
     const hash = window.location.hash.slice(1); // Remove '#' prefix
-    if (hash === id && isCollapsed) {
-      setCollapse(id, false);
+    if (hash === id) {
+      // Open section if hash matches, regardless of current state
+      if (isCollapsed) {
+        setCollapse(id, false);
+      }
       // Scroll into view after opening
       setTimeout(() => {
         const element = document.getElementById(`content-${id}`);
         element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
+      }, 100);
     }
+  }, [id, isCollapsed, setCollapse]);
+
+  // Also listen for hash changes after initial load
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash === id && isCollapsed) {
+        setCollapse(id, false);
+        setTimeout(() => {
+          const element = document.getElementById(`content-${id}`);
+          element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, [id, isCollapsed, setCollapse]);
 
   const handleOpenChange = (open: boolean) => {
