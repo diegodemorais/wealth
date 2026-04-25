@@ -37,6 +37,7 @@ export interface DecisaoDoMesProps {
   cdsBrazil5y?: number | null;
   concentrationBrazil: number | null;
   hodl11Brl?: number | null;
+  cryptoLegadoBrl?: number | null;
   rfBrl?: number | null;
   exposicaoCambialPct?: number;
 }
@@ -106,6 +107,7 @@ export default function DecisaoDoMes({
   cdsBrazil5y,
   concentrationBrazil,
   hodl11Brl,
+  cryptoLegadoBrl,
   rfBrl,
   exposicaoCambialPct = 87.9,
 }: DecisaoDoMesProps) {
@@ -405,7 +407,7 @@ export default function DecisaoDoMes({
                   <div className="text-xs text-muted mt-0.5">Exp. cambial ~{exposicaoCambialPct.toFixed(0)}% · faixa alvo 55–65%</div>
                 </div>
                 <div className="text-sm text-muted text-right">
-                  <div>HODL11: {fmtPrivacy((hodl11Brl ?? 0) / 1000, privacyMode)}</div>
+                  <div>Cripto: {fmtPrivacy(((hodl11Brl ?? 0) + (cryptoLegadoBrl ?? 0)) / 1000, privacyMode)}</div>
                   <div>RF Total: {fmtPrivacy((rfBrl ?? 0) / 1000, privacyMode)}</div>
                 </div>
               </div>

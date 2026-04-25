@@ -48,7 +48,7 @@ export function RFCryptoComposition() {
   const formatCurrency = (value: number) => fmtPrivacy(value, privacyMode);
 
   const totalRFValue = rfComposition.reduce((sum, item) => sum + item.valor, 0);
-  const hodlValue = data?.hodl11?.valor || 0;
+  const hodlValue = (data?.hodl11?.valor || 0) + ((data as any)?.concentracao_brasil?.composicao?.crypto_legado_brl ?? 0);
   const totalDerivatives = totalRFValue + hodlValue;
 
   if (!data) {

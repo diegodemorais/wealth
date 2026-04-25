@@ -188,6 +188,7 @@ export default function HomePage() {
         cdsBrazil5y={(data as Record<string, any>)?.macro?.cds_brazil_5y_bps ?? null}
         concentrationBrazil={d.concentrationBrazil ?? null}
         hodl11Brl={(data as Record<string, any>)?.hodl11?.valor ?? 0}
+        cryptoLegadoBrl={(data as Record<string, any>)?.concentracao_brasil?.composicao?.crypto_legado_brl ?? 0}
         rfBrl={d.rfBrl ?? 0}
         exposicaoCambialPct={(data as Record<string, any>)?.macro?.exposicao_cambial_pct ?? 87.9}
       />
@@ -482,7 +483,7 @@ export default function HomePage() {
                 ipcaTarget={15}
                 ipcaCurrent={patrimonioAtual > 0 ? (((data as any)?.rf?.ipca2040?.valor ?? (data as any)?.rf?.ipca2040?.valor_brl ?? 0) + ((data as any)?.rf?.ipca2050?.valor ?? (data as any)?.rf?.ipca2050?.valor_brl ?? 0)) / patrimonioAtual * 100 : 0}
                 hodl11Target={3}
-                hodl11Current={patrimonioAtual > 0 ? ((data as any)?.hodl11?.valor ?? 0) / patrimonioAtual * 100 : 0}
+                hodl11Current={patrimonioAtual > 0 ? (((data as any)?.hodl11?.valor ?? 0) + ((data as any)?.concentracao_brasil?.composicao?.crypto_legado_brl ?? 0)) / patrimonioAtual * 100 : 0}
                 lastRebalanceDate={(data as any)?.premissas?.ultima_revisao}
                 driftThresholdPp={5}
               />

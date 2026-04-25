@@ -22,7 +22,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
     if (!conc) return {};
     const totalBrl = conc.total_portfolio_brl ?? 0;
     const brasilBrl = conc.total_brasil_brl ?? 0;
-    // cripto = HODL11 (global/cripto, não Brasil)
+    // cripto = HODL11 + Binance legado (global/cripto, não Brasil)
     const criptoBrl = conc.total_cripto_brl ?? (conc.composicao?.hodl11_brl ?? 0);
     const internacionalBrl = Math.max(0, totalBrl - brasilBrl - criptoBrl);
 
@@ -137,7 +137,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           </span>
         </div>
         <div style={styles.kpi}>
-          <span style={styles.kpiLabel}>Cripto (HODL11)</span>
+          <span style={styles.kpiLabel}>Cripto (HODL11+Binance)</span>
           <span style={{ ...styles.kpiValue, color: EC.orange }}>
             {`${criptoPct.toFixed(1)}%`}
           </span>

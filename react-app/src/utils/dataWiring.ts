@@ -173,8 +173,8 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const progPct = (data.premissas.patrimonio_atual / PAT_GATILHO) * 100;
   const swrFireDay = data.premissas.custo_vida_base / PAT_GATILHO;
 
-  // Years to FIRE
-  const today = new Date(data.date);
+  // Years to FIRE — fallback to current date when data.date is missing (e.g. in unit tests)
+  const today = data.date ? new Date(data.date) : new Date();
   const _anoFireAlvoGlobal = today.getFullYear() + (data.premissas.idade_cenario_base - data.premissas.idade_atual);
   const _anoFireAspir = today.getFullYear() + ((data.premissas.idade_cenario_aspiracional ?? 50) - data.premissas.idade_atual);
   const _anoFire = today.getFullYear() + (data.premissas.idade_cenario_base - data.premissas.idade_atual);
@@ -394,7 +394,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
       gapPiso: null,
       status: st,
       dcaAtivo: false,
-      posicaoBrl: data.hodl11?.valor ?? 0,
+      posicaoBrl: (data.hodl11?.valor ?? 0) + cryptoLegado,
       pctCarteira: hodlBanda.atual_pct ?? null,
       alvoPct: hodlBanda.alvo_pct ?? null,
       gapAlvoPp: hodlBanda.atual_pct != null && hodlBanda.alvo_pct != null

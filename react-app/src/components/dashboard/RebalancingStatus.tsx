@@ -44,7 +44,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
     { ticker: 'AVGS', targetPercent: avgsTarget, currentPercent: avgsCurrent, driftPp: avgsCurrent - avgsTarget, driftDirection: (avgsCurrent - avgsTarget) > 0 ? 'over' : 'under', color: 'var(--cyan)' },
     { ticker: 'AVEM', targetPercent: avemTarget, currentPercent: avemCurrent, driftPp: avemCurrent - avemTarget, driftDirection: (avemCurrent - avemTarget) > 0 ? 'over' : 'under', color: 'var(--green)' },
     { ticker: 'IPCA+', targetPercent: ipcaTarget, currentPercent: ipcaCurrent, driftPp: ipcaCurrent - ipcaTarget, driftDirection: (ipcaCurrent - ipcaTarget) > 0 ? 'over' : 'under', color: 'var(--yellow)' },
-    { ticker: 'HODL11', targetPercent: hodl11Target, currentPercent: hodl11Current, driftPp: hodl11Current - hodl11Target, driftDirection: (hodl11Current - hodl11Target) > 0 ? 'over' : 'under', color: 'rgba(168, 85, 247, 0.7)' },
+    { ticker: 'Cripto', targetPercent: hodl11Target, currentPercent: hodl11Current, driftPp: hodl11Current - hodl11Target, driftDirection: (hodl11Current - hodl11Target) > 0 ? 'over' : 'under', color: 'rgba(168, 85, 247, 0.7)' },
   ];
 
   const maxDrift = Math.max(...driftItems.map(d => Math.abs(d.driftPp)));
