@@ -3218,8 +3218,16 @@ def main():
                 _ac   = next((k for k in _keys if k == 'aporte_brl'), None)
                 if _dc: _ultimo_aporte_data = _last[_dc].strip()[:7]
                 if _ac:
-                    try: _ultimo_aporte_brl = float(_last[_ac].replace(',', '.').replace(' ', ''))
-                    except ValueError: pass
+                    # Buscar última linha com aporte > 0 (linha mais recente pode ter aporte=0 se mês atual)
+                    for _row in reversed(_rows):
+                        try:
+                            _val = float(_row[_ac].replace(',', '.').replace(' ', ''))
+                            if _val > 0:
+                                _ultimo_aporte_brl = _val
+                                if _dc: _ultimo_aporte_data = _row[_dc].strip()[:7]
+                                break
+                        except (ValueError, KeyError):
+                            pass
                 # COE net (coe_brl coluna = COE asset + empréstimo XP net)
                 _coe_col = next((k for k in _keys if k == 'coe_brl'), None)
                 if _coe_col:
