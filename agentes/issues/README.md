@@ -35,14 +35,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| DEV-twr-pipeline-fixes | Fix TWR: RF MtM, preços fim-de-mês, Modified Dietz | Dev | 🔴 Alta |
-| DEV-ux-prototipo | Avaliação design: protótipo HTML vs dashboard React | Dev+Time | 🟡 Média |
 
 ### Done (últimas 20)
 > Issues concluídas
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DEV-twr-pipeline-fixes | Dev+Quant | 2026-04-25 | ✅ Done — TWR pipeline funcional. RF mark-to-market implementado, preços fim-de-mês sincronizados, Modified Dietz em production. CORE-portfolio-history validado (TWR 5 anos: 12.69%). Integrado em portfolio_analytics.py. |
+| DEV-ux-prototipo | Dev+Time | 2026-04-25 | ✅ Done — Protótipo HTML vs React avaliado. Redesign aprovado para CollapsibleSection auto-open feature. UX/layout consistent com spec.json. Tema CSS vars implementado. |
 | DASH-2026-04-25-consistency | Dev+Quant | 2026-04-25 | ✅ Done — **6 High-Priority Fixes** implementados. TER corrigido (AVGS 0.25%→0.39%, AVEM 0.18%→0.35%), pctAlvo dinâmico (12%/3%), CAUTELA styling, Renda+ taxa unificada, alpha drought caveat. Health 6.5/10→7.5/10. **Changelog:** [Performance TER](react-app/src/app/performance/page.tsx) · [Home pctAlvo](react-app/src/app/page.tsx) · [GuardrailsRetirada style](react-app/src/components/dashboard/GuardrailsRetirada.tsx) · [generate_data taxa](scripts/generate_data.py) · [Performance caveat](react-app/src/app/performance/page.tsx) |
 | DEV-decisao-mes-redesign | Dev+CIO+UX | 2026-04-25 | ✅ Done — DecisaoDoMes.tsx (340 linhas) substitui 3 componentes (557 linhas). Hierarquia Decisão→Gatilhos→Macro→Execução. Score removido, redundâncias eliminadas. 3 bugs corrigidos no ciclo. 495 testes passando. |
 | DEV-coe-hodl11-classificacao | Dev | 2026-04-25 | ✅ Done — COE R$64k net + Empréstimo XP no pipeline. HODL11 reclassificado como Cripto Global (BTC/USD). brasil_pct: 12%→10.6%, cripto_pct: novo 2.9%. Seção COE no dash portfolio. |
