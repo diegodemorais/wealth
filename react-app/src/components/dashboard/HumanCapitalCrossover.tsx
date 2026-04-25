@@ -125,9 +125,9 @@ export function HumanCapitalCrossover({
         if (!p) return '';
         return `<div style="font-size:11px">
           <div style="margin-bottom:4px;font-weight:600">${p.ano} · ${p.idade} anos</div>
-          <div>Capital Humano: ${fmtBrlMillions(p.vp_capital_humano)}</div>
-          <div>Financeiro: ${fmtBrlMillions(p.pat_financeiro)}</div>
-          <div>Delta: ${p.delta >= 0 ? '+' : ''}${fmtBrlMillions(p.delta)}</div>
+          <div>Capital Humano: ${fmtPrivacy(p.vp_capital_humano, privacyMode)}</div>
+          <div>Financeiro: ${fmtPrivacy(p.pat_financeiro, privacyMode)}</div>
+          <div>Delta: ${p.delta >= 0 ? '+' : ''}${fmtPrivacy(Math.abs(p.delta), privacyMode)}</div>
         </div>`;
       },
     },
@@ -217,7 +217,7 @@ export function HumanCapitalCrossover({
       <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
         <div>{crossoverText}</div>
         <div style={{ marginTop: 3, fontStyle: 'italic' }}>
-          Premissa: taxa desconto {(taxaDesconto * 100).toFixed(1)}% real · renda R${(rendaAnual / 1_000).toFixed(0)}k/ano
+          Premissa: taxa desconto {(taxaDesconto * 100).toFixed(1)}% real · renda {fmtPrivacy(rendaAnual, privacyMode, { decimals: 0 })}/ano
         </div>
       </div>
 

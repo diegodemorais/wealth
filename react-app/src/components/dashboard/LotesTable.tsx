@@ -165,7 +165,7 @@ export function LotesTable({ lots, summary, prices, cambio }: Props) {
                       </>
                     ) : (
                       <>
-                        <td style={{ textAlign: 'right', padding: '8px 8px' }}>{fmtQty(s.qty_total)}</td>
+                        <td style={{ textAlign: 'right', padding: '8px 8px' }}>{fmtPrivacy(s.qty_total, privacyMode, { prefix: '', decimals: s.qty_total >= 10 ? 0 : 2, compact: false })}</td>
                         <td style={{ textAlign: 'right', padding: '8px 8px' }}>{fmtPrivacy(s.cost_usd_total, privacyMode, { prefix: '$', compact: false })}</td>
                         <td style={{ textAlign: 'right', padding: '8px 8px' }}>—</td>
                       </>
@@ -182,7 +182,7 @@ export function LotesTable({ lots, summary, prices, cambio }: Props) {
                         {lot.date}
                         {lot.ptax_compra != null && <span style={{ marginLeft: 6, fontSize: 9, color: 'var(--muted)' }}>PTAX {lot.ptax_compra.toFixed(2)}</span>}
                       </td>
-                      <td style={{ textAlign: 'right', padding: '4px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{fmtQty(lot.qty)}</td>
+                      <td style={{ textAlign: 'right', padding: '4px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{fmtPrivacy(lot.qty, privacyMode, { prefix: '', decimals: lot.qty >= 10 ? 0 : 2, compact: false })}</td>
                       {hasBrl && lot.cost_brl != null ? (
                         <>
                           <td style={{ textAlign: 'right', padding: '4px 8px', fontSize: 'var(--text-xs)' }}>{fmtBrl(lot.cost_brl)}</td>

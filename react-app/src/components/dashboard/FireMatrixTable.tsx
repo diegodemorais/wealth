@@ -170,7 +170,9 @@ export function FireMatrixTable({ data, idades, currentPatrimonio, currentSpendi
                         outlineOffset: isCurrentCell ? '-2px' : undefined,
                         position: isCurrentCell ? 'relative' : undefined,
                       }}
-                      title={isCurrentCell
+                      title={privacyMode
+                        ? `P(FIRE) = ${pfire.toFixed(1)}%`
+                        : isCurrentCell
                         ? `← você aqui · P(FIRE) = ${pfire.toFixed(1)}% · patrimônio ${fmtCompact(pat)} · gasto ${fmtCompact(gasto)}`
                         : `P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtCompact(pat)} e gasto ${fmtCompact(gasto)}`}
                     >

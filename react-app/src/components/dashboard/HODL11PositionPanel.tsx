@@ -80,7 +80,7 @@ export default function HODL11PositionPanel({ hodl11 }: HODL11PositionPanelProps
         {hodl11?.pnl_pct != null && (
           <span style={{ fontSize: 11, color: hodl11.pnl_pct >= 0 ? '#22c55e' : '#ef4444', marginLeft: 'auto' }}>
             P&L: {hodl11.pnl_pct >= 0 ? '+' : ''}{hodl11.pnl_pct.toFixed(1)}%
-            {avgCost && <span style={{ fontSize: 10, color: '#64748b', marginLeft: 4 }}>(avg R${avgCost.toFixed(0)})</span>}
+            {avgCost && <span style={{ fontSize: 10, color: '#64748b', marginLeft: 4 }}>(avg {fmtPrivacy(avgCost, privacyMode, { compact: false, decimals: 0 })})</span>}
           </span>
         )}
       </div>

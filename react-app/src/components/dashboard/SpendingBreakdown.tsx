@@ -129,7 +129,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
                 <div
                   key={m.mes}
                   style={{ flex: 1, height: `${heightPct}%`, display: 'flex', flexDirection: 'column-reverse', borderRadius: '2px 2px 0 0', overflow: 'hidden', cursor: 'default' }}
-                  title={`${fmtMes(m.mes)}: ${fmtPrivacy(m.total, privacyMode)}/mês\nEss: ${fmtK(m.essenciais)} · Opt: ${fmtK(m.opcionais)} · Imp: ${fmtK(m.imprevistos)}`}
+                  title={`${fmtMes(m.mes)}: ${fmtPrivacy(m.total, privacyMode)}/mês\nEss: ${fmtPrivacy(m.essenciais, privacyMode)} · Opt: ${fmtPrivacy(m.opcionais, privacyMode)} · Imp: ${fmtPrivacy(m.imprevistos, privacyMode)}`}
                 >
                   <div style={{ flex: essPct, background: 'var(--red)', opacity: .85 }} />
                   <div style={{ flex: optPct, background: 'var(--yellow)', opacity: .85 }} />

@@ -52,7 +52,7 @@ export default function BondStrategyPanel({
     {
       id: 'ipca_longo',
       label: 'IPCA+ Longo (TD2040)',
-      nota: 'Hold to maturity · vence FIRE Day · R$~2.3M líquido no vencimento 2040',
+      nota: 'Hold to maturity · vence FIRE Day',
       pctAtual: rfPctAtual,
       pctAlvo: 15,
       status: 'ATIVO' as const,
@@ -210,7 +210,7 @@ export default function BondStrategyPanel({
       }}>
         ━━━━━━━━  FIRE DAY {anoFire}  ━━━━━━━━
         <div style={{ fontSize: 11, fontWeight: 400, color: 'var(--muted)', marginTop: 4 }}>
-          TD {anoFire} vence → R$~2.3M BRL imediato · início do usufruto
+          TD {anoFire} vence → início do usufruto
         </div>
       </div>
 

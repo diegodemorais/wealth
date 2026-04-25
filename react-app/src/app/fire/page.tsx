@@ -733,7 +733,7 @@ export default function FirePage() {
                     </div>
                   </div>
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8 }}>
-                    SWR 3% (conservador solo). Patrimônio = portfólio atual + PGBL Katia. INSS Katia: R${(inssKatia/1000).toFixed(0)}k/ano deduzido do gasto.
+                    SWR 3% (conservador solo). Patrimônio = portfólio atual + PGBL Katia. INSS Katia: {fmtPrivacy(inssKatia, privacyMode, { decimals: 0 })}/ano deduzido do gasto.
                   </div>
                 </div>
               );

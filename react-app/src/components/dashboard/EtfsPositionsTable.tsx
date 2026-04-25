@@ -93,7 +93,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
                     {fmtPrivacy(pos.qty, privacyMode, { prefix: '', decimals: 2, compact: false })}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
-                    {`R$ ${pos.avg_cost.toFixed(2)}`}
+                    {fmtPrivacy(pos.avg_cost, privacyMode, { decimals: 2, compact: false })}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                     {`R$ ${pos.price.toFixed(2)}`}
