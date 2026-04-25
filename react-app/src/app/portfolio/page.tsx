@@ -19,6 +19,7 @@ import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
 import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
 import { LotesTable } from '@/components/dashboard/LotesTable';
+import DARFObligationsPanel from '@/components/dashboard/DARFObligationsPanel';
 import HODL11PositionPanel from '@/components/dashboard/HODL11PositionPanel';
 import { MetricCard } from '@/components/primitives/MetricCard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
@@ -268,6 +269,21 @@ export default function PortfolioPage() {
       <CustoBaseTable defaultOpen={secOpen('portfolio', 'custo-base')} />
 
       <SectionDivider label="Tax & Atividade" />
+
+      {/* 6a. DARF Obligations Panel — Lei 14.754/2023 compliance */}
+      {data?.realized_pnl && (
+        <CollapsibleSection
+          id="section-darf-obligations"
+          title={secTitle('portfolio', 'darf-obligations', 'DARF & Obrigações Fiscais — Lei 14.754/2023')}
+          defaultOpen={secOpen('portfolio', 'darf-obligations', true)}
+          icon={<Landmark size={18} />}
+        >
+          <div style={{ padding: '16px' }}>
+            <DARFObligationsPanel realizedPnl={(data as any).realized_pnl} cambio={data.cambio} />
+          </div>
+        </CollapsibleSection>
+      )}
+
       {/* 7. IR Diferido — Alvo & Transitório + IR Shield (collapsible) */}
       <CollapsibleSection
         id="section-tax-ir"

@@ -82,6 +82,7 @@ export interface DashboardData {
   drift?: any;
   rf?: any;
   hodl11?: any;
+  realized_pnl?: any; // ibkr/realized_pnl.json — DARF obligations data
   [key: string]: any; // Allow for additional fields from Python generation
 }
 

@@ -113,7 +113,22 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
           throw new Error(`HTTP ${response.status} from ${dataUrl}`);
         }
 
-        const data = await response.json();
+        let data = await response.json();
+
+        // Load realized_pnl.json for DARF obligations
+        try {
+          const realizedPnlUrl = withBasePath('/data/realized_pnl.json');
+          const rpResponse = await fetch(realizedPnlUrl, {
+            signal: abortController!.signal,
+          });
+          if (rpResponse.ok) {
+            const realizedPnl = await rpResponse.json();
+            data.realized_pnl = realizedPnl;
+            console.log('Dashboard: realized_pnl loaded successfully');
+          }
+        } catch (e) {
+          console.warn('Dashboard: could not load realized_pnl.json, continuing without DARF data:', e);
+        }
 
         // Validate schema before storing
         validateDataSchema(data);
