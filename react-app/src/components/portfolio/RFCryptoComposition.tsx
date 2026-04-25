@@ -139,6 +139,17 @@ export function RFCryptoComposition() {
                   </td>
                 </tr>
               )}
+              {((data as any)?.concentracao_brasil?.composicao?.crypto_legado_brl ?? 0) > 0 && (
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: 'var(--space-2)', ...styles.instrumentName }}>Binance (BTC/ETH/BNB/ADA)</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>—</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>legado</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
+                    {formatCurrency((data as any).concentracao_brasil.composicao.crypto_legado_brl)}
+                  </td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>—</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
