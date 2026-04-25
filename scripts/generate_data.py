@@ -2522,36 +2522,61 @@ def get_semaforo_triggers(rf: dict, hodl11: dict, total_brl: float, drift: dict 
 
 
 # ─── 9b. GUARDRAILS DE RETIRADA ───────────────────────────────────────────────
-def get_guardrails_retirada() -> list:
-    """Gera guardrails de retirada baseados em P(FIRE).
+def get_guardrails_retirada(patrimonio_atual: float | None = None) -> list:
+    """Gera guardrails de retirada baseados em DRAWDOWN (carteira.md, aprovado 2026-03-20).
 
-    Três níveis de guardrail:
-    1. High: P(FIRE) >= 95% → Acelere retirada (2.5% real mínimo)
-    2. Normal: 80% <= P(FIRE) < 95% → Mantenha SWR base (3.0%)
-    3. Low: P(FIRE) < 80% → Reduza gastos 10% ou pausar retirada
+    Cinco níveis de guardrail baseados em queda % vs pico/target:
+    1. Expansivo: Upside +25% acima do pico → +10% retirada (teto R$350k)
+    2. Normal: 0-15% drawdown → sem ajuste (R$250k)
+    3. Cautela 1: 15-25% drawdown → corte 10% (R$225k)
+    4. Cautela 2: 25-35% drawdown → corte 20% (R$200k)
+    5. Defesa: >35% drawdown → piso essencial (R$180k)
 
-    Retorna list de dicts: [id, guardrail, condicao, acao, prioridade]
+    Args:
+        patrimonio_atual: patrimônio atual BRL (usado para calcular drawdown)
+
+    Retorna list de dicts: [id, guardrail, condicao_drawdown, retirada_sugerida, acao, prioridade]
+    Fonte: carteira.md §Guardrails de Retirada (2026-03-20)
     """
     return [
         {
-            "id": "guardrail_high",
-            "guardrail": "High Guardrail",
-            "condicao": "P(FIRE) ≥ 95%",
-            "acao": "Acelere retirada (2.5% real mínimo)",
+            "id": "guardrail_expansivo",
+            "guardrail": "Expansivo — Upside",
+            "condicao": "Portfolio +25% acima do pico real",
+            "retirada_sugerida": 275000,
+            "acao": "Aumentar retirada 10% permanente vs base (teto R$350k)",
             "prioridade": "EXPANSIVO"
         },
         {
             "id": "guardrail_normal",
-            "guardrail": "Normal Guardrail",
-            "condicao": "80% ≤ P(FIRE) < 95%",
-            "acao": "Mantenha SWR base (3.0%)",
+            "guardrail": "Normal",
+            "condicao": "Drawdown 0-15%",
+            "retirada_sugerida": 250000,
+            "acao": "Sem ajuste — manter retirada base",
             "prioridade": "MANTÉM"
         },
         {
-            "id": "guardrail_low",
-            "guardrail": "Low Guardrail",
-            "condicao": "P(FIRE) < 80%",
-            "acao": "Reduza gastos 10% ou pausar retirada",
+            "id": "guardrail_cautela_1",
+            "guardrail": "Cautela 1",
+            "condicao": "Drawdown 15-25%",
+            "retirada_sugerida": 225000,
+            "acao": "Corte 10% vs base",
+            "prioridade": "CAUTELA"
+        },
+        {
+            "id": "guardrail_cautela_2",
+            "guardrail": "Cautela 2",
+            "condicao": "Drawdown 25-35%",
+            "retirada_sugerida": 200000,
+            "acao": "Corte 20% vs base",
+            "prioridade": "CAUTELA"
+        },
+        {
+            "id": "guardrail_defesa",
+            "guardrail": "Defesa — Piso Essencial",
+            "condicao": "Drawdown >35%",
+            "retirada_sugerida": 180000,
+            "acao": "Piso essencial (moradia + saúde + alimentação); avaliar renda part-time",
             "prioridade": "DEFESA"
         },
     ]
@@ -3108,7 +3133,8 @@ def main():
     semaforo_triggers = get_semaforo_triggers(rf, hodl11, total_brl, drift=drift)
 
     # Guardrails de Retirada — Tier-1 Critical (dashboard RETIRO tab)
-    guardrails_retirada = get_guardrails_retirada()
+    # Baseado em drawdown = (PATRIMONIO_GATILHO - patrimonio_atual) / PATRIMONIO_GATILHO
+    guardrails_retirada = get_guardrails_retirada(patrimonio_atual=total_brl)
 
     # IR diferido — lê tax_snapshot.json (gerado por reconstruct_tax.py)
     # Fallback: calcular inline (compute_tax_diferido)

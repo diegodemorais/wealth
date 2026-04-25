@@ -111,7 +111,9 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
   const rm = data?.retornos_mensais ?? {};
   const ir = data?.rolling_sharpe?.information_ratio?.itd ?? {};
   const ddSummary = data?.drawdown_extended?.summary ?? {};
-  const premissa = data?.premissas_vs_realizado?.retorno_equity?.premissa_real_brl_pct ?? 4.5;
+  // QUANT-005: fallback should use correct premissa (4.85%, not 4.5%)
+  const premissaFallback = ((data?.premissas?.retorno_equity_base ?? 0.0485) * 100);
+  const premissa = data?.premissas_vs_realizado?.retorno_equity?.premissa_real_brl_pct ?? premissaFallback;
 
   const cagrReal: number | null = rm.twr_real_brl_pct ?? null;
   const cagrNominal: number | null = rm.twr_nominal_brl_cagr ?? null;

@@ -52,14 +52,14 @@ class TestGuardrailsRetiradaSchema:
             missing = required_fields - set(gr.keys())
             assert not missing, f"Missing fields {missing} in guardrail {gr.get('id')}"
 
-    def test_guardrails_pfire_based_current(self):
-        """Teste que guardrails_retirada atual usa P(FIRE) como condicao (implementacao corrente)."""
+    def test_guardrails_drawdown_based_current(self):
+        """QUANT-002: Teste que guardrails_retirada atual usa DRAWDOWN como condicao (implementacao nova)."""
         data = self._load_data_json()
         guardrails = data.get("guardrails_retirada", [])
 
-        # Deve ter pelo menos guardrail com P(FIRE) threshold
-        pfire_guardrails = [gr for gr in guardrails if "P(FIRE)" in gr.get("condicao", "")]
-        assert len(pfire_guardrails) >= 1, "Expected at least 1 P(FIRE)-based guardrail"
+        # Deve ter pelo menos guardrail com drawdown threshold (novo formato)
+        drawdown_guardrails = [gr for gr in guardrails if "drawdown" in gr.get("condicao", "").lower() or "upside" in gr.get("condicao", "").lower()]
+        assert len(drawdown_guardrails) >= 4, "Expected at least 4 drawdown-based guardrails (QUANT-002 implementation)"
 
     def test_guardrail_high_pfire_95(self):
         """Teste guardrail HIGH: P(FIRE) >= 95% com prioridade EXPANSIVO."""
@@ -120,11 +120,12 @@ class TestGuardrailsRetiradaSchema:
                 f"ceiling out of reasonable range: {spending_ceiling:.0f} (expected ~350k)"
 
     def test_guardrail_priorities_enum(self):
-        """Teste que todas as prioridades sao valores válidos."""
+        """Teste que todas as prioridades sao valores válidos. QUANT-002: Inclui CAUTELA para drawdown-based."""
         data = self._load_data_json()
         guardrails = data.get("guardrails_retirada", [])
 
-        valid_priorities = {"EXPANSIVO", "MANTÉM", "DEFESA"}
+        # QUANT-002: Novo set de prioridades para drawdown-based guardrails (era {"EXPANSIVO", "MANTÉM", "DEFESA"})
+        valid_priorities = {"EXPANSIVO", "MANTÉM", "DEFESA", "CAUTELA"}
         for gr in guardrails:
             if isinstance(gr, dict):
                 prioridade = gr.get("prioridade")

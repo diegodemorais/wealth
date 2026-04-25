@@ -242,9 +242,9 @@ export default function PerformancePage() {
                     ⓘ
                   </span>
                 </div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--red)', lineHeight: 1.1 }}>
-                  {/* TODO: vir de data.json quando premissas.haircut_alpha_liquido existir */}
-                  {(data as any)?.premissas?.haircut_alpha_liquido ?? '−0.16%/ano'}
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--neutral)', lineHeight: 1.1 }}>
+                  {/* QUANT-006: Alpha líquido = 0.20% bruto − 0.04% haircut = +0.16%/ano (POSITIVO) */}
+                  {(data as any)?.premissas?.haircut_alpha_liquido ?? '+0.16%/ano'}
                 </div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                   McLean &amp; Pontiff 2016
