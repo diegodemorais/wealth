@@ -151,36 +151,34 @@ describe('test_fmtprivacy_imports_valid', () => {
   // 2. EACH COMPONENT: Import check (parametrized)
   // ─────────────────────────────────────────────────────────────
 
-  describe('Each component: fmtPrivacy import validation', () => {
-    for (const analysis of componentAnalyses) {
-      it(`${analysis.name}: import statement valid or component doesn't handle monetized values`, () => {
-        // If component has numeric patterns, it MUST import fmtPrivacy
-        if (analysis.numericPatterns.length > 0) {
-          expect(
-            analysis.hasImport,
-            `${analysis.name} processes ${analysis.numericPatterns.length} numeric values but doesn't import fmtPrivacy`
-          ).toBe(true);
-        }
-      });
-    }
+  it('Each component: fmtPrivacy import validation', () => {
+    const importIssues = componentAnalyses.filter(
+      a => a.numericPatterns.length > 0 && !a.hasImport
+    );
+
+    const errorDetails = importIssues
+      .map(a => `\n  ${a.name} processes ${a.numericPatterns.length} numeric values but doesn't import fmtPrivacy`)
+      .join('');
+
+    expect(
+      importIssues.length,
+      `Components with numeric values missing fmtPrivacy import:${errorDetails}`
+    ).toBe(0);
   });
 
-  // ─────────────────────────────────────────────────────────────
-  // 3. EACH COMPONENT: Usage validation (parametrized)
-  // ─────────────────────────────────────────────────────────────
+  it('Each component: fmtPrivacy usage validation', () => {
+    const usageIssues = componentAnalyses.filter(
+      a => a.hasImport && !a.hasUsage && a.issuesFound.length > 0
+    );
 
-  describe('Each component: fmtPrivacy usage validation', () => {
-    for (const analysis of componentAnalyses) {
-      it(`${analysis.name}: if imported, fmtPrivacy is used appropriately`, () => {
-        // If fmtPrivacy is imported, it should be used (or explicitly intentional)
-        if (analysis.hasImport) {
-          expect(
-            analysis.hasUsage || analysis.issuesFound.length === 0,
-            `${analysis.name} imports fmtPrivacy but doesn't use it`
-          ).toBe(true);
-        }
-      });
-    }
+    const errorDetails = usageIssues
+      .map(a => `\n  ${a.name}: imported but not used`)
+      .join('');
+
+    expect(
+      usageIssues.length,
+      `Components importing fmtPrivacy without proper usage:${errorDetails}`
+    ).toBe(0);
   });
 
   // ─────────────────────────────────────────────────────────────
@@ -206,7 +204,7 @@ describe('test_fmtprivacy_imports_valid', () => {
   // 5. SAMPLE COMPONENTS: Deep validation
   // ─────────────────────────────────────────────────────────────
 
-  describe('Sample components: detailed inspection', () => {
+  it('Sample components: detailed inspection', () => {
     // Find some key components for detailed checks
     const knownComponents = [
       'PerformanceSummary',
@@ -217,25 +215,22 @@ describe('test_fmtprivacy_imports_valid', () => {
     ];
 
     for (const componentName of knownComponents) {
-      it(`${componentName} should handle privacy correctly if found`, () => {
-        const analysis = componentAnalyses.find(
-          c => c.name === componentName
-        );
+      const analysis = componentAnalyses.find(
+        c => c.name === componentName
+      );
 
-        if (!analysis) {
-          // Component not found — skip
-          expect(true).toBe(true);
-          return;
-        }
+      if (!analysis) {
+        // Component not found — skip
+        continue;
+      }
 
-        // If component has numeric patterns, verify import
-        if (analysis.numericPatterns.length > 0) {
-          expect(
-            analysis.hasImport,
-            `${componentName} processes numeric values but missing fmtPrivacy import`
-          ).toBe(true);
-        }
-      });
+      // If component has numeric patterns, verify import
+      if (analysis.numericPatterns.length > 0) {
+        expect(
+          analysis.hasImport,
+          `${componentName} processes numeric values but missing fmtPrivacy import`
+        ).toBe(true);
+      }
     }
   });
 

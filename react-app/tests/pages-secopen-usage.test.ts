@@ -176,20 +176,18 @@ describe('test_pages_use_secopen', () => {
   // 2. EACH PAGE: secOpen import validation (parametrized)
   // ─────────────────────────────────────────────────────────────
 
-  describe('Each page: secOpen usage validation', () => {
+  it('Each page: secOpen usage validation', () => {
     for (const analysis of pageAnalyses) {
-      it(`${analysis.name}: uses secOpen() pattern or doesn't have sections`, () => {
-        // Pages with CollapsibleSection MUST use secOpen
-        const fileContent = readFileSync(analysis.path, 'utf-8');
-        const usesCollapsible = fileContent.includes('CollapsibleSection');
+      // Pages with CollapsibleSection MUST use secOpen
+      const fileContent = readFileSync(analysis.path, 'utf-8');
+      const usesCollapsible = fileContent.includes('CollapsibleSection');
 
-        if (usesCollapsible) {
-          expect(
-            analysis.hasSecOpenImport && analysis.secOpenUsages > 0,
-            `${analysis.name} uses CollapsibleSection but does not import/use secOpen()`
-          ).toBe(true);
-        }
-      });
+      if (usesCollapsible) {
+        expect(
+          analysis.hasSecOpenImport && analysis.secOpenUsages > 0,
+          `${analysis.name} uses CollapsibleSection but does not import/use secOpen()`
+        ).toBe(true);
+      }
     }
   });
 
@@ -197,14 +195,12 @@ describe('test_pages_use_secopen', () => {
   // 3. EACH PAGE: No direct portfolio destructuring (parametrized)
   // ─────────────────────────────────────────────────────────────
 
-  describe('Each page: no direct portfolio bypass', () => {
+  it('Each page: no direct portfolio bypass', () => {
     for (const analysis of pageAnalyses) {
-      it(`${analysis.name}: no direct portfolio root destructuring`, () => {
-        expect(
-          analysis.directPortfolioAccess.length,
-          `${analysis.name} has direct portfolio access that should use secOpen(): ${analysis.directPortfolioAccess.join('; ')}`
-        ).toBe(0);
-      });
+      expect(
+        analysis.directPortfolioAccess.length,
+        `${analysis.name} has direct portfolio access that should use secOpen(): ${analysis.directPortfolioAccess.join('; ')}`
+      ).toBe(0);
     }
   });
 
@@ -231,27 +227,25 @@ describe('test_pages_use_secopen', () => {
   // 5. SAMPLE PAGES: Deep validation
   // ─────────────────────────────────────────────────────────────
 
-  describe('Sample pages: detailed inspection', () => {
+  it('Sample pages: detailed inspection', () => {
     const knownPages = ['performance', 'portfolio', 'fire', 'backtest'];
 
     for (const pageName of knownPages) {
-      it(`${pageName} page should use secOpen() if collapsible sections exist`, () => {
-        const analysis = pageAnalyses.find(
-          p => p.name === pageName
-        );
+      const analysis = pageAnalyses.find(
+        p => p.name === pageName
+      );
 
-        if (!analysis) {
-          expect(true).toBe(true); // Page not found, skip
-          return;
-        }
+      if (!analysis) {
+        // Page not found, skip
+        continue;
+      }
 
-        // If page uses CollapsibleSection, must have secOpen
-        const fileContent = readFileSync(analysis.path, 'utf-8');
-        if (fileContent.includes('CollapsibleSection')) {
-          expect(analysis.hasSecOpenImport).toBe(true);
-          expect(analysis.secOpenUsages).toBeGreaterThan(0);
-        }
-      });
+      // If page uses CollapsibleSection, must have secOpen
+      const fileContent = readFileSync(analysis.path, 'utf-8');
+      if (fileContent.includes('CollapsibleSection')) {
+        expect(analysis.hasSecOpenImport).toBe(true);
+        expect(analysis.secOpenUsages).toBeGreaterThan(0);
+      }
     }
   });
 

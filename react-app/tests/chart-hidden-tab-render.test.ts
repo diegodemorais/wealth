@@ -141,23 +141,18 @@ describe('test_chart_hidden_tab_render', () => {
   // 4. Check patterns for hidden container handling
   // ─────────────────────────────────────────────────────────────
 
-  describe('Each EChart component: hidden container handling', () => {
-    for (const analysis of echartAnalyses) {
-      it(`${analysis.componentName}: EChart or has hidden container pattern`, () => {
-        // Either the component doesn't use EChart (ok), or it has a pattern for handling hidden state
-        if (analysis.issuesFound.length > 0) {
-          // Skip check if component file is minimal
-          const content = readFileSync(analysis.filePath, 'utf-8');
-          if (content.length < 500) {
-            expect(true).toBe(true); // Minimal component, exempt
-          } else {
-            expect(
-              analysis.hasResizeObserver || analysis.hasSetTimeoutRetry || analysis.hasOffsetWidthCheck,
-              `${analysis.componentName}: Uses EChart but lacks hidden container pattern`
-            ).toBe(true);
-          }
-        }
-      });
+  it('Each EChart component: hidden container handling', () => {
+    const problematic = echartAnalyses.filter(analysis => {
+      if (analysis.issuesFound.length === 0) return false;
+      const content = readFileSync(analysis.filePath, 'utf-8');
+      return content.length >= 500; // Only check non-minimal components
+    });
+
+    for (const analysis of problematic) {
+      expect(
+        analysis.hasResizeObserver || analysis.hasSetTimeoutRetry || analysis.hasOffsetWidthCheck,
+        `${analysis.componentName}: Uses EChart but lacks hidden container pattern`
+      ).toBe(true);
     }
   });
 
