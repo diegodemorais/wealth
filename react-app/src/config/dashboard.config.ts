@@ -28,7 +28,7 @@ export const TABS: TabDef[] = [
   { id: 'tab-fire',        href: '/fire',        label: 'FIRE' },
   { id: 'tab-withdraw',    href: '/withdraw',    label: 'RETIREMENT' },
   { id: 'tab-backtest',    href: '/backtest',     label: 'BACKTEST' },
-  { id: 'tab-simulators',  href: '/simulators',  label: 'SIMULADORES' },
+  { id: 'tab-simuladores', href: '/simulators',  label: 'SIMULADORES' },
   { id: 'tab-assumptions', href: '/assumptions',  label: 'CHECKLIST' },
 ];
 
