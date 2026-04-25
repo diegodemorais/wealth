@@ -273,7 +273,7 @@ export default function DARFObligationsPanel({ realizedPnl, cambio = 5.15 }: DAR
             ) : analysis.hasDueSoon ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#ca8a04', fontSize: '13px', fontWeight: 700 }}>
                 <Clock size={16} />
-                VENCE EM <7d
+                VENCE {'<'}7d
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--green)', fontSize: '13px', fontWeight: 700 }}>
