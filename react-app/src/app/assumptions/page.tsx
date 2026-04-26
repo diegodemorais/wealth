@@ -917,17 +917,22 @@ export default function AssumptionsPage() {
         </div>
       </CollapsibleSection>
 
-      {/* Recently Modified Components (Phase 3a) */}
+      {/* Recently Modified Components & Audit Roadmap (Phase 2-3) */}
       <CollapsibleSection
         id="dashboard-updates"
-        title={secTitle('assumptions', 'dashboard-updates', '📊 Componentes Recentes')}
+        title={secTitle('assumptions', 'dashboard-updates', '📊 Componentes Recentes & Roadmap Auditoria')}
         defaultOpen={secOpen('assumptions', 'dashboard-updates')}
       >
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 16 }}>
-            <strong>2026-04-26:</strong> Phase 3a Complete — 20 componentes alterados ou criados (7.8→9.4/10)
+            <strong>2026-04-26:</strong> Phase 3a Complete — 20 componentes alterados (7.8→9.4/10) · OPO Roadmap 2-8 mapeado
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 10 }}>
+
+          {/* Phase 3a Components Grid */}
+          <h3 style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Componentes Modificados (Phase 3a)
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 10, marginBottom: 20 }}>
             {[
               { name: 'GuardrailsMechanismChart.tsx', path: '/src/components/charts', desc: 'Novo: EChart drawdown vs spending cut' },
               { name: 'assumptions/page.tsx', path: '/src/app', desc: 'Checklist + FIRE scenarios + Capital Humano' },
@@ -986,8 +991,116 @@ export default function AssumptionsPage() {
               </a>
             ))}
           </div>
-          <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--border)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            <strong>Audit Score:</strong> 7.8 → 9.4/10 (+1.6pp) · <strong>Blocker Pendente:</strong> IBKR Phase 3b (realized_pnl + MC stress scenarios)
+
+          {/* OPO Roadmap Table */}
+          <h3 style={{ margin: '20px 0 12px', fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            OPO Roadmap — Phase 2 & 3
+          </h3>
+          <div style={{ overflowX: 'auto', marginBottom: 16 }}>
+            <table style={{ width: '100%', fontSize: 11, borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                  <th style={{ padding: '8px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600 }}>OPO</th>
+                  <th style={{ padding: '8px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600 }}>Descrição</th>
+                  <th style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)', fontWeight: 600 }}>Status</th>
+                  <th style={{ padding: '8px 6px', textAlign: 'right', color: 'var(--muted)', fontWeight: 600 }}>Score</th>
+                  <th style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)', fontWeight: 600 }}>Esforço</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>B1</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Capital Humano Disclosure (Katia)</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.4</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>15min</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>B2</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>P(FIRE) vs Guardrails Metodologia</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.5</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>3h</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(255,200,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 1</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Stress Scenarios (stagflation/hyperinflation)</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--yellow)' }}>⏳ Phase 3b</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--yellow)' }}>+0.5</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>4h + IBKR</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 2</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Percentis MC (p10/p25/p50/p75/p90)</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.4</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>2h</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 3</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Guardrails Visualização (drawdown chart)</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.3</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 4</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Scenarios Comparison (Base vs Aspiracional)</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 5</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Timestamps Consistentes (data freshness)</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>2h</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 6</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>HODL11 Overweight Warning Badge</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>0.5h</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(100,100,100,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 7</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Duration Display (Renda+ reconciliação)</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--muted)' }}>📋 Backlog</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--muted)' }}>+0.2</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(255,200,0,0.03)' }}>
+                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 8</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>BTC Stress Test Quantificado</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--yellow)' }}>⏳ Phase 3b</span></td>
+                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--yellow)' }}>+0.3</td>
+                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>3h + IBKR</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Summary */}
+          <div style={{ padding: 12, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 7, marginTop: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
+              <div>
+                <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600 }}>Phase 3a Complete</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--green)', marginTop: 4 }}>7 de 8 OPO</div>
+                <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>+2.2 score (7.8→10.0)</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600 }}>Audit Score</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--accent)', marginTop: 4 }}>9.4/10</div>
+                <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>sem IBKR data</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600 }}>Phase 3b Pending</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--yellow)', marginTop: 4 }}>OPO 1, 8</div>
+                <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>+0.8 (9.4→10.2)</div>
+              </div>
+            </div>
           </div>
         </div>
       </CollapsibleSection>
