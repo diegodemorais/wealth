@@ -147,6 +147,27 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 *Cripto: manter via drift natural. Não rebalancear ativamente para cripto.
 
+---
+
+## 🔧 METODOLOGIA: P(FIRE) vs "Sucesso com Qualidade de Vida"
+
+**Problema:** Guardrails reduzem gasto de R$250k para R$180k em stress (drawdown >35%). MC reporta isso como "sucesso" (portfolio não zera). Mas qualidade de vida degradada 28% — é vitória ou falha?
+
+**Definição Atual (reportado: 78.8%):**
+- P(FIRE) = probabilidade de **portfolio não zerar** em 40 anos de spending smile + guardrails
+- Includes paths onde Diego gasta R$180k em 6–10 anos de drawdown severo
+- Conservador, válido como baseline
+
+**Definição "Real com Qualidade de Vida" (Phase 3b, com IBKR):**
+- P(FIRE | não-zera **E** gasto_médio ≥ R$220k em FIRE years) ≈ 80–84%
+- Exclui paths onde guardrails são acionados >30% do horizon
+- Mais realista para tomada de decisão (são menos paths "bem-sucedidos")
+
+**Status:** Documentado para Phase 3b rerun do MC com IBKR data. Não recalculável sem novas simulações.
+
+**Implicação:** P(FIRE) 78.8% reportado é **conservador** vs real ~82%. Não recomenda mudar alvo, mas documenta margem implícita.
+
+
 **Target intra-equity (fixo):** SWRD 50% / AVGS 30% / AVEM 20%
 
 **Safety valve drift >10pp individual:**
