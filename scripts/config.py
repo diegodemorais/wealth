@@ -108,6 +108,7 @@ CRYPTO_LEGADO_BRL = 3_944
 HORIZONTE_VIDA              = _P.get("horizonte_vida",              90)
 PATRIMONIO_GATILHO          = _P.get("patrimonio_gatilho",          8_333_333)
 SWR_GATILHO                 = _P.get("swr_gatilho",                 0.030)
+SWR_FALLBACK                = _P.get("swr_fallback",                0.035)
 
 IDADE_CENARIO_BASE          = _P.get("idade_cenario_base",          53)
 APORTE_CENARIO_BASE         = _P.get("aporte_cenario_base",         25_000)

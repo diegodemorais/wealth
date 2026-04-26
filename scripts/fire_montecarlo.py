@@ -26,7 +26,7 @@ from config import (
     APORTE_MENSAL, CUSTO_VIDA_BASE,
     IDADE_ATUAL, IDADE_CENARIO_BASE, IDADE_CENARIO_ASPIRACIONAL,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
-    IR_ALIQUOTA, PATRIMONIO_GATILHO, SWR_GATILHO,
+    IR_ALIQUOTA, PATRIMONIO_GATILHO, SWR_GATILHO, SWR_FALLBACK,
     APORTE_CENARIO_BASE, APORTE_CENARIO_ASPIRACIONAL,
     HORIZONTE_VIDA,
     RETORNO_EQUITY_BASE, RETORNO_IPCA_PLUS, VOLATILIDADE_EQUITY,
@@ -204,7 +204,7 @@ GK_PROSPERITY_MULT   = 0.80    # Prosperity Rule: sobe se WR < 80% do inicial
 GK_CUT_FACTOR        = 0.90    # fator de corte Capital Preservation
 GK_RAISE_FACTOR      = 1.10    # fator de aumento Prosperity Rule
 GK_MAX_AGE           = 85      # idade-limite para regras de ajuste (paper Guyton-Klinger 2006)
-SWR_FALLBACK         = 0.035   # SWR default quando patrimônio_inicial desconhecido
+# SWR_FALLBACK imported from config.py (centralized constant)
 
 
 @dataclass
