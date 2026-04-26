@@ -38,3 +38,7 @@ dashboard/audit-screenshots/
 dashboard/audit-reports/
 __pycache__/
 react-app/public/data/data.json
+
+# Generated data files (outputs from Python scripts)
+dados/
+react-app/public/data.json
