@@ -856,81 +856,98 @@ export default function AssumptionsPage() {
       >
         <div style={{ padding: '12px 0' }}>
           <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 12 }}>
-            <strong>2026-04-25:</strong> 6 High-Priority Consistency Fixes (Health Score 6.5/10 → 7.5/10)
+            <strong>2026-04-26:</strong> Phase 3 Launch — Auditoria de Gaps (7.8→10.0) + 5 Melhorias Medium-Priority
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Fix</th>
-                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Component</th>
-                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Change</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Melhoria</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Componente</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Mudança</th>
               </tr>
             </thead>
             <tbody>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '8px 6px', fontWeight: 600 }}>TER Correction</td>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Phase 3 Roadmap</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <Link href="/performance#section-fee-analysis"
-                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
-                    Fee Analysis ↗
-                  </Link>
+                  Auditoria Completa
                 </td>
-                <td style={{ padding: '8px 6px' }}>AVGS 0.25%→0.39%, AVEM 0.18%→0.35%, added HODL11 0.20%</td>
+                <td style={{ padding: '8px 6px' }}>Documentado 8 gaps + 2 blockers = +2.2 score (atingível 8.5-10/10)</td>
               </tr>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '8px 6px', fontWeight: 600 }}>pctAlvo Dynamic</td>
-                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <Link href="/"
-                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
-                    RF Status (Home) ↗
-                  </Link>
-                </td>
-                <td style={{ padding: '8px 6px' }}>Hardcoded 8%/7% → dynamic from DCA status</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '8px 6px', fontWeight: 600 }}>CAUTELA Status</td>
-                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <Link href="/withdraw#section-guardrails-table"
-                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
-                    Withdrawal Guardrails ↗
-                  </Link>
-                </td>
-                <td style={{ padding: '8px 6px' }}>Added yellow (CAUTELA) priority level</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Renda+ Taxa</td>
-                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
-                  <Link href="/portfolio#section-rf-status"
-                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
-                    RF Status ↗
-                  </Link>
-                </td>
-                <td style={{ padding: '8px 6px' }}>Use mercado_mtd as primary rate source</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Alpha Drought</td>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Alpha Drought Caveat</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
                   <Link href="/performance#section-expected-return-waterfall"
                         style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
                     Factor Waterfall ↗
                   </Link>
                 </td>
-                <td style={{ padding: '8px 6px' }}>⚠️ Factor drought caveat added</td>
+                <td style={{ padding: '8px 6px' }}>⚠️ Aviso factor droughts 8-10a comuns + impacto no alpha</td>
               </tr>
-              <tr>
-                <td style={{ padding: '8px 6px', fontWeight: 600 }}>FIRE Trigger</td>
-                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--green)' }}>
-                  <Link href="/withdraw#section-guardrails-table"
-                        style={{ color: 'var(--green)', textDecoration: 'none', cursor: 'pointer' }}>
-                    Withdrawal Guardrails ↗
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Renda+ Duration</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <Link href="/assumptions#assumptions-modelo-referencia"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Renda+ Metodologia ↗
                   </Link>
                 </td>
-                <td style={{ padding: '8px 6px' }}>✓ Drawdown-based (no P(FIRE) conflict)</td>
+                <td style={{ padding: '8px 6px' }}>Reconciliado Macaulay (21.79y) vs full product (43.6y) vs MtM impact</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>BTC/SWRD Correlation</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <Link href="/portfolio#section-crypto-band"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    HODL11 Position ↗
+                  </Link>
+                </td>
+                <td style={{ padding: '8px 6px' }}>Métrica 90-dia rolling correlation (diversificador &lt;40%, risco &gt;60%)</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Focus Expectations</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <Link href="/assumptions#assumptions-modelo-referencia"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Macro Expectations ↗
+                  </Link>
+                </td>
+                <td style={{ padding: '8px 6px' }}>Card com Selic terminal + IPCA 2026 Focus + cycle phase</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>SoRR Heatmap Refactor</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <Link href="/withdraw"
+                        style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Sequence of Returns ↗
+                  </Link>
+                </td>
+                <td style={{ padding: '8px 6px' }}>Interface para p10/p25/p50/p75/p90 (pronto para MC real)</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Data Symlink Fix</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--green)' }}>
+                  Sistema
+                </td>
+                <td style={{ padding: '8px 6px' }}>✓ Restaurado symlink data.json (dashboard carrega novamente)</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Backtest Fallback</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--green)' }}>
+                  <Link href="/backtest"
+                        style={{ color: 'var(--green)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Backtest Page ↗
+                  </Link>
+                </td>
+                <td style={{ padding: '8px 6px' }}>Mensagem informativa quando R7 data não carregado (aguardando IBKR)</td>
               </tr>
             </tbody>
           </table>
           <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--border)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            <strong>Commit:</strong> <code>ef68818b</code> · <strong>Branch:</strong> main
+            <strong>Commits:</strong> <code>7b85e060</code> (alpha drought) · <code>de4a2b15</code> (duration) · <code>c4293897</code> (correlation) · <code>650b1b57</code> (focus) · <code>36f427f5</code> (sorr) · <code>c0474723</code> (backtest fallback)
+          </div>
+          <div style={{ marginTop: 8, fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
+            <strong>Phase 3 Status:</strong> Auditoria completa. Roadmap: 8.5/10 (code-ready) → 9.2/10 (com IBKR) → 10.0/10 (stress scenarios + capital humano). Aguardando aprovação para implementação.
           </div>
         </div>
       </CollapsibleSection>
