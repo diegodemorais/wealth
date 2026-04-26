@@ -25,12 +25,16 @@ Pipeline:
     8. Escreve react-app/public/data.json (symlinked from dashboard/data.json)
 """
 
-import sys, json, subprocess, csv, math, argparse, re
+import sys, json, subprocess, csv, math, argparse, re, importlib.util
 from pathlib import Path
 from datetime import date, datetime, timedelta
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
+
+# Import PFireEngine for centralized P(FIRE) calculations
+from pfire_engine import PFireEngine, PFireRequest
+from pfire_transformer import canonicalize_pfire
 
 from config import (
     PESOS_TARGET, BUCKET_MAP, EQUITY_WEIGHTS,
@@ -414,6 +418,47 @@ def get_premissas():
         }, [], 180_000, {}
 
 
+def build_pfire_request(scenario: str, premissas: dict) -> PFireRequest:
+    """
+    Constrói PFireRequest a partir de PREMISSAS e cenário.
+
+    Args:
+        scenario: 'base', 'aspiracional', 'stress', ou 'custom'
+        premissas: Dict de PREMISSAS from fire_montecarlo.py
+
+    Returns:
+        PFireRequest pronto para PFireEngine.calculate()
+    """
+    patrimonio = premissas.get("patrimonio_atual", 1_000_000)
+    if patrimonio is None or patrimonio <= 0:
+        patrimonio = 1_000_000  # fallback
+
+    # Para fire_montecarlo, meta_fire é calculada dinamicamente
+    # Usar meta_fire = patrimonio (dummy, pois PFireEngine usa PREMISSAS)
+    meta_fire = patrimonio or 1_000_000
+
+    idade_atual = premissas.get("idade_atual", 39)
+    idade_fire = premissas.get("idade_cenario_base", 53)
+
+    # Para cenário aspiracional, usar idade_cenario_aspiracional se disponível
+    if scenario == "aspiracional":
+        idade_fire = premissas.get("idade_cenario_aspiracional", 49)
+
+    return PFireRequest(
+        scenario=scenario,
+        patrimonio_atual=patrimonio,
+        meta_fire=meta_fire,
+        aporte_mensal=premissas.get("aporte_mensal", 25_000),
+        idade_atual=idade_atual,
+        idade_fire=idade_fire,
+        retorno_anual=premissas.get("retorno_equity_base", 0.0485),
+        volatilidade_anual=premissas.get("volatilidade_equity", 0.168),
+        meses=(idade_fire - idade_atual) * 12,
+        n_simulacoes=10_000,
+        seed=42,
+    )
+
+
 # ─── 1b. RECONSTRUIR FIRE DATA (fire_trilha com P10/P90) ──────────────────────
 def rebuild_fire_data():
     """Roda reconstruct_fire_data.py para gerar fire_trilha.json com P10/P90 percentis."""
@@ -461,92 +506,48 @@ def get_pfire_tornado():
             norm_tornado
         )
 
-    # Rodar Cenário Aspiracional (--anos 10 --aporte 30000) com tornado e by-profile
-    print("  ▶ fire_montecarlo.py --anos 10 --aporte 30000 --tornado --by-profile ...")
-    out_aspiracional, err_aspiracional = run([VENV_PY, "scripts/fire_montecarlo.py", "--anos", "10", "--aporte", "30000", "--tornado", "--by-profile"], cwd=ROOT)
-    if err_aspiracional:
-        print(f"  ⚠️ stderr aspiracional: {err_aspiracional[:200]}")
+    # ─── Usar PFireEngine para cálculos canônicos de P(FIRE) ────────────────
+    print("  ▶ Calculando P(FIRE) canônicos via PFireEngine ...")
+    premissas, _, _, _ = get_premissas()
 
-    # Rodar Cenário Base (default, sem --anos) com by-profile
-    print("  ▶ fire_montecarlo.py --by-profile (Cenário Base default) ...")
-    out_base, err_base = run([VENV_PY, "scripts/fire_montecarlo.py", "--by-profile"], cwd=ROOT)
+    # Cenário Aspiracional (P(50) — idade 49)
+    try:
+        req_aspiracional = build_pfire_request("aspiracional", premissas)
+        result_aspiracional = PFireEngine.calculate(req_aspiracional)
+        canonical_aspiracional = result_aspiracional.canonical
+        pf_aspiracional = {
+            "base": canonical_aspiracional.percentage,
+            "fav": min(100, canonical_aspiracional.percentage + 3),  # Heurística: +3pp para otimista
+            "stress": max(0, canonical_aspiracional.percentage - 8),  # Heurística: -8pp para stress
+        }
+        print(f"  ✓ Aspiracional (P@49): {canonical_aspiracional.pct_str} (canônico, source={canonical_aspiracional.source})")
+    except Exception as e:
+        print(f"  ⚠️ PFireEngine aspiracional falhou: {e} — usando fallback")
+        pf_aspiracional = {"base": None, "fav": None, "stress": None}
 
-    def parse_pfire(out, idade):
-        """Parseia P(FIRE@{idade}) ou P({idade}) do output do fire_montecarlo."""
-        pf = {"base": None, "fav": None, "stress": None}
+    # Cenário Base (P(53) — idade 53)
+    try:
+        req_base = build_pfire_request("base", premissas)
+        result_base = PFireEngine.calculate(req_base)
+        canonical_base = result_base.canonical
+        pf_base = {
+            "base": canonical_base.percentage,
+            "fav": min(100, canonical_base.percentage + 3),  # Heurística: +3pp
+            "stress": max(0, canonical_base.percentage - 8),  # Heurística: -8pp
+        }
+        print(f"  ✓ Base (P@53): {canonical_base.pct_str} (canônico, source={canonical_base.source})")
+    except Exception as e:
+        print(f"  ⚠️ PFireEngine base falhou: {e} — usando fallback")
+        pf_base = {"base": None, "fav": None, "stress": None}
 
-        # Novo formato: tabela com perfis
-        # Perfil                 P(50) Base P(53) Base P(50) Stress P(53) Stress
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        #   ~~ Atual (Solteiro)          81.2%      89.0%        75.6%        85.8%
-        #   -~ Casado                    78.3%      87.9%        72.4%        83.4%
+    # ─── Tornado — manter subprocess para tornado (sensibilidade, não P(FIRE)) ────
+    # Tornado é uma análise de sensibilidade, não um cálculo de P(FIRE) — pode manter subprocess
+    print("  ▶ fire_montecarlo.py --tornado (sensibilidade) ...")
+    out_tornado, err_tornado = run([VENV_PY, "scripts/fire_montecarlo.py", "--tornado"], cwd=ROOT)
+    if err_tornado:
+        print(f"  ⚠️ stderr tornado: {err_tornado[:200]}")
 
-        for i, line in enumerate(out.splitlines()):
-            if "Solteiro" in line or "Atual" in line:
-                # Extrair os números percentuais da linha
-                # Esperado: 4 valores para P(50) Base, P(53) Base, P(50) Stress, P(53) Stress
-                pcts = re.findall(r'(\d+\.?\d*)%', line)
-                if len(pcts) >= 4:
-                    # Para aspir (P(50)), usar índice 0 (P(50) Base) e 2 (P(50) Stress)
-                    # Para base (P(53)), usar índice 1 (P(53) Base) e 3 (P(53) Stress)
-                    if idade == 49 or idade == 50:
-                        pf["base"] = float(pcts[0])
-                        pf["stress"] = float(pcts[2])
-                    elif idade == 53:
-                        pf["base"] = float(pcts[1])
-                        pf["stress"] = float(pcts[3])
-                    # Fav: aproximadamente média entre base e stress (ausente na tabela)
-                    pf["fav"] = (pf["base"] + pf["stress"]) / 2 + 4  # +4pp heurístico para otimista
-                return pf
-
-        # Fallback: formato antigo (compatibilidade)
-        for line in out.splitlines():
-            m = re.search(rf'P\(FIRE@{idade}\)[^=]*=\s*([\d.]+)%', line)
-            if not m:
-                m = re.search(rf'P\({idade}\)[^%]*(\d+\.?\d*)%', line)
-            if m:
-                l = line.lower()
-                val = float(m.group(1))
-                if "stress" in l:
-                    pf["stress"] = val
-                elif "favoráv" in l or "fav" in l:
-                    pf["fav"] = val
-                else:
-                    if pf["base"] is None:
-                        pf["base"] = val
-        return pf
-
-    def parse_pfire_generic(out):
-        """Parseia P(FIRE) genérico (sem @idade) — cenários base/fav/stress."""
-        pf = {"base": None, "fav": None, "stress": None}
-        for line in out.splitlines():
-            m = re.search(r'P\(FIRE\)[^=]*=\s*([\d.]+)%', line)
-            if m:
-                l = line.lower()
-                if "favoráv" in l or "fav" in l:
-                    pf["fav"] = float(m.group(1))
-                elif "stress" in l:
-                    pf["stress"] = float(m.group(1))
-                elif pf["base"] is None:
-                    pf["base"] = float(m.group(1))
-        return pf
-
-    pf_aspiracional = parse_pfire(out_aspiracional, 49)
-    if pf_aspiracional["base"] is None:
-        pf_aspiracional = parse_pfire_generic(out_aspiracional)
-
-    pf_base = parse_pfire(out_base, 53)
-    if pf_base["base"] is None:
-        pf_base = parse_pfire_generic(out_base)
-
-    # DEBUG RF-1: Garantir que pfire_aspiracional ≠ pfire_base
-    if pf_aspiracional["base"] == pf_base["base"]:
-        print(f"  ⚠️  RF-1 DETECTED: pfire_aspiracional = pfire_base = {pf_base['base']}% — isso é BUG!")
-        print(f"       out_aspiracional output (primeiras 30 linhas):")
-        for line in out_aspiracional.splitlines()[:30]:
-            print(f"       {line}")
-
-    # Tornado — parsear do output Aspiracional
+    # Tornado — parsear do output tornado
     # fire_montecarlo output format:
     #   "  Volatilidade equity (+/-10%)        -4.1%    +4.0%          8.2%"
     # Grupos: 1=label  2=up(+10%)  3=down(-10%)  4=impacto_total
@@ -555,7 +556,7 @@ def get_pfire_tornado():
     _tornado_pattern = re.compile(
         r'^\s+(.+?)\s+([+-]?\d+\.?\d*)%\s+([+-]?\d+\.?\d*)%\s+(\d+\.?\d*)%'
     )
-    for line in out_aspiracional.splitlines():
+    for line in out_tornado.splitlines():
         if "tornado" in line.lower() or "sensibilidade" in line.lower():
             in_tornado = True
         if in_tornado:
@@ -590,19 +591,18 @@ def get_pfire_tornado():
                 })
             print(f"  -> tornado: {len(tornado)} variaveis (de dashboard_state.json)")
 
-    # Fallback do state — NUNCA copiar pfire_base para aspiracional
-    s = load_state().get("fire", {})
+    # Fallback: se PFireEngine falhou para algum cenário, tentar estado
     if pf_aspiracional["base"] is None:
-        # Aspiracional: P(FIRE@49), não @53
+        s = load_state().get("fire", {})
         pf_aspiracional = {"base": s.get("pfire49_base", s.get("pfire50_base")),
                            "fav":  s.get("pfire49_fav",  s.get("pfire50_fav")),
                            "stress": s.get("pfire49_stress", s.get("pfire50_stress"))}
         if pf_aspiracional["base"] is None:
-            # Último resort: usar ~82% como estimativa temporária (avoids copying pfire_base)
-            print(f"  ⚠️  FALLBACK: pfire_aspiracional não disponível, usando estimativa 82.2%")
-            pf_aspiracional = {"base": 82.2, "fav": 88.8, "stress": 76.3}
+            print(f"  ⚠️  FALLBACK: pfire_aspiracional não disponível")
+            pf_aspiracional = {"base": None, "fav": None, "stress": None}
 
     if pf_base["base"] is None:
+        s = load_state().get("fire", {})
         pf_base = {"base": s.get("pfire53_base", s.get("pfire_base")),
                    "fav":  s.get("pfire53_fav",  s.get("pfire_fav")),
                    "stress": s.get("pfire53_stress", s.get("pfire_stress"))}
