@@ -167,7 +167,7 @@ Tudo acima + criar:
 
 - [ ] Team debate: Decidido Path A, B ou C
 - [ ] Prioridades definidas (quais items atacar primeiro)
-- [ ] Quat questions respondidas (guardrails canonical, SWR fallback, etc)
+- [ ] Quant questions respondidas (guardrails canonical, SWR fallback, etc)
 - [ ] Dev risks assessed (impacto em React charts)
 - [ ] Timeline estimado (1 week? 1 month? 2 months?)
 - [ ] Formal sub-issues criadas para cada item

@@ -29,7 +29,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| CENTRALIZATION_COMPLETE | Core & Dashboard Full Refactor (5 Engines) | Head + Quant + Dev | 🔴 CRÍTICA | 🎯 Aguardando respostas de Quant/Dev/Head |
+| CENTRALIZATION_COMPLETE | Core & Dashboard Full Refactor (5 Engines) | Head + Quant + Dev | 🔴 CRÍTICA | ✅ Team respondeu — Pronto para Phase 1 |
+| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | 🎯 Aguardando respostas de Quant/Dev/Head |
 
 ### Backlog
 > Issues prontas para execução, aguardando vez
@@ -39,12 +40,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | — |
 | VERIF-PFIRE-CANONICO | Verificação de Canonicidade de P(FIRE) Centralizado | Quant + FIRE | 🔴 Alta | PFIRE_PHASE4_DATA_GEN |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | — |
-
-### Doing
-> Issues em andamento
-
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
 
 ### Done (últimas 20)
 > Issues concluídas
