@@ -45,6 +45,7 @@ from fire_montecarlo import (
     _retorno_equity_cenario,
 )
 from bond_pool_engine import BondPoolEngine, BondPoolRequest
+from swr_engine import SWREngine, SWRRequest
 
 NOW = datetime.now().isoformat(timespec="seconds")
 DADOS = ROOT / "dados"
@@ -389,7 +390,10 @@ def gen_bond_pool_runway():
 # ─── R2: SWR Percentis ────────────────────────────────────────────────────────
 
 def gen_fire_swr_percentis():
-    """R2 — SWR implícita nos percentis P10/P50/P90 na data FIRE (2040)."""
+    """R2 — SWR implícita nos percentis P10/P50/P90 na data FIRE (2040).
+
+    Delegado para SWREngine.calculate_fire() — single source of truth.
+    """
     state = _load_json(DADOS / "dashboard_state.json")
     fire = state.get("fire", {})
 
@@ -400,23 +404,34 @@ def gen_fire_swr_percentis():
     p50 = fire.get("pat_mediano_fire53", fire.get("pat_mediano_fire", 11_527_476))
     p90 = fire.get("pat_p90_fire53", fire.get("pat_p90_fire", 18_916_227))
 
-    swr_p10 = round(custo_vida / p10, 4) if p10 > 0 else None
-    swr_p50 = round(custo_vida / p50, 4) if p50 > 0 else None
-    swr_p90 = round(custo_vida / p90, 4) if p90 > 0 else None
+    # Use SWREngine.calculate_fire() for each percentile
+    swr_results = {}
+    for label, patrimonio_fire in [("p10", p10), ("p50", p50), ("p90", p90)]:
+        if patrimonio_fire <= 0:
+            swr_results[label] = None
+        else:
+            request = SWRRequest(
+                patrimonio_atual=0,
+                custo_vida_base=custo_vida,
+                patrimonio_fire=patrimonio_fire,
+                anos_para_fire=IDADE_CENARIO_BASE - IDADE_ATUAL,
+            )
+            result = SWREngine.calculate_fire(request)
+            swr_results[label] = result.swr_fire
 
     data = {
         "_generated": NOW,
-        "_source": "reconstruct_fire_data.py → dashboard_state.json fire section",
+        "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
         "custo_vida_base": custo_vida,
         "patrimonio_p10_2040": p10,
         "patrimonio_p50_2040": p50,
         "patrimonio_p90_2040": p90,
-        "swr_p10": swr_p10,
-        "swr_p50": swr_p50,
-        "swr_p90": swr_p90,
-        "swr_p10_pct": round(swr_p10 * 100, 2) if swr_p10 else None,
-        "swr_p50_pct": round(swr_p50 * 100, 2) if swr_p50 else None,
-        "swr_p90_pct": round(swr_p90 * 100, 2) if swr_p90 else None,
+        "swr_p10": swr_results["p10"],
+        "swr_p50": swr_results["p50"],
+        "swr_p90": swr_results["p90"],
+        "swr_p10_pct": round(swr_results["p10"] * 100, 2) if swr_results["p10"] else None,
+        "swr_p50_pct": round(swr_results["p50"] * 100, 2) if swr_results["p50"] else None,
+        "swr_p90_pct": round(swr_results["p90"] * 100, 2) if swr_results["p90"] else None,
         "mc_date": fire.get("mc_date", ""),
     }
     _save(DADOS / "fire_swr_percentis.json", data)

@@ -32,6 +32,8 @@ from datetime import date, datetime, timedelta
 # Centralized engines (Lei 14.754/2023 and bond pool)
 from tax_engine import TaxEngine, TaxRequest
 from bond_pool_engine import BondPoolEngine, BondPoolRequest
+from guardrail_engine import GuardrailEngine, GuardrailRequest
+from swr_engine import SWREngine, SWRRequest
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -2006,7 +2008,7 @@ def _compute_bond_pool_runway_by_profile(
 def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrails_raw: list, gasto_piso: int) -> dict | None:
     """Calcula spending_guardrails com zonas de P(FIRE) × custo de vida.
 
-    Deriva upper/safe/lower guardrail a partir da lista GUARDRAILS do fire_montecarlo.py.
+    Delegado para GuardrailEngine.calculate() — single source of truth.
     """
     pfire_atual = pfire_base.get('base')
     spending_atual = premissas_raw.get('custo_vida_base', CUSTO_VIDA_BASE)
@@ -2014,43 +2016,20 @@ def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrail
     if pfire_atual is None:
         return None
 
-    # Zona
-    zona = 'verde' if pfire_atual >= 85 else ('amarelo' if pfire_atual >= 75 else 'vermelho')
-
-    # Derivar guardrails de spending a partir da lista GUARDRAILS
-    # Cada guardrail: (dd_min, dd_max, corte_pct, desc)
-    # upper_guardrail: teto de expansão (+10%) — quando P(FIRE) é alto, pode gastar mais
-    # safe_target:     corte 10% — zona segura
-    # lower_guardrail: corte 20% — piso de emergência
-    EXPANSION_PCT = 0.10
-    upper_spending = round(spending_atual * (1 + EXPANSION_PCT))  # teto de expansão
-    safe_spending  = spending_atual
-    lower_spending = spending_atual
-    for g in guardrails_raw:
-        if isinstance(g, (tuple, list)):
-            corte = g[2]
-        else:
-            corte = g.get('corte', 0)
-        retirada = round(spending_atual * (1 - corte))
-        if corte == 0.10:
-            safe_spending = retirada
-        elif corte == 0.20:
-            lower_spending = retirada
-
-    nota = (
-        f"P(FIRE@53) = {pfire_atual:.1f}% com spending atual R${spending_atual/1000:.0f}k/ano. "
-        f"Teto de expansão R${upper_spending/1000:.0f}k (+10%) — ativado quando P(FIRE) sustentado acima de 90%. "
-        f"Safe target R${safe_spending/1000:.0f}k (−10%). "
-        f"Piso de emergência R${lower_spending/1000:.0f}k (−20%)."
+    request = GuardrailRequest(
+        pfire_atual=pfire_atual,
+        spending_atual=spending_atual,
     )
+    result = GuardrailEngine.calculate(request)
+
     return {
-        "zona":                       zona,
-        "pfire_atual":                pfire_atual,
-        "spending_atual":             spending_atual,
-        "upper_guardrail_spending":   upper_spending,
-        "safe_target_spending":       safe_spending,
-        "lower_guardrail_spending":   lower_spending,
-        "nota":                       nota,
+        "zona":                       result.zona,
+        "pfire_atual":                result.pfire_atual,
+        "spending_atual":             result.spending_atual,
+        "upper_guardrail_spending":   result.upper_guardrail,
+        "safe_target_spending":       result.safe_target,
+        "lower_guardrail_spending":   result.lower_guardrail,
+        "nota":                       result.nota,
     }
 
 

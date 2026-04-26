@@ -40,6 +40,7 @@ from config import (
     GASTO_PISO, SAUDE_BASE,
     update_dashboard_state,
 )
+from guardrail_engine import GuardrailEngine, GuardrailRequest
 
 _SCRIPTS_DIR = _Path(__file__).parent
 _DADOS_DIR   = _SCRIPTS_DIR.parent / "dados"
@@ -236,8 +237,12 @@ def _clamp(gasto: float, teto: float = None) -> float:
 
 def withdrawal_guardrails(gasto_smile, pat, pat_pico, ano, ctx):
     """Drawdown-based guardrails (nossa estrategia atual)."""
-    drawdown = max(0, 1 - pat / pat_pico) if pat_pico > 0 else 0
-    return aplicar_guardrail(gasto_smile, drawdown)
+    return GuardrailEngine.apply_drawdown_guardrail(
+        base_spending=gasto_smile,
+        patrimonio_atual=pat,
+        patrimonio_pico=pat_pico,
+        guardrails_config=GUARDRAILS,
+    )
 
 def withdrawal_constant(gasto_smile, pat, pat_pico, ano, ctx):
     """Constant-dollar: spending smile puro, sem ajuste por mercado."""
@@ -357,14 +362,6 @@ def gasto_spending_smile(ano_pos_fire: int, ipca_acumulado: float,
         saude *= SAUDE_DECAY
 
     return gasto_base + saude
-
-
-def aplicar_guardrail(gasto_base: float, drawdown: float) -> float:
-    """Aplica guardrail de retirada com base no drawdown atual."""
-    for dd_min, dd_max, corte, _ in GUARDRAILS:
-        if dd_min <= drawdown < dd_max:
-            return _clamp(gasto_base * (1 - corte))
-    return GASTO_PISO
 
 
 def retorno_equity_net_ir(retorno_real: float, ipca: float, aliquota: float) -> float:
