@@ -37,3 +37,4 @@ dash/
 dashboard/audit-screenshots/
 dashboard/audit-reports/
 __pycache__/
+react-app/public/data/data.json
