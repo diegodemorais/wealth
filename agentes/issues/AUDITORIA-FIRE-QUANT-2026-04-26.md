@@ -1,10 +1,21 @@
 # AUDITORIA FIRE — Quant Review 2026-04-26
 
-**Status:** 🔴 BLOCKER (RF-1, RF-2, RF-3)  
+**Status:** 🟡 PARCIAL (RF-1 ✅, RF-2 ⏳, RF-3 ✅)  
 **Data:** 2026-04-26  
 **Auditor:** Quant  
 **Escopo:** fire/page.tsx + todos componentes dependentes (13 arquivos, 2.847 linhas código)  
 **Severidade:** 3 red flags críticos + 6 áreas de atenção
+
+## ✅ IMPLEMENTATION STATUS
+
+- **RF-1** ✅ FIXED (2026-04-26 20:22)  
+  Parse de pfire_aspiracional agora correto: 81.2% (não 86.3%)
+  
+- **RF-3** ✅ FIXED (2026-04-24)  
+  FireScenariosTable footer: "N=2.000, SE ±1.6%" para Câmbio Dinâmico
+  
+- **RF-2** ⏳ PENDING  
+  Percentis sintéticos vs reais (impacto: interpretação de tail risks)
 
 ---
 
