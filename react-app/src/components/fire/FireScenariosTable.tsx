@@ -6,6 +6,7 @@ import { useUiStore } from '@/store/uiStore';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { pfireColor } from '@/utils/fire';
 import { runCanonicalMC } from '@/utils/montecarlo';
+import { canonicalizePFire } from '@/utils/pfire-canonical';
 
 export function FireScenariosTable() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -55,7 +56,7 @@ export function FireScenariosTable() {
       aporte_mensal: aporte, meses, N: 2_000, seed: 42,
       metaFire: metaFireVal, fxRegime: true,
     });
-    return result.pFire * 100;
+    return result.pFire;  // Return 0-1, canonicalize at display time
   }, [data?.premissas]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const fmtBrl = (v: number) => fmtPrivacy(v, privacyMode);
@@ -84,7 +85,10 @@ export function FireScenariosTable() {
       // r_USD sem dep embutida + crises cambiais episódicas (17% freq, 35%/yr em crise)
       label: '↳ Câmbio Dinâmico ★',
       base: pfireCambioBase != null
-        ? <span style={{ fontWeight: 700, color: pfireColor(pfireCambioBase) }}>{fmtPct(pfireCambioBase)}</span>
+        ? (() => {
+            const canonical = canonicalizePFire(pfireCambioBase, 'mc');
+            return <span style={{ fontWeight: 700, color: pfireColor(canonical.percentage) }}>{canonical.percentStr}</span>;
+          })()
         : <span style={{ color: 'var(--muted)' }}>—</span>,
       asp: <span style={{ color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>base apenas</span>,
     },

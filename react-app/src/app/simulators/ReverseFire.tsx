@@ -8,6 +8,7 @@ import { EC, EC_AXIS_LINE, EC_SPLIT_LINE, EC_TOOLTIP } from '@/utils/echarts-the
 import { EChartsOption } from 'echarts';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { runCanonicalMC } from '@/utils/montecarlo';
+import { canonicalizePFire } from '@/utils/pfire-canonical';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -523,7 +524,7 @@ export function ReverseFire() {
             <div style={{ background: 'var(--surface, var(--card))', border: '1px solid var(--border)', borderRadius: '6px', padding: '12px 14px' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '3px' }}>P(FIRE)</div>
               <div style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: pFire >= 0.8 ? EC.green : pFire >= 0.6 ? EC.yellow : EC.red }}>
-                {privacyMode ? '••%' : `${Math.round(pFire * 100)}%`}
+                {privacyMode ? '••%' : canonicalizePFire(pFire, 'mc').percentStr}
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
                 probabilidade de atingir FIRE · N=1000 sims

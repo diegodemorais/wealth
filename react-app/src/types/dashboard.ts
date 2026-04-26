@@ -147,7 +147,7 @@ export interface MCResult {
     p50: number[];
     p90: number[];
   };
-  successRate: number;
+  successRate: number; // 0-1 decimal form (never 0-100) — use canonicalizePFire() for display
   medianEndWealth: number;
   drawdownDistribution?: {
     [key: string]: number;

@@ -233,7 +233,7 @@ function FireSimuladorSection() {
       meses: mesesFire, N: 1_000, seed: 42,
       metaFire: metaFireVal, fxRegime: true,
     });
-    return result.pFire * 100;
+    return result.pFire;  // Return 0-1, canonicalize at display time
   }, [isCambioDinamico, patrimonio, currentAge, custo, aporte]); // eslint-disable-line react-hooks/exhaustive-deps
 
   type FireResult = { ano: number; idade: number; pat: number; swrAtFire: number };
