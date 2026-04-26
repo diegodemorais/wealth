@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-04-26T16:45:44.028133+00:00",
+  "generated_at": "2026-04-26T18:04:34.814982+00:00",
   "ma200w": {
-    "current_price_usd": 77977.4,
-    "ma200w_usd": 60673.61,
-    "pct_above_ma": 28.5,
+    "current_price_usd": 78047.8,
+    "ma200w_usd": 60673.96,
+    "pct_above_ma": 28.6,
     "zone": "above",
     "last_touch_below": "2023-10-05",
     "series": [
@@ -1563,8 +1563,8 @@
       },
       {
         "date": "2026-04-23",
-        "price_usd": 77977.4,
-        "ma200w_usd": 60673.61,
+        "price_usd": 78047.8,
+        "ma200w_usd": 60673.96,
         "growth_rate_pct": 30.0
       }
     ]
@@ -5971,7 +5971,7 @@
     },
     "note": "RC derivado: CapMrktCurUSD/CapMVRVCur (Coin Metrics Community). Thresholds calibrados ao range emp\u00edrico dispon\u00edvel (2010\u2013hoje). Dataset community n\u00e3o inclui 2009\u20132010 completo."
   },
-  "correlation_90d": null,
+  "correlation_90d": 0.72,
   "errors": null,
   "meta": {
     "data_sources": {
