@@ -3372,7 +3372,7 @@ def main():
             spending[k] = {"gasto": v.get("gasto"), "inicio": v.get("inicio", 0), "fim": v.get("fim", 99)}
 
     # Spending sensibilidade — state usa {label, pfire}; template espera {label, custo, base, fav, stress}
-    # Se fav/stress ausentes no state, inferir via delta do pfire_base base→fav/stress
+    # Area A fix: SEMPRE recalcular fav/stress usando deltas atuais para evitar inconsistência com pfire_base
     _sens_raw = state.get("spending", {}).get("scenarios", [])
     spending_sens = []
     _custo_map = {"R$250k": 250_000, "R$270k": 270_000, "R$300k": 300_000,
@@ -3386,12 +3386,9 @@ def main():
         label = s.get("label", "")
         custo = s.get("custo", _custo_map.get(label, 0))
         base  = s.get("pfire", s.get("base"))
-        fav    = s.get("fav")
-        stress = s.get("stress")
-        if fav is None and base is not None and _delta_fav is not None:
-            fav = round(min(99.9, max(0, base + _delta_fav)), 1)
-        if stress is None and base is not None and _delta_stress is not None:
-            stress = round(min(99.9, max(0, base + _delta_stress)), 1)
+        # Area A: Recalculate fav/stress using current deltas to ensure consistency with pfire_base
+        fav    = round(min(99.9, max(0, base + _delta_fav)), 1) if (base is not None and _delta_fav is not None) else None
+        stress = round(min(99.9, max(0, base + _delta_stress)), 1) if (base is not None and _delta_stress is not None) else None
         spending_sens.append({
             "label": label, "custo": custo,
             "base": base, "fav": fav, "stress": stress,

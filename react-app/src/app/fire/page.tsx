@@ -734,7 +734,11 @@ export default function FirePage() {
               const gastoKatia = (data as any)?.premissas?.gasto_katia_solo ?? 160_000;
               const inssKatia = (data as any)?.premissas?.inss_katia_anual ?? 93_600;
               const pgblKatia = (data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490_000;
-              const patrimonioBase = (data as any)?.premissas?.patrimonio_atual ?? 0;
+              // Area D fix: Use FIRE Day patrimônio (trilha_p50[-1]) instead of patrimonio_atual for spouse scenario
+              // Spouse analysis assumes evaluation at FIRE Day when patrimônio will be larger from growth/aportes
+              const trilha = (data as any)?.trilha?.p50 ?? [];
+              const patrimonioFireDay = trilha.length > 0 ? trilha[trilha.length - 1] : 0;
+              const patrimonioBase = patrimonioFireDay > 0 ? patrimonioFireDay : ((data as any)?.premissas?.patrimonio_atual ?? 0);
               const gastoLiquido = Math.max(0, gastoKatia - inssKatia);
               const swrKatia = (data as any)?.premissas?.swr_gatilho ?? 0.03;
               const patrimonioNecessario = gastoLiquido > 0 ? gastoLiquido / swrKatia : 0;
