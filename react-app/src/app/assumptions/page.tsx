@@ -984,6 +984,15 @@ export default function AssumptionsPage() {
                 </td>
                 <td style={{ padding: '8px 6px' }}>✓ Restaurado symlink data.json (dashboard carrega novamente)</td>
               </tr>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px 6px', fontWeight: 600 }}>Phase 3a Changelog</td>
+                <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--accent)' }}>
+                  <a href="https://github.com/diegodemorais/wealth/blob/main/CHANGELOG_PHASE2_3A.md" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'none', cursor: 'pointer' }}>
+                    Auditoria Completa ↗
+                  </a>
+                </td>
+                <td style={{ padding: '8px 6px' }}>Documentado 6 items (B1, OPO 3/4/5/6, B2) com audit 7.8→9.4/10</td>
+              </tr>
               <tr>
                 <td style={{ padding: '8px 6px', fontWeight: 600 }}>Backtest Fallback</td>
                 <td style={{ padding: '8px 6px', fontFamily: 'monospace', fontSize: 'var(--text-xs)', color: 'var(--green)' }}>
@@ -999,24 +1008,6 @@ export default function AssumptionsPage() {
           <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--border)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             <strong>Commits:</strong> <code>7b85e060</code> (alpha drought) · <code>de4a2b15</code> (duration) · <code>c4293897</code> (correlation) · <code>650b1b57</code> (focus) · <code>36f427f5</code> (sorr) · <code>c0474723</code> (backtest fallback)
           </div>
-
-          <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--border)', fontSize: 'var(--text-xs)' }}>
-            <strong>📋 Phase 3a Audit Score: 7.8 → 9.4/10 (+1.6)</strong>
-            <div style={{ marginTop: 6, color: 'var(--muted)', lineHeight: 1.6 }}>
-              <div style={{ marginBottom: 4 }}>✅ B1: Capital Humano disclosure (+0.4)</div>
-              <div style={{ marginBottom: 4 }}>✅ OPO 3: Guardrails visualization (+0.3)</div>
-              <div style={{ marginBottom: 4 }}>✅ OPO 4: FIRE Scenarios table (+0.2)</div>
-              <div style={{ marginBottom: 4 }}>✅ OPO 5: BTC/SWRD correlation 72% (+0.2)</div>
-              <div style={{ marginBottom: 4 }}>✅ OPO 6: HODL11 overweight alert (+0.2)</div>
-              <div>✅ B2: Guardrails vs MC methodology (+0.5)</div>
-            </div>
-            <div style={{ marginTop: 8, color: 'var(--accent)', fontWeight: 600 }}>
-              📄 <a href="https://github.com/diegodemorais/wealth/blob/main/CHANGELOG_PHASE2_3A.md" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>
-                Full changelog: Phase 2 → Phase 3a
-              </a>
-            </div>
-          </div>
-
           <div style={{ marginTop: 8, fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
             <strong>Phase 3 Status:</strong> Auditoria completa. Roadmap: 8.5/10 (code-ready) → 9.2/10 (com IBKR) → 10.0/10 (stress scenarios + capital humano). Aguardando aprovação para implementação.
           </div>
