@@ -2930,6 +2930,16 @@ def main():
     # P(FIRE) + Tornado
     pfire_aspiracional, pfire_base, tornado = get_pfire_tornado()
 
+    # RF-2 FIX: Adicionar percentis reais de MC
+    # TODO: Requer reestruturação de premissas em carteira_params.json. Desabilitado por enquanto.
+    # Necessário: 'pct_equity', 'pct_rf', 'pct_cripto', 'pct_equity_swrd', etc.
+    # if not args.skip_scripts:
+    #     print("  ▶ RF-2: Computando percentis reais de P(FIRE) ...")
+    #     try:
+    #         ...
+    # Fallback: usar offsets hardcoded por enquanto (como antes)
+    # pfire_base["percentiles"] = None  # Componente usa fallback
+
     # Backtest
     backtest_data = get_backtest()
 
@@ -3204,7 +3214,9 @@ def main():
         "patrimonio_gatilho":     premissas_raw.get("patrimonio_gatilho", PATRIMONIO_GATILHO),
         "aporte_mensal":          premissas_raw.get("aporte_mensal", APORTE_MENSAL),
         "custo_vida_base":        premissas_raw.get("custo_vida_base", CUSTO_VIDA_BASE),
+        "anos_bond_pool":         premissas_raw.get("bond_tent_anos", 7),  # Área F fix: tent duration in years
         "idade_atual":            premissas_raw.get("idade_atual", IDADE_ATUAL),
+        "idade_fire_alvo":        premissas_raw.get("idade_cenario_base", IDADE_CENARIO_BASE),  # Para RF-2 MC
         "idade_cenario_base":        premissas_raw.get("idade_cenario_base", IDADE_CENARIO_BASE),
         "idade_cenario_aspiracional":premissas_raw.get("idade_cenario_aspiracional", IDADE_CENARIO_ASPIRACIONAL),
         "retorno_equity_base":    premissas_raw.get("retorno_equity_base", 0.0485),

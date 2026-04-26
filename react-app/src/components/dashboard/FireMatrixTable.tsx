@@ -61,10 +61,10 @@ export function FireMatrixTable({ data, idades, currentPatrimonio, currentSpendi
   };
 
   const getColor = (pfire: number): string => {
-    if (pfire >= 90) return 'rgba(34, 197, 94, 0.15)';
-    if (pfire >= 70) return 'rgba(234, 179, 8, 0.15)';
-    if (pfire >= 50) return 'rgba(249, 158, 11, 0.15)';
-    return 'rgba(239, 68, 68, 0.15)';
+    if (pfire >= 90) return 'rgba(34, 197, 94, 0.15)';    // verde: on track
+    if (pfire >= 85) return 'rgba(234, 179, 8, 0.15)';    // amarelo: adequado (threshold alignado com pfireColor)
+    if (pfire >= 50) return 'rgba(249, 158, 11, 0.15)';   // laranja: preocupação
+    return 'rgba(239, 68, 68, 0.15)';                     // vermelho: crítico
   };
 
   const getTextColor = pfireColor;
