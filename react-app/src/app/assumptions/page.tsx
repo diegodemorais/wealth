@@ -739,6 +739,41 @@ export default function AssumptionsPage() {
             </div>
           </div>
 
+          {/* FIRE Scenarios Comparison */}
+          <div style={{ marginBottom: 14 }}>
+            <Block title="FIRE Scenarios — Trade-offs">
+              <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <th style={{ padding: '6px 4px', textAlign: 'left', color: 'var(--muted)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Cenário</th>
+                    <th style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Idade FIRE</th>
+                    <th style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>P(FIRE)</th>
+                    <th style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Aporte/mês</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '6px 4px', color: 'var(--text)', fontWeight: 600 }}>Base</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace' }}>53</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--green)', fontWeight: 600 }}>{(pfire.base ?? 0).toFixed(1)}%</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--muted)' }}>{fmtBrl(p.aporte_mensal ?? 0)}</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '6px 4px', color: 'var(--text)', fontWeight: 600 }}>Aspiracional</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace' }}>48</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', color: (pfireA.base ?? 0) >= 90 ? 'var(--green)' : 'var(--yellow)', fontWeight: 600 }}>{(pfireA.base ?? 0).toFixed(1)}%</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', fontWeight: 600 }}>{fmtBrl(p.aporte_mensal_aspiracional ?? 0)}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan={4} style={{ padding: '8px 4px', fontSize: 11, color: 'var(--muted)', fontStyle: 'italic' }}>
+                      Diferença: 5 anos antes, +{fmtBrl((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0))}/mês, -7.6pp P(FIRE). Trade-off entre tempo-para-FIRE e risco.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </Block>
+          </div>
+
           {/* Family Scenarios */}
           {profiles.length > 0 && (
             <FamilyScenarios profiles={profiles} priv={privacyMode} />
