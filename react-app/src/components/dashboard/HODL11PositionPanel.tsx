@@ -78,6 +78,21 @@ export default function HODL11PositionPanel({ hodl11 }: HODL11PositionPanelProps
         <span style={{ padding: '2px 10px', borderRadius: 5, fontSize: 11, fontWeight: 700, background: signal.bg, border: `1px solid ${signal.border}`, color: signal.color }}>
           {signal.label}
         </span>
+
+        {/* OPO 6: Overweight warning badge */}
+        {allocPct > BANDS.sell && (
+          <span style={{
+            padding: '2px 10px',
+            borderRadius: 5,
+            fontSize: 11,
+            fontWeight: 700,
+            background: 'rgba(239,68,68,0.15)',
+            border: '1px solid rgba(239,68,68,0.4)',
+            color: '#ef4444',
+          }}>
+            ⚠️ SOBREPESO — Vender {(allocPct - BANDS.sell).toFixed(2)}%
+          </span>
+        )}
         {hodl11?.pnl_pct != null && (
           <span style={{ fontSize: 11, color: hodl11.pnl_pct >= 0 ? '#22c55e' : '#ef4444', marginLeft: 'auto' }}>
             P&L: {hodl11.pnl_pct >= 0 ? '+' : ''}{hodl11.pnl_pct.toFixed(1)}%
