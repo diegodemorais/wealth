@@ -258,6 +258,7 @@ export default function FirePage() {
     if (!ft?.dates || !ft?.trilha_brl || !pats.length) return undefined;
     const idadeAtual: number = (data as any)?.premissas?.idade_atual ?? 39;
     const anoAtual: number = (data as any)?.premissas?.ano_atual ?? 2026;
+    const horizonteVida: number = (data as any)?.premissas?.horizonte_vida ?? 90;
     const dates: string[] = ft.dates;
     const values: (number | null)[] = ft.trilha_brl;
     const nonNull = dates.map((dt: string, i: number) => ({ dt, v: values[i] })).filter(x => x.v != null) as { dt: string; v: number }[];
@@ -267,6 +268,8 @@ export default function FirePage() {
     const prev12 = nonNull[Math.max(0, nonNull.length - 12)];
     const monthlyGrowth = nonNull.length >= 12 ? (last.v / prev12.v) ** (1 / 11) - 1 : 0.006;
     const toIdade = (year: number, month: number) => idadeAtual + (year - anoAtual) + (month - 4) / 12;
+    // Area E fix: Extend extrapolation window and cap idade at horizonteVida
+    const maxExtrapolationMonths = 240; // 20 years instead of 10
     return pats.map((pat: number) => {
       for (const { dt, v } of nonNull) {
         if (v >= pat) {
@@ -277,13 +280,17 @@ export default function FirePage() {
       let v = last.v;
       let year = parseInt(last.dt.slice(0, 4));
       let month = parseInt(last.dt.slice(5, 7));
-      for (let i = 0; i < 120; i++) {
+      for (let i = 0; i < maxExtrapolationMonths; i++) {
         v *= (1 + monthlyGrowth);
         month++;
         if (month > 12) { month = 1; year++; }
-        if (v >= pat) return Math.round(toIdade(year, month));
+        if (v >= pat) {
+          const idade = Math.round(toIdade(year, month));
+          return Math.min(idade, horizonteVida); // Cap at life expectancy
+        }
       }
-      return null;
+      // Fallback: if still not reached, return life expectancy (conservative)
+      return horizonteVida;
     });
   }, [data]);
 
@@ -741,7 +748,11 @@ export default function FirePage() {
               const gastoKatia = (data as any)?.premissas?.gasto_katia_solo ?? 160_000;
               const inssKatia = (data as any)?.premissas?.inss_katia_anual ?? 93_600;
               const pgblKatia = (data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490_000;
-              const patrimonioBase = (data as any)?.premissas?.patrimonio_atual ?? 0;
+              // Area D fix: Use FIRE Day patrimônio (trilha_p50[-1]) instead of patrimonio_atual for spouse scenario
+              // Spouse analysis assumes evaluation at FIRE Day when patrimônio will be larger from growth/aportes
+              const trilha = (data as any)?.trilha?.p50 ?? [];
+              const patrimonioFireDay = trilha.length > 0 ? trilha[trilha.length - 1] : 0;
+              const patrimonioBase = patrimonioFireDay > 0 ? patrimonioFireDay : ((data as any)?.premissas?.patrimonio_atual ?? 0);
               const gastoLiquido = Math.max(0, gastoKatia - inssKatia);
               const swrKatia = (data as any)?.premissas?.swr_gatilho ?? 0.03;
               const patrimonioNecessario = gastoLiquido > 0 ? gastoLiquido / swrKatia : 0;

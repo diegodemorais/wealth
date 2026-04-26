@@ -509,6 +509,60 @@ def _retorno_equity_cenario(premissas: dict, cenario: str) -> float:
     return r
 
 
+def compute_pfire_percentiles(premissas: dict, n_rodadas: int = 20, n_sim_por_rodada: int = 10_000) -> dict:
+    """
+    Roda Monte Carlo múltiplas vezes com seeds diferentes para capturar distribuição de P(FIRE).
+
+    Cada rodada usa seed diferente, produzindo ligeira variação em P(FIRE) por causa da
+    aleatoriedade das trajetórias. Percentis dessa distribuição refletem incerteza no estimate.
+
+    Args:
+        premissas: dicionário de premissas FIRE
+        n_rodadas: número de rodadas MC (20 padrão)
+        n_sim_por_rodada: simulações por rodada (10k padrão)
+
+    Returns:
+        {
+            'p5': 80.2,
+            'p10': 81.0,
+            'p25': 82.3,
+            'p50': 83.5,  # mediana
+            'p75': 84.7,
+            'p90': 85.8,
+            'p95': 86.2,
+            'mean': 83.4,
+            'std': 1.2,
+            'n_rodadas': 20
+        }
+    """
+    resultados = []
+
+    for seed_offset in range(1, n_rodadas + 1):
+        seed = seed_offset * 10  # seeds: 10, 20, 30, ..., 200
+        resultado = rodar_monte_carlo(
+            premissas, n_sim=n_sim_por_rodada, cenario="base",
+            seed=seed, strategy="guardrails"
+        )
+        p_fire_pct = resultado["p_sucesso"] * 100
+        resultados.append(p_fire_pct)
+
+    resultados_sorted = sorted(resultados)
+
+    return {
+        'p5': float(np.percentile(resultados_sorted, 5)),
+        'p10': float(np.percentile(resultados_sorted, 10)),
+        'p25': float(np.percentile(resultados_sorted, 25)),
+        'p50': float(np.percentile(resultados_sorted, 50)),
+        'p75': float(np.percentile(resultados_sorted, 75)),
+        'p90': float(np.percentile(resultados_sorted, 90)),
+        'p95': float(np.percentile(resultados_sorted, 95)),
+        'mean': float(np.mean(resultados)),
+        'std': float(np.std(resultados)),
+        'n_rodadas': n_rodadas,
+        'n_sim_por_rodada': n_sim_por_rodada,
+    }
+
+
 def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
                        cenario: str = "base", seed: int = 42,
                        strategy: str = "guardrails",

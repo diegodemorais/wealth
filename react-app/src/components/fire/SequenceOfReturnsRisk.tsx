@@ -39,7 +39,7 @@ function pfireToGuardrailTier(pfire: number): {
   color: string;
 } {
   if (pfire > 90) return { tier: 'Expansão', action: 'R$250k → R$300k permanente', color: EC.green };
-  if (pfire >= 80) return { tier: 'Manter', action: 'Guardrails atuais — nenhuma ação', color: EC.accent };
+  if (pfire >= 85) return { tier: 'Manter', action: 'Guardrails atuais — nenhuma ação', color: EC.accent };
   return { tier: 'Revisão', action: 'Apertar limiares drawdown — abrir issue', color: EC.red };
 }
 
