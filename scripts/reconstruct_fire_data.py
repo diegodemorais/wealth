@@ -44,6 +44,7 @@ from fire_montecarlo import (
     projetar_acumulacao_mensal,
     _retorno_equity_cenario,
 )
+from bond_pool_engine import BondPoolEngine, BondPoolRequest
 
 NOW = datetime.now().isoformat(timespec="seconds")
 DADOS = ROOT / "dados"
@@ -307,6 +308,8 @@ def gen_drawdown_history():
 
 # ─── N3: Bond Pool Runway ──────────────────────────────────────────────────────
 
+# Bond pool calculation now centralized in BondPoolEngine
+# See scripts/bond_pool_engine.py for single source of truth
 def gen_bond_pool_runway():
     """N3 — Projeção anual do bond pool até 2040 e runway pós-FIRE."""
     state = _load_json(DADOS / "dashboard_state.json")
@@ -324,47 +327,33 @@ def gen_bond_pool_runway():
     taxa_2040 = td2040.get("taxa", 7.10) / 100   # 7.10% = IPCA + 7.10% real
     taxa_2050_real = 6.85 / 100                   # taxa operação pendente
 
-    # Aporte mensal para IPCA+ (quando taxa >= piso 6.0%)
-    # Cascade: 15% do portfolio em IPCA+, DCA ativo até fechar o gap
-    # Estimativa conservadora: R$10k/mês médio para IPCA+ até fechar gap de ~12%
-    aporte_ipca_mensal = 10_000   # R$/mês — estimativa conservadora
-    aporte_ipca_anual = aporte_ipca_mensal * 12
-
-    # Anos de projeção
-    ano_atual = 2026
-    ano_fire = 2040
-    anos = list(range(ano_atual, ano_fire + 1))
-    n_anos = len(anos)
-
-    # Projeção: valor cresce com taxa real + aportes
-    pool_2040 = []
-    pool_2050 = []
-    v40 = pool_2040_atual
-    v50 = pool_2050_atual
-
-    for i, ano in enumerate(anos):
-        pool_2040.append(round(v40, 0))
-        pool_2050.append(round(v50, 0))
-        # Crescimento + aporte (aporte para de fechar o gap, estimado 2028)
-        # Assumir aportes ativos até 2028, depois só crescimento (gap fechado)
-        aporte_este_ano = aporte_ipca_anual if ano <= 2028 else 0
-        v40 = v40 * (1 + taxa_2040) + aporte_este_ano * 0.8   # 80% para 2040
-        v50 = v50 * (1 + taxa_2050_real) + aporte_este_ano * 0.2  # 20% para 2050
-
-    pool_total = [round(a + b, 0) for a, b in zip(pool_2040, pool_2050)]
+    # Pre-FIRE accumulation via BondPoolEngine
+    try:
+        request = BondPoolRequest(
+            pool_2040_inicial=pool_2040_atual,
+            pool_2050_inicial=pool_2050_atual,
+            taxa_2040=taxa_2040,
+            taxa_2050=taxa_2050_real,
+            aporte_ipca_mensal=10_000,
+            ano_aporte_fim=2028,
+            ano_atual=2026,
+            ano_fire=2040,
+        )
+        pool_2040, pool_2050, pool_total = BondPoolEngine.calculate_pre_fire(request)
+    except ValueError as e:
+        print(f"  ⚠️ BondPoolEngine error: {e}")
+        return
 
     # Alvo: 15% do patrimônio esperado em 2040
-    # Patrimônio esperado 2040 ≈ P50 do MC = R$11.5M
     pat_p50_2040 = state.get("fire", {}).get("pat_mediano_fire", 11_527_476)
     alvo_pool_brl_2040 = round(pat_p50_2040 * IPCA_LONGO_PCT, 0)
 
-    # Runway pós-FIRE: bond pool no FIRE Day / custo_vida_anual
+    # Runway pós-FIRE: simples depleção sem crescimento (v = v - custo_vida)
     pool_no_fire = pool_total[-1]  # valor no último ano = 2040
     custo_vida_anual = CUSTO_VIDA_BASE  # R$250k
     anos_cobertura = 10  # projetar 10 anos pós-FIRE
 
     anos_pos_fire = list(range(1, anos_cobertura + 1))
-    # Bond pool disponível em cada ano pós-FIRE (consumindo custo_vida)
     pool_disponivel = []
     v = pool_no_fire
     gaps = []
@@ -374,9 +363,10 @@ def gen_bond_pool_runway():
         if v < 0:
             gaps.append({"ano_pos_fire": ano_pf, "gap_brl": round(v, 0)})
 
+    anos = list(range(2026, 2041))
     data = {
         "_generated": NOW,
-        "_source": "reconstruct_fire_data.py",
+        "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
         "anos_pre_fire": anos,
         "pool_td2040_brl": pool_2040,
         "pool_td2050_brl": pool_2050,

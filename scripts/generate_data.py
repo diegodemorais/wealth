@@ -29,8 +29,9 @@ import sys, json, subprocess, csv, math, argparse, re, importlib.util
 from pathlib import Path
 from datetime import date, datetime, timedelta
 
-# Centralized tax engine (Lei 14.754/2023)
+# Centralized engines (Lei 14.754/2023 and bond pool)
 from tax_engine import TaxEngine, TaxRequest
+from bond_pool_engine import BondPoolEngine, BondPoolRequest
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -1956,6 +1957,8 @@ def compute_earliest_fire(pfire_aspiracional: dict, pfire_base: dict, premissas_
 
 
 # ─── 8c. SPENDING GUARDRAILS ───────────────────────────────────────────────────
+# Bond pool runway calculation now centralized in BondPoolEngine
+# See scripts/bond_pool_engine.py for single source of truth
 def _compute_bond_pool_runway_by_profile(
     bond_pool_rwy_data: dict | None,
     perfis_cfg: dict,
@@ -1964,68 +1967,40 @@ def _compute_bond_pool_runway_by_profile(
     r_real: float | None = None,
     inss_katia_inicio_ano: int = INSS_KATIA_INICIO_ANO,
 ) -> dict | None:
-    """Calcula depleção pós-FIRE do bond pool por perfil familiar.
+    """Calcula depleção pós-FIRE do bond pool por perfil familiar via BondPoolEngine.
 
     Modelo: pool(t) = pool(t-1) × (1+r_real) − saque(t)
-    Onde saque(t) = custo_vida_base − inss_katia_anual × I(ano_calendário >= inss_katia_inicio_ano)
-
-    r_real = 5% líquido (IPCA+ ~6.5% menos ~1.5% IPCA = ~5% retorno real conservador)
     """
     if not bond_pool_rwy_data:
         return None
-
-    # Resolve defaults from config/premissas — sem hardcoded
-    if fire_year is None:
-        fire_year = ANO_NASCIMENTO + IDADE_CENARIO_BASE  # e.g. 1987+53=2040
-    if r_real is None:
-        r_real = RETORNO_RF_REAL_BOND_POOL
 
     pool_total_list = bond_pool_rwy_data.get("pool_total_brl", [])
     if not pool_total_list:
         return None
 
+    # Resolve defaults from config/premissas
+    if fire_year is None:
+        fire_year = ANO_NASCIMENTO + IDADE_CENARIO_BASE
+    if r_real is None:
+        r_real = RETORNO_RF_REAL_BOND_POOL
+
     pool_inicial = pool_total_list[-1]  # Pool no FIRE Day
-    anos_pos_fire = list(range(1, anos_projecao + 1))
 
-    result: dict = {}
-    for profile_key, cfg in perfis_cfg.items():
-        custo = cfg["custo_vida_base"]
-        inss_katia = cfg.get("inss_katia_anual", 0)
-        tem_conjuge = cfg.get("tem_conjuge", False)
-
-        pool = float(pool_inicial)
-        pool_series: list[float] = []
-        runway_anos: float | None = None
-
-        for ano_pos_fire in anos_pos_fire:
-            ano_calendario = fire_year + ano_pos_fire
-            inss_this_year = inss_katia if (tem_conjuge and ano_calendario >= inss_katia_inicio_ano) else 0
-            saque = custo - inss_this_year
-            pool_prev = pool
-            pool = pool * (1 + r_real) - saque
-            pool_series.append(round(pool))
-
-            # Interpolar o ponto exato onde o pool cruza zero
-            if pool < 0 and runway_anos is None:
-                fraction = pool_prev / (pool_prev - pool) if (pool_prev - pool) != 0 else 0
-                runway_anos = round(ano_pos_fire - 1 + fraction, 1)
-
-        if runway_anos is None:
-            runway_anos = float(anos_projecao)  # pool positivo por todo o horizonte
-
-        result[profile_key] = {
-            "custo_vida_anual": custo,
-            "inss_katia_anual": inss_katia,
-            "anos_inss_katia_pos_fire": inss_katia_inicio_ano - fire_year,
-            "anos_pos_fire": anos_pos_fire,
-            "pool_disponivel": pool_series,
-            "pool_inicial": round(pool_inicial),
-            "runway_anos": runway_anos,
-            "runway_label": f"{runway_anos:.1f} anos",
-            "_modelo": f"r_real={r_real*100:.0f}% | INSS Katia {inss_katia/1e3:.0f}k/ano a partir de {inss_katia_inicio_ano}",
-        }
-
-    return result
+    try:
+        request = BondPoolRequest(
+            pool_2040_inicial=1000,  # Dummy values (not used in post-FIRE)
+            pool_2050_inicial=500,
+            taxa_2040=0.07,
+            taxa_2050=0.07,
+            perfis_cfg=perfis_cfg,
+            r_real_post_fire=r_real,
+            anos_projecao_pos_fire=anos_projecao,
+            fire_year_override=fire_year,
+        )
+        return BondPoolEngine.calculate_post_fire(request, pool_inicial=pool_inicial)
+    except ValueError as e:
+        print(f"  ⚠️ BondPoolEngine error: {e}")
+        return None
 
 
 def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrails_raw: list, gasto_piso: int) -> dict | None:
