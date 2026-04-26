@@ -27,10 +27,11 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Backlog
 > Issues prontas para execução, aguardando vez
 
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
-| VERIF-PFIRE-CANONICO | Verificação de Canonicidade de P(FIRE) Centralizado | Quant + FIRE | 🔴 Alta |
-| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta |
+| ID | Titulo | Dono | Prioridade | Deps |
+|----|--------|------|------------|------|
+| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | — |
+| VERIF-PFIRE-CANONICO | Verificação de Canonicidade de P(FIRE) Centralizado | Quant + FIRE | 🔴 Alta | PFIRE_PHASE4_DATA_GEN |
+| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | — |
 
 ### Doing
 > Issues em andamento
