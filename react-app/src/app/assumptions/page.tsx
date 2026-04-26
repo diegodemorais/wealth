@@ -748,7 +748,7 @@ export default function AssumptionsPage() {
               <strong>Definição Atual:</strong> P(FIRE) = probabilidade de <strong>patrimônio não zerar</strong> em 40 anos com guardrails ativos.
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5 }}>
-              <strong>Nuance:</strong> Guardrails reduzem gasto de R$250k para R$180k em drawdowns >35% (28% degradação de vida). MC reporta como "sucesso".
+              <strong>Nuance:</strong> Guardrails reduzem gasto de R$250k para R$180k em drawdowns &gt;35% (28% degradação de vida). MC reporta como "sucesso".
               <br />
               <strong>Realidade:</strong> P(FIRE) {(pfire.base ?? 0).toFixed(1)}% é <strong>conservador</strong>. Com restrição gasto ≥ R$220k: ~82% (vs 78.8%).
               <br />

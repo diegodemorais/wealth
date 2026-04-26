@@ -4,7 +4,7 @@ import { useMemo, useEffect } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
-import { EC } from '@/utils/echarts-theme';
+import { EC, EC_SPLIT_LINE, EC_AXIS_LINE } from '@/utils/echarts-theme';
 
 // Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
 const handleChartResize = (containerRef: any) => {
@@ -56,8 +56,8 @@ export function GuardrailsMechanismChart() {
         nameTextStyle: { color: EC.muted, fontSize: 12 },
         min: 0,
         max: 50,
-        splitLine: { lineStyle: { color: EC.SPLIT_LINE } },
-        axisLine: { lineStyle: { color: EC.AXIS_LINE } },
+        splitLine: EC_SPLIT_LINE,
+        axisLine: EC_AXIS_LINE,
         axisLabel: { color: EC.muted, fontSize: 11 },
       },
       yAxis: {
@@ -68,8 +68,8 @@ export function GuardrailsMechanismChart() {
         nameTextStyle: { color: EC.muted, fontSize: 12 },
         min: 0,
         max: 50,
-        splitLine: { lineStyle: { color: EC.SPLIT_LINE } },
-        axisLine: { lineStyle: { color: EC.AXIS_LINE } },
+        splitLine: EC_SPLIT_LINE,
+        axisLine: EC_AXIS_LINE,
         axisLabel: { color: EC.muted, fontSize: 11 },
       },
       series: [
