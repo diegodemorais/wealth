@@ -49,6 +49,14 @@ from config import (
     INSS_KATIA_ANUAL, PGBL_KATIA_SALDO_FIRE, GASTO_KATIA_SOLO,
     INSS_KATIA_INICIO_ANO, RETORNO_RF_REAL_BOND_POOL,
     RETORNO_SWRD_USD_REAL, RETORNO_AVGS_USD_REAL, RETORNO_AVEM_USD_REAL,
+    HORIZONTE_VIDA, RETORNO_EQUITY_BASE, RETORNO_IPCA_PLUS, VOLATILIDADE_EQUITY,
+    DEP_BRL_BASE, DEP_BRL_FAVORAVEL, DEP_BRL_STRESS,
+    ADJ_FAVORAVEL, ADJ_STRESS, IPCA_ANUAL,
+    INSS_ANUAL, INSS_INICIO_ANO_POS_FIRE,
+    SPENDING_SMILE_GO_GO, SPENDING_SMILE_SLOW_GO, SPENDING_SMILE_NO_GO,
+    GUARDRAILS_BANDA1_MIN, GUARDRAILS_BANDA2_MIN, GUARDRAILS_BANDA3_MIN,
+    GUARDRAILS_CORTE1_PCT, GUARDRAILS_CORTE2_PCT, GUARDRAILS_PISO_PCT,
+    GASTO_PISO, SAUDE_BASE,
     update_dashboard_state,
 )
 
@@ -2930,15 +2938,56 @@ def main():
     # P(FIRE) + Tornado
     pfire_aspiracional, pfire_base, tornado = get_pfire_tornado()
 
-    # RF-2 FIX: Adicionar percentis reais de MC
-    # TODO: Requer reestruturação de premissas em carteira_params.json. Desabilitado por enquanto.
-    # Necessário: 'pct_equity', 'pct_rf', 'pct_cripto', 'pct_equity_swrd', etc.
-    # if not args.skip_scripts:
-    #     print("  ▶ RF-2: Computando percentis reais de P(FIRE) ...")
-    #     try:
-    #         ...
-    # Fallback: usar offsets hardcoded por enquanto (como antes)
-    # pfire_base["percentiles"] = None  # Componente usa fallback
+    # RF-2: Adicionar percentis reais de MC
+    if not args.skip_scripts:
+        try:
+            print("  ▶ RF-2: Computando percentis reais de P(FIRE) via MC múltiplo ...")
+            import fire_montecarlo as fm
+            import numpy as np
+
+            # Construir PREMISSAS dict para RF-2
+            pat_atual = float(state.get("patrimonio", {}).get("total_brl", 3_372_673.0))
+            premissas_rf2 = {
+                "patrimonio_atual": pat_atual,
+                "aporte_mensal": APORTE_MENSAL,
+                "custo_vida_base": CUSTO_VIDA_BASE,
+                "horizonte_vida": HORIZONTE_VIDA,
+                "idade_atual": IDADE_ATUAL,
+                "idade_cenario_base": IDADE_CENARIO_BASE,
+                "idade_cenario_aspiracional": IDADE_CENARIO_ASPIRACIONAL,
+                "idade_fire_alvo": IDADE_CENARIO_BASE,
+                "idade_safe_harbor": IDADE_CENARIO_BASE,
+                "anos_simulacao": HORIZONTE_VIDA - IDADE_CENARIO_BASE,
+                "retorno_equity_base": RETORNO_EQUITY_BASE,
+                "retorno_ipca_plus": RETORNO_IPCA_PLUS,
+                "volatilidade_equity": VOLATILIDADE_EQUITY,
+                "t_dist_df": 5,
+                "dep_brl_base": DEP_BRL_BASE,
+                "dep_brl_favoravel": DEP_BRL_FAVORAVEL,
+                "dep_brl_stress": DEP_BRL_STRESS,
+                "adj_favoravel": ADJ_FAVORAVEL,
+                "adj_stress": ADJ_STRESS,
+                "pct_ipca_longo": IPCA_LONGO_PCT,
+                "pct_ipca_curto": IPCA_CURTO_PCT,
+                "pct_equity": EQUITY_PCT,
+                "pct_cripto": CRIPTO_PCT,
+                "ipca_anual": IPCA_ANUAL,
+                "aplicar_ir_desacumulacao": True,
+                "anos_bond_pool": BOND_TENT_META_ANOS,
+                "aliquota_ir_equity": IR_ALIQUOTA,
+                "inss_anual": INSS_ANUAL,
+                "inss_inicio_ano": INSS_INICIO_ANO_POS_FIRE,
+                "vol_bond_pool": EQUITY_PCT * VOLATILIDADE_EQUITY,
+                "patrimonio_gatilho": PATRIMONIO_GATILHO,
+                "swr_gatilho": SWR_GATILHO,
+            }
+
+            percentiles = fm.compute_pfire_percentiles(premissas_rf2, n_rodadas=10, n_sim_por_rodada=10_000)
+            pfire_base["percentiles"] = percentiles
+            print(f"  ✓ RF-2: P50={percentiles['p50']:.1f}%, P10={percentiles['p10']:.1f}%, P90={percentiles['p90']:.1f}%")
+        except Exception as e:
+            print(f"  ⚠️ RF-2 falhou ({e}) — usando fallback (componente usa offsets)")
+            pfire_base["percentiles"] = None
 
     # Backtest
     backtest_data = get_backtest()
