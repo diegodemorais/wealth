@@ -24,17 +24,19 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Scan trimestral |
 | TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Scan trimestral |
 
-### Backlog
-> Issues prontas para execução, aguardando vez
-
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
-
 ### Doing
 > Issues em andamento
 
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
+| ID | Titulo | Dono | Prioridade | Status |
+|----|--------|------|------------|--------|
+| CENTRALIZATION_COMPLETE | Core & Dashboard Full Refactor (5 Engines) | Head + Quant + Dev | 🔴 CRÍTICA | 🎯 Aguardando respostas de Quant/Dev/Head |
+| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | 🎯 Aguardando respostas de Quant/Dev/Head |
+
+### Backlog
+> Issues prontas para execução, aguardando vez
+
+| ID | Titulo | Dono | Prioridade | Deps |
+|----|--------|------|------------|------|
 
 ### Done (últimas 20)
 > Issues concluídas
