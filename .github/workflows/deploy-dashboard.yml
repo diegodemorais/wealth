@@ -32,6 +32,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: react-app/package-lock.json
 
+      - name: Clear npm cache (force fresh Node 22)
+        run: npm cache clean --force
+
       - name: Instalar dependências
         run: |
           cd react-app
