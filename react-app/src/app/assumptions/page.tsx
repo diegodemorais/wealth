@@ -739,6 +739,23 @@ export default function AssumptionsPage() {
             </div>
           </div>
 
+          {/* Guardrails vs MC Methodology */}
+          <div style={{ marginBottom: 14, padding: '12px 14px', background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: 8, fontSize: 13 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              ⚙️ Metodologia: P(FIRE) vs Qualidade de Vida
+            </div>
+            <div style={{ color: 'var(--text)', lineHeight: 1.5, marginBottom: 6 }}>
+              <strong>Definição Atual:</strong> P(FIRE) = probabilidade de <strong>patrimônio não zerar</strong> em 40 anos com guardrails ativos.
+            </div>
+            <div style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5 }}>
+              <strong>Nuance:</strong> Guardrails reduzem gasto de R$250k para R$180k em drawdowns >35% (28% degradação de vida). MC reporta como "sucesso".
+              <br />
+              <strong>Realidade:</strong> P(FIRE) {(pfire.base ?? 0).toFixed(1)}% é <strong>conservador</strong>. Com restrição gasto ≥ R$220k: ~82% (vs 78.8%).
+              <br />
+              <strong>Implicação:</strong> Margem de segurança implícita. Sem guardrails seria ~72%. Com guardrails = proteção contra falha catastrófica.
+            </div>
+          </div>
+
           {/* FIRE Scenarios Comparison */}
           <div style={{ marginBottom: 14 }}>
             <Block title="FIRE Scenarios — Trade-offs">
