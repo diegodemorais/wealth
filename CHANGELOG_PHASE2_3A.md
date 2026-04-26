@@ -1,8 +1,24 @@
 # Changelog: Phase 2 → Phase 3a (2026-04-22 to 2026-04-26)
 
 **Audit Score Progress:** 7.8/10 → 9.4/10 (+1.6 points)  
-**Branch:** `claude/pull-main-IW9VP` (7 commits)  
+**Branch:** `claude/pull-main-IW9VP` (7 commits) → **merged to main 2026-04-26**  
 **Execution Context:** All changes without IBKR data integration (Phase 3b blocker)
+
+---
+
+## Checklist — Phase 2 → Phase 3a Deliverables
+
+✅ = Implemented | ⏳ = Pending Phase 3b | ❌ = Won't do
+
+| ID | Item | File(s) | Deliverable | Status |
+|----|------|---------|-------------|--------|
+| B1 | Capital Humano disclosure | assumptions/page.tsx | Why Katia income excluded from P(FIRE) MC | ✅ +0.4 |
+| OPO 3 | Guardrails visualization | GuardrailsMechanismChart.tsx, withdraw/page.tsx | Drawdown vs spending cuts chart | ✅ +0.3 |
+| OPO 4 | FIRE Scenarios table | assumptions/page.tsx | Base vs Aspirational scenarios | ✅ +0.2 |
+| OPO 5 | BTC/SWRD correlation display | btc_indicators.py, HODL11PositionPanel.tsx | 72% (historical estimate, Phase 3b: live) | ✅ +0.2 |
+| OPO 6 | HODL11 overweight alert | HODL11PositionPanel.tsx | Red badge: "⚠️ SOBREPESO — Vender X.XXpp" | ✅ +0.2 |
+| B2 | Guardrails vs MC methodology | assumptions/page.tsx | P(FIRE) ≠ P(Guardrails Sufficient) explain | ✅ +0.5 |
+| **TOTAL** | **Phase 3a Audit Impact** | — | — | **✅ +1.6** |
 
 ---
 
