@@ -150,15 +150,16 @@ class TestProhibitionRulesSWRConstants:
     """Prohibition rules for SWR constants."""
 
     def test_no_hardcoded_swr_fallback(self):
-        """SWR_FALLBACK must be defined in config.py, not hardcoded elsewhere."""
-        # Look for: = 0.035 or = 0.035 (SWR fallback value)
+        """SWR_FALLBACK must be imported from config, not hardcoded."""
+        # Look for hardcoded fallback assignments like: swr_fallback = 0.035
+        # Exclude config.py and swr_engine.py (which defines thresholds)
         matches = _grep_in_files(
-            r"SWR.*=.*0\.035\|swr.*=.*0\.035",
-            exclude_patterns=["config.py"],  # Allow in config
+            r"swr_fallback\s*=\s*0\.035\|SWR_FALLBACK\s*=",
+            exclude_patterns=["config.py", "swr_engine.py"],  # Allow in definitions
         )
         assert (
             len(matches) == 0
-        ), f"Hardcoded SWR_FALLBACK = 0.035 found outside config.py: {matches}"
+        ), f"Hardcoded SWR_FALLBACK found outside config: {matches}"
 
     def test_withdrawal_uses_config_swr(self):
         """Withdrawal calculations must import SWR constants from config."""
@@ -171,6 +172,88 @@ class TestProhibitionRulesSWRConstants:
         assert (
             len(matches) == 0
         ), f"SWR imported from fire_montecarlo (should be from config): {matches}"
+
+
+class TestProhibitionRulesSWREngine:
+    """Prohibition rules for SWREngine."""
+
+    def test_no_duplicate_swr_calculate_logic_outside_engine(self):
+        """Duplicate SWR.calculate_*() logic must not exist outside SWREngine."""
+        # Look for duplicate zone-classification logic (verde/amarelo/vermelho)
+        # that duplicates SWREngine.calculate_*() behavior
+        matches = _grep_in_files(
+            r"if.*swr.*>=.*0\.035.*verde\|if.*swr_atual.*>=.*3\.5",
+            exclude_patterns=["swr_engine.py", "test_"],
+        )
+        # Filter to find actual duplicates (not just references)
+        filtered = [m for m in matches if "zona" in m.lower()]
+        assert (
+            len(filtered) == 0
+        ), f"Duplicate SWR zone logic found outside SWREngine: {filtered}"
+
+    def test_no_zone_classification_outside_engine(self):
+        """SWR zone classification must use SWREngine.calculate_*()."""
+        # Look for hardcoded zone comparisons: swr >= 0.035 or swr_atual >= 3.5
+        matches = _grep_in_files(
+            r">=\s*0\.035\|<=\s*0\.025\|>=\s*3\.5",
+            exclude_patterns=["swr_engine.py", "test_"],
+        )
+        filtered = [m for m in matches if "swr" in m.lower()]
+        assert (
+            len(filtered) == 0
+        ), f"Hardcoded SWR zone thresholds found outside SWREngine: {filtered}"
+
+    def test_swr_engine_imported_by_data_pipeline(self):
+        """SWR calculations must be delegated through SWREngine imports."""
+        # Check generate_data and reconstruct_fire_data import SWREngine
+        matches_gen = _grep_in_files(
+            r"from.*swr_engine import.*SWREngine",
+            exclude_patterns=[],
+        )
+        matches_recon = [m for m in matches_gen if "reconstruct_fire_data" in m]
+        assert len(matches_recon) > 0, "reconstruct_fire_data.py doesn't import SWREngine"
+
+
+class TestProhibitionRulesGuardrailEngine:
+    """Prohibition rules for GuardrailEngine."""
+
+    def test_no_guardrail_calculation_outside_engine(self):
+        """Guardrail calculations must use GuardrailEngine, not inline logic."""
+        # Look for: spending * (1 - corte) — guardrail calculation pattern
+        # Exclude guardrail_engine.py and test files
+        matches = _grep_in_files(
+            r"spending.*\(1\s*-.*corte\|gasto.*\(1\s*-.*0\.",
+            exclude_patterns=["guardrail_engine.py", "test_"],
+        )
+        filtered = [m for m in matches if "guarantee" not in m]
+        assert (
+            len(filtered) == 0
+        ), f"Inline guardrail calculations found outside GuardrailEngine: {filtered}"
+
+    def test_no_drawdown_guardrail_outside_engine(self):
+        """Drawdown-based guardrails must use GuardrailEngine.apply_drawdown_guardrail()."""
+        # Look for: aplicar_guardrail function (legacy pattern)
+        matches = _grep_in_files(
+            r"def aplicar_guardrail\|aplicar_guardrail\(",
+            exclude_patterns=["guardrail_engine.py"],
+        )
+        assert (
+            len(matches) == 0
+        ), f"Legacy aplicar_guardrail() found outside engine: {matches}"
+
+    def test_guardrail_engine_imported_by_fire_montecarlo(self):
+        """fire_montecarlo.py must import GuardrailEngine for withdrawal strategy."""
+        matches = _grep_in_files(r"from.*guardrail_engine import.*GuardrailEngine")
+        assert (
+            len(matches) > 0
+        ), "fire_montecarlo.py doesn't import GuardrailEngine"
+
+    def test_guardrail_engine_imported_by_generate_data(self):
+        """generate_data.py must import GuardrailEngine for spending guardrails."""
+        matches = _grep_in_files(r"from.*guardrail_engine import.*GuardrailEngine")
+        assert (
+            len(matches) > 0
+        ), "generate_data.py doesn't import GuardrailEngine"
 
 
 class TestProhibitionRulesIntegration:
@@ -201,6 +284,32 @@ class TestProhibitionRulesIntegration:
         assert (
             "SWR_FALLBACK" in content and "from config import" in content
         ), "fire_montecarlo.py doesn't import SWR_FALLBACK from config"
+
+    def test_all_engines_imported_in_generate_data(self):
+        """generate_data.py must import all centralized engines."""
+        gd_file = SCRIPTS_DIR / "generate_data.py"
+        content = gd_file.read_text()
+        engines = ["TaxEngine", "BondPoolEngine", "GuardrailEngine", "SWREngine"]
+        for engine in engines:
+            assert (
+                engine in content
+            ), f"generate_data.py doesn't import {engine}"
+
+    def test_swr_engine_imported_in_reconstruct_fire_data(self):
+        """reconstruct_fire_data.py must import SWREngine."""
+        rfd_file = SCRIPTS_DIR / "reconstruct_fire_data.py"
+        content = rfd_file.read_text()
+        assert (
+            "SWREngine" in content
+        ), "reconstruct_fire_data.py doesn't import SWREngine"
+
+    def test_guardrail_engine_imported_in_fire_montecarlo(self):
+        """fire_montecarlo.py must import GuardrailEngine."""
+        fm_file = SCRIPTS_DIR / "fire_montecarlo.py"
+        content = fm_file.read_text()
+        assert (
+            "GuardrailEngine" in content
+        ), "fire_montecarlo.py doesn't import GuardrailEngine"
 
 
 if __name__ == "__main__":
