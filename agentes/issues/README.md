@@ -24,12 +24,18 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Scan trimestral |
 | TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Scan trimestral |
 
+### Doing
+> Issues em andamento
+
+| ID | Titulo | Dono | Prioridade | Status |
+|----|--------|------|------------|--------|
+| CENTRALIZATION_COMPLETE | Core & Dashboard Full Refactor (5 Engines) | Head + Quant + Dev | 🔴 CRÍTICA | 🎯 Aguardando respostas de Quant/Dev/Head |
+
 ### Backlog
 > Issues prontas para execução, aguardando vez
 
 | ID | Titulo | Dono | Prioridade | Deps |
 |----|--------|------|------------|------|
-| CENTRALIZATION_PRIORITY_TRIAGE | Which Core Logic Should Be Centralized? (Guardrails, SWR, Tax, Bond Pool) | Head + Quant + Dev | 🟠 Média | — |
 | PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | — |
 | VERIF-PFIRE-CANONICO | Verificação de Canonicidade de P(FIRE) Centralizado | Quant + FIRE | 🔴 Alta | PFIRE_PHASE4_DATA_GEN |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | — |
