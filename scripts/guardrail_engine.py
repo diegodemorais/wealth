@@ -54,6 +54,10 @@ class GuardrailRequest:
     corte_safe_pct: float = 0.10  # Safe target: -10%
     corte_lower_pct: float = 0.20  # Lower guardrail: -20%
 
+    # P(FIRE) thresholds (for zone classification)
+    pfire_banda1_min: float = 85.0  # Verde threshold (P(FIRE) ≥ 85%)
+    pfire_banda2_min: float = 75.0  # Amarelo threshold (P(FIRE) ≥ 75%)
+
     def __post_init__(self):
         """Validate request constraints."""
         if not (0 <= self.pfire_atual <= 100):
@@ -90,6 +94,10 @@ class GuardrailResult:
     banda: str  # Which P(FIRE) band (Verde 85+, Amarelo 75-85, Vermelho <75)
     nota: str  # Human-readable explanation
 
+    # Thresholds for validation
+    pfire_banda1_min: float = 85.0  # Verde threshold for validation
+    pfire_banda2_min: float = 75.0  # Amarelo threshold for validation
+
     # Optional: Drawdown-adjusted limit
     gasto_com_drawdown: float | None = None  # Spending after drawdown guardrail
 
@@ -116,9 +124,9 @@ class GuardrailResult:
             )
 
         # Invariant 3: Zone must match P(FIRE)
-        if self.pfire_atual >= GUARDRAILS_BANDA1_MIN:
+        if self.pfire_atual >= self.pfire_banda1_min:
             expected_zona = "verde"
-        elif self.pfire_atual >= GUARDRAILS_BANDA2_MIN:
+        elif self.pfire_atual >= self.pfire_banda2_min:
             expected_zona = "amarelo"
         else:
             expected_zona = "vermelho"
@@ -163,15 +171,15 @@ class GuardrailEngine:
         spending = request.spending_atual
 
         # Determine zone
-        if pfire >= GUARDRAILS_BANDA1_MIN:
+        if pfire >= request.pfire_banda1_min:
             zona = "verde"
-            banda = f"Verde (P(FIRE) ≥ {GUARDRAILS_BANDA1_MIN}%)"
-        elif pfire >= GUARDRAILS_BANDA2_MIN:
+            banda = f"Verde (P(FIRE) ≥ {request.pfire_banda1_min:.0f}%)"
+        elif pfire >= request.pfire_banda2_min:
             zona = "amarelo"
-            banda = f"Amarelo (P(FIRE) {GUARDRAILS_BANDA2_MIN}–{GUARDRAILS_BANDA1_MIN-1}%)"
+            banda = f"Amarelo (P(FIRE) {request.pfire_banda2_min:.0f}–{request.pfire_banda1_min-1:.0f}%)"
         else:
             zona = "vermelho"
-            banda = f"Vermelho (P(FIRE) < {GUARDRAILS_BANDA2_MIN}%)"
+            banda = f"Vermelho (P(FIRE) < {request.pfire_banda2_min:.0f}%)"
 
         # Calculate guardrails
         upper = round(spending * (1 + request.expansion_pct))
@@ -190,6 +198,8 @@ class GuardrailEngine:
         return GuardrailResult(
             zona=zona,
             pfire_atual=pfire,
+            pfire_banda1_min=request.pfire_banda1_min,
+            pfire_banda2_min=request.pfire_banda2_min,
             spending_atual=spending,
             upper_guardrail=upper,
             safe_target=safe,
@@ -217,14 +227,18 @@ class GuardrailEngine:
             patrimonio_atual: Current portfolio value
             patrimonio_pico: Peak portfolio value
             guardrails_config: List of (dd_min, dd_max, corte, desc) tuples
-                              If None, uses GUARDRAILS from config
+                              If None, uses GUARDRAILS from fire_montecarlo
 
         Returns:
             Adjusted spending after guardrail application
         """
         if guardrails_config is None:
-            from config import GUARDRAILS
-            guardrails_config = GUARDRAILS
+            try:
+                from fire_montecarlo import GUARDRAILS
+                guardrails_config = GUARDRAILS
+            except ImportError:
+                # Fallback: no guardrails data available
+                return base_spending
 
         # Calculate drawdown
         if patrimonio_pico <= 0:
