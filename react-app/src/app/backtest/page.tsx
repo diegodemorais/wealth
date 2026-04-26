@@ -457,6 +457,17 @@ function BacktestLongoSection() {
   // backtest_r7 is at top-level of data; all sub-keys are directly on backtest_r7 (no .r7 sub-key)
   const r7 = data?.backtest_r7 ?? null;
 
+  if (!r7) {
+    return (
+      <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
+        <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)', fontSize: '14px' }}>
+          <p>Dados de backtest R7 não carregados. Aguardando sincronização com IBKR.</p>
+          <p style={{ fontSize: '12px', marginTop: '8px', fontStyle: 'italic' }}>Os dados históricos (1995-2026) serão preenchidos após a próxima execução de generate_data.py.</p>
+        </div>
+      </CollapsibleSection>
+    );
+  }
+
   // Metrics — real field: metricas_globais (not .metrics)
   const metrics = r7?.metricas_globais ?? null;
   // win_rates — real field: at top-level of backtest_r7 (not inside metrics)
