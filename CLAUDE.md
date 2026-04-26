@@ -148,3 +148,93 @@ Pipeline: Scripts Python → `dados/` (JSON) → React (`react-app/`) → `dash/
 | Flight Rules | `agentes/referencia/flight-rules.md` |
 
 Estrutura: `agentes/contexto/` (verdade) · `scripts/` (Python) · `react-app/` (dashboard) · `dados/` (estado) · `agentes/referencia/` (guias)
+
+## P(FIRE) Canonicalization — Forma Centralizada Obrigatória
+
+**REGRA ABSOLUTA:** P(FIRE) NUNCA é convertido com × 100 ou ÷ 100 fora das funções centralizadas.
+
+### Python (fire_montecarlo.py → generate_data.py)
+
+```python
+from scripts.pfire_transformer import canonicalize_pfire, apply_pfire_delta
+
+# ✅ Correto: canalizar via função centralizada
+p_sucesso = 0.864  # de fire_montecarlo.py
+pfire = canonicalize_pfire(p_sucesso, source='mc')
+# Resultado: CanonicalPFire(decimal=0.864, percentage=86.4, percentStr="86.4%")
+
+# ✅ Correto: aplicar delta mantendo rastreabilidade
+pfire_fav = apply_pfire_delta(pfire, delta_pct=2.05, reason="fav = base + delta")
+# Resultado: CanonicalPFire(..., percentage=88.45, source='heuristic')
+
+# ❌ PROIBIDO:
+# percentage = p_sucesso * 100  # Não faça isto
+# pct = round(p_sucesso * 100, 1)  # Não faça isto
+```
+
+**Validação:** `pytest scripts/tests/pfire-canonicalization.test.py` (QA enforcement)
+
+### TypeScript (React Components)
+
+```typescript
+import { canonicalizePFire, fromAPIPercentage, applyPFireDelta } from '@/utils/pfire-canonical';
+
+// ✅ Correto: consumir de data.json (já em %)
+const pfire = fromAPIPercentage(data.pfire_base.base, source='mc');
+// Resultado: CanonicalPFire(decimal=0.864, percentage=86.4, percentStr="86.4%")
+
+// ✅ Correto: usar .percentStr para display
+return <div>{pfire.percentStr}</div>  // Exibe "86.4%"
+
+// ✅ Correto: se receber 0-1 (ex: de runCanonicalMC)
+const decimal = result.pFire;  // 0.864
+const canonical = canonicalizePFire(decimal, source='mc');
+
+// ❌ PROIBIDO:
+// const pct = pfire * 100;  // Não faça isto
+// return Math.round(pfire * 100) + "%";  // Não faça isto
+// return `${pFire * 100}%`;  // Não faça isto
+```
+
+**Validação:** `npm run test:ci` com `pfire-canonicalization.test.ts` (grep-based prohibition tests)
+
+### Rastreabilidade: `source` Campo
+
+Todo CanonicalPFire tem `source` que documenta origem:
+
+| source | Significado | Confiança |
+|--------|-----------|-----------|
+| `'mc'` | Monte Carlo real (fire_montecarlo.py ou runCanonicalMC) | ✅ Canônico |
+| `'heuristic'` | Deduzido por delta (ex: fav = base + 2.05pp) | ⚠️ Derivado |
+| `'fallback'` | Constante stale (ex: 82.2% hardcoded) | 🔴 Emergencial |
+
+Ao exibir, considere adicionar badge se `source !== 'mc'`:
+```typescript
+{pfire.source === 'mc' ? '' : <span style={{color: 'orange'}}>Estimado</span>}
+```
+
+### Garantias (QA Enforcement)
+
+Tests automaticamente PROÍBEM:
+1. ❌ Padrão `pFire * 100` em qualquer arquivo
+2. ❌ Padrão `successRate * 100` sem canonicalizar
+3. ❌ Padrão `Math.round(decimal * 100)` inline
+4. ❌ Função de transformação P(FIRE) fora de pfire-canonical
+5. ✅ Toda exibição usa `.percentStr` ou `.percentage`
+
+Se violar: `npm run test:ci` falha com erro de canonicalization. CI bloqueia merge.
+
+### Referência Rápida
+
+```
+Python:      canonicalize_pfire(0.864, 'mc') → CanonicalPFire(...)
+TypeScript:  canonicalizePFire(0.864, 'mc') → CanonicalPFire(...)
+
+Consumir API (já %):
+Python:      ---
+TypeScript:  fromAPIPercentage(86.4, 'mc') → CanonicalPFire(...)
+
+Aplicar delta:
+Python:      apply_pfire_delta(base, +2.05, "reason") → non-canonical
+TypeScript:  applyPFireDelta(base, 2.05, "reason") → non-canonical
+```

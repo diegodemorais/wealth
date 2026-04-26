@@ -225,7 +225,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         trajectories: results.trajectories || [],
         endWealthDist: results.endWealthDist || [],
         percentiles: results.percentiles || { p10: [], p50: [], p90: [] },
-        successRate: (results.successRate || 0) * 100,
+        successRate: results.successRate || 0,
         medianEndWealth: results.medianEndWealth || 0,
         drawdownDistribution,
       };
