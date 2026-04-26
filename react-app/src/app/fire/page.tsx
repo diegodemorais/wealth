@@ -377,10 +377,14 @@ export default function FirePage() {
       </div>
 
       {/* P(FIRE) Distribution — Percentiles & Tail Risks */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
+        <h2 style={{ margin: 0 }}>P(FIRE) Distribuição Monte Carlo — Percentis</h2>
+        <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+      </div>
       <PFireDistribution
         base={pfireHero}
         percentiles={(data as any)?.pfire_base?.percentiles ?? null}
-        label="P(FIRE) Distribuição Monte Carlo — Percentis"
+        label=""
       />
 
       {/* G1: Bond Pool Readiness + G3: IR Latente — compact status strip */}
@@ -481,7 +485,10 @@ export default function FirePage() {
 
       {/* Tracking FIRE — Realizado vs Projeção */}
       <section className="section" id="trackingFireSection">
-        <h2>Tracking FIRE — Realizado vs Projeção</h2>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
+          <h2 style={{ margin: 0 }}>Tracking FIRE — Realizado vs Projeção</h2>
+          <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+        </div>
         <TrackingFireChart data={safeData} />
         <div className="src">
           Patrimônio realizado vs projeção FIRE · Meta FIRE
@@ -775,6 +782,10 @@ export default function FirePage() {
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8 }}>
             (gatilhos de recalibração)
           </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cenário</span>
+            <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+          </div>
           <EventosVidaChart data={safeData} />
           <div className="src">
             Ao ativar qualquer evento: recalibrar custo de vida, FIRE date, seguro de vida e estrutura patrimonial imediatamente. Impacto de eventos permanentes no custo de vida.
@@ -785,6 +796,10 @@ export default function FirePage() {
       {/* Glide Path — collapsed (mecanismo de execução) */}
       <CollapsibleSection id="section-glide-path" title={secTitle('fire', 'glide-path')} defaultOpen={secOpen('fire', 'glide-path')}>
         <div style={{ padding: '0 16px 16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cenário</span>
+            <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+          </div>
           <GlidePathChart data={safeData} />
           <div className="src">
             Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.
