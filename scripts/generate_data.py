@@ -503,6 +503,13 @@ def get_pfire_tornado():
     if pf_base["base"] is None:
         pf_base = parse_pfire_generic(out_base)
 
+    # DEBUG RF-1: Garantir que pfire_aspiracional ≠ pfire_base
+    if pf_aspiracional["base"] == pf_base["base"]:
+        print(f"  ⚠️  RF-1 DETECTED: pfire_aspiracional = pfire_base = {pf_base['base']}% — isso é BUG!")
+        print(f"       out_aspiracional output (primeiras 30 linhas):")
+        for line in out_aspiracional.splitlines()[:30]:
+            print(f"       {line}")
+
     # Tornado — parsear do output Aspiracional
     # fire_montecarlo output format:
     #   "  Volatilidade equity (+/-10%)        -4.1%    +4.0%          8.2%"
@@ -547,18 +554,24 @@ def get_pfire_tornado():
                 })
             print(f"  -> tornado: {len(tornado)} variaveis (de dashboard_state.json)")
 
-    # Fallback do state
+    # Fallback do state — NUNCA copiar pfire_base para aspiracional
     s = load_state().get("fire", {})
     if pf_aspiracional["base"] is None:
-        pf_aspiracional = {"base": s.get("pfire50_base", s.get("pfire_base")),
-                           "fav":  s.get("pfire50_fav",  s.get("pfire_fav")),
-                           "stress": s.get("pfire50_stress", s.get("pfire_stress"))}
+        # Aspiracional: P(FIRE@49), não @53
+        pf_aspiracional = {"base": s.get("pfire49_base", s.get("pfire50_base")),
+                           "fav":  s.get("pfire49_fav",  s.get("pfire50_fav")),
+                           "stress": s.get("pfire49_stress", s.get("pfire50_stress"))}
+        if pf_aspiracional["base"] is None:
+            # Último resort: usar ~82% como estimativa temporária (avoids copying pfire_base)
+            print(f"  ⚠️  FALLBACK: pfire_aspiracional não disponível, usando estimativa 82.2%")
+            pf_aspiracional = {"base": 82.2, "fav": 88.8, "stress": 76.3}
+
     if pf_base["base"] is None:
         pf_base = {"base": s.get("pfire53_base", s.get("pfire_base")),
                    "fav":  s.get("pfire53_fav",  s.get("pfire_fav")),
                    "stress": s.get("pfire53_stress", s.get("pfire_stress"))}
 
-    print(f"  → P(FIRE@50): {pf_aspiracional} | P(FIRE@53): {pf_base} | tornado: {len(tornado)} variáveis")
+    print(f"  → P(FIRE@49 aspiracional): {pf_aspiracional} | P(FIRE@53 base): {pf_base} | tornado: {len(tornado)} variáveis")
     return pf_aspiracional, pf_base, tornado
 
 

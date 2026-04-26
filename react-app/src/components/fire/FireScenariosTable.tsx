@@ -158,9 +158,9 @@ export function FireScenariosTable() {
         </table>
       </div>
 
-      <div style={{ marginTop: 10, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-        10.000 simulações Monte Carlo · Guardrails aprovados 2026-04-07<br />
-        ★ Câmbio Dinâmico: Hamilton (1989) Markov Switching — 2 regimes (normal 0,5%/a · crise 35%/a, freq. ~17%). N=2.000
+      <div style={{ marginTop: 10, fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.5 }}>
+        <strong>Base e Aspiracional:</strong> 10.000 simulações Monte Carlo · Guardrails 2026-04-07<br />
+        <strong>★ Câmbio Dinâmico:</strong> Estimativa rápida (N=2.000, SE ±1.6%) · Hamilton Markov Switching (1989) · 2 regimes
       </div>
     </div>
   );
