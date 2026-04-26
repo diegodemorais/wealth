@@ -1,8 +1,27 @@
 # Carteira Diego Morais — Contexto Compartilhado
 
-> Atualizado em: 2026-04-22
+> Atualizado em: 2026-04-26
 > Este arquivo e a fonte de verdade para todos os agentes.
 > Cambio de referencia: R$ 5,156 (PTAX BCB 2026-04-22, dashboard_state.json)
+
+---
+
+## 🔐 PREMISSA CRÍTICA: Capital Humano EXCLUÍDO do Monte Carlo (Decisão Deliberada)
+
+**Por quê?** P(FIRE) = probabilidade de patrimônio financeiro cobrir 100% de gastos sem renda externa. É conservador por design.
+
+**Capital Humano Disponível (NÃO incluído em P(FIRE)):**
+- **Katia**: INSS R$84.6k/ano (desde nov/2049, aos 62a) + PGBL R$29.2k/ano = **R$113.8k/ano garantido** (16 anos até 2065)
+- **Diego**: INSS R$18k/ano (desde 2052, aos 65a) — menor impacto
+
+**Impacto Quantitativo:**
+- **P(FIRE) reportado (78.8% Aspiracional):** assume zero renda Katia → conservador
+- **P(FIRE) "real" (com capital humano):** ~84-87% (até +8pp) → mas omitimos para margem
+- **Lógica:** exclusão cria buffer implícito; não comunicamos "P real" para evitar falsa precisão
+
+**Implicação para FIRE:** Após ano 9 pós-FIRE (2049), R$113.8k/ano de renda garantida oferece piso seguro. Torna SWR pré-2049 mais rigoroso (compensatório). Permite recuperação se cenário ruim 2040-2048; evita ruína por sequência de retornos ruins.
+
+**Status:** Documentado, não está sendo otimizado. Comunicação em dashboard (Assumptions page) adequada.
 
 ---
 
