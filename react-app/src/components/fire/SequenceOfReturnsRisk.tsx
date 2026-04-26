@@ -256,7 +256,105 @@ export function SequenceOfReturnsRisk({
         </p>
       </div>
 
-      {/* ── 2. P(FIRE) Gate Status atual ─────────────────────────────────── */}
+      {/* ── 2. Guardrails Visualization — Drawdown vs Spending Cut ─────────── */}
+      <div style={{
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
+        borderRadius: '10px',
+        padding: '16px',
+        marginBottom: '16px',
+      }}>
+        <div style={{ fontWeight: 700, fontSize: 'var(--text-sm)', marginBottom: 4 }}>
+          Mecanismo de Guardrails — Como Drawdown Ajusta Spending
+        </div>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 12 }}>
+          Curva mostra: 0–15% queda = nenhum corte · 15–25% = 10% redução · 25–35% = 20% redução · 35%+ = piso essencial (R${Math.round(pisoEssencial / 1000)}k)
+        </div>
+        <EChart option={useMemo(() => {
+          const fmt = (v: number) => fmtPrivacy(v, privacyMode);
+          const drawdownPcts = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+          const spendingCuts: number[] = drawdownPcts.map(dd => {
+            const ddFrac = dd / 100;
+            if (ddFrac < 0.15) return 0;
+            if (ddFrac < 0.25) return 10;
+            if (ddFrac < 0.35) return 20;
+            return Math.min(50, 20 + (ddFrac - 0.35) * 300); // ~1.5pp per 1% dd above 35%
+          });
+
+          return {
+            backgroundColor: 'transparent',
+            grid: { left: 50, right: 16, top: 20, bottom: 32 },
+            tooltip: {
+              trigger: 'axis' as const,
+              backgroundColor: theme.tooltip.backgroundColor,
+              borderColor: theme.tooltip.borderColor,
+              textStyle: theme.tooltip.textStyle,
+              formatter: (params: any) => {
+                if (!params.length) return '';
+                const p = params[0];
+                const dd = p.value[0];
+                const cut = p.value[1];
+                const spendingResult = custoVida * (1 - cut / 100);
+                return `
+                  <div style="padding:8px 10px">
+                    <strong>Drawdown ${dd.toFixed(0)}%</strong><br/>
+                    Corte de Spending: <strong>${cut.toFixed(0)}%</strong><br/>
+                    Retirada: <strong>${fmt(Math.round(spendingResult / 1000) * 1000)}/ano</strong>
+                  </div>`;
+              },
+            },
+            xAxis: {
+              type: 'value',
+              name: 'Drawdown %',
+              min: 0,
+              max: 50,
+              axisLine: EC_AXIS_LINE,
+              axisLabel: { color: EC.muted, fontSize: 11, formatter: (v: any) => `${v}%` },
+              splitLine: EC_SPLIT_LINE,
+            },
+            yAxis: {
+              type: 'value',
+              name: 'Spending Redução %',
+              min: 0,
+              max: 60,
+              axisLine: EC_AXIS_LINE,
+              axisLabel: { color: EC.muted, fontSize: 11, formatter: (v: any) => `${v}%` },
+              splitLine: EC_SPLIT_LINE,
+            },
+            series: [
+              {
+                type: 'line',
+                name: 'Spending Cut',
+                data: drawdownPcts.map((dd, i) => [dd, spendingCuts[i]]),
+                smooth: 0.4,
+                lineStyle: { color: EC.accent, width: 3 },
+                itemStyle: { color: EC.accent, borderColor: 'var(--card)', borderWidth: 2 },
+                areaStyle: { color: `color-mix(in srgb, ${EC.accent} 15%, transparent)` },
+                emphasis: { itemStyle: { borderWidth: 3 } },
+              },
+              // Annotate guardrail thresholds
+              {
+                type: 'scatter',
+                name: 'Guardrail Trigger',
+                data: [
+                  [15, 0],
+                  [25, 10],
+                  [35, 20],
+                ],
+                symbolSize: 8,
+                itemStyle: { color: EC.yellow, borderColor: 'var(--card)', borderWidth: 2 },
+              },
+            ],
+          };
+        }, [custoVida, pisoEssencial, privacyMode, theme])}
+        style={{ height: 200 }} />
+        <div className="src">
+          Guardrails são reativos: acionam quando drawdown observado cruza threshold (15%, 25%, 35%).
+          Permitem que carteira se adapte sem falhar total. P(FIRE) gate anual (janeiro) recalibra esses thresholds.
+        </div>
+      </div>
+
+      {/* ── 3. P(FIRE) Gate Status atual ─────────────────────────────────── */}
       <div style={{
         display: 'flex',
         flexWrap: 'wrap',
@@ -326,7 +424,7 @@ export function SequenceOfReturnsRisk({
         </div>
       </div>
 
-      {/* ── 3. Cenário exemplo: P(FIRE) 95% → 80% ─────────────────────────── */}
+      {/* ── 4. Cenário exemplo: P(FIRE) 95% → 80% ─────────────────────────── */}
       <div style={{
         background: 'var(--card)',
         border: '1px solid var(--border)',
@@ -413,7 +511,7 @@ export function SequenceOfReturnsRisk({
         </div>
       </div>
 
-      {/* ── 5. Nota INSS Floors Katia — Piso Adicional 2049 ─────────────── */}
+      {/* ── 6. Nota INSS Floors Katia — Piso Adicional 2049 ─────────────── */}
       <div style={{
         background: 'color-mix(in srgb, var(--accent) 6%, transparent)',
         border: '1px solid color-mix(in srgb, var(--accent) 25%, transparent)',
