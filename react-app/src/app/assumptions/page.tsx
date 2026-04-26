@@ -722,6 +722,23 @@ export default function AssumptionsPage() {
             </Block>
           </div>
 
+          {/* Capital Humano Disclosure */}
+          <div style={{ marginBottom: 14, padding: '12px 14px', background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: 8, fontSize: 13 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              ℹ️ Capital Humano — EXCLUÍDO do MC
+            </div>
+            <div style={{ color: 'var(--text)', lineHeight: 1.5, marginBottom: 6 }}>
+              P(FIRE) = {(pfire.base ?? 0).toFixed(1)}% assume <strong>patrimônio financeiro isolado</strong> sem renda futura.
+            </div>
+            <div style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5 }}>
+              <strong>Renda Garantida (não incluída):</strong> Katia R$113.8k/ano de INSS + PGBL a partir de 2049 (idade 62).
+              <br />
+              <strong>Por quê?</strong> Conservadorismo deliberado. P(FIRE) real é estimado 4-7pp maior com renda garantida.
+              <br />
+              <strong>Impacto prático:</strong> Após 9 anos pós-FIRE, margem de segurança ativada. Permite recuperação de drawdowns severos. Torna SWR pré-2049 mais rigoroso por design.
+            </div>
+          </div>
+
           {/* Family Scenarios */}
           {profiles.length > 0 && (
             <FamilyScenarios profiles={profiles} priv={privacyMode} />
