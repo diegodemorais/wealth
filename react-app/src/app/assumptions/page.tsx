@@ -1002,6 +1002,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '2px solid var(--border)' }}>
                   <th style={{ padding: '8px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600 }}>OPO</th>
                   <th style={{ padding: '8px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600 }}>Descrição</th>
+                  <th style={{ padding: '8px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600, fontSize: 10 }}>Componentes Afetados</th>
                   <th style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)', fontWeight: 600 }}>Status</th>
                   <th style={{ padding: '8px 6px', textAlign: 'right', color: 'var(--muted)', fontWeight: 600 }}>Score</th>
                   <th style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)', fontWeight: 600 }}>Esforço</th>
@@ -1011,6 +1012,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>B1</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Capital Humano Disclosure (Katia)</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>assumptions/page.tsx</code> (Capital Humano block)</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.4</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>15min</td>
@@ -1018,6 +1020,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>B2</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>P(FIRE) vs Guardrails Metodologia</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>assumptions/page.tsx</code> (Guardrails vs MC section)</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.5</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>3h</td>
@@ -1025,6 +1028,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(255,200,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 1</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Stress Scenarios (stagflation/hyperinflation)</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--yellow)', fontSize: 10 }}>TBD (fire/page.tsx)</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--yellow)' }}>⏳ Phase 3b</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--yellow)' }}>+0.5</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>4h + IBKR</td>
@@ -1032,6 +1036,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 2</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Percentis MC (p10/p25/p50/p75/p90)</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>SequenceOfReturnsRisk.tsx</code>, <code>fire/page.tsx</code></td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.4</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>2h</td>
@@ -1039,6 +1044,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 3</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Guardrails Visualização (drawdown chart)</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>GuardrailsMechanismChart.tsx</code>, <code>withdraw/page.tsx</code></td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.3</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
@@ -1046,6 +1052,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 4</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Scenarios Comparison (Base vs Aspiracional)</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>assumptions/page.tsx</code> (FIRE Scenarios table)</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
@@ -1053,6 +1060,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 5</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Timestamps Consistentes (data freshness)</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>assumptions/page.tsx</code> (header timestamp)</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>2h</td>
@@ -1060,6 +1068,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 6</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>HODL11 Overweight Warning Badge</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>HODL11PositionPanel.tsx</code></td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>0.5h</td>
@@ -1067,6 +1076,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(100,100,100,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 7</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Duration Display (Renda+ reconciliação)</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--muted)', fontSize: 10 }}><code>RFStatusPanel.tsx</code> (TBD)</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--muted)' }}>📋 Backlog</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--muted)' }}>+0.2</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
@@ -1074,6 +1084,7 @@ export default function AssumptionsPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(255,200,0,0.03)' }}>
                   <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 8</td>
                   <td style={{ padding: '8px 6px', color: 'var(--text)' }}>BTC Stress Test Quantificado</td>
+                  <td style={{ padding: '8px 6px', color: 'var(--yellow)', fontSize: 10 }}>TBD (HODL11PositionPanel, portfolio)</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--yellow)' }}>⏳ Phase 3b</span></td>
                   <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--yellow)' }}>+0.3</td>
                   <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>3h + IBKR</td>
