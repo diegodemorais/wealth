@@ -29,6 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
+| VERIF-PFIRE-CANONICO | Verificação de Canonicidade de P(FIRE) Centralizado | Quant + FIRE | 🔴 Alta |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta |
 
 ### Doing
