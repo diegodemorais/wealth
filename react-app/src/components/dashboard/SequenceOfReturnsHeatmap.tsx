@@ -101,8 +101,8 @@ export default function SequenceOfReturnsHeatmap({
                 <tr key={yr}>
                   <td style={{ padding: '4px 6px', fontWeight: 600, color: 'var(--text)' }}>{yr}</td>
                   {useMcData
-                    ? (scenarios as typeof scenarios).map((s) => {
-                        const key = s.key as 'p10' | 'p25' | 'p50' | 'p75' | 'p90';
+                    ? scenarios.map((s) => {
+                        const key = (s as any).key as 'p10' | 'p25' | 'p50' | 'p75' | 'p90';
                         const pat = getMcPatForYear(yr, key);
                         const swr = pat > 0 ? spending / pat : 0.1;
                         const p = pFireFromSWR(swr);
@@ -112,7 +112,7 @@ export default function SequenceOfReturnsHeatmap({
                           </td>
                         );
                       })
-                    : (scenarios as typeof scenarios).map((s) => {
+                    : scenarios.map((s) => {
                         const basePat = getPatForYear(yr);
                         const adjPat = basePat * (1 + (s as any).scenario);
                         const swr = adjPat > 0 ? spending / adjPat : 0.1;

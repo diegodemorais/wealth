@@ -19,6 +19,7 @@ import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
 import { HumanCapitalCrossover } from '@/components/dashboard/HumanCapitalCrossover';
+import { PFireDistribution } from '@/components/fire/PFireDistribution';
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { EChart } from '@/components/primitives/EChart';
@@ -374,6 +375,13 @@ export default function FirePage() {
           </div>
         </div>
       </div>
+
+      {/* P(FIRE) Distribution — Percentiles & Tail Risks */}
+      <PFireDistribution
+        base={pfireHero}
+        percentiles={(data as any)?.pfire_base?.percentiles ?? null}
+        label="P(FIRE) Distribuição Monte Carlo — Percentis"
+      />
 
       {/* G1: Bond Pool Readiness + G3: IR Latente — compact status strip */}
       {(() => {
