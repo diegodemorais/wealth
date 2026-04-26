@@ -5,6 +5,7 @@ import { usePageData } from '@/hooks/usePageData';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
+import { GuardrailsMechanismChart } from '@/components/charts/GuardrailsMechanismChart';
 import { IncomeProjectionChart } from '@/components/charts/IncomeProjectionChart';
 import { GuardrailsRetirada } from '@/components/dashboard/GuardrailsRetirada';
 import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
@@ -437,6 +438,9 @@ export default function WithdrawPage() {
         <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Regras de Ajuste de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
           <div style={{ padding: '0 16px 16px' }}>
             <GuardrailsRetirada guardrails={safeData.guardrails_retirada} />
+            <div style={{ marginTop: 14, marginBottom: 8 }}>
+              <GuardrailsMechanismChart />
+            </div>
             <div style={{ marginTop: 10, fontSize: 'var(--text-sm)', background: 'rgba(34,197,94,.07)', borderRadius: 6, padding: 8, borderLeft: '3px solid var(--green)' }}>
               <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto R$350k)
             </div>
