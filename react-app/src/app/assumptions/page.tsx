@@ -722,6 +722,59 @@ export default function AssumptionsPage() {
             </Block>
           </div>
 
+          {/* FIRE Scenarios Comparison — OPO 4 */}
+          <div style={{ marginBottom: 14, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 14, overflow: 'auto' }}>
+            <h3 style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>FIRE Scenarios Comparison</h3>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                  <th style={{ padding: '6px 4px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600 }}>Cenário</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontWeight: 600 }}>Idade</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontWeight: 600 }}>Ano</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontWeight: 600 }}>P(FIRE)</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontWeight: 600 }}>Aporte/mês</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontWeight: 600, fontSize: 11 }}>Vs Base</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Base scenario */}
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '6px 4px', color: 'var(--text)', fontWeight: 600 }}>Base</td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--text)' }}>53</td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--text)' }}>2040</td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 700, color: pfireColor(pfire.base ?? 0) }}>
+                    {(pfire.base ?? 0).toFixed(1)}%
+                  </td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
+                    {mask(p.aporte_mensal ?? 0, privacyMode)}
+                  </td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--muted)', fontSize: 11 }}>—</td>
+                </tr>
+
+                {/* Aspirational scenario */}
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'color-mix(in srgb, var(--yellow) 4%, transparent)' }}>
+                  <td style={{ padding: '6px 4px', color: 'var(--text)', fontWeight: 600 }}>Aspiracional</td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--text)' }}>48</td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--text)' }}>2035</td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 700, color: pfireColor(pfireA.base ?? 0) }}>
+                    {(pfireA.base ?? 0).toFixed(1)}%
+                  </td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
+                    {mask(p.aporte_mensal_aspiracional ?? 0, privacyMode)}
+                  </td>
+                  <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 600, color: 'var(--yellow)', fontSize: 11 }}>
+                    {((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0) > 0 ? '+' : '') + mask((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0), privacyMode) + '/mês'}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 10, lineHeight: 1.5 }}>
+              <strong>Leitura:</strong> Aspiracional antecipa FIRE em 5 anos (53→48) com aporte {mask((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0), privacyMode)}/mês adicional.
+              {' '}{Math.abs((pfireA.base ?? 0) - (pfire.base ?? 0)).toFixed(1)}pp menor P(FIRE) é tradeoff: spending extra por 5 anos vs risco acelerado.
+              {' '}Baseado em retorno equity {fmtPct(p.retorno_equity_base ?? 0)}/ano (base).
+            </div>
+          </div>
+
           {/* Family Scenarios */}
           {profiles.length > 0 && (
             <FamilyScenarios profiles={profiles} priv={privacyMode} />
