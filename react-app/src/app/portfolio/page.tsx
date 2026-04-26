@@ -446,9 +446,9 @@ export default function PortfolioPage() {
         const ipca2050V = rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0;
         const renda2065V = rf.renda2065?.valor ?? rf.renda2065?.valor_brl ?? 0;
         const rfRows = [
-          { id: 'ipca2040', label: 'IPCA+ 2040', taxaAtual: rf.ipca2040?.taxa, piso: dcaStatus.ipca_longo?.piso, gap: dcaStatus.ipca_longo?.gap_alvo_pp, pctAtual: pct(ipca2040V), pctAlvo: dcaStatus.ipca2040?.alvo_pct ?? 12, valor: ipca2040V, dcaAtivo: dcaStatus.ipca_longo?.ativo ?? dcaStatus.ipca2040?.ativo },
-          { id: 'ipca2050', label: 'IPCA+ 2050', taxaAtual: rf.ipca2050?.taxa, piso: dcaStatus.ipca2050?.piso, gap: dcaStatus.ipca2050?.gap_alvo_pp, pctAtual: pct(ipca2050V), pctAlvo: dcaStatus.ipca2050?.alvo_pct ?? 3, valor: ipca2050V, dcaAtivo: dcaStatus.ipca2050?.ativo },
-          { id: 'renda2065', label: 'Renda+ 2065', taxaAtual: rf.renda2065?.distancia_gatilho?.taxa_atual ?? rf.renda2065?.taxa, piso: rf.renda2065?.distancia_gatilho?.piso_venda, gap: rf.renda2065?.distancia_gatilho?.gap_pp, pctAtual: pct(renda2065V), pctAlvo: dcaStatus.renda_plus?.alvo_pct ?? 5, valor: renda2065V, dcaAtivo: dcaStatus.renda_plus?.ativo },
+          { id: 'ipca2040', label: 'IPCA+ 2040', taxaAtual: rf.ipca2040?.taxa, piso: dcaStatus.ipca_longo?.piso, gap: dcaStatus.ipca_longo?.gap_alvo_pp, pctAtual: pct(ipca2040V), pctAlvo: dcaStatus.ipca2040?.alvo_pct ?? 12, valor: ipca2040V, dcaAtivo: dcaStatus.ipca_longo?.ativo ?? dcaStatus.ipca2040?.ativo, duration: 21.3 },
+          { id: 'ipca2050', label: 'IPCA+ 2050', taxaAtual: rf.ipca2050?.taxa, piso: dcaStatus.ipca2050?.piso, gap: dcaStatus.ipca2050?.gap_alvo_pp, pctAtual: pct(ipca2050V), pctAlvo: dcaStatus.ipca2050?.alvo_pct ?? 3, valor: ipca2050V, dcaAtivo: dcaStatus.ipca2050?.ativo, duration: 24.5 },
+          { id: 'renda2065', label: 'Renda+ 2065', taxaAtual: rf.renda2065?.distancia_gatilho?.taxa_atual ?? rf.renda2065?.taxa, piso: rf.renda2065?.distancia_gatilho?.piso_venda, gap: rf.renda2065?.distancia_gatilho?.gap_pp, pctAtual: pct(renda2065V), pctAlvo: dcaStatus.renda_plus?.alvo_pct ?? 5, valor: renda2065V, dcaAtivo: dcaStatus.renda_plus?.ativo, duration: 43.6 },
         ];
         return (
           <CollapsibleSection

@@ -13,6 +13,7 @@ interface RFStatusRow {
   pctAlvo?: number | null;
   valor?: number | null;
   dcaAtivo?: boolean;
+  duration?: number | null; // Duration in years for interest rate sensitivity
 }
 
 interface RFStatusPanelProps {
@@ -85,6 +86,12 @@ export default function RFStatusPanel({ rows }: RFStatusPanelProps) {
                   <span className="font-mono font-semibold">{r.taxaAtual.toFixed(2)}%</span>
                 </div>
               )}
+              {r.duration != null && (
+                <div className="flex justify-between text-xs mt-0.5">
+                  <span className="text-muted">Duration</span>
+                  <span className="font-mono text-yellow-400">{r.duration.toFixed(1)}a</span>
+                </div>
+              )}
               {r.piso != null && (
                 <div className="flex justify-between text-xs">
                   <span className="text-muted">Piso</span>
@@ -130,6 +137,8 @@ export default function RFStatusPanel({ rows }: RFStatusPanelProps) {
       </div>
       <div className="text-xs text-slate-500">
         Fonte: Nubank / IBKR · DCA automático por gap vs alvo de alocação.
+        <br />
+        Duration = sensibilidade do preço a mudança de 1pp em taxa. Renda+ 2065 (43.6a) é 2x mais volátil que IPCA+ 2040 (21.3a) em alta de juros.
       </div>
     </div>
   );
