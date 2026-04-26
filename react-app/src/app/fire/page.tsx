@@ -258,6 +258,7 @@ export default function FirePage() {
     if (!ft?.dates || !ft?.trilha_brl || !pats.length) return undefined;
     const idadeAtual: number = (data as any)?.premissas?.idade_atual ?? 39;
     const anoAtual: number = (data as any)?.premissas?.ano_atual ?? 2026;
+    const horizonteVida: number = (data as any)?.premissas?.horizonte_vida ?? 90;
     const dates: string[] = ft.dates;
     const values: (number | null)[] = ft.trilha_brl;
     const nonNull = dates.map((dt: string, i: number) => ({ dt, v: values[i] })).filter(x => x.v != null) as { dt: string; v: number }[];
@@ -267,6 +268,8 @@ export default function FirePage() {
     const prev12 = nonNull[Math.max(0, nonNull.length - 12)];
     const monthlyGrowth = nonNull.length >= 12 ? (last.v / prev12.v) ** (1 / 11) - 1 : 0.006;
     const toIdade = (year: number, month: number) => idadeAtual + (year - anoAtual) + (month - 4) / 12;
+    // Area E fix: Extend extrapolation window and cap idade at horizonteVida
+    const maxExtrapolationMonths = 240; // 20 years instead of 10
     return pats.map((pat: number) => {
       for (const { dt, v } of nonNull) {
         if (v >= pat) {
@@ -277,13 +280,17 @@ export default function FirePage() {
       let v = last.v;
       let year = parseInt(last.dt.slice(0, 4));
       let month = parseInt(last.dt.slice(5, 7));
-      for (let i = 0; i < 120; i++) {
+      for (let i = 0; i < maxExtrapolationMonths; i++) {
         v *= (1 + monthlyGrowth);
         month++;
         if (month > 12) { month = 1; year++; }
-        if (v >= pat) return Math.round(toIdade(year, month));
+        if (v >= pat) {
+          const idade = Math.round(toIdade(year, month));
+          return Math.min(idade, horizonteVida); // Cap at life expectancy
+        }
       }
-      return null;
+      // Fallback: if still not reached, return life expectancy (conservative)
+      return horizonteVida;
     });
   }, [data]);
 
