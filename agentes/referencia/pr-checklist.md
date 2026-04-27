@@ -51,7 +51,7 @@
 ```
 
 **O que fazer**:
-- [ ] Grep na PR: `git diff | grep -E '(\*|/) 100'`
+- [ ] Grep na PR: `git diff | grep -E 'padrão proibido'` (pre-commit hook faz isso)
 - [ ] Se encontrado → refactor com `canonicalize_pfire()`
 - [ ] Validar com `npm run test:ci` (enforcement automático)
 
