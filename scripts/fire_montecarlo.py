@@ -300,7 +300,7 @@ def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retor
         withdrawal_req = WithdrawalRequest(
             strategy=strategy,
             gasto_smile=gasto_base,
-            patrimonio_atual=pat,
+            patrimonio_atual=max(0, pat),  # Clamp to 0 (depleted portfolio)
             patrimonio_pico=pat_pico,
             ano=ano,
             ctx=ctx,
@@ -368,7 +368,7 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
         withdrawal_req = WithdrawalRequest(
             strategy=strategy,
             gasto_smile=gasto_base,
-            patrimonio_atual=pat,
+            patrimonio_atual=max(0, pat),  # Clamp to 0 (depleted portfolio)
             patrimonio_pico=pat_pico,
             ano=ano,
             ctx=ctx,
