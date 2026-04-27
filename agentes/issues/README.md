@@ -27,7 +27,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade | Status |
+|----|--------|------|------------|--------|
+| HD-ARCHITECT | Guardião de Arquitetura & Centralizations | Head | 🔴 CRÍTICA | 🟦 Ativo — lendo briefs, primeira auditoria |
 
 ### Blocked
 > Issues aguardando dependências externas
