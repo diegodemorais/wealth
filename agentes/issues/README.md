@@ -30,9 +30,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
 | HD-ARCHITECT | Guardião de Arquitetura & Centralizations | Head | 🔴 CRÍTICA | 🟩 Ativo — P4 auto-fix engine em construção |
-| HD-ARCHITECT-P0P1 | Implementação P0 & P1 — Automação + Validação | Architect + Head | 🔴 CRÍTICA | ✅ Done — P0 concluído, P1 pronto |
-| HD-ARCHITECT-P2 | Advanced Hardcoding Detection — AST + Grep | Architect | 🔵 Alta | ✅ Concluído — 323 violations detectadas |
-| HD-ARCHITECT-P3 | Refactor 323 Hardcoding Violations | Head + Dev | 🔴 CRÍTICA | ✅ Done — 323 violations refactored, zero remaining |
 | HD-ARCHITECT-P4 | Auto-Fix Suggestion Engine | Dev + Architect | 🔵 Alta | 🟦 Em Andamento — Suggestion engine + patch generator implementados |
 
 ### Blocked
@@ -48,6 +45,15 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | ✅ IBKR posições carregam via ibkr_posicoes_sync (fallback chain) |
 | PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | ✅ generate_data.py roda completo, data.json gerado com P(FIRE) |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | ✅ Lotes históricos carregam, Flex Query merge implementado |
+
+### Done — Últimas Issues Concluídas
+
+| ID | Titulo | Data | Resumo |
+|----|--------|------|--------|
+| HD-ARCHITECT-P3 | Refactor 323 Hardcoding Violations | 2026-04-27 | 323 violations refactored, zero remaining. Estate tax centralizado. React constants → data.json. |
+| HD-ARCHITECT-P2 | Advanced Hardcoding Detection — AST + Grep | 2026-04-27 | 323 violations detectadas via AST + grep. CI pre-check carteira_params.json integrado. |
+| HD-ARCHITECT-P0P1 | Implementação P0 & P1 — Automação + Validação | 2026-04-27 | P0 concluído, P1 pronto. Automação + validação implementados. |
+| DEV-semantic-test-coverage | Semantic tests + data-testid | 2026-04-27 | 9 data-testids, semantic-smoke.spec.ts (9 testes Playwright), pipeline assertions, checklist CLAUDE.md |
 
 ### Done — Últimos Componentes Alterados (Dashboard Changelog)
 > Mudanças visualmente percebidas no dashboard (últimas 10 alterações)
