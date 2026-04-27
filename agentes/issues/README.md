@@ -45,6 +45,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
+| DEV-semantic-test-coverage | Semantic Test Coverage — Playwright valida valores, não só estrutura | dev | 🔴 Alta | ✅ — |
 | DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | ✅ IBKR posições carregam via ibkr_posicoes_sync (fallback chain) |
 | PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | ✅ generate_data.py roda completo, data.json gerado com P(FIRE) |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | ✅ Lotes históricos carregam, Flex Query merge implementado |
