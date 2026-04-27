@@ -2,7 +2,7 @@
 
 // privacy-ok: toLocaleString here formats dates only (timestamps), not BRL monetary values
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { AlertTriangle } from 'lucide-react';
@@ -19,6 +19,10 @@ function fmtBrt(iso: string): string {
 
 export function VersionFooter() {
   const data = useDashboardStore(s => s.data);
+  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
+  useEffect(() => {
+    loadDataOnce().catch(() => {});
+  }, [loadDataOnce]);
 
   const { dataDate, daysOld, isStale } = useMemo(() => {
     const raw = (data as any)?._generated_brt ?? (data as any)?._generated ?? data?.date;

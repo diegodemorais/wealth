@@ -821,7 +821,7 @@ def get_timeline_attribution():
 
 
 # ─── 4b. ATTRIBUTION ─────────────────────────────────────────────────────────
-def get_attribution():
+def get_attribution(pat_override: float = None):
     """Decomposição desde o início dos aportes do patrimônio em 3 componentes:
       - aportes:    soma de todos os aportes_brl do CSV (from day one)
       - retornoUsd: retorno equity USD (fração equity_usd da decomposicao total)
@@ -832,9 +832,9 @@ def get_attribution():
     Fallback: proxy via pesos_target se decomposicao não disponível.
     """
     try:
-        # 1. Patrimônio atual — de dashboard_state.json
+        # 1. Patrimônio atual — pat_override se disponível, senão de dashboard_state.json
         state = load_state()
-        pat_atual = state.get("patrimonio", {}).get("total_brl")
+        pat_atual = pat_override or state.get("patrimonio", {}).get("total_brl")
         if pat_atual is None:
             posicoes_raw = state.get("posicoes", {})
             cambio_state = state.get("patrimonio", {}).get("cambio", CAMBIO_FALLBACK)
@@ -2900,8 +2900,6 @@ def main():
     # Backtest
     backtest_data = get_backtest()
 
-    # Attribution
-    attr = get_attribution()
     timeline_attribution = get_timeline_attribution()
 
     # Factor data — lê factor_snapshot.json (gerado por reconstruct_factor.py)
@@ -3107,6 +3105,9 @@ def main():
 
     # Drift
     drift, total_brl = compute_drift(posicoes, rf, hodl11_brl, cambio, coe_net_brl=_coe_net_brl_early)
+
+    # Attribution — after compute_drift so total_brl is available as pat_override
+    attr = get_attribution(pat_override=total_brl)
 
     # ── Bandas visuais HODL11 ────────────────────────────────────────────────────
     # Política: piso 1.5% / alvo 3% / teto 5% do portfolio total.

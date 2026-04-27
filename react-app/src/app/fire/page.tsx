@@ -313,7 +313,12 @@ export default function FirePage() {
   const fireYearHero: number | null = (() => {
     const p0 = (data as any)?.fire_matrix?.by_profile?.[0];
     const y = p0?.fire_age_53 ?? prem.ano_cenario_base;
-    return y ? parseInt(String(y), 10) : null;
+    if (y) return parseInt(String(y), 10);
+    const idadeAtual = prem.idade_atual;
+    const idadeCenario = prem.idade_cenario_base ?? 53;
+    const anoAtual = prem.ano_atual ?? new Date().getFullYear();
+    if (idadeAtual != null) return anoAtual + (idadeCenario - idadeAtual);
+    return null;
   })();
   const anoAtualHero: number = prem.ano_atual ?? new Date().getFullYear();
   const anosRestantesHero: number | null = fireYearHero != null ? fireYearHero - anoAtualHero : (

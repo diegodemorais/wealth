@@ -273,6 +273,12 @@ function FireSimuladorSection() {
         firePire = fireMkt === 'fav'    ? (p.p_at_threshold_fav ?? p.p_at_threshold)
                  : fireMkt === 'stress' ? (p.p_at_threshold_stress ?? p.p_at_threshold)
                  : p.p_at_threshold;
+      } else if (aporte !== undefined && retorno !== undefined && custo !== undefined &&
+                 currentAge !== undefined && patrimonio !== undefined && swrTarget !== undefined) {
+        result = calcFireYear(aporte, retorno / 100, custo, currentAge, getAnoAtual(premissas), patrimonio, swrTarget);
+        firePire = fireMkt === 'fav'    ? ((data as any)?.pfire_aspiracional?.base ?? null)
+                 : fireMkt === 'stress' ? ((data as any)?.pfire_base?.stress ?? null)
+                 : ((data as any)?.pfire_base?.base ?? null);
       }
     }
   } else {
