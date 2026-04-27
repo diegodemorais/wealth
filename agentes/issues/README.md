@@ -29,7 +29,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| CENTRALIZATION_COMPLETE | Core & Dashboard Full Refactor (5 Engines) | Head + Quant + Dev | 🔴 CRÍTICA | ✅ Team respondeu — Pronto para Phase 1 |
 | DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | 🎯 Aguardando respostas de Quant/Dev/Head |
 
 ### Backlog
@@ -46,6 +45,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| CENTRALIZATION_COMPLETE | Head+Quant+Dev | 2026-04-27 | ✅ Done — Phase 4.1-4.4 consolidated (74 tests). 5 engines merged, invariants guaranteed, AST prohibition tests. Planning for Phase 5+ created. |
 | DEV-twr-pipeline-fixes | Dev+Quant | 2026-04-25 | ✅ Done — TWR pipeline funcional. RF mark-to-market implementado, preços fim-de-mês sincronizados, Modified Dietz em production. CORE-portfolio-history validado (TWR 5 anos: 12.69%). Integrado em portfolio_analytics.py. |
 | DEV-ux-prototipo | Dev+Time | 2026-04-25 | ✅ Done — Protótipo HTML vs React avaliado. Redesign aprovado para CollapsibleSection auto-open feature. UX/layout consistent com spec.json. Tema CSS vars implementado. |
 | DASH-2026-04-25-consistency | Dev+Quant | 2026-04-25 | ✅ Done — **6 High-Priority Fixes** implementados. TER corrigido (AVGS 0.25%→0.39%, AVEM 0.18%→0.35%), pctAlvo dinâmico (12%/3%), CAUTELA styling, Renda+ taxa unificada, alpha drought caveat. Health 6.5/10→7.5/10. **Changelog:** [Performance TER](react-app/src/app/performance/page.tsx) · [Home pctAlvo](react-app/src/app/page.tsx) · [GuardrailsRetirada style](react-app/src/components/dashboard/GuardrailsRetirada.tsx) · [generate_data taxa](scripts/generate_data.py) · [Performance caveat](react-app/src/app/performance/page.tsx) |
