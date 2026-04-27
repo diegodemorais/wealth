@@ -27,24 +27,28 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-| ID | Titulo | Dono | Prioridade | Status |
-|----|--------|------|------------|--------|
-| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | 🎯 Aguardando respostas de Quant/Dev/Head |
-| XX-test-parameters-audit | Auditoria de Testes — Validação de Parâmetros | Quant + Dev | 🔴 Alta | 🔵 Em Andamento — aguardando especialistas |
+(vazio)
+
+### Blocked
+> Issues aguardando dependências externas
+
+| ID | Titulo | Dono | Prioridade | Bloqueador |
+|----|--------|------|------------|-----------|
+| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | 🔴 IBKR flex data não disponível em dev |
+| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | 🔴 IBKR flex data não disponível em dev |
+| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | 🔴 IBKR flex data não disponível em dev |
 
 ### Backlog
 > Issues prontas para execução, aguardando vez
 
-| ID | Titulo | Dono | Prioridade | Deps |
-|----|--------|------|------------|------|
-| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | — |
-| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | — |
+(vazio)
 
 ### Done — Últimos Componentes Alterados (Dashboard Changelog)
 > Mudanças visualmente percebidas no dashboard (últimas 10 alterações)
 
 | ID | Componente | Data | Descrição | Link |
 |----|-----------|------|-----------|------|
+| XX-test-parameters-audit | **Issue Completa** | 2026-04-27 | Auditoria P0-P1 + 70+ testes (fixtures/mock) + pre-commit validation | [agentes/issues/XX-test-parameters-audit.md](https://github.com/diegodemorais/wealth/blob/main/agentes/issues/XX-test-parameters-audit.md) |
 | XX-test-parameters-audit | Config: TER (AVGS/AVEM/JPGL) | 2026-04-27 | Corrigido 0.25%→0.39%, 0.25%→0.35%, 0.38%→0.19% | [scripts/config.py#206-208](https://github.com/diegodemorais/wealth/blob/main/scripts/config.py#L206) |
 | VERIF-PFIRE-CANONICO | React: assumptions/page.tsx | 2026-04-26 | Exibição P(FIRE) corrigida (formato .percentStr) | [react-app/src/app/assumptions/page.tsx#632](https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/assumptions/page.tsx#L632) |
 | DEV-ux-prototipo | React: CollapsibleSection.tsx | 2026-04-25 | Auto-open em seções (ux/spec consistency) | [react-app/src/components/dashboard/CollapsibleSection.tsx](https://github.com/diegodemorais/wealth/blob/main/react-app/src/components/dashboard/CollapsibleSection.tsx) |
