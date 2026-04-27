@@ -37,7 +37,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Deps |
 |----|--------|------|------------|------|
 | PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | — |
-| VERIF-PFIRE-CANONICO | Verificação de Canonicidade de P(FIRE) Centralizado | Quant + FIRE | 🔴 Alta | PFIRE_PHASE4_DATA_GEN |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | — |
 
 ### Done (últimas 20)
@@ -45,6 +44,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| VERIF-PFIRE-CANONICO | Quant+FIRE | 2026-04-27 | ✅ Done — Audit completo, 11 violations fixadas. Phase 1-3 refatoração executada. fire_montecarlo.py (10), assumptions/page.tsx (2). 9/9 tests passando. Compliance 85%→100%. Merged to main. |
 | CENTRALIZATION_COMPLETE | Head+Quant+Dev | 2026-04-27 | ✅ Done — Phase 4.1-4.4 consolidated (74 tests). 5 engines merged, invariants guaranteed, AST prohibition tests. Planning for Phase 5+ created. |
 | DEV-twr-pipeline-fixes | Dev+Quant | 2026-04-25 | ✅ Done — TWR pipeline funcional. RF mark-to-market implementado, preços fim-de-mês sincronizados, Modified Dietz em production. CORE-portfolio-history validado (TWR 5 anos: 12.69%). Integrado em portfolio_analytics.py. |
 | DEV-ux-prototipo | Dev+Time | 2026-04-25 | ✅ Done — Protótipo HTML vs React avaliado. Redesign aprovado para CollapsibleSection auto-open feature. UX/layout consistent com spec.json. Tema CSS vars implementado. |
