@@ -29,6 +29,11 @@ class CanonicalPFire:
             return f"{self.percentage:.1f}% (não-canônico)"
         return f"{self.percentage:.1f}%"
 
+    @property
+    def percentStr(self) -> str:
+        """Alias for pct_str for compatibility with TypeScript version."""
+        return self.pct_str
+
     def to_json(self) -> dict:
         """Serializa para JSON com rastreabilidade."""
         return {

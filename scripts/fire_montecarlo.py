@@ -42,6 +42,7 @@ from config import (
 )
 from guardrail_engine import GuardrailEngine, GuardrailRequest
 from withdrawal_engine import WithdrawalEngine, WithdrawalRequest, WithdrawalCtx
+from pfire_transformer import canonicalize_pfire
 
 _SCRIPTS_DIR = _Path(__file__).parent
 _DADOS_DIR   = _SCRIPTS_DIR.parent / "dados"
@@ -435,7 +436,8 @@ def compute_pfire_percentiles(premissas: dict, n_rodadas: int = 20, n_sim_por_ro
             premissas, n_sim=n_sim_por_rodada, cenario="base",
             seed=seed, strategy="guardrails"
         )
-        p_fire_pct = resultado["p_sucesso"] * 100
+        pfire_canonical = canonicalize_pfire(resultado["p_sucesso"], source='mc')
+        p_fire_pct = pfire_canonical.percentage
         resultados.append(p_fire_pct)
 
     resultados_sorted = sorted(resultados)
@@ -797,7 +799,8 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
 
             for cenario in ["base", "favoravel", "stress"]:
                 r = rodar_monte_carlo(p, n_sim=n_sim, cenario=cenario, seed=seed)
-                p_pct = round(r["p_sucesso"] * 100, 1)
+                pfire_canonical = canonicalize_pfire(r["p_sucesso"], source='mc')
+                p_pct = round(pfire_canonical.percentage, 1)
 
                 if cenario == "base":
                     entry[age_key] = p_pct
@@ -816,7 +819,8 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
             p["anos_simulacao"] = HORIZONTE_VIDA - age_target
 
             r = rodar_monte_carlo(p, n_sim=n_sim, cenario="base", seed=seed)
-            p_pct = round(r["p_sucesso"] * 100, 1)
+            pfire_canonical = canonicalize_pfire(r["p_sucesso"], source='mc')
+            p_pct = round(pfire_canonical.percentage, 1)
             pat_med = round(r["pat_mediana_fire"], 0)
 
             if p_pct >= FIRE_P_THRESHOLD and not threshold_found:
@@ -827,8 +831,10 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
                 entry["fire_age_threshold"]      = age_target
                 entry["fire_year_threshold"]     = str(ano_nascimento + age_target)
                 entry["p_at_threshold"]          = p_pct
-                entry["p_at_threshold_fav"]      = round(r_fav["p_sucesso"]    * 100, 1)
-                entry["p_at_threshold_stress"]   = round(r_stress["p_sucesso"] * 100, 1)
+                pfire_fav_canonical = canonicalize_pfire(r_fav["p_sucesso"], source='mc')
+                pfire_stress_canonical = canonicalize_pfire(r_stress["p_sucesso"], source='mc')
+                entry["p_at_threshold_fav"]      = round(pfire_fav_canonical.percentage, 1)
+                entry["p_at_threshold_stress"]   = round(pfire_stress_canonical.percentage, 1)
                 entry["swr_at_fire"]             = round(swr, 4) if swr else None
                 entry["pat_mediano_threshold"]   = pat_med
                 threshold_found = True
@@ -842,7 +848,8 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
             p["idade_fire_alvo"] = last_age
             p["anos_simulacao"] = HORIZONTE_VIDA - last_age
             r = rodar_monte_carlo(p, n_sim=n_sim, cenario="base", seed=seed)
-            p_pct = round(r["p_sucesso"] * 100, 1)
+            pfire_canonical = canonicalize_pfire(r["p_sucesso"], source='mc')
+            p_pct = round(pfire_canonical.percentage, 1)
             pat_med = round(r["pat_mediana_fire"], 0)
             swr = perfil["gasto_anual"] / pat_med if pat_med > 0 else None
             entry["fire_age_threshold"]      = last_age
@@ -924,8 +931,10 @@ def run_canonical_mc_with_ir_discount(ir_diferido: float,
 
     r_liquido = rodar_monte_carlo(premissas_liquido, n_sim=n_sim, cenario="base", seed=seed)
 
-    pfire_bruto   = round(r_bruto["p_sucesso"]   * 100, 1)
-    pfire_liquido = round(r_liquido["p_sucesso"] * 100, 1)
+    pfire_bruto_canonical = canonicalize_pfire(r_bruto["p_sucesso"], source='mc')
+    pfire_liquido_canonical = canonicalize_pfire(r_liquido["p_sucesso"], source='mc')
+    pfire_bruto   = round(pfire_bruto_canonical.percentage, 1)
+    pfire_liquido = round(pfire_liquido_canonical.percentage, 1)
     delta_pp      = round(pfire_liquido - pfire_bruto, 1)
 
     return {
@@ -1189,10 +1198,11 @@ def main():
         pass
 
     fire_data = {**fire_data_existing}  # preserva campos existentes
+    pfire_base_canonical = canonicalize_pfire(resultados[0]["p_sucesso"], source='mc')
     fire_data.update({
-        "pfire_base": round(resultados[0]["p_sucesso"] * 100, 1),
-        "pfire_fav":  round(resultados[1]["p_sucesso"] * 100, 1) if len(resultados) > 1 else None,
-        "pfire_stress": round(resultados[2]["p_sucesso"] * 100, 1) if len(resultados) > 2 else None,
+        "pfire_base": round(pfire_base_canonical.percentage, 1),
+        "pfire_fav":  round(canonicalize_pfire(resultados[1]["p_sucesso"], source='mc').percentage, 1) if len(resultados) > 1 else None,
+        "pfire_stress": round(canonicalize_pfire(resultados[2]["p_sucesso"], source='mc').percentage, 1) if len(resultados) > 2 else None,
         "pat_mediano_fire": round(resultados[0]["pat_mediana_fire"], 0),
         "pat_p10_fire": round(resultados[0]["pat_p10_fire"], 0),
         "pat_p90_fire": round(resultados[0]["pat_p90_fire"], 0),

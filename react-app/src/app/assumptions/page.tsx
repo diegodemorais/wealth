@@ -6,6 +6,7 @@ import { usePageData } from '@/hooks/usePageData';
 import { useUiStore } from '@/store/uiStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { pfireColor } from '@/utils/fire';
+import { canonicalizePFire } from '@/utils/pfire-canonical';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CheckCircle, AlertTriangle, Clock, Shield, ArrowRight } from 'lucide-react';
@@ -629,7 +630,7 @@ export default function AssumptionsPage() {
                 Eventos de Vida — Impacto FIRE
               </h3>
               <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
-                Base sem eventos: spending {mask(le.base?.spending_brl ?? 0, privacyMode)}/ano, P(FIRE) {((le.base?.pfire_2040 ?? 0) * 100).toFixed(1)}%
+                Base sem eventos: spending {mask(le.base?.spending_brl ?? 0, privacyMode)}/ano, P(FIRE) {canonicalizePFire(le.base?.pfire_2040 ?? 0, 'mc').percentStr}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 8 }}>
                 {le.eventos.map((ev: any, idx: number) => {
@@ -661,7 +662,7 @@ export default function AssumptionsPage() {
                           {ev.delta_pp > 0 ? '+' : ''}{ev.delta_pp}pp
                         </div>
                         <div style={{ fontSize: 10, color: 'var(--muted)' }}>
-                          P {(ev.pfire_2040 * 100).toFixed(1)}%
+                          P {canonicalizePFire(ev.pfire_2040, 'mc').percentStr}
                         </div>
                       </div>
                     </div>
