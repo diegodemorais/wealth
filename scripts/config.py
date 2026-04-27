@@ -82,6 +82,25 @@ TICKERS_YF = {
 }
 
 
+# ──── TICKER CONSTANTS (centralized) ────────────────────────────────────────
+# LSE-listed ETF tickers (London Stock Exchange)
+TICKER_SWRD_LSE = "SWRD.L"
+TICKER_AVGS_LSE = "AVGS.L"
+TICKER_AVEM_LSE = "AVEM.L"
+TICKER_VWRA_LSE = "VWRA.L"
+TICKER_JPGL_LSE = "JPGL.L"
+
+
+# ──── DATAFRAME COLUMN NAMES (centralized) ──────────────────────────────────
+COLUMN_CLOSE = "Close"
+COLUMN_DELTA_PP = "Delta (pp)"
+
+
+# ──── DATE/TIME FORMATS (centralized) ────────────────────────────────────────
+DATE_FORMAT_YM = "%Y-%m"
+DATE_FORMAT_YMD = "%Y-%m-%d"
+
+
 # ─── PISOS E GATILHOS OPERACIONAIS ───────────────────────────────────────────
 
 PISO_TAXA_IPCA_LONGO    = _P.get("piso_taxa_ipca_longo",    6.0)
@@ -96,6 +115,13 @@ HODL11_TETO_PCT = _P.get("hodl11_teto_pct", 5.0)
 
 FACTOR_UNDERPERF_THRESHOLD = _P.get("factor_underperf_threshold_pp", -5)
 TLH_GATILHO               = _P.get("tlh_gatilho",                    0.05)
+
+
+# ─── ESTATE TAX (US-listed ETFs) ──────────────────────────────────────────────
+
+# IRS Estate Tax: $60k exemption, 40% rate on amount above threshold
+US_ESTATE_TAX_EXEMPTION_USD = 60_000
+US_ESTATE_TAX_RATE = 0.40
 
 # Crypto legado (BTC+ETH+BNB+ADA+dust — Binance spot+earn)
 # Fonte primária: dashboard_state.json "crypto_legado_brl" (atualizado por broker_analysis.py --broker binance)
@@ -215,6 +241,30 @@ ETF_TER = {
 # ─── TRIBUTAÇÃO (Lei 14.754/2023) ────────────────────────────────────────────
 
 IR_ALIQUOTA = 0.15
+
+
+# ─── TECHNICAL INDICATORS (BTC + Factor-based signals) ────────────────────────
+
+# BTC 200-week Moving Average
+BTC_SMA_WINDOW = 200  # weeks
+
+# BTC MA Zone Thresholds: % above/below 200WMA (from btc_indicators.py)
+BTC_MA_ZONE_NEAR_LOW = 0  # pct above 200WMA
+BTC_MA_ZONE_NEAR_HIGH = 20  # pct above 200WMA (near zone: 0-20%)
+BTC_MA_ZONE_ABOVE_HIGH = 80  # pct above 200WMA (above zone: 20-80%, euphoria >80%)
+
+# BTC MVRV Z-Score Thresholds (realized cap derivation, thresholds calibrated to empirical range)
+BTC_ZSCORE_ACCUMULATE = 0.5  # threshold: z < 0.5 → accumulate
+BTC_ZSCORE_NEUTRAL = 1.2     # threshold: 0.5 ≤ z < 1.2 → neutral
+BTC_ZSCORE_CAUTION = 1.8     # threshold: 1.2 ≤ z < 1.8 → caution
+BTC_ZSCORE_TRIM = 2.0        # threshold: z ≥ 1.8 → trim (2.0 used as top signal)
+
+# Factor underperformance (used in factor_regression.py backtest analysis)
+FACTOR_REGRESSION_WINDOW = 36  # months — threshold for statistical significance
+FACTOR_UNDERPERFORMANCE_THRESHOLD_PP = -5  # basis points (same as FACTOR_UNDERPERF_THRESHOLD)
+
+# Spending analysis anomaly detection
+SPENDING_ANOMALY_THRESHOLD_BRL = 500.0  # outlier detection threshold (from spending_analysis.py)
 
 
 # ─── SHADOW PORTFOLIOS ───────────────────────────────────────────────────────

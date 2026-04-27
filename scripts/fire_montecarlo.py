@@ -22,7 +22,7 @@ warnings.filterwarnings("ignore")
 import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).parent))
-from config import (
+from config import TICKER_SWRD_LSE, TICKER_VWRA_LSE, COLUMN_CLOSE, DATE_FORMAT_YM, \n     (
     APORTE_MENSAL, CUSTO_VIDA_BASE,
     IDADE_ATUAL, IDADE_CENARIO_BASE, IDADE_CENARIO_ASPIRACIONAL,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
@@ -703,7 +703,7 @@ def projetar_acumulacao_mensal(premissas: dict, r_equity: float, n_sim: int = 5_
         p10_monthly.append(float(np.percentile(pat, 10)))
         p90_monthly.append(float(np.percentile(pat, 90)))
 
-        dates.append(cur_date.strftime("%Y-%m"))
+        dates.append(cur_date.strftime(DATE_FORMAT_YM))
         cur_date += relativedelta(months=1)
 
     return dates, p50_monthly, p10_monthly, p90_monthly

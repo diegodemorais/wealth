@@ -19,6 +19,9 @@ from collections import defaultdict
 from datetime import datetime, date, timedelta
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
+from config import TICKER_SWRD_LSE, COLUMN_CLOSE, DATE_FORMAT_YM
+
 ROOT = Path(__file__).parent.parent
 IBKR_CSV = ROOT / "analysis" / "raw" / "U5947683.TRANSACTIONS.20210408.20260331.csv"
 IBKR_APORTES = ROOT / "dados" / "ibkr" / "aportes.json"
@@ -95,7 +98,7 @@ def build_ibkr_positions_by_month(trades: list[dict]) -> dict[str, dict[str, flo
                 del trades_by_date[d]  # processed
 
         # Snapshot
-        month_str = current.strftime("%Y-%m")
+        month_str = current.strftime(DATE_FORMAT_YM)
         positions_monthly[month_str] = {s: round(q, 6) for s, q in position.items() if abs(q) > 0.001}
 
         current = next_month
@@ -126,13 +129,13 @@ def build_xp_positions_by_month() -> dict[str, dict[str, float]]:
 
     months_sorted = sorted(ops_by_month.keys())
     first_month = months_sorted[0]
-    today_month = date.today().strftime("%Y-%m")
+    today_month = date.today().strftime(DATE_FORMAT_YM)
 
     current = datetime.strptime(first_month + "-01", "%Y-%m-%d").date()
     end = datetime.strptime(today_month + "-01", "%Y-%m-%d").date()
 
     while current <= end:
-        month_str = current.strftime("%Y-%m")
+        month_str = current.strftime(DATE_FORMAT_YM)
         if month_str in ops_by_month:
             for op in ops_by_month[month_str]:
                 ticker = op["ticker"]
@@ -184,7 +187,7 @@ def _fetch_ntnb_pu(ref_date: date, maturity: date, cache: dict) -> float | None:
     """
     import pyield
 
-    mat_str = maturity.strftime("%Y-%m-%d")
+    mat_str = maturity.strftime(DATE_FORMAT_YMD)
 
     for offset in range(5):  # try ref_date, then ±1, ±2 business days
         for delta in ([0] if offset == 0 else [-offset, offset]):
@@ -198,7 +201,7 @@ def _fetch_ntnb_pu(ref_date: date, maturity: date, cache: dict) -> float | None:
                     df = pyield.anbima.tpf(try_date, "NTN-B")
                     if df is not None and len(df) > 0:
                         pdf = df.to_pandas()
-                        pdf["mat_str"] = pdf["data_vencimento"].dt.strftime("%Y-%m-%d")
+                        pdf["mat_str"] = pdf["data_vencimento"].dt.strftime(DATE_FORMAT_YMD)
                         cache[cache_key] = pdf
                     else:
                         cache[cache_key] = None
@@ -268,7 +271,7 @@ def build_nubank_rf_by_month() -> dict[str, float]:
         ops_by_month[month].append(op)
 
     first_month = min(ops_by_month.keys())
-    today_month = date.today().strftime("%Y-%m")
+    today_month = date.today().strftime(DATE_FORMAT_YM)
 
     current = datetime.strptime(first_month + "-01", "%Y-%m-%d").date()
     end_dt = datetime.strptime(today_month + "-01", "%Y-%m-%d").date()
@@ -280,7 +283,7 @@ def build_nubank_rf_by_month() -> dict[str, float]:
     print("    Building RF MtM via PYield ANBIMA PU...")
 
     while current <= end_dt:
-        month_str = current.strftime("%Y-%m")
+        month_str = current.strftime(DATE_FORMAT_YM)
 
         # Apply operations for this month
         if month_str in ops_by_month:
@@ -382,7 +385,7 @@ def fetch_monthly_prices(symbols: list[str], start: str, end: str) -> dict[str, 
 
     # Map internal symbols to yfinance tickers
     YF_MAP = {
-        "SWRD": "SWRD.L",
+        "SWRD": TICKER_SWRD_LSE,
         "AVGS": "AVGS.L",
         "AVDV": "AVDV",           # US-listed (NYSE Arca)
         "AVUV": "AVUV",           # US-listed (NYSE Arca)
@@ -396,7 +399,7 @@ def fetch_monthly_prices(symbols: list[str], start: str, end: str) -> dict[str, 
         "F50A": "F50A.L",
         "COIN": "COIN",
         "ZPRX": "ZPRX.DE",       # German-listed
-        "WRDUSWUSD": "SWRD.L",   # predecessor
+        "WRDUSWUSD": TICKER_SWRD_LSE,   # predecessor
         "HODL11": "HODL11.SA",
         "B5P211": "B5P211.SA",
         "BBDC4": "BBDC4.SA",
@@ -431,8 +434,8 @@ def fetch_monthly_prices(symbols: list[str], start: str, end: str) -> dict[str, 
             if yt == yf_t:
                 result[s] = {}
                 for idx, row in data.iterrows():
-                    month_str = idx.strftime("%Y-%m")
-                    price = row.get("Close")
+                    month_str = idx.strftime(DATE_FORMAT_YM)
+                    price = row.get(COLUMN_CLOSE)
                     if price is not None and not (hasattr(price, '__iter__') and len(price) == 0):
                         try:
                             p = float(price)
@@ -442,13 +445,13 @@ def fetch_monthly_prices(symbols: list[str], start: str, end: str) -> dict[str, 
                             pass
     else:
         # Multi ticker: data.columns are MultiIndex (Price, Ticker)
-        close = data.get("Close", data)
+        close = data.get(COLUMN_CLOSE, data)
         for s, yf_t in sym_to_yf.items():
             result[s] = {}
             if yf_t in close.columns:
                 series = close[yf_t].dropna()
                 for idx, price in series.items():
-                    month_str = idx.strftime("%Y-%m")
+                    month_str = idx.strftime(DATE_FORMAT_YM)
                     try:
                         p = float(price)
                         if p > 0:
@@ -484,7 +487,7 @@ def fetch_monthly_fx(start: str, end: str) -> dict[str, float]:
             raise ValueError("BCB returned empty")
         monthly = {}
         for idx, row in df.iterrows():
-            month_str = idx.strftime("%Y-%m")
+            month_str = idx.strftime(DATE_FORMAT_YM)
             monthly[month_str] = round(float(row["ptax"]), 4)  # keeps last value of month
         print(f"    PTAX: {len(monthly)} months")
         return monthly
@@ -495,9 +498,9 @@ def fetch_monthly_fx(start: str, end: str) -> dict[str, float]:
             data = yf.download("USDBRL=X", start=start, end=end, interval="1mo",
                               auto_adjust=True, progress=False)
             monthly = {}
-            close = data.get("Close", data)
+            close = data.get(COLUMN_CLOSE, data)
             for idx, row in close.iterrows() if hasattr(close, 'iterrows') else []:
-                month_str = idx.strftime("%Y-%m")
+                month_str = idx.strftime(DATE_FORMAT_YM)
                 try:
                     monthly[month_str] = round(float(row if not hasattr(row, '__iter__') else row.iloc[0]), 4)
                 except:
@@ -505,7 +508,7 @@ def fetch_monthly_fx(start: str, end: str) -> dict[str, float]:
             if not monthly:
                 # Try iterating directly
                 for idx in close.index:
-                    month_str = idx.strftime("%Y-%m")
+                    month_str = idx.strftime(DATE_FORMAT_YM)
                     val = close.loc[idx]
                     try:
                         monthly[month_str] = round(float(val.iloc[0] if hasattr(val, 'iloc') else val), 4)
@@ -582,7 +585,7 @@ def main():
         return
 
     start_date = all_months[0] + "-01"
-    end_date = date.today().strftime("%Y-%m-%d")
+    end_date = date.today().strftime(DATE_FORMAT_YMD)
 
     # ── Step 3: Fetch prices ──────────────────────────────────────────────
     print(f"\n4. Fetching prices ({start_date} → {end_date})...")
@@ -681,7 +684,7 @@ def main():
             for offset in range(1, 4):
                 m = datetime.strptime(month + "-01", "%Y-%m-%d").date()
                 for delta in [-offset, offset]:
-                    candidate = (m.replace(day=1) + timedelta(days=32 * delta)).strftime("%Y-%m")
+                    candidate = (m.replace(day=1) + timedelta(days=32 * delta)).strftime(DATE_FORMAT_YM)
                     if candidate in fx:
                         cambio = fx[candidate]
                         break
@@ -889,8 +892,8 @@ def _compute_information_ratio(dates: list[str], twr_usd_pct: list) -> dict | No
             warnings.simplefilter("ignore")
             ticker = yf.Ticker("VWRA.L")
             hist = ticker.history(
-                start=d_start_fetch.strftime("%Y-%m-%d"),
-                end=d_end_fetch.strftime("%Y-%m-%d"),
+                start=d_start_fetch.strftime(DATE_FORMAT_YMD),
+                end=d_end_fetch.strftime(DATE_FORMAT_YMD),
                 interval="1d",
                 auto_adjust=True,
             )
@@ -908,14 +911,14 @@ def _compute_information_ratio(dates: list[str], twr_usd_pct: list) -> dict | No
         # Garantir índice tz-naive para uniformidade
         if hist.index.tz is not None:
             hist.index = hist.index.tz_localize(None)
-        close = hist["Close"].resample("ME").last()   # último dia útil do mês
+        close = hist[COLUMN_CLOSE].resample("ME").last()   # último dia útil do mês
         bm_rets_raw = close.pct_change() * 100        # retorno simples em %
         # Construir dict YYYY-MM → retorno mensal benchmark
         bm_dict: dict[str, float] = {}
         for ts, val in bm_rets_raw.items():
             if _pd.isna(val):
                 continue
-            ym = ts.strftime("%Y-%m")
+            ym = ts.strftime(DATE_FORMAT_YM)
             bm_dict[ym] = round(float(val), 6)
     except Exception as _e:
         print(f"  ⚠ IR: erro ao calcular retornos VWRA.L ({_e}) — omitindo")
@@ -1176,7 +1179,7 @@ def _generate_core_jsons(rows: list[dict]):
             for _row_ipca in _ipca_monthly_raw:
                 try:
                     _dt_ipca = datetime.strptime(_row_ipca["data"].strip(), "%d/%m/%Y")
-                    ipca_mensal_by_ym[_dt_ipca.strftime("%Y-%m")] = float(_row_ipca["valor"])
+                    ipca_mensal_by_ym[_dt_ipca.strftime(DATE_FORMAT_YM)] = float(_row_ipca["valor"])
                 except (KeyError, ValueError):
                     pass
         except Exception:
@@ -1199,7 +1202,7 @@ def _generate_core_jsons(rows: list[dict]):
             for _row_cdi2 in _cdi_raw2:
                 try:
                     _dt_cdi2 = datetime.strptime(_row_cdi2["data"].strip(), "%d/%m/%Y")
-                    cdi_mensal_by_ym[_dt_cdi2.strftime("%Y-%m")] = float(_row_cdi2["valor"])
+                    cdi_mensal_by_ym[_dt_cdi2.strftime(DATE_FORMAT_YM)] = float(_row_cdi2["valor"])
                 except (KeyError, ValueError):
                     pass
         except Exception:
@@ -1223,20 +1226,20 @@ def _generate_core_jsons(rows: list[dict]):
             with _warnings.catch_warnings():
                 _warnings.simplefilter("ignore")
                 _hist_vwra = _yf.Ticker("VWRA.L").history(
-                    start=_d0_vwra.strftime("%Y-%m-%d"),
-                    end=_d1_vwra_fetch.strftime("%Y-%m-%d"),
+                    start=_d0_vwra.strftime(DATE_FORMAT_YMD),
+                    end=_d1_vwra_fetch.strftime(DATE_FORMAT_YMD),
                     interval="1d",
                     auto_adjust=True,
                 )
             if _hist_vwra is not None and not _hist_vwra.empty:
                 if _hist_vwra.index.tz is not None:
                     _hist_vwra.index = _hist_vwra.index.tz_localize(None)
-                _close_vwra = _hist_vwra["Close"].resample("ME").last()
+                _close_vwra = _hist_vwra[COLUMN_CLOSE].resample("ME").last()
                 _vwra_rets = _close_vwra.pct_change() * 100
                 for _ts, _val in _vwra_rets.items():
                     if _pd.isna(_val):
                         continue
-                    vwra_mensal_by_ym[_ts.strftime("%Y-%m")] = float(_val)
+                    vwra_mensal_by_ym[_ts.strftime(DATE_FORMAT_YM)] = float(_val)
         except Exception as _e:
             print(f"  ⚠ VWRA anual: {_e} — alpha omitido")
 
@@ -1390,7 +1393,7 @@ def _generate_core_jsons(rows: list[dict]):
             for _row_cdi in _cdi_raw:
                 try:
                     _dt_cdi = datetime.strptime(_row_cdi["data"].strip(), "%d/%m/%Y")
-                    _ym_cdi = _dt_cdi.strftime("%Y-%m")
+                    _ym_cdi = _dt_cdi.strftime(DATE_FORMAT_YM)
                     rf_cdi_series[_ym_cdi] = float(_row_cdi["valor"])
                 except (KeyError, ValueError):
                     pass

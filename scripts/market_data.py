@@ -212,11 +212,11 @@ def etfs() -> dict:
     try:
         import yfinance as yf
         tickers = {
-            "SWRD": "SWRD.L",
+            "SWRD": TICKER_SWRD_LSE,
             "AVGS": "AVGS.L",
             "AVEM": "AVEM.L",
             "HODL11": "HODL11.SA",
-            "VWRA": "VWRA.L",
+            "VWRA": TICKER_VWRA_LSE,
             "VIX": "^VIX",
             "DXY": "DX-Y.NYB",
             "GOLD": "GC=F",

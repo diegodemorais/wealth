@@ -24,6 +24,10 @@ import zipfile
 from datetime import date, datetime
 from pathlib import Path
 
+# Add scripts dir to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+from config import TICKER_SWRD_LSE, TICKER_VWRA_LSE, TICKER_AVGS_LSE, COLUMN_CLOSE, DATE_FORMAT_YM
+
 ROOT = Path(__file__).parent.parent
 OUT  = ROOT / "dados" / "factor_snapshot.json"
 
@@ -97,13 +101,13 @@ def compute_factor_rolling(cache: dict) -> dict:
         import yfinance as yf
         import pandas as pd
 
-        tickers = ["AVGS.L", "SWRD.L"]
+        tickers = [TICKER_AVGS_LSE, TICKER_SWRD_LSE]
         data = yf.download(tickers, start="2019-01-01", progress=False, auto_adjust=True)
 
         if isinstance(data.columns, pd.MultiIndex):
-            close = data["Close"]
+            close = data[COLUMN_CLOSE]
         else:
-            close = data[["Close"]]
+            close = data[[COLUMN_CLOSE]]
 
         monthly = close.resample("ME").last().dropna(how="all")
 
@@ -112,10 +116,10 @@ def compute_factor_rolling(cache: dict) -> dict:
             row    = monthly.iloc[i]
             row_12 = monthly.iloc[i - 12]
 
-            avgs_now = row.get("AVGS.L")
-            avgs_ago = row_12.get("AVGS.L")
-            swrd_now = row.get("SWRD.L")
-            swrd_ago = row_12.get("SWRD.L")
+            avgs_now = row.get(TICKER_AVGS_LSE)
+            avgs_ago = row_12.get(TICKER_AVGS_LSE)
+            swrd_now = row.get(TICKER_SWRD_LSE)
+            swrd_ago = row_12.get(TICKER_SWRD_LSE)
 
             if any(v is None or (isinstance(v, float) and math.isnan(v))
                    for v in [avgs_now, avgs_ago, swrd_now, swrd_ago]):
@@ -126,7 +130,7 @@ def compute_factor_rolling(cache: dict) -> dict:
             ret_avgs = (avgs_now / avgs_ago - 1) * 100
             ret_swrd = (swrd_now / swrd_ago - 1) * 100
             diffs.append(round(ret_avgs - ret_swrd, 2))
-            dates.append(monthly.index[i].strftime("%Y-%m"))
+            dates.append(monthly.index[i].strftime(DATE_FORMAT_YM))
 
         result = {"dates": dates, "avgs_vs_swrd_12m": diffs, "threshold": THRESHOLD}
         print(f"    → {len(dates)} pts, latest: {diffs[-1] if diffs else 'N/A'}pp")
@@ -147,15 +151,15 @@ def compute_factor_signal(cache: dict) -> dict | None:
         ytd_start = f"{today.year}-01-01"
 
         tickers = yf.download(
-            ["SWRD.L", "AVGS.L"], start=AVGS_LAUNCH_STR,
+            [TICKER_SWRD_LSE, TICKER_AVGS_LSE], start=AVGS_LAUNCH_STR,
             auto_adjust=True, progress=False
-        )["Close"]
+        )[COLUMN_CLOSE]
 
         ytd              = tickers[tickers.index >= ytd_start]
-        swrd_ytd         = float((ytd["SWRD.L"].iloc[-1] / ytd["SWRD.L"].iloc[0] - 1) * 100)
-        avgs_ytd         = float((ytd["AVGS.L"].iloc[-1] / ytd["AVGS.L"].iloc[0] - 1) * 100)
-        swrd_launch      = float((tickers["SWRD.L"].iloc[-1] / tickers["SWRD.L"].iloc[0] - 1) * 100)
-        avgs_launch_ret  = float((tickers["AVGS.L"].iloc[-1] / tickers["AVGS.L"].iloc[0] - 1) * 100)
+        swrd_ytd         = float((ytd[TICKER_SWRD_LSE].iloc[-1] / ytd[TICKER_SWRD_LSE].iloc[0] - 1) * 100)
+        avgs_ytd         = float((ytd[TICKER_AVGS_LSE].iloc[-1] / ytd[TICKER_AVGS_LSE].iloc[0] - 1) * 100)
+        swrd_launch      = float((tickers[TICKER_SWRD_LSE].iloc[-1] / tickers[TICKER_SWRD_LSE].iloc[0] - 1) * 100)
+        avgs_launch_ret  = float((tickers[TICKER_AVGS_LSE].iloc[-1] / tickers[TICKER_AVGS_LSE].iloc[0] - 1) * 100)
         meses = (today - AVGS_LAUNCH_DATE).days / 30.44
 
         result = {
@@ -195,7 +199,7 @@ def compute_factor_loadings(cache: dict) -> dict:
         factors = ff5.join(mom[["MOM"]], how="inner")
 
         etf_map = {
-            "SWRD.L": "SWRD", "AVGS.L": "AVGS", "AVEM.L": "AVEM",
+            TICKER_SWRD_LSE: "SWRD", TICKER_AVGS_LSE: "AVGS", "AVEM.L": "AVEM",
             "EIMI.L": "EIMI", "AVUV": "AVUV", "AVDV": "AVDV",
             "DGS": "DGS", "USSC.L": "USSC", "IWVL.L": "IWVL",
         }
@@ -203,7 +207,7 @@ def compute_factor_loadings(cache: dict) -> dict:
 
         prices = {}
         if isinstance(price_data.columns, pd.MultiIndex):
-            close = price_data["Close"]
+            close = price_data[COLUMN_CLOSE]
             for yf_tk, label in etf_map.items():
                 if yf_tk in close.columns:
                     series = close[yf_tk].dropna()
@@ -212,7 +216,7 @@ def compute_factor_loadings(cache: dict) -> dict:
         else:
             for yf_tk, label in etf_map.items():
                 if "Close" in price_data.columns:
-                    prices[label] = price_data["Close"].dropna()
+                    prices[label] = price_data[COLUMN_CLOSE].dropna()
 
         factor_cols = [f for f in ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "MOM"] if f in factors.columns]
         loadings = {}

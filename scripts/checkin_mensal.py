@@ -23,17 +23,20 @@ import pandas as pd
 from bcb import sgs
 
 sys.path.insert(0, os.path.dirname(__file__))
-from config import PESOS_TARGET, PESOS_SHADOW_C, IR_ALIQUOTA, BUCKET_TICKERS, update_dashboard_state, load_dashboard_state
+from config import (
+    PESOS_TARGET, PESOS_SHADOW_C, IR_ALIQUOTA, BUCKET_TICKERS, update_dashboard_state, load_dashboard_state,
+    TICKER_SWRD_LSE, TICKER_VWRA_LSE, COLUMN_CLOSE
+)
 
 
 # ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
 
 TICKERS = {
-    "SWRD": "SWRD.L",
+    "SWRD": TICKER_SWRD_LSE,
     "AVGS": "AVGS.L",
     "AVEM": "AVEM.L",
     "JPGL": "JPGL.L",
-    "VWRA": "VWRA.L",
+    "VWRA": TICKER_VWRA_LSE,
     "HODL11": "HODL11.SA",
     "BTC":    "BTC-USD",
     "USD_BRL": "USDBRL=X",   # ETFs UCITS na LSE são cotados em USD
@@ -80,7 +83,7 @@ def get_preco_mensal(ticker: str, inicio: date, fim: date) -> tuple[float, float
     # Pega janela com folga para capturar primeiro e último dia útil
     start = inicio - timedelta(days=5)
     end = fim + timedelta(days=5)
-    data = yf.download(ticker, start=start, end=end, auto_adjust=True, progress=False)["Close"]
+    data = yf.download(ticker, start=start, end=end, auto_adjust=True, progress=False)[COLUMN_CLOSE]
     if data.empty:
         raise ValueError(f"Sem dados para {ticker} no período {inicio}–{fim}")
     data = data.dropna()
@@ -130,7 +133,7 @@ def retorno_etf_brl(ticker: str, inicio: date, fim: date, usd_brl_ini: float, us
 
 def retorno_shadow_a(inicio: date, fim: date, usd_brl_ini: float, usd_brl_fim: float) -> float:
     """Shadow A: 100% VWRA em BRL."""
-    return retorno_etf_brl("VWRA.L", inicio, fim, usd_brl_ini, usd_brl_fim)
+    return retorno_etf_brl(TICKER_VWRA_LSE, inicio, fim, usd_brl_ini, usd_brl_fim)
 
 
 def retorno_shadow_b(ipca_mensal: float) -> float:
@@ -142,7 +145,7 @@ def retorno_shadow_b(ipca_mensal: float) -> float:
 def retorno_target(inicio: date, fim: date, usd_brl_ini: float, usd_brl_fim: float, ipca_mensal: float) -> float:
     """Target: pesos alvo dos 4 ETFs + IPCA+ + HODL11."""
     r = {}
-    r["SWRD"]   = retorno_etf_brl("SWRD.L", inicio, fim, usd_brl_ini, usd_brl_fim)
+    r["SWRD"]   = retorno_etf_brl(TICKER_SWRD_LSE, inicio, fim, usd_brl_ini, usd_brl_fim)
     r["AVGS"]   = retorno_etf_brl("AVGS.L", inicio, fim, usd_brl_ini, usd_brl_fim)
     r["AVEM"]   = retorno_etf_brl("AVEM.L", inicio, fim, usd_brl_ini, usd_brl_fim)
     r["JPGL"]   = retorno_etf_brl("JPGL.L", inicio, fim, usd_brl_ini, usd_brl_fim)
@@ -158,7 +161,7 @@ def retorno_shadow_c(inicio: date, fim: date, usd_brl_ini: float, usd_brl_fim: f
                      ipca_mensal: float, btc_brl_ini: float, btc_brl_fim: float,
                      renda_plus_retorno: float = None) -> float:
     """Shadow C: 79% VWRA + 15% IPCA+ + 3% BTC + 3% Renda+ MtM."""
-    r_vwra = retorno_etf_brl("VWRA.L", inicio, fim, usd_brl_ini, usd_brl_fim)
+    r_vwra = retorno_etf_brl(TICKER_VWRA_LSE, inicio, fim, usd_brl_ini, usd_brl_fim)
     r_ipca = retorno_shadow_b(ipca_mensal)
     r_btc  = btc_brl_fim / btc_brl_ini - 1
 
@@ -387,7 +390,7 @@ def custo_base_brl_por_bucket(lotes_por_ticker: dict, usd_brl_atual: float) -> d
         try:
             dados_yf = yf.download(primeiro_ticker, period="5d", auto_adjust=True, progress=False)
             if not dados_yf.empty:
-                preco_atual_usd = float(dados_yf["Close"].dropna().iloc[-1])
+                preco_atual_usd = float(dados_yf[COLUMN_CLOSE].dropna().iloc[-1])
             else:
                 preco_atual_usd = preco_medio_usd  # fallback
         except Exception:
@@ -424,8 +427,8 @@ def get_ptax_venda(data_str: str) -> float:
     for delta in range(6):
         d = target - pd.Timedelta(days=delta)
         try:
-            df = bcb_currency.get(["USD"], start=d.strftime("%Y-%m-%d"),
-                                   end=d.strftime("%Y-%m-%d"))
+            df = bcb_currency.get(["USD"], start=d.strftime(DATE_FORMAT_YMD),
+                                   end=d.strftime(DATE_FORMAT_YMD))
             if df is not None and not df.empty:
                 val = float(df["USD"].dropna().iloc[-1])
                 if val > 0:
@@ -474,12 +477,12 @@ def get_precos_atuais_transitorios() -> dict:
         try:
             data = yf.download(ticker, period="5d", auto_adjust=True, progress=False)
             if not data.empty:
-                close = data["Close"] if not isinstance(data.columns, pd.MultiIndex) else data["Close"].squeeze()
+                close = data[COLUMN_CLOSE] if not isinstance(data.columns, pd.MultiIndex) else data[COLUMN_CLOSE].squeeze()
                 preco = float(close.dropna().iloc[-1])
                 # GBp → USD: pence → libras → USD (usa PTAX de hoje como GBP/USD proxy)
                 # Para LSE em GBp: dividir por 100 dá GBP; GBP/USD ≈ 1.27 (aproximação)
                 if TLH_TRANSITORIOS[ticker]["cotacao"] == "GBp":
-                    gbp_usd = yf.download("GBPUSD=X", period="5d", progress=False)["Close"].dropna().iloc[-1]
+                    gbp_usd = yf.download("GBPUSD=X", period="5d", progress=False)[COLUMN_CLOSE].dropna().iloc[-1]
                     preco = (preco / 100) * float(gbp_usd)
                 precos[ticker] = preco
         except Exception as e:
@@ -762,8 +765,8 @@ def main():
     # Retornos ETFs individuais
     print("  Buscando preços dos ETFs...")
     detalhes_etfs = {}
-    for nome, ticker in [("SWRD.L", "SWRD.L"), ("AVGS.L", "AVGS.L"),
-                          ("AVEM.L", "AVEM.L"), ("JPGL.L", "JPGL.L"), ("VWRA.L", "VWRA.L")]:
+    for nome, ticker in [(TICKER_SWRD_LSE, TICKER_SWRD_LSE), ("AVGS.L", "AVGS.L"),
+                          ("AVEM.L", "AVEM.L"), ("JPGL.L", "JPGL.L"), (TICKER_VWRA_LSE, TICKER_VWRA_LSE)]:
         try:
             r = retorno_etf_brl(ticker, inicio, fim, usd_brl_ini, usd_brl_fim)
             detalhes_etfs[nome] = r
@@ -860,7 +863,7 @@ def main():
 
     # MtD reference — seed/atualiza início do mês
     from datetime import date as _date
-    _mes_atual = _date.today().strftime("%Y-%m")
+    _mes_atual = _date.today().strftime(DATE_FORMAT_YM)
     _state_now = load_dashboard_state()
     _mtd_ref   = _state_now.get("mercado_mtd", {})
     if _mtd_ref.get("ref_mes") != _mes_atual:

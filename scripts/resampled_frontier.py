@@ -60,7 +60,7 @@ def baixar_precos():
     raw = yf.download(
         [TICKER_AVUV, TICKER_AVDV, "IDEV", "AVEM"],
         period=PERIODO, auto_adjust=True, progress=False
-    )["Close"].dropna()
+    )[COLUMN_CLOSE].dropna()
 
     # AVGS sintético: 58% AVUV + 42% AVDV
     avgs_price = 0.58 * raw[TICKER_AVUV] + 0.42 * raw[TICKER_AVDV]

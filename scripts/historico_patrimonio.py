@@ -525,7 +525,7 @@ def interpolate_monthly(quarterly_data):
             # Linear interpolation
             frac = (month_end - d1).days / total_days
             val = v1 + frac * (v2 - v1)
-            month_end_str = month_end.strftime("%Y-%m-%d")
+            month_end_str = month_end.strftime(DATE_FORMAT_YMD)
             monthly.append((month_end_str, val))
 
     # Add last point

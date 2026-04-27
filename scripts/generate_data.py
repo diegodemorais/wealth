@@ -53,6 +53,7 @@ from config import (
     HODL11_PISO_PCT, HODL11_ALVO_PCT, HODL11_TETO_PCT,
     FACTOR_UNDERPERF_THRESHOLD, TLH_GATILHO, CRYPTO_LEGADO_BRL,
     BOND_TENT_META_ANOS,
+    TICKER_SWRD_LSE, COLUMN_CLOSE, DATE_FORMAT_YM,
     CAMBIO_FALLBACK, SELIC_META_SNAPSHOT, FED_FUNDS_SNAPSHOT, DEPRECIACAO_BRL_BASE,
     IPCA_CAGR_FALLBACK,
     TERRENO_BRL, TEM_CONJUGE, NOME_CONJUGE,
@@ -258,7 +259,7 @@ def get_source_timestamps():
     # IBKR lotes
     if LOTES_PATH.exists():
         mtime = datetime.fromtimestamp(LOTES_PATH.stat().st_mtime)
-        timestamps["posicoes_ibkr"] = mtime.strftime("%Y-%m-%d")
+        timestamps["posicoes_ibkr"] = mtime.strftime(DATE_FORMAT_YMD)
     else:
         timestamps["posicoes_ibkr"] = None
 
@@ -289,7 +290,7 @@ def get_source_timestamps():
     # Holdings.md
     if HOLDINGS_PATH.exists():
         mtime = datetime.fromtimestamp(HOLDINGS_PATH.stat().st_mtime)
-        timestamps["holdings_md"] = mtime.strftime("%Y-%m-%d")
+        timestamps["holdings_md"] = mtime.strftime(DATE_FORMAT_YMD)
     else:
         timestamps["holdings_md"] = None
 
@@ -300,7 +301,7 @@ def get_source_timestamps():
             # Formato esperado: "2026-04-09T10:30:00"
             ts_str = state["_meta"]["generated"]
             ts_obj = datetime.fromisoformat(ts_str)
-            timestamps["fire_mc"] = ts_obj.strftime("%Y-%m-%d")
+            timestamps["fire_mc"] = ts_obj.strftime(DATE_FORMAT_YMD)
         except (ValueError, KeyError):
             timestamps["fire_mc"] = None
     else:
@@ -1145,14 +1146,14 @@ def get_factor_rolling():
         import yfinance as yf
         import pandas as pd
 
-        tickers = ["AVGS.L", "SWRD.L"]
+        tickers = ["AVGS.L", TICKER_SWRD_LSE]
         data = yf.download(tickers, start="2019-01-01", progress=False, auto_adjust=True)
 
         # Handle MultiIndex columns from yfinance
         if isinstance(data.columns, pd.MultiIndex):
-            close = data["Close"]
+            close = data[COLUMN_CLOSE]
         else:
-            close = data[["Close"]]
+            close = data[[COLUMN_CLOSE]]
 
         # Resample to month-end
         monthly = close.resample("ME").last().dropna(how="all")
@@ -1167,8 +1168,8 @@ def get_factor_rolling():
 
             avgs_now = row.get("AVGS.L")
             avgs_ago = row_12.get("AVGS.L")
-            swrd_now = row.get("SWRD.L")
-            swrd_ago = row_12.get("SWRD.L")
+            swrd_now = row.get(TICKER_SWRD_LSE)
+            swrd_ago = row_12.get(TICKER_SWRD_LSE)
 
             if any(v is None or (isinstance(v, float) and math.isnan(v))
                    for v in [avgs_now, avgs_ago, swrd_now, swrd_ago]):
@@ -1181,7 +1182,7 @@ def get_factor_rolling():
             diff_pp = round(ret_avgs - ret_swrd, 2)
 
             dt = monthly.index[i]
-            dates.append(dt.strftime("%Y-%m"))
+            dates.append(dt.strftime(DATE_FORMAT_YM))
             diffs.append(diff_pp)
 
         result = {"dates": dates, "avgs_vs_swrd_12m": diffs, "threshold": THRESHOLD}
@@ -1223,15 +1224,15 @@ def get_factor_signal():
         ytd_start = f"{today.year}-01-01"
 
         tickers = yf.download(
-            ['SWRD.L', 'AVGS.L'], start=AVGS_LAUNCH_STR,
+            [TICKER_SWRD_LSE, TICKER_AVGS_LSE], start=AVGS_LAUNCH_STR,
             auto_adjust=True, progress=False
-        )['Close']
+        )[COLUMN_CLOSE]
 
         ytd   = tickers[tickers.index >= ytd_start]
-        swrd_ytd        = float((ytd['SWRD.L'].iloc[-1] / ytd['SWRD.L'].iloc[0] - 1) * 100)
-        avgs_ytd        = float((ytd['AVGS.L'].iloc[-1] / ytd['AVGS.L'].iloc[0] - 1) * 100)
-        swrd_launch     = float((tickers['SWRD.L'].iloc[-1] / tickers['SWRD.L'].iloc[0] - 1) * 100)
-        avgs_launch_ret = float((tickers['AVGS.L'].iloc[-1] / tickers['AVGS.L'].iloc[0] - 1) * 100)
+        swrd_ytd        = float((ytd[TICKER_SWRD_LSE].iloc[-1] / ytd[TICKER_SWRD_LSE].iloc[0] - 1) * 100)
+        avgs_ytd        = float((ytd[TICKER_AVGS_LSE].iloc[-1] / ytd[TICKER_AVGS_LSE].iloc[0] - 1) * 100)
+        swrd_launch     = float((tickers[TICKER_SWRD_LSE].iloc[-1] / tickers[TICKER_SWRD_LSE].iloc[0] - 1) * 100)
+        avgs_launch_ret = float((tickers[TICKER_AVGS_LSE].iloc[-1] / tickers[TICKER_AVGS_LSE].iloc[0] - 1) * 100)
         meses = (today - AVGS_LAUNCH).days / 30.44
 
         result = {
@@ -1338,7 +1339,7 @@ def get_factor_loadings():
         # --- Download ETF prices ---
         # Main ETFs + transitional that still have positions
         etf_map = {
-            "SWRD.L": "SWRD", "AVGS.L": "AVGS", "AVEM.L": "AVEM",
+            TICKER_SWRD_LSE: "SWRD", "AVGS.L": "AVGS", "AVEM.L": "AVEM",
             "EIMI.L": "EIMI", "AVUV": "AVUV", "AVDV": "AVDV",
             "DGS": "DGS", "USSC.L": "USSC", "IWVL.L": "IWVL",
         }
@@ -1347,7 +1348,7 @@ def get_factor_loadings():
 
         prices = {}
         if isinstance(price_data.columns, _pd.MultiIndex):
-            close = price_data["Close"]
+            close = price_data[COLUMN_CLOSE]
             for yf_tk, label in etf_map.items():
                 if yf_tk in close.columns:
                     series = close[yf_tk].dropna()
@@ -1356,8 +1357,8 @@ def get_factor_loadings():
         else:
             # Single ticker fallback
             for yf_tk, label in etf_map.items():
-                if "Close" in price_data.columns:
-                    prices[label] = price_data["Close"].dropna()
+                if COLUMN_CLOSE in price_data.columns:
+                    prices[label] = price_data[COLUMN_CLOSE].dropna()
 
         # --- Monthly returns + regression ---
         factor_cols = [f for f in ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "MOM"] if f in factors.columns]
@@ -1424,8 +1425,8 @@ def get_posicoes_precos(state):
             tickers_yf = {tk: yf_sym for tk, yf_sym in TICKERS_YF.items() if tk in posicoes or tk in ("USD_BRL", "HODL11")}
             syms = list(set(tickers_yf.values()))
             data = yf.download(syms, period="2d", progress=False, auto_adjust=True)
-            if hasattr(data, 'columns') and 'Close' in data:
-                close = data['Close']
+            if hasattr(data, 'columns') and COLUMN_CLOSE in data:
+                close = data[COLUMN_CLOSE]
                 for tk, yf_sym in tickers_yf.items():
                     if yf_sym in close.columns:
                         last = close[yf_sym].dropna()
@@ -2145,7 +2146,7 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
             import yfinance as yf
             btc_data = yf.download("BTC-USD", period="2d", progress=False, auto_adjust=True)
             if btc_data is not None and not btc_data.empty:
-                close = btc_data['Close'] if 'Close' in btc_data.columns else btc_data.iloc[:, 0]
+                close = btc_data[COLUMN_CLOSE] if COLUMN_CLOSE in btc_data.columns else btc_data.iloc[:, 0]
                 last = close.dropna()
                 if len(last):
                     bitcoin_usd = round(float(last.iloc[-1]), 2)
@@ -3509,7 +3510,7 @@ def main():
     _btc_current   = macro.get("bitcoin_usd") or _mercado_state.get("btc_usd")
 
     # MtD reference — seed no início de cada mês
-    _mes_atual = date.today().strftime("%Y-%m")
+    _mes_atual = date.today().strftime(DATE_FORMAT_YM)
     _mtd_ref   = state.get("mercado_mtd", {})
     _taxa_ipca_atual  = rf.get("ipca2040",  {}).get("taxa")
     _taxa_renda_atual = rf.get("renda2065", {}).get("taxa")

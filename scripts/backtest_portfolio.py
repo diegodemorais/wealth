@@ -49,7 +49,11 @@ import numpy as np
 import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).parent))
-from config import EQUITY_WEIGHTS, TICKERS_YF, REGIME7_CONFIG
+from config import (
+    EQUITY_WEIGHTS, TICKERS_YF, REGIME7_CONFIG,
+    TICKER_SWRD_LSE, TICKER_AVGS_LSE, TICKER_AVEM_LSE, TICKER_VWRA_LSE,
+    COLUMN_CLOSE, COLUMN_DELTA_PP, DATE_FORMAT_YM, DATE_FORMAT_YMD
+)
 
 
 # ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
@@ -59,11 +63,11 @@ PESOS_TARGET = {TICKERS_YF[k]: v for k, v in EQUITY_WEIGHTS.items()}
 # Datas de inception reais (confirmadas Factor+Fact-Checker via web — 2026-03-31)
 # Fonte: agentes/referencia/proxies-canonicos.md
 LAUNCH = {
-    "SWRD.L": "2019-02-28",
-    "VWRA.L": "2019-07-23",
+    TICKER_SWRD_LSE: "2019-02-28",
+    TICKER_VWRA_LSE: "2019-07-23",
     "JPGL.L": "2019-07-09",
-    "AVEM.L": "2024-12-09",
-    "AVGS.L": "2024-09-25",
+    TICKER_AVEM_LSE: "2024-12-09",
+    TICKER_AVGS_LSE: "2024-09-25",
 }
 
 # Regimes: data início, tickers usados e flags de proxy
@@ -74,22 +78,22 @@ REGIMES = {
     1: {
         "inicio": "2024-12-01",
         "label":  "Regime 1 — ETFs UCITS reais (Dez/2024+)",
-        "target": {"SWRD.L": 0.50, "AVGS.L": 0.30, "AVEM.L": 0.20},
-        "shadow": {"VWRA.L": 1.00},
+        "target": {TICKER_SWRD_LSE: 0.50, TICKER_AVGS_LSE: 0.30, TICKER_AVEM_LSE: 0.20},
+        "shadow": {TICKER_VWRA_LSE: 1.00},
         "proxies": [],
     },
     2: {
         "inicio": "2024-09-01",
         "label":  "Regime 2 — 1 proxy AVEM→AVEM US (Set/2024+)",
-        "target": {"SWRD.L": 0.50, "AVGS.L": 0.30, "AVEM": 0.20},
-        "shadow": {"VWRA.L": 1.00},
+        "target": {TICKER_SWRD_LSE: 0.50, TICKER_AVGS_LSE: 0.30, "AVEM": 0.20},
+        "shadow": {TICKER_VWRA_LSE: 1.00},
         "proxies": ["AVEM (US-listed) ⚠️ proxy de AVEM.L (UCITS lançado Dez/2024 — mesma estratégia Avantis)"],
     },
     3: {
         "inicio": "2019-07-01",
         "label":  "Regime 3 — 2 proxies AVGS+AVEM (Jul/2019+)",
-        "target": {"SWRD.L": 0.50, "AVUV": 0.174, "AVDV": 0.126, "AVEM": 0.20},
-        "shadow": {"VWRA.L": 1.00},
+        "target": {TICKER_SWRD_LSE: 0.50, "AVUV": 0.174, "AVDV": 0.126, "AVEM": 0.20},
+        "shadow": {TICKER_VWRA_LSE: 1.00},
         "proxies": [
             "AVUV 58% + AVDV 42% ⚠️ proxy de AVGS.L (global SC value — pesos factsheet Avantis)",
             "AVEM (US-listed) ⚠️ proxy de AVEM.L (UCITS lançado Dez/2024 — mesma estratégia Avantis)",
@@ -98,8 +102,8 @@ REGIMES = {
     4: {
         "inicio": "2019-07-01",
         "label":  "Regime 4 — máximo histórico (Jul/2019+)",
-        "target": {"SWRD.L": 0.50, "AVUV": 0.174, "AVDV": 0.126, "AVEM": 0.20},
-        "shadow": {"VWRA.L": 1.00},
+        "target": {TICKER_SWRD_LSE: 0.50, "AVUV": 0.174, "AVDV": 0.126, "AVEM": 0.20},
+        "shadow": {TICKER_VWRA_LSE: 1.00},
         "proxies": [
             "AVUV 58% + AVDV 42% ⚠️ proxy de AVGS.L",
             "AVEM (US-listed) ⚠️ proxy de AVEM.L",
@@ -165,7 +169,7 @@ REGIMES = {
 def baixar_dados(tickers: list, inicio: str, fim: str = None) -> pd.DataFrame:
     """Baixa preços de fechamento mensais (USD) para lista de tickers."""
     if fim is None:
-        fim = datetime.today().strftime("%Y-%m-%d")
+        fim = datetime.today().strftime(DATE_FORMAT_YMD)
 
     import sys as _sys
     print(f"  Baixando preços ({inicio} → {fim})...", file=_sys.stderr)
@@ -173,9 +177,9 @@ def baixar_dados(tickers: list, inicio: str, fim: str = None) -> pd.DataFrame:
                       auto_adjust=True, progress=False)
 
     if isinstance(raw.columns, pd.MultiIndex):
-        close = raw["Close"]
+        close = raw[COLUMN_CLOSE]
     else:
-        close = raw[["Close"]].rename(columns={"Close": tickers[0]})
+        close = raw[[COLUMN_CLOSE]].rename(columns={COLUMN_CLOSE: tickers[0]})
 
     # Resample para último dia útil do mês
     monthly = close.resample("ME").last().dropna(how="all")
@@ -185,13 +189,13 @@ def baixar_dados(tickers: list, inicio: str, fim: str = None) -> pd.DataFrame:
 def baixar_cambio(inicio: str, fim: str = None) -> pd.Series:
     """Retorna câmbio USD/BRL (fim de mês)."""
     if fim is None:
-        fim = datetime.today().strftime("%Y-%m-%d")
+        fim = datetime.today().strftime(DATE_FORMAT_YMD)
     raw = yf.download("USDBRL=X", start=inicio, end=fim,
                       auto_adjust=True, progress=False)
     if isinstance(raw.columns, pd.MultiIndex):
-        close = raw["Close"].squeeze()
+        close = raw[COLUMN_CLOSE].squeeze()
     else:
-        close = raw["Close"]
+        close = raw[COLUMN_CLOSE]
     return close.resample("ME").last().dropna()
 
 
@@ -263,7 +267,7 @@ def tabela_anual(r_target: pd.Series, r_shadow: pd.Series) -> pd.DataFrame:
     """Retorno anual de cada carteira e delta."""
     df = pd.DataFrame({"Target": r_target, "Shadow A": r_shadow})
     anual = df.groupby(df.index.year).apply(lambda x: (1 + x).prod() - 1)
-    anual["Delta (pp)"] = (anual["Target"] - anual["Shadow A"]) * 100
+    anual[COLUMN_DELTA_PP] = (anual["Target"] - anual["Shadow A"]) * 100
     return anual
 
 
@@ -273,12 +277,12 @@ def imprimir_tabela_anual(tab: pd.DataFrame, regime_label: str):
     print(f"\n{'─'*58}")
     print(f"  RETORNOS ANUAIS — {regime_label}")
     print(f"{'─'*58}")
-    print(f"  {'Ano':>4}  {'Target':>8}  {'Shadow A':>9}  {'Delta (pp)':>10}  Veredito")
+    print(f"  {'Ano':>4}  {'Target':>8}  {'Shadow A':>9}  {COLUMN_DELTA_PP:>10}  Veredito")
     print(f"  {'─'*52}")
     for ano, row in tab.iterrows():
         t = row["Target"]
         s = row["Shadow A"]
-        d = row["Delta (pp)"]
+        d = row[COLUMN_DELTA_PP]
         veredito = "✅ tilt ganhou" if d > 0 else ("➖ empate" if abs(d) < 0.5 else "❌ tilt perdeu")
         print(f"  {ano:>4}  {t:>+8.1%}  {s:>+9.1%}  {d:>+10.2f}  {veredito}")
 
@@ -305,7 +309,7 @@ def imprimir_metricas(r_target: pd.Series, r_shadow: pd.Series):
 
 def imprimir_alerta_advocate(tab: pd.DataFrame):
     """Gera alerta se delta negativo em 2+ anos consecutivos."""
-    negativos = tab["Delta (pp)"] < 0
+    negativos = tab[COLUMN_DELTA_PP] < 0
     alertas = []
     streak = 0
     for ano, neg in negativos.items():
@@ -322,7 +326,7 @@ def imprimir_alerta_advocate(tab: pd.DataFrame):
         print(f"  → Escalar para issue formal se padrão continuar.")
     else:
         ultimos = tab.tail(3)
-        delta_medio = ultimos["Delta (pp)"].mean()
+        delta_medio = ultimos[COLUMN_DELTA_PP].mean()
         print(f"\n  ✅ Nenhum underperformance consecutivo detectado.")
         print(f"     Delta médio últimos {len(ultimos)} anos: {delta_medio:+.2f}pp")
 
@@ -333,7 +337,7 @@ def _build_series_json(r_target: pd.Series, r_shadow: pd.Series) -> dict:
     """Constrói dict com datas, séries acumuladas e métricas para output JSON."""
     cum_t = crescimento_acumulado(r_target)
     cum_s = crescimento_acumulado(r_shadow)
-    dates = [d.strftime("%Y-%m") for d in cum_t.index]
+    dates = [d.strftime(DATE_FORMAT_YM) for d in cum_t.index]
     return {
         "dates":   dates,
         "target":  [round(float(v), 2) for v in cum_t],
@@ -434,7 +438,7 @@ def _get_french_world_returns(start: str) -> pd.Series:
 
 def _download_monthly_returns(ticker: str, start: str, end: str = None) -> pd.Series:
     """Baixa série de retornos mensais para um ticker via yfinance."""
-    fim = end or datetime.today().strftime("%Y-%m-%d")
+    fim = end or datetime.today().strftime(DATE_FORMAT_YMD)
     raw = yf.download(ticker, start=start, end=fim, auto_adjust=True, progress=False)
     if raw.empty:
         return pd.Series(dtype=float, name=ticker)
@@ -453,7 +457,7 @@ def _build_swrd_r7(start: str) -> tuple[pd.Series, str]:
     cfg = REGIME7_CONFIG["proxies"]["SWRD"][0]
     ret = _download_monthly_returns(cfg["ticker"], start=start)
     tier = cfg["tier"]
-    label = f"MSCI World NR ({cfg['ticker']}) {ret.index[0].strftime('%Y-%m')} → {ret.index[-1].strftime('%Y-%m')} [Tier {tier}]"
+    label = f"MSCI World NR ({cfg['ticker']}) {ret.index[0].strftime(DATE_FORMAT_YM)} → {ret.index[-1].strftime(DATE_FORMAT_YM)} [Tier {tier}]"
     return ret, label
 
 
@@ -483,22 +487,22 @@ def _build_avgs_r7(start: str) -> tuple[pd.Series, str, list]:
         solo_part = dfsvx_r.loc[solo_idx]
         blended = pd.concat([solo_part, blended]).sort_index()
         splice_log.append({
-            "period": f"{solo_idx[0].strftime('%Y-%m')} → {solo_idx[-1].strftime('%Y-%m')}",
+            "period": f"{solo_idx[0].strftime(DATE_FORMAT_YM)} → {solo_idx[-1].strftime(DATE_FORMAT_YM)}",
             "note": "DFSVX only (DISVX nao disponivel) — peso 100% DFSVX ⚠️ conservador",
         })
 
     splice_log.append({
-        "DFSVX_start": dfsvx_r.index[0].strftime("%Y-%m"),
-        "DISVX_start": disvx_r.index[0].strftime("%Y-%m"),
-        "blend_start": common_idx[0].strftime("%Y-%m"),
-        "blend_end": common_idx[-1].strftime("%Y-%m"),
+        "DFSVX_start": dfsvx_r.index[0].strftime(DATE_FORMAT_YM),
+        "DISVX_start": disvx_r.index[0].strftime(DATE_FORMAT_YM),
+        "blend_start": common_idx[0].strftime(DATE_FORMAT_YM),
+        "blend_end": common_idx[-1].strftime(DATE_FORMAT_YM),
         "DFSVX_weight": w_dfsvx,
         "DISVX_weight": w_disvx,
     })
 
     tier_s = c_dfsvx["tier"]
     label = (f"DFSVX {int(w_dfsvx*100)}% + DISVX {int(w_disvx*100)}% → "
-             f"{blended.index[0].strftime('%Y-%m')} → {blended.index[-1].strftime('%Y-%m')} [Tier {tier_s}]")
+             f"{blended.index[0].strftime(DATE_FORMAT_YM)} → {blended.index[-1].strftime(DATE_FORMAT_YM)} [Tier {tier_s}]")
     blended.name = "AVGS_R7"
     return blended, label, splice_log
 
@@ -527,8 +531,8 @@ def _build_avem_r7(start: str) -> tuple[pd.Series, str]:
 
     tier_label = f"Tier C (corr={corr})"
     label = (
-        f"French EM {french_part.index[0].strftime('%Y-%m')}→{french_part.index[-1].strftime('%Y-%m')} "
-        f"[{tier_label}] + DFEMX {dfemx_ret.index[0].strftime('%Y-%m')}→{dfemx_ret.index[-1].strftime('%Y-%m')} [Tier B]"
+        f"French EM {french_part.index[0].strftime(DATE_FORMAT_YM)}→{french_part.index[-1].strftime(DATE_FORMAT_YM)} "
+        f"[{tier_label}] + DFEMX {dfemx_ret.index[0].strftime(DATE_FORMAT_YM)}→{dfemx_ret.index[-1].strftime(DATE_FORMAT_YM)} [Tier B]"
     )
     combined.name = "AVEM_R7"
     return combined, label
@@ -579,8 +583,8 @@ def _build_benchmark_r7(start: str) -> tuple[pd.Series, str]:
     combined.name = "BENCH_R7"
 
     label = (
-        f"Sintetico (MSCI World+French EM) {synth_series.index[0].strftime('%Y-%m')}→{synth_series.index[-1].strftime('%Y-%m')} "
-        f"+ ACWI {acwi_ret.index[0].strftime('%Y-%m')}→{acwi_ret.index[-1].strftime('%Y-%m')}"
+        f"Sintetico (MSCI World+French EM) {synth_series.index[0].strftime(DATE_FORMAT_YM)}→{synth_series.index[-1].strftime(DATE_FORMAT_YM)} "
+        f"+ ACWI {acwi_ret.index[0].strftime(DATE_FORMAT_YM)}→{acwi_ret.index[-1].strftime(DATE_FORMAT_YM)}"
     )
     return combined, label
 
@@ -849,14 +853,14 @@ def _factor_regression_r7(r_target: pd.Series, r_bench: pd.Series,
 
     # Sub-período (a): proxy completo
     mask_a = r_target.index <= proxy_end
-    res_a = _run_regression(r_target[mask_a], f"(a) Proxy {r_target.index[0].strftime('%Y-%m')}→{proxy_end.strftime('%Y-%m')}")
+    res_a = _run_regression(r_target[mask_a], f"(a) Proxy {r_target.index[0].strftime(DATE_FORMAT_YM)}→{proxy_end.strftime(DATE_FORMAT_YM)}")
 
     # Sub-período (b): ETF real
     mask_b = r_target.index >= etf_start
-    res_b = _run_regression(r_target[mask_b], f"(b) ETF real {etf_start.strftime('%Y-%m')}→{r_target.index[-1].strftime('%Y-%m')}")
+    res_b = _run_regression(r_target[mask_b], f"(b) ETF real {etf_start.strftime(DATE_FORMAT_YM)}→{r_target.index[-1].strftime(DATE_FORMAT_YM)}")
 
     # (c): série completa
-    res_c = _run_regression(r_target, f"(c) Completo {r_target.index[0].strftime('%Y-%m')}→{r_target.index[-1].strftime('%Y-%m')}")
+    res_c = _run_regression(r_target, f"(c) Completo {r_target.index[0].strftime(DATE_FORMAT_YM)}→{r_target.index[-1].strftime(DATE_FORMAT_YM)}")
 
     # Teste de Chow entre (a) e (b)
     chow = {}
@@ -975,8 +979,8 @@ def run_regime7():
         return
 
     n_meses = len(df_all)
-    data_ini = df_all.index[0].strftime("%Y-%m")
-    data_fim = df_all.index[-1].strftime("%Y-%m")
+    data_ini = df_all.index[0].strftime(DATE_FORMAT_YM)
+    data_fim = df_all.index[-1].strftime(DATE_FORMAT_YM)
     n_anos = n_meses / 12
 
     print(f"\n  FONTES E STITCHING:")
@@ -1291,7 +1295,7 @@ def main():
 
     # Veredito final
     delta_total_pp = (cagr(r_target) - cagr(r_shadow)) * 100
-    anos_positivos = (tab["Delta (pp)"] > 0).sum()
+    anos_positivos = (tab["COLUMN_DELTA_PP"] > 0).sum()
     anos_total = len(tab)
     print(f"\n  📊 Veredito: CAGR delta = {delta_total_pp:+.2f}pp | "
           f"Tilt ganhou em {anos_positivos}/{anos_total} anos")

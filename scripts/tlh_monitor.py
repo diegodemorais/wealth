@@ -39,7 +39,7 @@ LOTES_FILE = ROOT / "data" / "tlh_lotes.json"
 
 # Mapa ETF → ticker yfinance
 TICKER_MAP = {
-    "SWRD":      "SWRD.L",
+    "SWRD":      TICKER_SWRD_LSE,
     "EIMI":      "EIMI.L",
     "AVGS":      "AVGS.L",
     "AVEM":      "AVEM.L",
@@ -66,7 +66,7 @@ SUBSTITUTO_UCITS = {
     "AVUV":  "AVGS.L",
     "AVDV":  "AVGS.L",
     "USSC":  "AVGS.L",
-    "IWVL":  "SWRD.L",
+    "IWVL":  TICKER_SWRD_LSE,
     "JPGL":  "AVGS.L",
 }
 

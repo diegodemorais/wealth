@@ -20,6 +20,11 @@ import numpy as np
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+from config import (
+    BTC_SMA_WINDOW, BTC_MA_ZONE_NEAR_LOW, BTC_MA_ZONE_NEAR_HIGH, BTC_MA_ZONE_ABOVE_HIGH,
+    BTC_ZSCORE_ACCUMULATE, BTC_ZSCORE_NEUTRAL, BTC_ZSCORE_CAUTION, BTC_ZSCORE_TRIM
+)
+
 OUTPUT_PATH = Path(__file__).parent.parent / "dados" / "btc_indicators.json"
 
 
@@ -46,7 +51,7 @@ def fetch_kraken_weekly():
     for item in ohlc:
         ts = int(item[0])
         close = float(item[4])
-        date = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
+        date = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(DATE_FORMAT_YMD)
         result.append((date, close))
     return result
 
@@ -56,7 +61,7 @@ def compute_ma200w(weekly_prices):
     prices = np.array([p for _, p in weekly_prices])
     dates = [d for d, _ in weekly_prices]
     n = len(prices)
-    window = 200
+    window = BTC_SMA_WINDOW
     series = []
     for i in range(n):
         if i < window - 1:
@@ -94,11 +99,11 @@ def compute_ma200w(weekly_prices):
 
     zone = "below"
     if current and pct_above is not None:
-        if pct_above < 0:
+        if pct_above < BTC_MA_ZONE_NEAR_LOW:
             zone = "below"
-        elif pct_above < 20:
+        elif pct_above < BTC_MA_ZONE_NEAR_HIGH:
             zone = "near"
-        elif pct_above < 80:
+        elif pct_above < BTC_MA_ZONE_ABOVE_HIGH:
             zone = "above"
         else:
             zone = "euphoria"
@@ -183,16 +188,16 @@ def compute_mvrv_zscore(rows):
     z_max = float(zscores.max())
     z_min = float(zscores.min())
 
-    # Thresholds calibrados ao range empírico deste dataset
+    # Thresholds calibrados ao range empírico deste dataset (config.py: BTC_ZSCORE_*)
     # Range observado ~-0.16 a ~2.4 (picos 2025)
     def get_signal(z):
         if z < 0:
             return "accumulate", "Capitulação — não reduzir"
-        if z < 0.5:
+        if z < BTC_ZSCORE_ACCUMULATE:
             return "accumulate", "Acumulação"
-        if z < 1.2:
+        if z < BTC_ZSCORE_NEUTRAL:
             return "neutral", "Neutro — Hold"
-        if z < 1.8:
+        if z < BTC_ZSCORE_CAUTION:
             return "caution", "Sobreaquecido — não adicionar"
         return "trim", "Topo histórico — considerar trim"
 
@@ -207,10 +212,10 @@ def compute_mvrv_zscore(rows):
         "z_range": {"min": round(z_min, 3), "max": round(z_max, 3)},
         "series": series_display,
         "thresholds": {
-            "top_signal": 2.0,
-            "overheated": 1.8,
-            "caution": 1.2,
-            "neutral": 0.5,
+            "top_signal": BTC_ZSCORE_TRIM,
+            "overheated": BTC_ZSCORE_CAUTION,
+            "caution": BTC_ZSCORE_NEUTRAL,
+            "neutral": BTC_ZSCORE_ACCUMULATE,
             "accumulation": 0.0,
             "capitulation": -0.2,
         },
@@ -255,7 +260,7 @@ def fetch_daily_prices_binance(symbol, days=120):
         for item in data:
             ts = int(item[0])
             close = float(item[4])
-            date = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+            date = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).strftime(DATE_FORMAT_YMD)
             result.append((date, close))
         return result
     except Exception:

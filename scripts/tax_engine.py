@@ -30,7 +30,7 @@ ETFS_ACC = {"SWRD", "AVGS", "AVEM", "AVUV", "AVDV", "USSC", "EIMI", "AVES", "DGS
 
 import sys as _sys
 _sys.path.insert(0, str(ROOT / "scripts"))
-from config import IR_ALIQUOTA
+from config import IR_ALIQUOTA, US_ESTATE_TAX_EXEMPTION_USD, US_ESTATE_TAX_RATE
 
 
 @dataclass
@@ -105,7 +105,7 @@ def _fetch_ptax_series() -> dict:
             return {}
         series = {}
         for idx, row in df.iterrows():
-            d = idx.strftime("%Y-%m-%d") if hasattr(idx, "strftime") else str(idx)[:10]
+            d = idx.strftime(DATE_FORMAT_YMD) if hasattr(idx, "strftime") else str(idx)[:10]
             val = float(row.iloc[0]) if hasattr(row, "iloc") else float(row)
             series[d] = val
         return series
@@ -120,7 +120,7 @@ def _lookup_ptax(dt_str: str, ptax_series: dict, fallback_cambio: float) -> floa
     except ValueError:
         return fallback_cambio
     for offset in range(11):
-        key = (d - timedelta(days=offset)).strftime("%Y-%m-%d")
+        key = (d - timedelta(days=offset)).strftime(DATE_FORMAT_YMD)
         if key in ptax_series:
             return ptax_series[key]
     return fallback_cambio
@@ -222,3 +222,26 @@ class TaxEngine:
             ptax_source=request.ptax_source,
             ptax_atual=round(request.cambio_atual, 4),
         )
+
+    @staticmethod
+    def calculate_us_estate_tax(us_exposure: float) -> float:
+        """Calculate US Estate Tax on US-listed ETFs.
+
+        IRS Estate Tax applies to non-US persons holding US-listed securities.
+        Rule: $60,000 exemption, 40% rate on amount above threshold.
+
+        Args:
+            us_exposure: Total cost basis of US-listed ETF holdings (USD)
+
+        Returns:
+            Estate tax due (USD). Returns 0.0 if below exemption threshold.
+
+        Reference:
+            IRS: 26 USC § 2104 (Estate tax on property of nonresidents not citizens)
+            Exemption: $60,000 fixed (per current law)
+            Rate: 40% flat on excess
+        """
+        if us_exposure <= US_ESTATE_TAX_EXEMPTION_USD:
+            return 0.0
+        taxable_amount = us_exposure - US_ESTATE_TAX_EXEMPTION_USD
+        return round(taxable_amount * US_ESTATE_TAX_RATE, 2)

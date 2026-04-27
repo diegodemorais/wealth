@@ -291,7 +291,7 @@ def enrich_ir_brl(lots: list[dict], current_prices: dict[str, float] | None = No
     # Fetch PTAX series covering all dates (min date - 7 days to max date)
     if unique_dates:
         from datetime import datetime as dt, timedelta
-        min_date = (dt.strptime(unique_dates[0], "%Y-%m-%d") - timedelta(days=7)).strftime("%Y-%m-%d")
+        min_date = (dt.strptime(unique_dates[0], "%Y-%m-%d") - timedelta(days=7)).strftime(DATE_FORMAT_YMD)
         max_date = unique_dates[-1]
         try:
             ptax_series = get_ptax_series(min_date, max_date)

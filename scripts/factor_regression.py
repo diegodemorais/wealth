@@ -17,6 +17,11 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import statsmodels.api as sm
+import sys as _sys
+from pathlib import Path as _Path
+
+_sys.path.insert(0, str(_Path(__file__).parent))
+from config import DATE_FORMAT_YM, FACTOR_REGRESSION_WINDOW
 
 warnings.filterwarnings("ignore")
 
@@ -93,7 +98,7 @@ def download_ff_factors(url, skip_footer=0):
 print("Downloading Fama-French Developed 5 Factors...")
 ff5_url = "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/Developed_5_Factors_CSV.zip"
 ff5 = download_ff_factors(ff5_url)
-print(f"  FF5 range: {ff5.index.min().strftime('%Y-%m')} to {ff5.index.max().strftime('%Y-%m')}, cols: {list(ff5.columns)}")
+print(f"  FF5 range: {ff5.index.min().strftime(DATE_FORMAT_YM)} to {ff5.index.max().strftime(DATE_FORMAT_YM)}, cols: {list(ff5.columns)}")
 
 print("Downloading Fama-French Developed Momentum Factor...")
 mom_url = "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/Developed_Mom_Factor_CSV.zip"
@@ -103,11 +108,11 @@ if "WML" in mom.columns:
     mom = mom.rename(columns={"WML": "MOM"})
 elif len(mom.columns) >= 1 and mom.columns[0] != "MOM":
     mom = mom.rename(columns={mom.columns[0]: "MOM"})
-print(f"  MOM range: {mom.index.min().strftime('%Y-%m')} to {mom.index.max().strftime('%Y-%m')}, cols: {list(mom.columns)}")
+print(f"  MOM range: {mom.index.min().strftime(DATE_FORMAT_YM)} to {mom.index.max().strftime(DATE_FORMAT_YM)}, cols: {list(mom.columns)}")
 
 # Merge factors
 factors = ff5.join(mom[["MOM"]], how="inner")
-print(f"  Merged factors: {factors.index.min().strftime('%Y-%m')} to {factors.index.max().strftime('%Y-%m')}")
+print(f"  Merged factors: {factors.index.min().strftime(DATE_FORMAT_YM)} to {factors.index.max().strftime(DATE_FORMAT_YM)}")
 print(f"  Columns: {list(factors.columns)}")
 print()
 
@@ -151,7 +156,7 @@ returns_df = pd.DataFrame(monthly_returns)
 
 # Align dates
 merged = returns_df.join(factors, how="inner")
-print(f"\nMerged dataset: {len(merged)} months ({merged.index.min().strftime('%Y-%m')} to {merged.index.max().strftime('%Y-%m')})")
+print(f"\nMerged dataset: {len(merged)} months ({merged.index.min().strftime(DATE_FORMAT_YM)} to {merged.index.max().strftime(DATE_FORMAT_YM)})")
 
 # Calculate excess returns
 for ticker in etfs:
@@ -274,7 +279,7 @@ if not args.rolling_only and results:
     print(" - Factors: Fama-French Developed Markets 5 Factors + Momentum")
     print(" - ETF returns in native currency (GBP-denominated LSE listings)")
     print(" - Robust standard errors (HC1)")
-    print(f" - Sample: {merged.index.min().strftime('%Y-%m')} to {merged.index.max().strftime('%Y-%m')}")
+    print(f" - Sample: {merged.index.min().strftime(DATE_FORMAT_YM)} to {merged.index.max().strftime(DATE_FORMAT_YM)}")
     print(f"{'='*70}")
 
 
@@ -282,7 +287,7 @@ if not args.rolling_only and results:
 
 if args.rolling or args.rolling_only:
 
-    WINDOW = 36    # meses — padrão metodologia-analitica.md (24m = ruído estatístico)
+    WINDOW = FACTOR_REGRESSION_WINDOW    # meses — padrão metodologia-analitica.md (24m = ruído estatístico)
     STEP   = 3     # passo trimestral
 
     # Gatilhos de alerta (FI-rolling-loadings)
@@ -352,7 +357,7 @@ if args.rolling or args.rolling_only:
         print(f"  {'-'*72}")
         display_rows = df_roll.tail(8)
         for date, r in display_rows.iterrows():
-            print(f"  {date.strftime('%Y-%m'):<10}  {r['Market']:>7.3f}  {r['SMB']:>7.3f}  "
+            print(f"  {date.strftime(DATE_FORMAT_YM):<10}  {r['Market']:>7.3f}  {r['SMB']:>7.3f}  "
                   f"{r['HML']:>7.3f}  {r['RMW']:>7.3f}  {r['MOM']:>7.3f}  "
                   f"{r['alpha']:>6.1f}%  {r['n']}")
 
@@ -385,11 +390,11 @@ if args.rolling or args.rolling_only:
                     last_breach = consec[consec].index[-1]
                     val = series.loc[last_breach]
                     alerts_found.append(f"  🔴 {cfg['label']}")
-                    alerts_found.append(f"     Último breach: {last_breach.strftime('%Y-%m')}  valor={val:.3f}")
+                    alerts_found.append(f"     Último breach: {last_breach.strftime(DATE_FORMAT_YM)}  valor={val:.3f}")
                 elif breaches.iloc[-1]:
                     val = series.iloc[-1]
                     alerts_found.append(f"  🟡 {cfg['label'].replace('⚠️  ', '')} — 1 trimestre (monitorar)")
-                    alerts_found.append(f"     Último valor: {series.index[-1].strftime('%Y-%m')}  valor={val:.3f}")
+                    alerts_found.append(f"     Último valor: {series.index[-1].strftime(DATE_FORMAT_YM)}  valor={val:.3f}")
 
         # 2. Mudança de sinal em qualquer fator (2 trimestres)
         for factor in ["Market", "SMB", "HML", "RMW", "MOM"]:
@@ -407,7 +412,7 @@ if args.rolling or args.rolling_only:
                 val_prev = series.iloc[list(series.index).index(last) - 1]
                 alerts_found.append(
                     f"  🟡 {ticker} {factor} mudou sinal por 2 trimestres "
-                    f"({val_prev:+.3f} → {val_now:+.3f}, até {last.strftime('%Y-%m')})"
+                    f"({val_prev:+.3f} → {val_now:+.3f}, até {last.strftime(DATE_FORMAT_YM)})"
                 )
 
     if alerts_found:
@@ -426,7 +431,7 @@ if args.rolling or args.rolling_only:
             continue
         first = df_roll.iloc[0]
         last  = df_roll.iloc[-1]
-        print(f"\n  {ticker}  ({df_roll.index[0].strftime('%Y-%m')} → {df_roll.index[-1].strftime('%Y-%m')})")
+        print(f"\n  {ticker}  ({df_roll.index[0].strftime(DATE_FORMAT_YM)} → {df_roll.index[-1].strftime(DATE_FORMAT_YM)})")
         print(f"  {'Fator':<8}  {'Primeiro':>9}  {'Último':>9}  {'Delta':>9}  Tendência")
         print(f"  {'-'*52}")
         for factor in ["Market", "SMB", "HML", "RMW", "MOM"]:
@@ -439,5 +444,5 @@ if args.rolling or args.rolling_only:
             print(f"  {factor:<8}  {v_first:>9.3f}  {v_last:>9.3f}  {delta:>+9.3f}  {trend}")
 
     print(f"\n  Janela: {WINDOW} meses | Passo: {STEP} meses | "
-          f"Sample: {merged.index.min().strftime('%Y-%m')} → {merged.index.max().strftime('%Y-%m')}")
+          f"Sample: {merged.index.min().strftime(DATE_FORMAT_YM)} → {merged.index.max().strftime(DATE_FORMAT_YM)}")
     print(f"{'='*70}")

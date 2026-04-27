@@ -21,6 +21,12 @@ import glob
 import json
 from collections import defaultdict
 from datetime import datetime
+from pathlib import Path as _Path
+
+_sys_path = _Path(__file__).parent
+if str(_sys_path) not in sys.path:
+    sys.path.insert(0, str(_sys_path))
+from config import SPENDING_ANOMALY_THRESHOLD_BRL
 
 # ─── Configuração de categorias ────────────────────────────────────────────────
 
@@ -66,7 +72,7 @@ INTERNAL_PAYEES = [
 ]
 
 # Threshold para anomalias em opcionais
-ANOMALY_THRESHOLD = 500.0
+ANOMALY_THRESHOLD = SPENDING_ANOMALY_THRESHOLD_BRL
 
 # ─── Baseline de referência ────────────────────────────────────────────────────
 BASELINE = {
@@ -146,7 +152,7 @@ def analyze(transactions):
         amount = t['amount']
         date   = t['date']
         payee  = t['payee']
-        month  = date.strftime('%Y-%m')
+        month  = date.strftime(DATE_FORMAT_YM)
 
         # Investimentos: registrar separado
         if cat in SKIP_CATEGORIES:
@@ -266,7 +272,7 @@ def report(data, csv_path):
     print_section("HIPOTECA — cash out total (principal + juros)")
     mort_by_month = defaultdict(float)
     for t in mort:
-        mort_by_month[t['date'].strftime('%Y-%m')] += t['amount']
+        mort_by_month[t['date'].strftime(DATE_FORMAT_YM)] += t['amount']
     for m in sorted(mort_by_month):
         print(f"  {m}  R${mort_by_month[m]:>10,.2f}")
     if mort_by_month:
@@ -277,7 +283,7 @@ def report(data, csv_path):
     print_section(f"ANOMALIAS — opcionais > R${ANOMALY_THRESHOLD:.0f}")
     if anom:
         for t in sorted(anom, key=lambda x: x['amount']):
-            print(f"  {t['date'].strftime('%Y-%m-%d')}  {t['payee'][:45]:<45}  [{t['cat']:<20}]  R${t['amount']:>9,.0f}")
+            print(f"  {t['date'].strftime(DATE_FORMAT_YMD)}  {t['payee'][:45]:<45}  [{t['cat']:<20}]  R${t['amount']:>9,.0f}")
     else:
         print("  Nenhuma anomalia identificada.")
 
@@ -363,7 +369,7 @@ def export_json(data, csv_path, output_path=None):
         "total_anual": round(abs(avg_tot) * 12),
         "modelo_fire_anual": BASELINE['model_fire'],
         "monthly_breakdown": monthly_breakdown,
-        "updated_at": datetime.now().strftime("%Y-%m-%d"),
+        "updated_at": datetime.now().strftime(DATE_FORMAT_YMD),
         "fonte": os.path.basename(csv_path),
     }
 

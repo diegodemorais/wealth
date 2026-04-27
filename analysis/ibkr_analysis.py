@@ -10,6 +10,9 @@ import json
 from datetime import datetime, date
 from collections import defaultdict
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+from tax_engine import TaxEngine
 
 # ── Configurações ─────────────────────────────────────────────────────────────
 CSV_PATH = Path(__file__).parent / "raw" / "U5947683.TRANSACTIONS.20210408.20260331.csv"
@@ -344,8 +347,8 @@ def main():
             print(f"  {sym}: {total_qty:.2f} shares, custo ${fmt(total_cost)}")
 
     print(f"\n  Exposição US-listed total: ${fmt(us_exposure)} USD")
-    if us_exposure > 60000:
-        estate_tax = (us_exposure - 60000) * 0.40
+    estate_tax = TaxEngine.calculate_us_estate_tax(us_exposure)
+    if estate_tax > 0:
         print(f"  ⚠ ACIMA do threshold $60k → estate tax estimado: ${fmt(estate_tax)}")
     else:
         print(f"  ✓ Abaixo do threshold $60k — sem estate tax")

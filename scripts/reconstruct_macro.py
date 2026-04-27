@@ -113,7 +113,7 @@ def _get_bitcoin(cache: dict) -> float | None:
         import yfinance as yf
         btc_data = yf.download("BTC-USD", period="2d", progress=False, auto_adjust=True)
         if btc_data is not None and not btc_data.empty:
-            close = btc_data["Close"] if "Close" in btc_data.columns else btc_data.iloc[:, 0]
+            close = btc_data[COLUMN_CLOSE] if COLUMN_CLOSE in btc_data.columns else btc_data.iloc[:, 0]
             last = close.dropna()
             if len(last):
                 val = round(float(last.iloc[-1]), 2)

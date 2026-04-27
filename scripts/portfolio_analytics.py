@@ -32,6 +32,7 @@ from config import (
     EQUITY_WEIGHTS, TICKERS_YF,
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, RENDA_PLUS_PCT,
     PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS,
+    TICKER_SWRD_LSE, TICKER_VWRA_LSE, TICKER_JPGL_LSE, COLUMN_CLOSE,
 )
 
 
@@ -41,7 +42,7 @@ TICKERS_ALVO = {k: TICKERS_YF[k] for k in EQUITY_WEIGHTS}
 
 PESOS_ALVO = {TICKERS_YF[k]: v for k, v in EQUITY_WEIGHTS.items()}
 
-BENCHMARK = "VWRA.L"
+BENCHMARK = TICKER_VWRA_LSE
 PERIODO_ANALISE = "3y"   # janela padrão para análise trimestral
 
 # Proxies US-listed para fronteira eficiente (histórico ~5 anos vs AVGS ~1 ano)
@@ -58,7 +59,7 @@ def get_precos(periodo: str = "3y", include_shadows: bool = False) -> pd.DataFra
     if include_shadows:
         tickers = list(set(tickers + TICKERS_SHADOW_EXTRA))
     print(f"  Baixando preços ({periodo}): {', '.join(sorted(tickers))}")
-    precos = yf.download(tickers, period=periodo, auto_adjust=True, progress=False)["Close"]
+    precos = yf.download(tickers, period=periodo, auto_adjust=True, progress=False)[COLUMN_CLOSE]
     precos = precos.dropna(how="all")
     return precos
 
@@ -77,7 +78,7 @@ def get_precos_proxy_avgs(periodo: str = "5y") -> pd.DataFrame:
     # JPGL → JPUS 60% + JPIN 40% (JPMorgan Diversified Factor US+Intl)
     proxies_us = ["AVUV", "AVDV", "IDEV", "AVEM", "JPUS", "JPIN", "VT"]
     print(f"  Baixando proxies US ({periodo}): {', '.join(proxies_us)}")
-    precos = yf.download(proxies_us, period=periodo, auto_adjust=True, progress=False)["Close"]
+    precos = yf.download(proxies_us, period=periodo, auto_adjust=True, progress=False)[COLUMN_CLOSE]
     return precos.dropna()
 
 
@@ -180,10 +181,10 @@ def analise_fronteira(precos: pd.DataFrame):
         }).dropna()
 
         pesos_proxy = {
-            "IDEV":       PESOS_ALVO["SWRD.L"],
+            "IDEV":       PESOS_ALVO[TICKER_SWRD_LSE],
             "AVGS_proxy": PESOS_ALVO["AVGS.L"],
             "AVEM":       PESOS_ALVO["AVEM.L"],
-            "JPGL_proxy": PESOS_ALVO["JPGL.L"],
+            "JPGL_proxy": PESOS_ALVO[TICKER_JPGL_LSE],
         }
 
         n_proxy = len(precos_proxy)
@@ -268,11 +269,11 @@ def correlacoes_regime():
     print("─"*60)
 
     # Download: ETFs + proxies + VIX — 6 anos para capturar COVID 2020 + 2022
-    tickers_regimes = ["SWRD.L", "AVUV", "VWO", "JPGL.L", "^VIX"]
+    tickers_regimes = [TICKER_SWRD_LSE, "AVUV", "VWO", TICKER_JPGL_LSE, "^VIX"]
     print(f"\n  Baixando dados (6 anos): {', '.join(tickers_regimes)}")
     print(f"  ⚠️  AVUV = proxy AVGS | VWO = proxy AVEM (histórico pré-UCITS)")
 
-    raw = yf.download(tickers_regimes, period="6y", auto_adjust=True, progress=False)["Close"]
+    raw = yf.download(tickers_regimes, period="6y", auto_adjust=True, progress=False)[COLUMN_CLOSE]
     raw = raw.dropna()
 
     if raw.empty or len(raw) < 100:
@@ -280,8 +281,8 @@ def correlacoes_regime():
         return
 
     vix   = raw["^VIX"]
-    etfs  = raw[["SWRD.L", "AVUV", "VWO", "JPGL.L"]]
-    nomes = {"SWRD.L": "SWRD", "AVUV": "AVGS(p)", "VWO": "AVEM(p)", "JPGL.L": "JPGL"}
+    etfs  = raw[[TICKER_SWRD_LSE, "AVUV", "VWO", TICKER_JPGL_LSE]]
+    nomes = {TICKER_SWRD_LSE: "SWRD", "AVUV": "AVGS(p)", "VWO": "AVEM(p)", TICKER_JPGL_LSE: "JPGL"}
 
     retornos = etfs.pct_change().dropna()
     vix_alinhado = vix.reindex(retornos.index).ffill()
@@ -309,12 +310,12 @@ def correlacoes_regime():
 
     # Calcular correlações por regime
     pares = [
-        ("SWRD.L", "AVUV"),
-        ("SWRD.L", "VWO"),
-        ("SWRD.L", "JPGL.L"),
+        (TICKER_SWRD_LSE, "AVUV"),
+        (TICKER_SWRD_LSE, "VWO"),
+        (TICKER_SWRD_LSE, TICKER_JPGL_LSE),
         ("AVUV",   "VWO"),
-        ("AVUV",   "JPGL.L"),
-        ("VWO",    "JPGL.L"),
+        ("AVUV",   TICKER_JPGL_LSE),
+        ("VWO",    TICKER_JPGL_LSE),
     ]
 
     resultados = {}
@@ -369,12 +370,12 @@ def correlacoes_regime():
     peso_jpgl  = 0.20
 
     if resultados["calm"] is not None and resultados["crise"] is not None:
-        corr_calm_avgs  = resultados["calm"].loc["SWRD.L", "AVUV"]
-        corr_calm_avem  = resultados["calm"].loc["SWRD.L", "VWO"]
-        corr_calm_jpgl  = resultados["calm"].loc["SWRD.L", "JPGL.L"]
-        corr_crise_avgs = resultados["crise"].loc["SWRD.L", "AVUV"]
-        corr_crise_avem = resultados["crise"].loc["SWRD.L", "VWO"]
-        corr_crise_jpgl = resultados["crise"].loc["SWRD.L", "JPGL.L"]
+        corr_calm_avgs  = resultados["calm"].loc[TICKER_SWRD_LSE, "AVUV"]
+        corr_calm_avem  = resultados["calm"].loc[TICKER_SWRD_LSE, "VWO"]
+        corr_calm_jpgl  = resultados["calm"].loc[TICKER_SWRD_LSE, TICKER_JPGL_LSE]
+        corr_crise_avgs = resultados["crise"].loc[TICKER_SWRD_LSE, "AVUV"]
+        corr_crise_avem = resultados["crise"].loc[TICKER_SWRD_LSE, "VWO"]
+        corr_crise_jpgl = resultados["crise"].loc[TICKER_SWRD_LSE, TICKER_JPGL_LSE]
 
         # Retorno esperado dos outros ETFs dado choque SWRD × correlação (linear, aproximação)
         # Assume vol similar para simplicidade — captura direção do efeito
@@ -526,7 +527,7 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
 
     # ── Câmbio ────────────────────────────────────────────────────────────────
     try:
-        fx = yf.download("USDBRL=X", period="5d", progress=False)["Close"].dropna()
+        fx = yf.download("USDBRL=X", period="5d", progress=False)[COLUMN_CLOSE].dropna()
         usd_brl = float(fx.iloc[-1])
     except Exception:
         usd_brl = 5.85
@@ -545,7 +546,7 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
         # Mostrar preços atuais equity para referência
         aporte_usd = aporte_brl / usd_brl
         print(f"\n  Aporte: R$ {aporte_brl:,.0f} = US$ {aporte_usd:,.2f}")
-        for ticker, nome in [("SWRD.L","SWRD"), ("AVGS.L","AVGS"), ("AVEM.L","AVEM")]:
+        for ticker, nome in [(TICKER_SWRD_LSE,"SWRD"), ("AVGS.L","AVGS"), ("AVEM.L","AVEM")]:
             if ticker in precos.columns:
                 p = float(precos[ticker].iloc[-1])
                 print(f"  {nome}: US$ {p:.2f} = R$ {p*usd_brl:.2f}  |  {aporte_usd/p:.4f} cotas")
@@ -606,7 +607,7 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
         print(f"\n  {'Ativo':<10} {'Alvo':>8}  {'Preço (USD)':>12}  {'Preço (R$)':>12}  {'Cotas c/ 100%':>14}")
         print("  " + "-"*70)
         for ticker, (nome, alvo) in zip(
-            ["SWRD.L", "AVGS.L", "AVEM.L"],
+            [TICKER_SWRD_LSE, "AVGS.L", "AVEM.L"],
             [("SWRD", 0.50), ("AVGS", 0.30), ("AVEM", 0.20)]
         ):
             if ticker in precos.columns:
@@ -622,14 +623,14 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
 
 # Shadow portfolios para comparação (scorecard HD-scorecard)
 SHADOWS = {
-    "Target (50/30/20)": {"SWRD.L": 0.50, "AVGS.L": 0.30, "AVEM.L": 0.20},
-    "Shadow A — VWRA":   {"VWRA.L": 1.00},
-    "Shadow B — SWRD100": {"SWRD.L": 1.00},
+    "Target (50/30/20)": {TICKER_SWRD_LSE: 0.50, "AVGS.L": 0.30, "AVEM.L": 0.20},
+    "Shadow A — VWRA":   {TICKER_VWRA_LSE: 1.00},
+    "Shadow B — SWRD100": {TICKER_SWRD_LSE: 1.00},
     # Shadow C: 60/40 global (SWRD 60% + IEF proxy via yfinance SPY/AGG — usamos SWRD+IGLN)
 }
 
 # Tickers adicionais para shadow portfolios
-TICKERS_SHADOW_EXTRA = ["VWRA.L", "IGLN.L"]   # VWRA e ouro como alternativa ao bond
+TICKERS_SHADOW_EXTRA = [TICKER_VWRA_LSE, "IGLN.L"]   # VWRA e ouro como alternativa ao bond
 
 
 def benchmarks_comparison(precos: pd.DataFrame):

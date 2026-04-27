@@ -92,7 +92,7 @@ def _parse_date_ddmmyy(s: str) -> str | None:
     for fmt in ("%d/%m/%y", "%d/%m/%Y"):
         try:
             d = datetime.strptime(s, fmt)
-            return d.strftime("%Y-%m-%d")
+            return d.strftime(DATE_FORMAT_YMD)
         except ValueError:
             continue
     return None

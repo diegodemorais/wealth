@@ -151,7 +151,7 @@ def gen_fire_trilha():
     future_trilha = []
     cur = last_hist_date + relativedelta(months=1)
     while cur <= fire_date:
-        dt_str = cur.strftime("%Y-%m")
+        dt_str = cur.strftime(DATE_FORMAT_YM)
         j = len(future_dates) + 1  # meses a partir do último histórico
         future_dates.append(dt_str)
         future_trilha.append(_trilha_future(j))
