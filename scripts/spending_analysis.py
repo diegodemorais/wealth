@@ -26,7 +26,7 @@ from pathlib import Path as _Path
 _sys_path = _Path(__file__).parent
 if str(_sys_path) not in sys.path:
     sys.path.insert(0, str(_sys_path))
-from config import SPENDING_ANOMALY_THRESHOLD_BRL
+from config import SPENDING_ANOMALY_THRESHOLD_BRL, DATE_FORMAT_YM, DATE_FORMAT_YMD
 
 # ─── Configuração de categorias ────────────────────────────────────────────────
 

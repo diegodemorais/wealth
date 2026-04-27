@@ -38,6 +38,7 @@ from config import (
     IDADE_ATUAL, IDADE_CENARIO_BASE,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
     ETF_COMPOSITION, MACRO_REGRAS, HORIZONTE_VIDA,
+    DATE_FORMAT_YM, DATE_FORMAT_YMD,
 )
 from fire_montecarlo import (
     PREMISSAS, rodar_monte_carlo, projetar_acumulacao,

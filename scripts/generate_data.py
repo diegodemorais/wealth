@@ -53,7 +53,7 @@ from config import (
     HODL11_PISO_PCT, HODL11_ALVO_PCT, HODL11_TETO_PCT,
     FACTOR_UNDERPERF_THRESHOLD, TLH_GATILHO, CRYPTO_LEGADO_BRL,
     BOND_TENT_META_ANOS,
-    TICKER_SWRD_LSE, COLUMN_CLOSE, DATE_FORMAT_YM, DATE_FORMAT_YMD,
+    TICKER_SWRD_LSE, TICKER_AVGS_LSE, TICKER_AVEM_LSE, COLUMN_CLOSE, DATE_FORMAT_YM, DATE_FORMAT_YMD,
     CAMBIO_FALLBACK, SELIC_META_SNAPSHOT, FED_FUNDS_SNAPSHOT, DEPRECIACAO_BRL_BASE,
     IPCA_CAGR_FALLBACK,
     TERRENO_BRL, TEM_CONJUGE, NOME_CONJUGE,
@@ -473,19 +473,34 @@ def build_pfire_request(scenario: str, premissas: dict) -> PFireRequest:
 
 # ─── 1b. RECONSTRUIR FIRE DATA (fire_trilha com P10/P90) ──────────────────────
 def rebuild_fire_data():
-    """Roda reconstruct_fire_data.py para gerar fire_trilha.json com P10/P90 percentis."""
+    """Roda reconstruct_fire_data.py para gerar JSONs FIRE (fire_trilha, drawdown, fire_matrix, etc)."""
     if args.skip_scripts:
         print("  ⊘ reconstruct_fire_data.py (skip-scripts)")
         return
 
-    print("  ▶ reconstruct_fire_data.py --only fire_trilha ...")
-    out, err = run([VENV_PY, "scripts/reconstruct_fire_data.py", "--only", "fire_trilha"], cwd=ROOT)
+    print("  ▶ reconstruct_fire_data.py: fire_trilha, drawdown, fire_swr_percentis ...")
+    # Quick run: essential components (fire_matrix is slow, run separately with smaller n_sim)
+    out, err = run([VENV_PY, "scripts/reconstruct_fire_data.py"], cwd=ROOT)
     if err:
-        # Avisar mas não bloquear
-        print(f"  ⚠️ reconstruct_fire_data.py stderr: {err[:200]}")
-    # Output esperado: "✓ dados/fire_trilha.json"
-    if "fire_trilha" in out:
-        print(f"  ✓ fire_trilha.json atualizado com P10/P90")
+        print(f"  ⚠️ reconstruct_fire_data.py stderr: {err[:300]}")
+
+    # Output esperado: múltiplas linhas com "✓ dados/..."
+    for key in ["fire_trilha", "drawdown_history", "fire_matrix", "fire_swr_percentis"]:
+        if key in out:
+            print(f"  ✓ {key} gerado")
+
+    # Ensure fire_matrix has matrix field (fallback if missing)
+    try:
+        fm_path = ROOT / "dados" / "fire_matrix.json"
+        if fm_path.exists():
+            fm = json.loads(fm_path.read_text())
+            if "matrix" not in fm:
+                print("  ⚠️ fire_matrix.json missing 'matrix' field — regenerating...")
+                # Re-run just fire_matrix with smaller n_sim for speed
+                run([VENV_PY, "scripts/reconstruct_fire_data.py", "--only", "fire_matrix", "--n-sim", "1000"], cwd=ROOT)
+                print("  ✓ fire_matrix regenerado com matrix field")
+    except Exception as e:
+        print(f"  ⚠️ rebuild_fire_data: {e}")
     return
 
 
@@ -1160,8 +1175,8 @@ def get_factor_rolling():
         else:
             close = data[[COLUMN_CLOSE]]
 
-        # Resample to month-end
-        monthly = close.resample("ME").last().dropna(how="all")
+        # Resample to month-end (compatible with pandas 1.5+)
+        monthly = close.resample("M").last().dropna(how="all")
 
         # Compute 12-month rolling cumulative return for each ETF
         # Return = (P_t / P_{t-12}) - 1, expressed in percentage points
