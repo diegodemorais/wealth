@@ -2,11 +2,42 @@
 
 **Issue**: `agentes/issues/DATA_PIPELINE_CENTRALIZATION.md`  
 **Dono**: Head (with Dev + Quant)  
-**Status**: 📋 Refined (awaiting team questions discussion)  
+**Status**: 🔄 Em progresso (Invariants 3+5 implementados, 1+2+4+6+7 pendentes)  
 **Prioridade**: 🔴 Alta  
 **Criado em**: 2026-04-26  
+**Atualizado em**: 2026-04-27  
 **Dependências**: CENTRALIZATION_COMPLETE (shares invariant pattern)  
 **Paralelo com**: CENTRALIZATION_COMPLETE (Phase 5+)
+
+## Decisões Head (2026-04-27)
+
+| Q | Decisão | Racional |
+|---|---------|----------|
+| Q1 Frequência | D — Hybrid (quick hourly, MC semanal) | CLI por enquanto; sem scheduler |
+| Q2 Fire trigger | B — Time-based 24h cache + `--force-regen` flag | Simpler is better |
+| Q3 Schema | B — Additive only | Sem breaking changes |
+| Q4 CLI vs scheduling | A — CLI only | Sem backend disponível |
+| Q5 React | A — Static | Sem backend API |
+| Q6 Testing | Integration + snapshot validation | CI catches schema breaks |
+| Q7 Scope | A — Core only (metadata + validation) | 2-3 semanas |
+| Q8 Parallel | Standalone | Sem dependência de CENTRALIZATION_COMPLETE |
+| Q9 Risk | A — Non-invasive | Apenas metadata; sem lógica changes |
+
+## Implementado (2026-04-27)
+
+- ✅ **Invariant 3 (Rastreabilidade)**: `_pipeline_run` UUID + `_snapshots_metadata` em data.json
+  - Cada snapshot mostra: `{file, mtime, age_h, _generated}`
+  - Warn automático quando snapshot >48h antigo
+- ✅ **Invariant 5 (Output Validation)**: `_validate_ssot_basic()` ao final de `main()`
+  - Checks: `pfire_base.source`, snapshot staleness, patrimônio holístico > 0, timestamps keys
+
+## Pendente
+
+- [ ] Invariant 1 (Sync): `_window_id` em reconstruct_*.py scripts — requer tocar cada script
+- [ ] Invariant 2 (Dep ordering): PIPELINE_PHASES DAG — informativo, não enforcement
+- [ ] Invariant 4 (Input validation): `SnapshotValidator.validate_snapshot()` com fail-fast
+- [ ] Invariant 6 (Prohibition tests): grep-based QA — complexo, muitas exceções a whitelist
+- [ ] Invariant 7 (Archive): 7-day rollback — nice-to-have, baixa prioridade
 
 ---
 
