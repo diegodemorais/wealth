@@ -3988,3 +3988,37 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ─── LOAD POSIÇÕES FROM IBKR LOTES ──────────────────────────────────────
+def load_posicoes_from_ibkr():
+    """Fallback: load current posições from dados/ibkr/lotes.json if available"""
+    lotes_path = Path("dados/ibkr/lotes.json")
+    
+    if not lotes_path.exists():
+        return {}
+    
+    try:
+        with open(lotes_path) as f:
+            lotes_data = json.load(f)
+        
+        posicoes = {}
+        for ticker, ticker_data in lotes_data.items():
+            lotes = ticker_data.get("lotes", [])
+            if not lotes:
+                continue
+            
+            total_qty = sum(lot.get("qty", 0) for lot in lotes)
+            total_cost = sum(lot.get("qty", 0) * lot.get("custo_por_share", 0) for lot in lotes)
+            
+            if total_qty > 0:
+                posicoes[ticker] = {
+                    "qty": total_qty,
+                    "avg_cost": round(total_cost / total_qty, 4),
+                    "status": ticker_data.get("status", "alvo"),
+                }
+        
+        return posicoes
+    except Exception as e:
+        print(f"  ⚠️ load_posicoes_from_ibkr: {e}")
+        return {}
