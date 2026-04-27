@@ -226,7 +226,8 @@ export default function DARFObligationsPanel({ realizedPnl, cambio = 5.15 }: DAR
             <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>
               Total Realizado
             </div>
-            <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'monospace' }}>
+            <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'monospace' }}
+              data-testid="darf-total-realizado">
               {fmtUSD(analysis.totalRealizedUsd)}
             </div>
           </div>
@@ -256,7 +257,8 @@ export default function DARFObligationsPanel({ realizedPnl, cambio = 5.15 }: DAR
               fontWeight: 700,
               fontFamily: 'monospace',
               color: '#dc2626',
-            }}>
+            }}
+              data-testid="darf-total-brl">
               {fmtBRL(Math.max(0, analysis.totalTaxBrl))}
             </div>
           </div>

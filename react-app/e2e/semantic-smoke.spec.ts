@@ -149,6 +149,33 @@ test.describe('Performance — semantic values', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Portfolio — DARF panel (Lei 14.754/2023 compliance)
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Portfolio — DARF panel', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.portfolio);
+  });
+
+  test('darf-total-realizado shows a dollar value with digits', async ({ page }) => {
+    const el = page.locator('[data-testid="darf-total-realizado"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim()).not.toBe('—');
+    expect(text, 'darf-total-realizado must contain digits').toMatch(/\d/);
+  });
+
+  test('darf-total-brl shows a non-zero BRL tax value', async ({ page }) => {
+    const el = page.locator('[data-testid="darf-total-brl"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim()).not.toBe('—');
+    expect(text.trim()).not.toBe('R$ 0');
+    expect(text, 'darf-total-brl must contain digits').toMatch(/\d/);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Footer — version and data timestamp (all critical tabs)
 // ─────────────────────────────────────────────────────────────────────────────
 

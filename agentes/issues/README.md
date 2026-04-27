@@ -41,12 +41,12 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
-| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | ✅ Lotes históricos carregam, Flex Query merge implementado |
 
 ### Done — Últimas Issues Concluídas
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | 2026-04-27 | Blocker1: realized_pnl.json FIFO+Flex 53 trades USD 26k. Blocker2: corr 33% chart. Blocker3: stagflation 17.1%/hyperinflation 0.0% MC. DARF panel ✅. Score ~10.0/10. |
 | PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | 2026-04-27 | generate_data.py completo. pfire_base.source="mc", is_canonical=true. 563/563 testes. IR diferido R$169k, factor_signal populado. |
 | HD-ARCHITECT-P4 | Auto-Fix Suggestion Engine | 2026-04-27 | SuggestionEngine + --fix CLI. ast.Num bug fixed. Zero violations. 6 scripts refatorados, withdrawal_engine constants extraídas. |
 | HD-ARCHITECT | Guardião de Arquitetura & Centralizations | 2026-04-27 | P0–P4 completos. Zero hardcoding violations. Scanner, whitelist, config.py, 10+ scripts atualizados. |
