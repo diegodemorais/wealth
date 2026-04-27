@@ -4,8 +4,9 @@ titulo: Phase 3b — IBKR Data Integration & Remaining Audit Items
 tipo: feature
 dono: Bookkeeper + Dev + Quant
 prioridade: 🔴 Alta
-status: 📋 Backlog
+status: 🔄 Em progresso
 criado: 2026-04-26
+atualizado: 2026-04-27
 ---
 
 ## Objetivo
@@ -36,22 +37,22 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 
 **O quê:** Calcular correlação rolling 90d entre BTC (Binance) e SWRD (Irlanda UCITS).
 
-**Status:** ✅ RESOLVIDO INTERIM (2026-04-26)
-- SWRD é UCITS domiciliado Irlanda, não Brasil
-- yfinance + pandas<2/>=2 dependency conflict (python-bcb vs pyield incompatível)
-- Solução: usar 0.72 (correlação histórica 2020-2026 ± 0.05)
+**Status:** ✅ RESOLVIDO COMPLETO (2026-04-27)
+- Yahoo Finance v8 API (`query1.finance.yahoo.com/v8/finance/chart/SWRD.L`) — sem pandas, só `requests` + `numpy`
+- Correlação **live** 0.3297 (33%) — não mais estimativa de 72%
+- Série temporal: 244 pontos (1 ano rolling)
+- Chart ECharts implementado no HODL11PositionPanel com linhas de referência 40%/60%
 
 **Implementado:**
-- `btc_indicators.py` retorna 0.72 (estimativa conservadora)
-- Dashboard HODL11PositionPanel exibe "72%" com interpretação
-- Teste: 0.72 ∈ (0.4-0.6) = Neutro/Diversificador (não sistêmico)
+- `btc_indicators.py`: `fetch_swrd_prices_historical()` via Yahoo Finance v8 + `compute_correlation_90d()` retorna série
+- `btc_indicators.json`: `correlation_90d: 0.3297`, `correlation_series: [244 pontos]`
+- `HODL11PositionPanel.tsx`: `CorrelationChart` sub-component com EChart 110px, `onChartReady` hidden container pattern
 
 **Impacto:**
-- ✅ `correlation_90d` em btc_indicators.json agora 0.72 (não null)
-- ✅ Dashboard HODL11PositionPanel mostra valor real: "Diversificador quando <40%, Risco sistêmico quando >60%"
-- +0.2 audit score (OPO 5 completo)
-
-**Phase 3b (pendente):** Resolver deps pandas 2.x system-wide → rodar live correlation calc
+- ✅ `correlation_90d: 0.33` (vs 0.72 stale) = BTC está em zona Diversificador (<40%)
+- ✅ Chart temporal 1 ano com interpretação ao vivo
+- ✅ `DATE_FORMAT_YMD` NameError corrigido em `btc_indicators.py` e `ibkr_lotes.py`
+- ✅ 563/563 testes passando (chart hidden-container pattern fixo)
 
 **Deps:** Resolvido sem deps adicionais
 
@@ -73,6 +74,17 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 **Deps:** IBKR data (asset correlations em stress), MC recompile
 
 ---
+
+## Resolvido Nesta Sessão (2026-04-27)
+
+- ✅ **IR diferido:** `tax.ir_diferido_total_brl = R$169,155` sobre 9 ETFs (4 falhas schema-validation fixas)
+  - Causa raiz: `dados/tax_snapshot.json` stale com IR R$0 (posicoes vazia em dashboard_state.json)
+  - Fix: deletar snapshot → `generate_data.py` recalcula via TaxEngine com posicoes de ibkr/lotes.json
+- ✅ **factor_signal:** `swrd_ytd_pct`, `avgs_ytd_pct`, `excess_ytd_pp`, `excess_since_launch_pp` em data.json
+  - Causa raiz: `factor_cache.json` existia sem `factor_signal` key, impedindo o fallback de rodar
+  - Fix: rodar `generate_data.py` sem `--skip-scripts` → yfinance computa AVGS vs SWRD YTD + since launch
+- ✅ **Testes:** 563 passed | 32 skipped (0 falhas, vs 4 falhas anteriores)
+- ✅ **ibkr_lotes.py:** `DATE_FORMAT_YMD` importado de config (fix NameError pré-existente)
 
 ## Oportunidades (Média Prioridade)
 
@@ -119,11 +131,15 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 - [ ] Obter flex_query.xml de IBKR ou expandir sync
 - [ ] Parsear 213 lotes → realized_pnl.json
 - [ ] Testar DARF panel no Portfolio
-- [ ] Resolver yfinance + numpy incompatibilidade
-- [ ] Calcular correlation_90d BTC/SWRD
-- [ ] Adicionar 2 cenários ao MC
-- [ ] Re-rodar 10k simulações
+- [x] ~~Resolver yfinance + numpy incompatibilidade~~ (Yahoo Finance v8 direto, sem pandas conflict)
+- [x] ~~Calcular correlation_90d BTC/SWRD~~ (live 33%, série 244 pts, chart implementado)
+- [x] ~~tax.ir_diferido_total_brl~~ (R$169,155 sobre 9 ETFs)
+- [x] ~~factor_signal~~ (AVGS vs SWRD YTD + since launch)
+- [x] ~~4 falhas schema-validation~~ (563/563 testes ✓)
+- [ ] Adicionar 2 cenários ao MC (stagflation + hyperinflation)
+- [ ] Re-rodar 10k simulações com cenários estendidos
 - [ ] Atualizar dashboard stress scenarios card
+- [ ] OPO 5: timestamps PTAX/RF/HODL11 em data.json
 - [ ] Changelog Phase 3b completo
 - [ ] Validar 10.0/10 final
 
