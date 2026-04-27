@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { useConfig } from '@/hooks/useConfig';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { EChart } from '@/components/primitives/EChart';
+import { EC, EC_TOOLTIP } from '@/utils/echarts-theme';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -11,6 +13,7 @@ interface BtcIndicatorsData {
   ma200w?: { zone?: string };
   mvrv_zscore?: { current_value?: number; signal?: string };
   correlation_90d?: number;
+  correlation_series?: Array<{ date: string; value: number }>;
 }
 
 interface HODL11PositionPanelProps {
@@ -21,6 +24,124 @@ interface HODL11PositionPanelProps {
     pnl_pct?: number | null;
     banda?: { atual_pct?: number };
   };
+}
+
+function corrColor(pct: number): string {
+  if (pct < 40) return EC.positive;
+  if (pct < 60) return EC.warning;
+  return EC.negative;
+}
+
+function CorrelationChart({
+  current,
+  series,
+}: {
+  current: number;
+  series: Array<{ date: string; value: number }> | null;
+}) {
+  const chartRef = useRef<{ getEchartsInstance?: () => { resize?: () => void } } | null>(null);
+  const currentPct = Math.round(current * 100);
+  const color = corrColor(currentPct);
+
+  // Handle hidden container (tab panel): resize when container becomes visible
+  const onChartReady = () => {
+    const inst = chartRef.current?.getEchartsInstance?.();
+    if (chartRef.current && (chartRef.current as unknown as HTMLElement).offsetWidth > 0) {
+      setTimeout(() => inst?.resize?.(), 100);
+    }
+  };
+
+  if (!series || series.length === 0) {
+    return (
+      <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span>BTC/SWRD Correlação (90d)</span>
+          <span style={{ fontFamily: 'monospace', fontWeight: 600, color }}>{currentPct}%</span>
+        </div>
+        <p style={{ margin: '4px 0 0', fontSize: 10, fontStyle: 'italic' }}>
+          Diversificador quando &lt; 40%; Risco sistêmico quando &gt; 60%
+        </p>
+      </div>
+    );
+  }
+
+  const dates = series.map(p => p.date);
+  const values = series.map(p => Math.round(p.value * 100));
+
+  // Show only every ~30th label to avoid crowding
+  const labelInterval = Math.max(1, Math.floor(series.length / 8));
+
+  const option = {
+    grid: { top: 14, bottom: 28, left: 34, right: 10 },
+    tooltip: {
+      trigger: 'axis' as const,
+      ...EC_TOOLTIP,
+      formatter: (params: { name: string; value: number }[]) => {
+        const p = params[0];
+        const c = corrColor(p.value);
+        return `<span style="color:${EC.muted}">${p.name}</span><br/><span style="color:${c};font-weight:600">${p.value}%</span>`;
+      },
+    },
+    xAxis: {
+      type: 'category' as const,
+      data: dates,
+      boundaryGap: false,
+      axisLabel: {
+        fontSize: 8,
+        color: EC.muted,
+        interval: labelInterval,
+        formatter: (val: string) => val.slice(5).replace('-', '/'),
+      },
+      axisLine: { lineStyle: { color: EC.border2 } },
+      axisTick: { show: false },
+    },
+    yAxis: {
+      type: 'value' as const,
+      min: -20,
+      max: 100,
+      interval: 20,
+      axisLabel: { fontSize: 8, color: EC.muted, formatter: '{value}%' },
+      splitLine: { lineStyle: { color: EC.border3 } },
+    },
+    series: [
+      {
+        type: 'line' as const,
+        data: values,
+        smooth: 0.3,
+        lineStyle: { color: EC.accent, width: 1.5 },
+        symbol: 'none',
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          data: [
+            {
+              yAxis: 40,
+              lineStyle: { color: EC.positive, type: 'dashed' as const, width: 1 },
+              label: { show: true, position: 'end' as const, formatter: '40%', fontSize: 8, color: EC.positive },
+            },
+            {
+              yAxis: 60,
+              lineStyle: { color: EC.warning, type: 'dashed' as const, width: 1 },
+              label: { show: true, position: 'end' as const, formatter: '60%', fontSize: 8, color: EC.warning },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+        <span style={{ fontSize: 11, color: 'var(--muted)' }}>BTC/SWRD Correlação (90d rolling)</span>
+        <span style={{ fontSize: 12, fontFamily: 'monospace', fontWeight: 700, color }}>{currentPct}%</span>
+      </div>
+      <EChart ref={chartRef as React.RefObject<import('echarts-for-react').default>} option={option} style={{ height: 110 }} onChartReady={onChartReady} />
+      <p style={{ margin: '2px 0 0', fontSize: 9, color: 'var(--muted)', fontStyle: 'italic' }}>
+        Diversificador quando &lt; 40% · Risco sistêmico quando &gt; 60%
+      </p>
+    </div>
+  );
 }
 
 /**
@@ -138,19 +259,14 @@ export default function HODL11PositionPanel({ hodl11 }: HODL11PositionPanelProps
       </div>
 
       {/* BTC/SWRD 90-day rolling correlation */}
-      <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)', fontSize: 11, color: 'var(--muted)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>BTC/SWRD Correlação (90d)</span>
-          <span style={{ fontFamily: 'monospace', fontWeight: 600, color: btcData?.correlation_90d != null ? 'var(--text)' : 'var(--muted)' }}>
-            {btcData?.correlation_90d != null
-              ? `${(btcData.correlation_90d * 100).toFixed(0)}%`
-              : '—'}
-          </span>
+      {btcData?.correlation_90d != null && (
+        <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <CorrelationChart
+            current={btcData.correlation_90d}
+            series={btcData.correlation_series ?? null}
+          />
         </div>
-        <p style={{ margin: '4px 0 0', fontSize: 10, color: 'var(--muted)', fontStyle: 'italic' }}>
-          Diversificador quando {'<'} 40%; Risco sistêmico quando {'>'} 60%
-        </p>
-      </div>
+      )}
     </div>
   );
 }

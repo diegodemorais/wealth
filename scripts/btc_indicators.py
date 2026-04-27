@@ -26,6 +26,7 @@ from config import (
 )
 
 OUTPUT_PATH = Path(__file__).parent.parent / "dados" / "btc_indicators.json"
+DATE_FORMAT_YMD = "%Y-%m-%d"
 
 
 # ---------------------------------------------------------------------------
@@ -267,46 +268,88 @@ def fetch_daily_prices_binance(symbol, days=120):
         return None
 
 
-def fetch_swrd_prices_historical(days=120):
-    """Estima preços SWRD usando Yahoo Finance fetch direto (sem yfinance lib).
-    Fallback: usa correlação estimada baseada em dados históricos conhecidos."""
-    try:
-        # Tentar fetch direto do Yahoo Finance via URL
-        end = datetime.now(timezone.utc).date()
-        start = end - timedelta(days=days)
-        url = (
-            f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/SWRD?"
-            f"modules=price"
-        )
-        r = requests.get(url, timeout=10)
-        # Se falhar, retorna None para fallback
-        if r.status_code != 200:
-            return None
-        # Se suceder mas é complexo, use None
-        return None
-    except Exception:
-        return None
+def fetch_swrd_prices_historical(days=400):
+    """Fetch SWRD daily prices via Yahoo Finance v8 chart API (no library needed).
+    Tries multiple ticker symbols (LSE, SIX) as fallbacks.
+    """
+    end_ts = int(datetime.now(timezone.utc).timestamp())
+    start_ts = int((datetime.now(timezone.utc) - timedelta(days=days)).timestamp())
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+        "Accept": "application/json",
+    }
+    for ticker in ["SWRD.L", "SWRD.SW", "IWRD.L"]:
+        try:
+            url = (
+                f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+                f"?period1={start_ts}&period2={end_ts}&interval=1d"
+            )
+            r = requests.get(url, headers=headers, timeout=20)
+            if r.status_code != 200:
+                continue
+            data = r.json()
+            results = data.get("chart", {}).get("result", [])
+            if not results:
+                continue
+            timestamps = results[0].get("timestamp", [])
+            closes = results[0].get("indicators", {}).get("quote", [{}])[0].get("close", [])
+            out = []
+            for ts, close in zip(timestamps, closes):
+                if close is None:
+                    continue
+                date = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(DATE_FORMAT_YMD)
+                out.append((date, close))
+            if len(out) > 60:
+                return out
+        except Exception:
+            continue
+    return None
 
 
 def compute_correlation_90d():
-    """90-day rolling correlation entre BTC e SWRD (Irlanda UCITS).
+    """Rolling 90-day BTC/SWRD correlation with 1-year time series.
 
-    SWRD: Xtrackers MSCI World (domiciliado Irlanda, track ~2000 ações globais).
-    BTC: Binance OHLC.
-
-    Problema técnico (Phase 3b blocker):
-    - yfinance + pandas<2/>=2 conflict: python-bcb requer pandas<2, pyield requer pandas>=2
-    - Não consegue resolver versões compatíveis no sistema
-
-    Solução interim: usar correlação histórica estimada 0.72
-    - Período 2020-2026: correlação média 0.72 ± 0.05
-    - Último período 90d (estimado): 0.68-0.75 (dentro do range)
-    - Interpretação: diversificador quando < 40%, sistêmico quando > 60%
-
-    TODO: resolver deps python-bcb vs pyield → upgrade pandas 2.x system-wide
+    Returns dict with:
+      current: float  — most recent 90d correlation (0..1)
+      series:  list[{date, value}] | None  — last ~365 points for charting
     """
-    # Historical estimate — atualize quando yfinance + deps forem resolvidas
-    return 0.72
+    WINDOW = 90
+    FETCH_DAYS = 365 + WINDOW + 30
+
+    try:
+        btc_raw = fetch_daily_prices_binance("BTC", days=FETCH_DAYS)
+        swrd_raw = fetch_swrd_prices_historical(days=FETCH_DAYS)
+
+        if not btc_raw or not swrd_raw:
+            return {"current": 0.72, "series": None}
+
+        btc_dict = dict(btc_raw)
+        swrd_dict = dict(swrd_raw)
+        common_dates = sorted(set(btc_dict.keys()) & set(swrd_dict.keys()))
+
+        if len(common_dates) < WINDOW + 10:
+            return {"current": 0.72, "series": None}
+
+        btc_prices = np.array([btc_dict[d] for d in common_dates])
+        swrd_prices = np.array([swrd_dict[d] for d in common_dates])
+        btc_ret = np.diff(np.log(btc_prices))
+        swrd_ret = np.diff(np.log(swrd_prices))
+        ret_dates = common_dates[1:]
+
+        series = []
+        n = len(btc_ret)
+        for i in range(WINDOW - 1, n):
+            bw = btc_ret[i - WINDOW + 1: i + 1]
+            sw = swrd_ret[i - WINDOW + 1: i + 1]
+            corr = float(np.corrcoef(bw, sw)[0, 1])
+            if not np.isnan(corr):
+                series.append({"date": ret_dates[i], "value": round(corr, 4)})
+
+        series = series[-365:]
+        current = series[-1]["value"] if series else 0.72
+        return {"current": current, "series": series if series else None}
+    except Exception:
+        return {"current": 0.72, "series": None}
 
 
 # ---------------------------------------------------------------------------
@@ -345,23 +388,25 @@ def main():
 
     # --- BTC/SWRD 90-day Correlation ---
     correlation_90d = None
+    correlation_series = None
     try:
-        print("Calculando correlação BTC/SWRD 90 dias...")
-        correlation_90d = compute_correlation_90d()
-        if correlation_90d:
-            print(f"  Correlação: {correlation_90d}")
-        else:
-            print("  Correlação indisponível (dados insuficientes ou yfinance não instalado)")
+        print("Calculando correlação BTC/SWRD 90 dias (rolling)...")
+        corr_result = compute_correlation_90d()
+        correlation_90d = corr_result["current"]
+        correlation_series = corr_result.get("series")
+        n_pts = len(correlation_series) if correlation_series else 0
+        source = "calculada" if correlation_series else "estimada (fallback)"
+        print(f"  Correlação {source}: {correlation_90d:.4f} | série: {n_pts} pontos")
     except Exception as e:
         msg = f"Correlação BTC/SWRD falhou: {e}"
         print(f"  AVISO: {msg}", file=sys.stderr)
-        # Não adiciona erro fatal — é melhor ter dados incompletos que nenhum dado
 
     output = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "ma200w": ma200w,
         "mvrv_zscore": mvrv,
         "correlation_90d": correlation_90d,
+        "correlation_series": correlation_series,
         "errors": errors if errors else None,
         "meta": {
             "data_sources": {
@@ -385,8 +430,9 @@ def main():
         print(f"  200WMA zone: {ma200w['zone']} | pct acima: {ma200w['pct_above_ma']:+.1f}%")
     if mvrv:
         print(f"  MVRV Z-Score: {mvrv['current_value']} — {mvrv['zone']}")
-    if correlation_90d:
-        print(f"  BTC/SWRD Correlação 90d: {correlation_90d}")
+    if correlation_90d is not None:
+        n_pts = len(correlation_series) if correlation_series else 0
+        print(f"  BTC/SWRD Correlação 90d: {correlation_90d:.4f} | série: {n_pts} pontos")
     if errors:
         print(f"  Erros parciais: {errors}")
     else:
