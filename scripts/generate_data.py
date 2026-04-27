@@ -1511,8 +1511,26 @@ def get_rf(state):
             "notas": raw.get("notas", notas_map.get(key, "")),
         }
 
+    # Fallback: Se RF está vazio em state, ler de resumo_td.json (Nubank via parse_nubank_operations.py)
+    if not rf_raw and NUBANK_TD_PATH.exists():
+        try:
+            nubank_resumo = json.loads(NUBANK_TD_PATH.read_text())
+            for key, data in nubank_resumo.items():
+                if key.startswith("_"):
+                    continue  # skip metadata fields
+                rf[key] = {
+                    "cotas": None,  # será calculado por reconstruct_history
+                    "valor": data.get("liquido_aplicado", 0),
+                    "taxa": data.get("taxa"),
+                    "tipo": data.get("tipo", "Tesouro Direto"),
+                    "notas": notas_map.get(key, ""),
+                }
+                print(f"  ✓ RF loaded from resumo_td.json: {key} R${data.get('liquido_aplicado', 0):,.0f}")
+        except Exception as e:
+            print(f"  ⚠️ resumo_td.json: {e}")
+
     # Initialize missing RF assets with empty placeholders (prevents RF vazio)
-    for asset_key in ["ipca2029", "ipca2040", "renda2065"]:
+    for asset_key in ["ipca2029", "ipca2040", "renda2065", "ipca2050"]:
         if asset_key not in rf:
             rf[asset_key] = {
                 "cotas": None,
