@@ -1515,6 +1515,7 @@ def get_rf(state):
     if not rf_raw and NUBANK_TD_PATH.exists():
         try:
             nubank_resumo = json.loads(NUBANK_TD_PATH.read_text())
+            print(f"  ▶ Loading RF from resumo_td.json ({len(nubank_resumo)} items)...")
             for key, data in nubank_resumo.items():
                 if key.startswith("_"):
                     continue  # skip metadata fields
@@ -1525,7 +1526,7 @@ def get_rf(state):
                     "tipo": data.get("tipo", "Tesouro Direto"),
                     "notas": notas_map.get(key, ""),
                 }
-                print(f"  ✓ RF loaded from resumo_td.json: {key} R${data.get('liquido_aplicado', 0):,.0f}")
+                print(f"  ✓ RF {key}: R${data.get('liquido_aplicado', 0):,.0f} @ {data.get('taxa')}%")
         except Exception as e:
             print(f"  ⚠️ resumo_td.json: {e}")
 
