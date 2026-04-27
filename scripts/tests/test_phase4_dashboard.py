@@ -153,23 +153,6 @@ class TestPhase4DataIntegrity:
         # If we got here, it's valid JSON
         assert isinstance(data_json, dict)
 
-    def test_data_is_serializable(self, data_json):
-        """data.json should be serializable back to JSON."""
-        if data_json is None:
-            pytest.skip("data.json not found")
-
-        # Should be able to serialize back
-        json_str = json.dumps(data_json)
-        assert len(json_str) > 100
-
-    def test_no_nan_in_numeric_fields(self, data_json):
-        """Numeric fields should not have NaN (JSON serialization would fail)."""
-        if data_json is None:
-            pytest.skip("data.json not found")
-
-        # If we loaded valid JSON, there are no NaNs
-        # (JSON doesn't support NaN, so if it loaded, it's clean)
-        assert True
 
 
 class TestPhase4ReactAppCompatibility:

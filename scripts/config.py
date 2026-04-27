@@ -203,9 +203,9 @@ GLIDE_PATH = {
 
 ETF_TER = {
     "SWRD":    0.12,
-    "AVGS":    0.25,
-    "AVEM":    0.25,
-    "JPGL":    0.38,
+    "AVGS":    0.39,
+    "AVEM":    0.35,
+    "JPGL":    0.19,
     "HODL11":  0.70,
     "RENDA":   0.00,
     "IPCA":    0.00,

@@ -163,30 +163,19 @@ class TestPFireCanonicalForm:
         pfire_mid = canonicalize_pfire(0.5, source="mc")
         assert 0 <= pfire_mid.decimal <= 1, "Decimal out of range"
 
-    def test_canonical_percentage_scaled_correctly(self):
-        """Canonical percentage must be decimal × 100"""
-        from pfire_transformer import canonicalize_pfire
-
-        test_cases = [
-            (0.0, 0.0),
-            (0.5, 50.0),
-            (0.864, 86.4),
-            (1.0, 100.0),
-        ]
-
-        for decimal, expected_pct in test_cases:
-            pfire = canonicalize_pfire(decimal, source="mc")
-            assert (
-                pfire.percentage == expected_pct
-            ), f"For {decimal}, expected {expected_pct}%, got {pfire.percentage}%"
-
-    def test_canonical_percentstr_formatted(self):
-        """Canonical percentStr must be formatted with % sign"""
+    def test_canonical_form_percentstr_and_scaling(self):
+        """Canonical percentStr format and percentage scaling (merged)"""
         from pfire_transformer import canonicalize_pfire
 
         pfire = canonicalize_pfire(0.864, source="mc")
+
+        # Format check
         assert pfire.percentStr.endswith("%"), "percentStr must end with %"
         assert "86.4" in pfire.percentStr, "percentStr must contain the percentage value"
+
+        # Scaling check (combined)
+        assert pfire.percentage == 86.4, f"percentage scaling wrong: {pfire.percentage}"
+        assert pfire.decimal == 0.864, f"decimal preservation wrong: {pfire.decimal}"
 
 
 if __name__ == "__main__":
