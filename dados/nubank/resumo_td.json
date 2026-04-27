@@ -1,21 +1,73 @@
 {
-  "ipca2029": {
-    "liquido_aplicado": 86554.71,
-    "taxa": 7.58,
-    "tipo": "Tesouro Direto"
-  },
   "ipca2040": {
+    "aplicacoes": [
+      {
+        "data": "2026-04-13",
+        "valor": 46498.08
+      },
+      {
+        "data": "2026-04-06",
+        "valor": 20035.48
+      },
+      {
+        "data": "2026-03-01",
+        "valor": 46481.44
+      }
+    ],
+    "resgates": [],
+    "total_aplicado": 113015.0,
+    "total_resgatado": 0.0,
     "liquido_aplicado": 113015.0,
-    "taxa": 7.10,
+    "zerado": false,
+    "n_aplicacoes": 3,
+    "taxa": 7.1,
     "tipo": "Tesouro Direto"
   },
   "ipca2050": {
-    "liquido_aplicado": 11660.0,
+    "aplicacoes": [
+      {
+        "data": "2026-04-13",
+        "valor": 11660.71
+      }
+    ],
+    "resgates": [],
+    "total_aplicado": 11660.71,
+    "total_resgatado": 0.0,
+    "liquido_aplicado": 11660.71,
+    "zerado": false,
+    "n_aplicacoes": 1,
     "taxa": 6.85,
     "tipo": "Tesouro Direto"
   },
+  "ipca2029": {
+    "aplicacoes": [
+      {
+        "data": "2026-03-01",
+        "valor": 86554.71
+      }
+    ],
+    "resgates": [],
+    "total_aplicado": 86554.71,
+    "total_resgatado": 0.0,
+    "liquido_aplicado": 86554.71,
+    "zerado": false,
+    "n_aplicacoes": 1,
+    "taxa": 7.58,
+    "tipo": "estrutural"
+  },
   "renda2065": {
+    "aplicacoes": [
+      {
+        "data": "2026-03-01",
+        "valor": 117832.62
+      }
+    ],
+    "resgates": [],
+    "total_aplicado": 117832.62,
+    "total_resgatado": 0.0,
     "liquido_aplicado": 117832.62,
+    "zerado": false,
+    "n_aplicacoes": 1,
     "taxa": 6.93,
     "tipo": "Tesouro Direto"
   }

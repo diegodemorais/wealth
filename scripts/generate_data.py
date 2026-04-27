@@ -2713,13 +2713,16 @@ def sync_nubank_resumo():
         # Mapa título → chave de resumo (variações de nome)
         titulo_map = {
             "IPCA+ 2029": "ipca2029",
+            "Tesouro IPCA+ 2029": "ipca2029",
             "IPCA+ 2040": "ipca2040",
             "Tesouro IPCA+ 2040": "ipca2040",
             "IPCA+ 2050": "ipca2050",
             "Tesouro IPCA+ 2050": "ipca2050",
             "RendA+ 2065": "renda2065",
             "Renda+ 2065": "renda2065",
+            "Tesouro Renda+ 2065": "renda2065",
             "IPCA+ 2045": "ipca2045",
+            "Tesouro IPCA+ 2045": "ipca2045",
         }
 
         # Agregar por título
