@@ -2177,7 +2177,7 @@ def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrail
 
 
 # ─── 9. MACRO ─────────────────────────────────────────────────────────────────
-def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
+def get_macro_data(state: dict, total_brl_override: float = None, equity_usd_override: float = None) -> dict:
     """
     Retorna dados macro para o dashboard.
 
@@ -2191,6 +2191,7 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
     Args:
         state: Estado contendo dados macro cached
         total_brl_override: Se fornecido, usa esse valor em vez de state.patrimonio.total_brl
+        equity_usd_override: Se fornecido, usa esse valor em vez de state.patrimonio.equity_usd
     """
     import math
     import urllib.request
@@ -2270,12 +2271,12 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
     exposicao_cambial_pct = None
     try:
         pat = state.get("patrimonio", {})
-        equity_usd = pat.get("equity_usd", 0)
-        cambio_ref  = pat.get("cambio", CAMBIO_FALLBACK)
+        # Preferir override (calculado de posicoes × preços ao vivo) sobre state.patrimonio
+        equity_usd  = equity_usd_override if equity_usd_override is not None else (pat.get("equity_usd") or 0)
+        cambio_ref  = pat.get("cambio") or CAMBIO_FALLBACK
         # Usar total_brl_override se fornecido (calculado recentemente em compute_drift)
-        # Senão, ler do state (que pode estar desatualizado)
-        total_brl   = total_brl_override if total_brl_override is not None else pat.get("total_brl", 0)
-        if total_brl and total_brl > 0:
+        total_brl   = total_brl_override if total_brl_override is not None else (pat.get("total_brl") or 0)
+        if equity_usd and total_brl and total_brl > 0:
             equity_brl = equity_usd * cambio_ref
             exposicao_cambial_pct = round(equity_brl / total_brl * 100, 1)
     except Exception:
@@ -3745,10 +3746,21 @@ def main():
 
     if macro is None:
         print("  ▶ macro data (inline fallback) ...")
-        macro = get_macro_data(state, total_brl_override=total_brl)
+        _eq_usd_live = sum(p.get("qty", 0) * p.get("price", p.get("avg_cost", 0)) for p in posicoes.values())
+        macro = get_macro_data(state, total_brl_override=total_brl, equity_usd_override=_eq_usd_live)
 
     # Inject cambio into macro for template convenience
     macro["cambio"] = cambio
+
+    # Recalcular exposicao_cambial_pct sempre de posicoes ao vivo (sobrepõe snapshot stale)
+    # Usa cambio e total_brl de compute_drift — mais confiáveis que state.patrimonio
+    try:
+        _eq_usd_live = sum(p.get("qty", 0) * p.get("price", p.get("avg_cost", 0)) for p in posicoes.values())
+        if _eq_usd_live and total_brl and total_brl > 0:
+            macro["exposicao_cambial_pct"] = round(_eq_usd_live * cambio / total_brl * 100, 1)
+            macro["equity_usd"] = round(_eq_usd_live, 2)
+    except Exception:
+        pass
 
     # HODL11 FIRE projection (3 cenários BTC/USD) — precisa de macro.bitcoin_usd
     _btc_usd_live = macro.get("bitcoin_usd") or (state.get("mercado", {}).get("btc_usd"))

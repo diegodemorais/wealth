@@ -1,61 +1,61 @@
 {
-  "_generated": "2026-04-27T19:27:07",
-  "_generated_brt": "2026-04-27T19:27:07-03:00",
+  "_generated": "2026-04-27T20:34:50",
+  "_generated_brt": "2026-04-27T20:34:50-03:00",
   "_schema_version": "2.0",
-  "_pipeline_run": "20260427T192706",
+  "_pipeline_run": "20260427T203446",
   "_snapshots_metadata": {
     "fire_matrix": {
       "file": "fire_matrix.json",
-      "mtime": "2026-04-27T18:53:37",
+      "mtime": "2026-04-27T20:00:05",
       "age_h": 0.6,
-      "_generated": "2026-04-27T18:51:44"
+      "_generated": "2026-04-27T19:58:15"
     },
     "fire_swr_percentis": {
       "file": "fire_swr_percentis.json",
-      "mtime": "2026-04-27T18:51:44",
+      "mtime": "2026-04-27T19:58:15",
       "age_h": 0.6,
-      "_generated": "2026-04-27T18:51:44"
+      "_generated": "2026-04-27T19:58:15"
     },
     "fire_aporte_sensitivity": {
       "file": "fire_aporte_sensitivity.json",
-      "mtime": "2026-04-27T18:51:50",
+      "mtime": "2026-04-27T19:58:21",
       "age_h": 0.6,
-      "_generated": "2026-04-27T18:51:44"
+      "_generated": "2026-04-27T19:58:15"
     },
     "fire_trilha": {
       "file": "fire_trilha.json",
-      "mtime": "2026-04-27T18:51:44",
+      "mtime": "2026-04-27T19:58:15",
       "age_h": 0.6,
-      "_generated": "2026-04-27T18:51:44"
+      "_generated": "2026-04-27T19:58:15"
     },
     "drawdown_history": {
       "file": "drawdown_history.json",
-      "mtime": "2026-04-27T18:51:44",
+      "mtime": "2026-04-27T19:58:15",
       "age_h": 0.6,
-      "_generated": "2026-04-27T18:51:44"
+      "_generated": "2026-04-27T19:58:15"
     },
     "etf_composition": {
       "file": "etf_composition.json",
-      "mtime": "2026-04-27T18:51:44",
+      "mtime": "2026-04-27T19:58:15",
       "age_h": 0.6,
-      "_generated": "2026-04-27T18:51:44"
+      "_generated": "2026-04-27T19:58:15"
     },
     "bond_pool_runway": {
       "file": "bond_pool_runway.json",
-      "mtime": "2026-04-27T18:51:44",
+      "mtime": "2026-04-27T19:58:15",
       "age_h": 0.6,
-      "_generated": "2026-04-27T18:51:44"
+      "_generated": "2026-04-27T19:58:15"
     },
     "lumpy_events": {
       "file": "lumpy_events.json",
-      "mtime": "2026-04-27T18:51:52",
+      "mtime": "2026-04-27T19:58:23",
       "age_h": 0.6,
-      "_generated": "2026-04-27T18:51:44"
+      "_generated": "2026-04-27T19:58:15"
     },
     "fire_by_profile": {
       "file": "fire_by_profile.json",
       "mtime": "2026-04-27T12:18:28",
-      "age_h": 7.1,
+      "age_h": 8.3,
       "_generated": null
     }
   },
@@ -86,13 +86,13 @@
     "rf_updated": "2026-04-25",
     "hodl11_updated": "2026-04-27"
   },
-  "cambio": 4.977,
+  "cambio": 4.9791,
   "posicoes": {
     "SWRD": {
       "qty": 5291.6415,
       "avg_cost": 32.8795,
       "status": "alvo",
-      "price": 50.0,
+      "price": 49.935,
       "bucket": "SWRD",
       "ter": 0.12
     },
@@ -100,7 +100,7 @@
       "qty": 2020.2934,
       "avg_cost": 31.3341,
       "status": "transitório",
-      "price": 52.09,
+      "price": 51.96,
       "bucket": "AVEM",
       "ter": null
     },
@@ -108,7 +108,7 @@
       "qty": 373.2498,
       "avg_cost": 60.0398,
       "status": "transitório",
-      "price": 87.46,
+      "price": 87.1,
       "bucket": "AVGS",
       "ter": null
     },
@@ -116,7 +116,7 @@
       "qty": 34.0,
       "avg_cost": 37.2259,
       "status": "transitório",
-      "price": 68.57,
+      "price": 68.09,
       "bucket": "JPGL",
       "ter": null
     },
@@ -156,7 +156,7 @@
       "qty": 233.4292,
       "avg_cost": 24.9326,
       "status": "alvo",
-      "price": 27.485,
+      "price": 27.37,
       "bucket": "AVGS",
       "ter": 0.39
     }
@@ -191,8 +191,9 @@
     "source": "mc",
     "is_canonical": true
   },
+  "pfire_cenarios_estendidos": {},
   "premissas": {
-    "patrimonio_atual": 3727914,
+    "patrimonio_atual": 3725369,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2330,7 +2331,7 @@
       253.74,
       283.54,
       296.13,
-      304.69,
+      304.68,
       321.64,
       339.22,
       328.39,
@@ -2695,17 +2696,17 @@
       4.86,
       13.32,
       13.34,
-      16.18
+      15.74
     ],
     "threshold": -5
   },
   "factor_signal": {
-    "swrd_ytd_pct": 4.62,
-    "avgs_ytd_pct": 15.17,
-    "excess_ytd_pp": 10.54,
-    "swrd_since_launch_pct": 26.0,
-    "avgs_since_launch_pct": 37.46,
-    "excess_since_launch_pp": 11.46,
+    "swrd_ytd_pct": null,
+    "avgs_ytd_pct": null,
+    "excess_ytd_pp": null,
+    "swrd_since_launch_pct": null,
+    "avgs_since_launch_pct": null,
+    "excess_since_launch_pp": null,
     "avgs_launch_date": "2024-10-14",
     "meses_desde_launch": 18.4,
     "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
@@ -2795,7 +2796,7 @@
     "DGS": {
       "alpha": -0.00126,
       "mkt_rf": 0.8246,
-      "smb": 0.6263,
+      "smb": 0.6262,
       "hml": 0.1524,
       "rmw": 0.2273,
       "cma": 0.1373,
@@ -2931,23 +2932,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 76894.74,
+      "btc_atual_usd": 77196.27,
       "hodl11_brl_atual": 108102,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.04,
-          "valor_fire_brl": 112468
+          "valor_fire_brl": 112028
         },
         "base": {
           "btc_target_usd": 250000,
-          "upside_factor": 3.25,
-          "valor_fire_brl": 351461
+          "upside_factor": 3.24,
+          "valor_fire_brl": 350088
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.5,
-          "valor_fire_brl": 702922
+          "upside_factor": 6.48,
+          "valor_fire_brl": 700176
         }
       }
     }
@@ -3021,9 +3022,9 @@
       "unidade": "pp",
       "piso": -2.0,
       "gap": -2.2,
-      "posicao_r": 1315954,
+      "posicao_r": 1315055,
       "acao": "Rebalancear",
-      "detalhe": "drift: -4.20pp (atual 35.3% vs alvo 39.5%) · posição R$1316k"
+      "detalhe": "drift: -4.20pp (atual 35.3% vs alvo 39.5%) · posição R$1315k"
     },
     {
       "id": "hodl11_banda",
@@ -3043,13 +3044,13 @@
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.655636369293926,
+      "valor": -11.65335165456093,
       "unidade": "pp",
       "piso": -2.0,
-      "gap": -9.66,
+      "gap": -9.65,
       "posicao_r": 124675.0,
       "acao": "Aportar urgente",
-      "detalhe": "drift: -11.66pp vs alvo 15% · posição R$125k"
+      "detalhe": "drift: -11.65pp vs alvo 15% · posição R$125k"
     }
   ],
   "guardrails_retirada": [
@@ -3166,7 +3167,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.2934,
       "pm": 31.3341,
-      "price": 52.09,
+      "price": 51.96,
       "ucits": "AVEM.L"
     },
     {
@@ -3174,7 +3175,7 @@
       "nome": "SPDR World SC",
       "qty": 373.2498,
       "pm": 60.0398,
-      "price": 87.46,
+      "price": 87.1,
       "ucits": "AVGS.L"
     },
     {
@@ -3182,7 +3183,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.2259,
-      "price": 68.57,
+      "price": 68.09,
       "ucits": "JPGL.L"
     },
     {
@@ -3220,11 +3221,11 @@
   ],
   "tlh_lotes": {
     "summary": {
-      "total_lotes": 213,
+      "total_lotes": 221,
       "total_symbols": 9,
-      "ir_brl_total": 144657.96,
-      "tlh_count": 3,
-      "tlh_benefit_brl": 1.05,
+      "ir_brl_total": 142537.99,
+      "tlh_count": 4,
+      "tlh_benefit_brl": 2.14,
       "by_symbol": {
         "AVDV": {
           "symbol": "AVDV",
@@ -3354,20 +3355,20 @@
         },
         "SWRD": {
           "symbol": "SWRD",
-          "n_lotes": 60,
+          "n_lotes": 68,
           "qty_total": 5291.6415,
-          "cost_usd_total": 174101.36,
-          "cost_brl_total": 922435.42,
-          "value_brl_total": 1313263.42,
-          "pnl_brl_total": 390828.0,
-          "ir_brl_total": 58625.21,
-          "tlh_count": 2,
-          "tlh_benefit_brl": 1.04,
-          "pm_usd": 32.9012,
+          "cost_usd_total": 177098.46,
+          "cost_brl_total": 936575.86,
+          "value_brl_total": 1313263.44,
+          "pnl_brl_total": 376687.58,
+          "ir_brl_total": 56505.24,
+          "tlh_count": 3,
+          "tlh_benefit_brl": 2.13,
+          "pm_usd": 33.4676,
           "status": "alvo",
           "domicilio": "UCITS",
           "bucket": "SWRD",
-          "oldest_lot": "2021-04-08",
+          "oldest_lot": "2021-04-16",
           "newest_lot": "2026-03-09"
         },
         "USSC": {
@@ -3393,41 +3394,21 @@
     "lots": [
       {
         "symbol": "SWRD",
-        "date": "2021-04-08",
-        "qty": 61.0,
-        "price_usd": 28.78,
-        "commission_usd": 5.0,
-        "cost_usd": 1760.58,
-        "bucket": "SWRD",
-        "status": "alvo",
-        "domicilio": "UCITS",
-        "ptax_compra": 5.5817,
-        "ptax_atual": 4.97,
-        "price_atual_usd": 49.935,
-        "cost_brl": 9827.03,
-        "value_brl": 15138.79,
-        "pnl_brl": 5311.76,
-        "ir_brl": 796.76,
-        "tlh_eligible": false,
-        "tlh_benefit_brl": 0
-      },
-      {
-        "symbol": "SWRD",
         "date": "2021-04-16",
-        "qty": 610.0,
+        "qty": 420.7821,
         "price_usd": 29.385,
         "commission_usd": 8.9624,
-        "cost_usd": 17933.81,
+        "cost_usd": 12364.68,
         "bucket": "SWRD",
         "status": "alvo",
         "domicilio": "UCITS",
         "ptax_compra": 5.6328,
         "ptax_atual": 4.97,
         "price_atual_usd": 49.935,
-        "cost_brl": 101017.58,
-        "value_brl": 151387.94,
-        "pnl_brl": 50370.36,
-        "ir_brl": 7555.55,
+        "cost_brl": 69698.26,
+        "value_brl": 104428.42,
+        "pnl_brl": 34730.16,
+        "ir_brl": 5209.52,
         "tlh_eligible": false,
         "tlh_benefit_brl": 0
       },
@@ -4548,6 +4529,186 @@
         "value_brl": 227.88,
         "pnl_brl": 5.05,
         "ir_brl": 0.76,
+        "tlh_eligible": false,
+        "tlh_benefit_brl": 0
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2025-12-22",
+        "qty": 44.0,
+        "price_usd": 40.57,
+        "commission_usd": 4.3152,
+        "cost_usd": 1789.4,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.5389,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 9911.28,
+        "value_brl": 10919.79,
+        "pnl_brl": 1008.51,
+        "ir_brl": 151.28,
+        "tlh_eligible": false,
+        "tlh_benefit_brl": 0
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2025-12-22",
+        "qty": 1.0,
+        "price_usd": 40.67,
+        "commission_usd": 0.1006,
+        "cost_usd": 40.77,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.5389,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 225.82,
+        "value_brl": 248.18,
+        "pnl_brl": 22.36,
+        "ir_brl": 3.35,
+        "tlh_eligible": false,
+        "tlh_benefit_brl": 0
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2025-12-22",
+        "qty": 0.3503,
+        "price_usd": 40.67,
+        "commission_usd": 0.0,
+        "cost_usd": 14.25,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.5389,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 78.91,
+        "value_brl": 86.94,
+        "pnl_brl": 8.03,
+        "ir_brl": 1.2,
+        "tlh_eligible": false,
+        "tlh_benefit_brl": 0
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2026-01-14",
+        "qty": 44.0,
+        "price_usd": 41.2,
+        "commission_usd": 1.7,
+        "cost_usd": 1814.5,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.3795,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 9761.1,
+        "value_brl": 10919.79,
+        "pnl_brl": 1158.69,
+        "ir_brl": 173.8,
+        "tlh_eligible": false,
+        "tlh_benefit_brl": 0
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2026-01-14",
+        "qty": 70.0,
+        "price_usd": 41.1947,
+        "commission_usd": 0.6482,
+        "cost_usd": 2884.28,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.3795,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 15515.97,
+        "value_brl": 17372.39,
+        "pnl_brl": 1856.42,
+        "ir_brl": 278.46,
+        "tlh_eligible": false,
+        "tlh_benefit_brl": 0
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2026-01-14",
+        "qty": 0.8148,
+        "price_usd": 41.2,
+        "commission_usd": 0.0168,
+        "cost_usd": 33.59,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.3795,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 180.68,
+        "value_brl": 202.21,
+        "pnl_brl": 21.53,
+        "ir_brl": 3.23,
+        "tlh_eligible": false,
+        "tlh_benefit_brl": 0
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2026-01-30",
+        "qty": 0.0528,
+        "price_usd": 41.62,
+        "commission_usd": 1.7,
+        "cost_usd": 3.9,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.2301,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 20.38,
+        "value_brl": 13.1,
+        "pnl_brl": -7.28,
+        "ir_brl": 0.0,
+        "tlh_eligible": true,
+        "tlh_benefit_brl": 1.09
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2026-01-30",
+        "qty": 89.0,
+        "price_usd": 41.62,
+        "commission_usd": 0.2332,
+        "cost_usd": 3704.41,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.2301,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 19374.45,
+        "value_brl": 22087.75,
+        "pnl_brl": 2713.3,
+        "ir_brl": 407.0,
+        "tlh_eligible": false,
+        "tlh_benefit_brl": 0
+      },
+      {
+        "symbol": "SWRD",
+        "date": "2026-01-30",
+        "qty": 1.0,
+        "price_usd": 41.62,
+        "commission_usd": 0.1008,
+        "cost_usd": 41.72,
+        "bucket": "SWRD",
+        "status": "alvo",
+        "domicilio": "UCITS",
+        "ptax_compra": 5.2301,
+        "ptax_atual": 4.97,
+        "price_atual_usd": 49.935,
+        "cost_brl": 218.2,
+        "value_brl": 248.18,
+        "pnl_brl": 29.98,
+        "ir_brl": 4.5,
         "tlh_eligible": false,
         "tlh_benefit_brl": 0
       },
@@ -7652,16 +7813,16 @@
         "tlh_benefit_brl": 0
       }
     ],
-    "_generated": "2026-04-27T18:11:26Z"
+    "_generated": "2026-04-27T20:05:23Z"
   },
   "attribution": {
     "aportes": 2070997,
-    "retornoUsd": 1691978,
-    "cambio": -35061,
-    "fx": -79453,
-    "rf": 44392,
-    "crescReal": 3727914,
-    "cagr_total": 12.479999999999999,
+    "retornoUsd": 1689379,
+    "cambio": -35007,
+    "fx": -79330,
+    "rf": 44323,
+    "crescReal": 3725369,
+    "cagr_total": 12.46,
     "_estimativa": false,
     "_fonte": "retornos_mensais.json decomposicao (desde início)",
     "_inicio": "2021-04",
@@ -7673,7 +7834,7 @@
       },
       {
         "label": "Retorno USD",
-        "value_pct": 45.4
+        "value_pct": 45.3
       },
       {
         "label": "RF Doméstica",
@@ -8008,10 +8169,10 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 647584,
-    "retorno_usd": 256541,
-    "pct_aportes": 60.4,
-    "pct_retorno": 39.6,
+    "patrimonio_equity_usd": 646800,
+    "retorno_usd": 255757,
+    "pct_aportes": 60.5,
+    "pct_retorno": 39.5,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-27"
@@ -8027,9 +8188,9 @@
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 0.0,
+    "exposicao_cambial_pct": 86.4,
     "cds_brazil_5y_bps": null,
-    "bitcoin_usd": 76894.74,
+    "bitcoin_usd": 77196.27,
     "plano_status": {
       "status": "PLANO_PERMANECE",
       "gatilho_ativo": "DCA IPCA+ ativo — 7.07% ≥ 6.0%",
@@ -8042,13 +8203,14 @@
         "ipca_taxa_pct": 7.07
       }
     },
-    "cambio": 4.977
+    "cambio": 4.9791,
+    "equity_usd": 646800.18
   },
   "mercado": {
-    "cambio_brl_usd": 4.977,
-    "btc_usd": 76894.74,
-    "cambio_mtd_pct": 0.17,
-    "btc_mtd_pct": -1.19,
+    "cambio_brl_usd": 4.9791,
+    "btc_usd": 77196.27,
+    "cambio_mtd_pct": 0.22,
+    "btc_mtd_pct": -0.81,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": null,
     "ref_mes": "2026-04",
@@ -8478,88 +8640,88 @@
   "cryptoLegado": 3641.53,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 168954.35,
+    "ir_diferido_total_brl": 168440.0,
     "ir_por_etf": {
       "SWRD": {
-        "ganho_usd": 90595.78,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 865929.79,
-        "valor_atual_brl": 1316824.99,
-        "ganho_brl": 450895.2,
-        "ir_estimado": 67634.28
+        "ganho_usd": 90251.82,
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 866295.16,
+        "valor_atual_brl": 1315668.01,
+        "ganho_brl": 449372.86,
+        "ir_estimado": 67405.93
       },
       "EIMI": {
-        "ganho_usd": 41932.99,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 315064.49,
-        "valor_atual_brl": 523764.96,
-        "ganho_brl": 208700.48,
-        "ir_estimado": 31305.07
+        "ganho_usd": 41670.35,
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 315197.43,
+        "valor_atual_brl": 522678.26,
+        "ganho_brl": 207480.83,
+        "ir_estimado": 31122.13
       },
       "USSC": {
-        "ganho_usd": 10234.57,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 111533.87,
-        "valor_atual_brl": 162471.32,
-        "ganho_brl": 50937.45,
-        "ir_estimado": 7640.62
+        "ganho_usd": 10100.2,
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 111580.93,
+        "valor_atual_brl": 161870.83,
+        "ganho_brl": 50289.9,
+        "ir_estimado": 7543.49
       },
       "IWVL": {
-        "ganho_usd": 1065.7,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 6299.29,
-        "valor_atual_brl": 11603.28,
-        "ganho_brl": 5303.99,
-        "ir_estimado": 795.6
+        "ganho_usd": 1049.38,
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 6301.95,
+        "valor_atual_brl": 11526.92,
+        "ganho_brl": 5224.97,
+        "ir_estimado": 783.75
       },
       "AVDV": {
         "ganho_usd": 40923.83,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 289447.64,
-        "valor_atual_brl": 493125.53,
-        "ganho_brl": 203677.89,
-        "ir_estimado": 30551.68
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 289569.77,
+        "valor_atual_brl": 493333.6,
+        "ganho_brl": 203763.83,
+        "ir_estimado": 30564.57
       },
       "AVUV": {
         "ganho_usd": 20881.86,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 222818.2,
-        "valor_atual_brl": 326747.22,
-        "ganho_brl": 103929.03,
-        "ir_estimado": 15589.35
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 222912.21,
+        "valor_atual_brl": 326885.09,
+        "ganho_brl": 103972.88,
+        "ir_estimado": 15595.93
       },
       "DGS": {
         "ganho_usd": 2511.74,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 46943.64,
-        "valor_atual_brl": 59444.55,
-        "ganho_brl": 12500.91,
-        "ir_estimado": 1875.14
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 46963.45,
+        "valor_atual_brl": 59469.63,
+        "ganho_brl": 12506.18,
+        "ir_estimado": 1875.93
       },
       "AVES": {
         "ganho_usd": 17571.24,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 209661.76,
-        "valor_atual_brl": 297113.82,
-        "ganho_brl": 87452.06,
-        "ir_estimado": 13117.81
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 209750.22,
+        "valor_atual_brl": 297239.18,
+        "ganho_brl": 87488.96,
+        "ir_estimado": 13123.34
       },
       "AVGS": {
-        "ganho_usd": 595.8,
-        "ptax_compra_medio": 4.977,
-        "ptax_atual": 4.977,
-        "custo_total_brl": 28966.13,
-        "valor_atual_brl": 31931.44,
-        "ganho_brl": 2965.31,
-        "ir_estimado": 444.8
+        "ganho_usd": 568.96,
+        "ptax_compra_medio": 4.9791,
+        "ptax_atual": 4.9791,
+        "custo_total_brl": 28978.35,
+        "valor_atual_brl": 31811.26,
+        "ganho_brl": 2832.91,
+        "ir_estimado": 424.94
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -8575,17 +8737,17 @@
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "fallback",
-    "ptax_atual": 4.977
+    "ptax_atual": 4.9791
   },
   "passivos": {
     "hipoteca_brl": 453417,
     "hipoteca_vencimento": "2051-02-15",
-    "ir_diferido_brl": 168954.35,
-    "total_brl": 622371.35,
+    "ir_diferido_brl": 168440.0,
+    "total_brl": 621857.0,
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3727914,
+    "financeiro_brl": 3725369,
     "imovel_equity_brl": 366583,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 453417,
@@ -8593,11 +8755,11 @@
     "capital_humano_vp": 3129022.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 7656519.0,
+    "total_brl": 7653974.0,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
-    "brasil_pct": 10.5,
+    "brasil_pct": 10.6,
     "cripto_pct": 3.0,
     "composicao": {
       "hodl11_brl": 108102,
@@ -8613,7 +8775,7 @@
     },
     "total_brasil_brl": 393143,
     "total_cripto_brl": 111744,
-    "total_portfolio_brl": 3727914,
+    "total_portfolio_brl": 3725369,
     "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
   },
   "premissas_vs_realizado": {
@@ -8740,7 +8902,8 @@
   "backtest_r7": null,
   "fire_montecarlo_liquido": null,
   "fire_matrix": {
-    "_generated": "2026-04-27T18:51:44",
+    "_generated": "2026-04-27T19:58:15",
+    "_window_id": "20260427T195815",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -9042,7 +9205,8 @@
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-04-27T18:51:44",
+    "_generated": "2026-04-27T19:58:15",
+    "_window_id": "20260427T195815",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 7097769.0,
@@ -9057,7 +9221,8 @@
     "mc_date": "2026-04-27"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-04-27T18:51:44",
+    "_generated": "2026-04-27T19:58:15",
+    "_window_id": "20260427T195815",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -9081,7 +9246,8 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-27T18:51:44",
+    "_generated": "2026-04-27T19:58:15",
+    "_window_id": "20260427T195815",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -10687,7 +10853,8 @@
     "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
   },
   "drawdown_history": {
-    "_generated": "2026-04-27T18:51:44",
+    "_generated": "2026-04-27T19:58:15",
+    "_window_id": "20260427T195815",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-04",
@@ -10844,7 +11011,8 @@
     "_fonte": "backtest.metrics.target.maxdd (fallback)"
   },
   "etf_composition": {
-    "_generated": "2026-04-27T18:51:44",
+    "_generated": "2026-04-27T19:58:15",
+    "_window_id": "20260427T195815",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -10901,7 +11069,8 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-04-27T18:51:44",
+    "_generated": "2026-04-27T19:58:15",
+    "_window_id": "20260427T195815",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -11035,7 +11204,8 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-04-27T18:51:44",
+    "_generated": "2026-04-27T19:58:15",
+    "_window_id": "20260427T195815",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.8498,
@@ -11362,17 +11532,17 @@
     ]
   },
   "realized_pnl": {
-    "total_usd": 21675.32,
+    "total_usd": 26119.29,
     "por_simbolo": {
-      "COIN": -147.9,
-      "IWMO": -374.83,
-      "JPGL": 12165.82,
-      "ZPRX": 2287.58,
-      "AVDV": 1648.66,
-      "USSC": 4058.67,
-      "EIMI": 2034.54,
-      "WRDUSWUSD": -350.54,
-      "F50A": 353.32
+      "AVDV": 1648.92,
+      "COIN": -146.9,
+      "EIMI": 2041.23,
+      "F50A": 78.89,
+      "IWMO": -372.84,
+      "JPGL": 12198.35,
+      "SWRD": 5276.46,
+      "USSC": 4066.76,
+      "ZPRX": 1328.42
     },
     "detalhado": [
       {
@@ -11380,7 +11550,7 @@
         "symbol": "COIN",
         "qty_sold": 0.18,
         "cost_per_share": 381.0,
-        "sell_price": 315.9583,
+        "sell_price": 315.96,
         "gain_usd": -11.71,
         "lot_date": "2021-04-14",
         "currency": "USD"
@@ -11390,18 +11560,18 @@
         "symbol": "COIN",
         "qty_sold": 1.82,
         "cost_per_share": 381.0,
-        "sell_price": 314.4983,
-        "gain_usd": -121.03,
+        "sell_price": 315.0,
+        "gain_usd": -120.12,
         "lot_date": "2021-04-14",
         "currency": "USD"
       },
       {
         "date": "2021-04-21",
         "symbol": "COIN",
-        "qty_sold": 0.17999999999999994,
+        "qty_sold": 0.18,
         "cost_per_share": 398.72,
-        "sell_price": 314.4983,
-        "gain_usd": -15.16,
+        "sell_price": 315.0,
+        "gain_usd": -15.07,
         "lot_date": "2021-04-14",
         "currency": "USD"
       },
@@ -11410,8 +11580,8 @@
         "symbol": "IWMO",
         "qty_sold": 40.0,
         "cost_per_share": 63.74,
-        "sell_price": 56.1517,
-        "gain_usd": -303.53,
+        "sell_price": 56.19,
+        "gain_usd": -302.0,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11420,8 +11590,8 @@
         "symbol": "IWMO",
         "qty_sold": 10.0,
         "cost_per_share": 62.63,
-        "sell_price": 56.1517,
-        "gain_usd": -64.78,
+        "sell_price": 56.19,
+        "gain_usd": -64.4,
         "lot_date": "2021-04-21",
         "currency": "USD"
       },
@@ -11430,8 +11600,8 @@
         "symbol": "IWMO",
         "qty_sold": 1.0,
         "cost_per_share": 62.63,
-        "sell_price": 56.1099,
-        "gain_usd": -6.52,
+        "sell_price": 56.19,
+        "gain_usd": -6.44,
         "lot_date": "2021-04-21",
         "currency": "USD"
       },
@@ -11440,8 +11610,8 @@
         "symbol": "JPGL",
         "qty_sold": 53.0,
         "cost_per_share": 31.66,
-        "sell_price": 44.2664,
-        "gain_usd": 668.14,
+        "sell_price": 44.3,
+        "gain_usd": 669.92,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11450,38 +11620,38 @@
         "symbol": "ZPRX",
         "qty_sold": 47.0,
         "cost_per_share": 43.45,
-        "sell_price": 69.2103,
-        "gain_usd": 1210.73,
+        "sell_price": 58.67,
+        "gain_usd": 715.34,
         "lot_date": "2021-04-23",
-        "currency": "EUR"
+        "currency": "USD"
       },
       {
         "date": "2025-09-22",
         "symbol": "ZPRX",
         "qty_sold": 8.0,
         "cost_per_share": 44.9,
-        "sell_price": 69.2103,
-        "gain_usd": 194.48,
+        "sell_price": 58.67,
+        "gain_usd": 110.16,
         "lot_date": "2021-07-14",
-        "currency": "EUR"
+        "currency": "USD"
       },
       {
         "date": "2025-09-22",
         "symbol": "ZPRX",
         "qty_sold": 36.0,
         "cost_per_share": 44.7,
-        "sell_price": 69.2103,
-        "gain_usd": 882.37,
+        "sell_price": 58.67,
+        "gain_usd": 502.92,
         "lot_date": "2021-07-15",
-        "currency": "EUR"
+        "currency": "USD"
       },
       {
         "date": "2025-09-22",
         "symbol": "JPGL",
         "qty_sold": 357.0,
         "cost_per_share": 31.66,
-        "sell_price": 44.2782,
-        "gain_usd": 4504.69,
+        "sell_price": 44.3,
+        "gain_usd": 4512.48,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11490,8 +11660,8 @@
         "symbol": "JPGL",
         "qty_sold": 40.0,
         "cost_per_share": 40.44,
-        "sell_price": 44.2782,
-        "gain_usd": 153.53,
+        "sell_price": 44.3,
+        "gain_usd": 154.4,
         "lot_date": "2025-03-21",
         "currency": "USD"
       },
@@ -11500,8 +11670,8 @@
         "symbol": "JPGL",
         "qty_sold": 18.0,
         "cost_per_share": 40.44,
-        "sell_price": 44.2782,
-        "gain_usd": 69.09,
+        "sell_price": 44.3,
+        "gain_usd": 69.48,
         "lot_date": "2025-03-21",
         "currency": "USD"
       },
@@ -11510,8 +11680,8 @@
         "symbol": "JPGL",
         "qty_sold": 39.0,
         "cost_per_share": 40.44,
-        "sell_price": 44.2782,
-        "gain_usd": 149.69,
+        "sell_price": 44.3,
+        "gain_usd": 150.54,
         "lot_date": "2025-03-21",
         "currency": "USD"
       },
@@ -11520,8 +11690,8 @@
         "symbol": "JPGL",
         "qty_sold": 14.0,
         "cost_per_share": 40.44,
-        "sell_price": 44.2782,
-        "gain_usd": 53.73,
+        "sell_price": 44.3,
+        "gain_usd": 54.04,
         "lot_date": "2025-03-21",
         "currency": "USD"
       },
@@ -11530,8 +11700,8 @@
         "symbol": "JPGL",
         "qty_sold": 113.0,
         "cost_per_share": 40.44,
-        "sell_price": 44.2782,
-        "gain_usd": 433.71,
+        "sell_price": 44.3,
+        "gain_usd": 436.18,
         "lot_date": "2025-03-21",
         "currency": "USD"
       },
@@ -11540,8 +11710,8 @@
         "symbol": "JPGL",
         "qty_sold": 43.0,
         "cost_per_share": 40.44,
-        "sell_price": 44.2782,
-        "gain_usd": 165.04,
+        "sell_price": 44.3,
+        "gain_usd": 165.98,
         "lot_date": "2025-03-21",
         "currency": "USD"
       },
@@ -11550,8 +11720,8 @@
         "symbol": "JPGL",
         "qty_sold": 1.0,
         "cost_per_share": 40.565,
-        "sell_price": 44.2782,
-        "gain_usd": 3.71,
+        "sell_price": 44.3,
+        "gain_usd": 3.73,
         "lot_date": "2025-03-21",
         "currency": "USD"
       },
@@ -11560,8 +11730,8 @@
         "symbol": "JPGL",
         "qty_sold": 0.2208,
         "cost_per_share": 40.55,
-        "sell_price": 44.2782,
-        "gain_usd": 0.82,
+        "sell_price": 44.3,
+        "gain_usd": 0.83,
         "lot_date": "2025-03-21",
         "currency": "USD"
       },
@@ -11570,18 +11740,18 @@
         "symbol": "JPGL",
         "qty_sold": 699.0,
         "cost_per_share": 35.83,
-        "sell_price": 44.2782,
-        "gain_usd": 5905.28,
+        "sell_price": 44.3,
+        "gain_usd": 5920.53,
         "lot_date": "2025-04-09",
         "currency": "USD"
       },
       {
         "date": "2025-09-22",
         "symbol": "JPGL",
-        "qty_sold": 6.779199999999946,
+        "qty_sold": 6.7792,
         "cost_per_share": 35.83,
-        "sell_price": 44.2782,
-        "gain_usd": 57.27,
+        "sell_price": 44.3,
+        "gain_usd": 57.42,
         "lot_date": "2025-04-09",
         "currency": "USD"
       },
@@ -11590,8 +11760,8 @@
         "symbol": "AVDV",
         "qty_sold": 8.0,
         "cost_per_share": 67.09,
-        "sell_price": 87.8674,
-        "gain_usd": 166.22,
+        "sell_price": 87.91,
+        "gain_usd": 166.56,
         "lot_date": "2021-09-08",
         "currency": "USD"
       },
@@ -11600,8 +11770,8 @@
         "symbol": "AVDV",
         "qty_sold": 32.0,
         "cost_per_share": 67.09,
-        "sell_price": 87.9112,
-        "gain_usd": 666.28,
+        "sell_price": 87.91,
+        "gain_usd": 666.24,
         "lot_date": "2021-09-08",
         "currency": "USD"
       },
@@ -11610,8 +11780,8 @@
         "symbol": "AVDV",
         "qty_sold": 36.0,
         "cost_per_share": 65.24,
-        "sell_price": 87.9112,
-        "gain_usd": 816.16,
+        "sell_price": 87.91,
+        "gain_usd": 816.12,
         "lot_date": "2022-01-11",
         "currency": "USD"
       },
@@ -11620,8 +11790,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 53.68,
-        "sell_price": 75.2822,
-        "gain_usd": 194.42,
+        "sell_price": 75.48,
+        "gain_usd": 196.2,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11630,8 +11800,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 53.68,
-        "sell_price": 75.4711,
-        "gain_usd": 196.12,
+        "sell_price": 75.48,
+        "gain_usd": 196.2,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11640,8 +11810,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 53.68,
-        "sell_price": 75.4711,
-        "gain_usd": 196.12,
+        "sell_price": 75.48,
+        "gain_usd": 196.2,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11650,8 +11820,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 53.68,
-        "sell_price": 75.4711,
-        "gain_usd": 196.12,
+        "sell_price": 75.48,
+        "gain_usd": 196.2,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11660,8 +11830,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 53.68,
-        "sell_price": 75.4711,
-        "gain_usd": 196.12,
+        "sell_price": 75.48,
+        "gain_usd": 196.2,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11670,8 +11840,8 @@
         "symbol": "USSC",
         "qty_sold": 51.0,
         "cost_per_share": 53.68,
-        "sell_price": 75.4413,
-        "gain_usd": 1109.83,
+        "sell_price": 75.48,
+        "gain_usd": 1111.8,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11680,8 +11850,8 @@
         "symbol": "USSC",
         "qty_sold": 7.0,
         "cost_per_share": 52.04,
-        "sell_price": 75.4413,
-        "gain_usd": 163.81,
+        "sell_price": 75.48,
+        "gain_usd": 164.08,
         "lot_date": "2021-07-19",
         "currency": "USD"
       },
@@ -11690,8 +11860,8 @@
         "symbol": "USSC",
         "qty_sold": 23.0,
         "cost_per_share": 50.59,
-        "sell_price": 75.4413,
-        "gain_usd": 571.58,
+        "sell_price": 75.48,
+        "gain_usd": 572.47,
         "lot_date": "2022-05-24",
         "currency": "USD"
       },
@@ -11700,8 +11870,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 50.59,
-        "sell_price": 75.4334,
-        "gain_usd": 223.59,
+        "sell_price": 75.48,
+        "gain_usd": 224.01,
         "lot_date": "2022-05-24",
         "currency": "USD"
       },
@@ -11710,8 +11880,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 50.59,
-        "sell_price": 75.4334,
-        "gain_usd": 223.59,
+        "sell_price": 75.48,
+        "gain_usd": 224.01,
         "lot_date": "2022-05-24",
         "currency": "USD"
       },
@@ -11720,8 +11890,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 50.59,
-        "sell_price": 75.4334,
-        "gain_usd": 223.59,
+        "sell_price": 75.48,
+        "gain_usd": 224.01,
         "lot_date": "2022-05-24",
         "currency": "USD"
       },
@@ -11730,8 +11900,8 @@
         "symbol": "USSC",
         "qty_sold": 3.0,
         "cost_per_share": 50.59,
-        "sell_price": 75.4334,
-        "gain_usd": 74.53,
+        "sell_price": 75.48,
+        "gain_usd": 74.67,
         "lot_date": "2022-05-24",
         "currency": "USD"
       },
@@ -11740,8 +11910,8 @@
         "symbol": "USSC",
         "qty_sold": 0.5449,
         "cost_per_share": 60.61,
-        "sell_price": 75.4334,
-        "gain_usd": 8.08,
+        "sell_price": 75.48,
+        "gain_usd": 8.1,
         "lot_date": "2024-04-23",
         "currency": "USD"
       },
@@ -11750,8 +11920,8 @@
         "symbol": "USSC",
         "qty_sold": 5.4551,
         "cost_per_share": 60.61,
-        "sell_price": 75.4334,
-        "gain_usd": 80.86,
+        "sell_price": 75.48,
+        "gain_usd": 81.12,
         "lot_date": "2024-04-23",
         "currency": "USD"
       },
@@ -11760,8 +11930,8 @@
         "symbol": "USSC",
         "qty_sold": 9.0,
         "cost_per_share": 60.61,
-        "sell_price": 75.4334,
-        "gain_usd": 133.41,
+        "sell_price": 75.48,
+        "gain_usd": 133.83,
         "lot_date": "2024-04-23",
         "currency": "USD"
       },
@@ -11770,8 +11940,8 @@
         "symbol": "USSC",
         "qty_sold": 18.0,
         "cost_per_share": 60.61,
-        "sell_price": 75.4378,
-        "gain_usd": 266.9,
+        "sell_price": 75.48,
+        "gain_usd": 267.66,
         "lot_date": "2024-04-23",
         "currency": "USD"
       },
@@ -11780,8 +11950,8 @@
         "symbol": "EIMI",
         "qty_sold": 2.0,
         "cost_per_share": 37.65,
-        "sell_price": 42.34,
-        "gain_usd": 9.38,
+        "sell_price": 43.23,
+        "gain_usd": 11.16,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11790,8 +11960,8 @@
         "symbol": "EIMI",
         "qty_sold": 136.0,
         "cost_per_share": 37.65,
-        "sell_price": 43.2136,
-        "gain_usd": 756.66,
+        "sell_price": 43.23,
+        "gain_usd": 758.88,
         "lot_date": "2021-04-16",
         "currency": "USD"
       },
@@ -11800,8 +11970,8 @@
         "symbol": "EIMI",
         "qty_sold": 1.0,
         "cost_per_share": 35.61,
-        "sell_price": 43.2136,
-        "gain_usd": 7.6,
+        "sell_price": 43.23,
+        "gain_usd": 7.62,
         "lot_date": "2022-01-19",
         "currency": "USD"
       },
@@ -11810,8 +11980,8 @@
         "symbol": "EIMI",
         "qty_sold": 157.0,
         "cost_per_share": 35.58,
-        "sell_price": 43.2136,
-        "gain_usd": 1198.48,
+        "sell_price": 43.23,
+        "gain_usd": 1201.05,
         "lot_date": "2022-01-19",
         "currency": "USD"
       },
@@ -11820,129 +11990,59 @@
         "symbol": "EIMI",
         "qty_sold": 6.0,
         "cost_per_share": 32.81,
-        "sell_price": 43.2136,
-        "gain_usd": 62.42,
+        "sell_price": 43.23,
+        "gain_usd": 62.52,
         "lot_date": "2022-03-25",
         "currency": "USD"
       },
       {
         "date": "2025-09-23",
         "symbol": "JPGL",
-        "qty_sold": 0.22080000000005384,
+        "qty_sold": 0.2208,
         "cost_per_share": 35.83,
-        "sell_price": 39.1982,
-        "gain_usd": 0.74,
+        "sell_price": 44.305,
+        "gain_usd": 1.87,
         "lot_date": "2025-04-09",
         "currency": "USD"
       },
       {
         "date": "2025-09-23",
         "symbol": "JPGL",
-        "qty_sold": 0.11209999999994613,
+        "qty_sold": 0.1121,
         "cost_per_share": 35.83,
-        "sell_price": 39.1982,
-        "gain_usd": 0.38,
+        "sell_price": 44.305,
+        "gain_usd": 0.95,
         "lot_date": "2025-04-09",
         "currency": "USD"
       },
       {
         "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 44.0,
-        "cost_per_share": 40.57,
-        "sell_price": 39.8351,
-        "gain_usd": -32.34,
-        "lot_date": "2025-12-22",
+        "symbol": "SWRD",
+        "qty_sold": 61.0,
+        "cost_per_share": 28.78,
+        "sell_price": 39.855,
+        "gain_usd": 675.57,
+        "lot_date": "2021-04-08",
         "currency": "USD"
       },
       {
         "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 1.0,
-        "cost_per_share": 40.67,
-        "sell_price": 39.8351,
-        "gain_usd": -0.83,
-        "lot_date": "2025-12-22",
+        "symbol": "SWRD",
+        "qty_sold": 189.0,
+        "cost_per_share": 29.385,
+        "sell_price": 39.855,
+        "gain_usd": 1978.83,
+        "lot_date": "2021-04-16",
         "currency": "USD"
       },
       {
         "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 0.3503,
-        "cost_per_share": 40.67,
-        "sell_price": 39.8351,
-        "gain_usd": -0.29,
-        "lot_date": "2025-12-22",
-        "currency": "USD"
-      },
-      {
-        "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 44.0,
-        "cost_per_share": 41.2,
-        "sell_price": 39.8351,
-        "gain_usd": -60.06,
-        "lot_date": "2026-01-14",
-        "currency": "USD"
-      },
-      {
-        "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 70.0,
-        "cost_per_share": 41.1947,
-        "sell_price": 39.8351,
-        "gain_usd": -95.17,
-        "lot_date": "2026-01-14",
-        "currency": "USD"
-      },
-      {
-        "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 0.8148,
-        "cost_per_share": 41.2,
-        "sell_price": 39.8351,
-        "gain_usd": -1.11,
-        "lot_date": "2026-01-14",
-        "currency": "USD"
-      },
-      {
-        "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 0.0528,
-        "cost_per_share": 41.62,
-        "sell_price": 39.8351,
-        "gain_usd": -0.09,
-        "lot_date": "2026-01-30",
-        "currency": "USD"
-      },
-      {
-        "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 89.0,
-        "cost_per_share": 41.62,
-        "sell_price": 39.8351,
-        "gain_usd": -158.86,
-        "lot_date": "2026-01-30",
-        "currency": "USD"
-      },
-      {
-        "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
-        "qty_sold": 0.7820999999999856,
-        "cost_per_share": 41.62,
-        "sell_price": 39.8351,
-        "gain_usd": -1.4,
-        "lot_date": "2026-01-30",
-        "currency": "USD"
-      },
-      {
-        "date": "2026-03-09",
-        "symbol": "WRDUSWUSD",
+        "symbol": "SWRD",
         "qty_sold": 0.2179,
-        "cost_per_share": 41.62,
-        "sell_price": 39.8351,
-        "gain_usd": -0.39,
-        "lot_date": "2026-01-30",
+        "cost_per_share": 29.385,
+        "sell_price": 39.855,
+        "gain_usd": 2.28,
+        "lot_date": "2021-04-16",
         "currency": "USD"
       },
       {
@@ -11950,10 +12050,30 @@
         "symbol": "F50A",
         "qty_sold": 49.0,
         "cost_per_share": 32.805,
-        "sell_price": 40.0156,
-        "gain_usd": 353.32,
+        "sell_price": 34.415,
+        "gain_usd": 78.89,
         "lot_date": "2025-09-17",
-        "currency": "EUR"
+        "currency": "USD"
+      },
+      {
+        "date": "2026-03-09",
+        "symbol": "SWRD",
+        "qty_sold": 250.0,
+        "cost_per_share": 29.385,
+        "sell_price": 39.855,
+        "gain_usd": 2617.5,
+        "lot_date": "2021-04-16",
+        "currency": "USD"
+      },
+      {
+        "date": "2026-03-09",
+        "symbol": "SWRD",
+        "qty_sold": 0.2179,
+        "cost_per_share": 29.385,
+        "sell_price": 39.855,
+        "gain_usd": 2.28,
+        "lot_date": "2021-04-16",
+        "currency": "USD"
       }
     ]
   }

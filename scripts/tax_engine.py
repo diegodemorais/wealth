@@ -77,9 +77,10 @@ class TaxResult:
         if self.ptax_atual <= 0:
             raise ValueError(f"ptax_atual must be > 0, got {self.ptax_atual}")
 
-        # Invariant 2: Total IR >= sum of individual ETF IRs (within floating point tolerance)
+        # Invariant 2: Total IR >= sum of individual ETF IRs (within rounding tolerance)
+        # Tolerance of 0.05 accommodates round(ir_total,2) vs sum of round(ir_etf,2) discrepancies
         total_etf_ir = sum(info.get("ir_estimado", 0) for info in self.ir_por_etf.values())
-        if not (self.ir_diferido_total_brl >= total_etf_ir - 1e-6):
+        if not (self.ir_diferido_total_brl >= total_etf_ir - 0.05):
             raise ValueError(
                 f"ir_diferido_total_brl ({self.ir_diferido_total_brl}) < sum of ETF IRs ({total_etf_ir})"
             )
