@@ -26,6 +26,8 @@ from datetime import datetime, date
 from pathlib import Path
 from io import StringIO
 
+DATE_FORMAT_YMD = "%Y-%m-%d"
+
 # ─── Paths ──────────────────────────────────────────────────────────────────
 ROOT = Path(__file__).parent.parent
 SNAPSHOTS_JSON = ROOT / "dados" / "historico_sheets.json"

@@ -20,7 +20,7 @@ from datetime import datetime, date, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import TICKER_SWRD_LSE, COLUMN_CLOSE, DATE_FORMAT_YM
+from config import TICKER_SWRD_LSE, COLUMN_CLOSE, DATE_FORMAT_YM, DATE_FORMAT_YMD
 
 ROOT = Path(__file__).parent.parent
 IBKR_CSV = ROOT / "analysis" / "raw" / "U5947683.TRANSACTIONS.20210408.20260331.csv"
@@ -1418,7 +1418,7 @@ def _generate_core_jsons(rows: list[dict]):
         except Exception:
             pass
     if TBILL_ANUAL is None:
-        from scripts.config import FED_FUNDS_SNAPSHOT
+        from config import FED_FUNDS_SNAPSHOT
         TBILL_ANUAL = FED_FUNDS_SNAPSHOT
         print(f"  ⚠ T-Bill usando snapshot config.py: {TBILL_ANUAL}% (rode /macro-bcb para atualizar)")
     rf_mensal_usd = ((1 + TBILL_ANUAL / 100) ** (1/12) - 1) * 100

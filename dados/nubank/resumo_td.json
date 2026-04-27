@@ -1,0 +1,22 @@
+{
+  "ipca2029": {
+    "liquido_aplicado": 86554.71,
+    "taxa": 7.58,
+    "tipo": "Tesouro Direto"
+  },
+  "ipca2040": {
+    "liquido_aplicado": 113015.0,
+    "taxa": 7.10,
+    "tipo": "Tesouro Direto"
+  },
+  "ipca2050": {
+    "liquido_aplicado": 11660.0,
+    "taxa": 6.85,
+    "tipo": "Tesouro Direto"
+  },
+  "renda2065": {
+    "liquido_aplicado": 117832.62,
+    "taxa": 6.93,
+    "tipo": "Tesouro Direto"
+  }
+}

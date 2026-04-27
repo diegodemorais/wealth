@@ -4025,7 +4025,11 @@ def main():
         "fire_aporte_sensitivity": fire_aporte_data,
         "fire_trilha":             fire_trilha_data,
         "drawdown_history":        drawdown_hist_data,
-        "drawdown_extended":       _load_json_safe(DRAWDOWN_EXTENDED_PATH, "drawdown_extended"),
+        "drawdown_extended":       _load_json_safe(DRAWDOWN_EXTENDED_PATH, "drawdown_extended") or (
+            # Fallback: popula summary a partir do backtest quando drawdown_extended.json não existe
+            {"summary": {"real_max_dd_target": backtest.get("metrics", {}).get("target", {}).get("maxdd")}, "_fonte": "backtest.metrics.target.maxdd (fallback)"}
+            if backtest and backtest.get("metrics", {}).get("target", {}).get("maxdd") is not None else None
+        ),
         "etf_composition":         etf_comp_data,
         "bond_pool_runway":        bond_pool_rwy_data,
         "lumpy_events":            lumpy_data,

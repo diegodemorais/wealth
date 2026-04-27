@@ -1,0 +1,10 @@
+{
+  "contrato": {
+    "valor_imovel": 820000,
+    "data_fim_prevista": "2051-02-15"
+  },
+  "imovel_valor": 820000,
+  "estado_atual": {
+    "saldo_devedor": 453417
+  }
+}
