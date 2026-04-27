@@ -2,8 +2,8 @@
 
 **Issue**: `agentes/issues/DATA_PIPELINE_CENTRALIZATION.md`  
 **Dono**: Head (with Dev + Quant)  
-**Status**: 🔄 Em progresso (Invariants 3+5 implementados, 1+2+4+6+7 pendentes)  
-**Prioridade**: 🔴 Alta  
+**Status**: 🔄 Em progresso (Invariants 1+3+4+5 implementados, 2+6+7 pendentes)  
+**Prioridade**: 🟡 Média  
 **Criado em**: 2026-04-26  
 **Atualizado em**: 2026-04-27  
 **Dependências**: CENTRALIZATION_COMPLETE (shares invariant pattern)  
@@ -25,19 +25,23 @@
 
 ## Implementado (2026-04-27)
 
+- ✅ **Invariant 1 (Sync)**: `_window_id` em todos reconstruct_*.py + `--window-id` CLI arg
+  - `generate_data.py` inicializa `_pipeline_run_id` no topo de `main()` e passa para `rebuild_fire_data(window_id=_pipeline_run_id)`
+  - Scripts: reconstruct_fire_data, reconstruct_macro, reconstruct_factor, reconstruct_tax
 - ✅ **Invariant 3 (Rastreabilidade)**: `_pipeline_run` UUID + `_snapshots_metadata` em data.json
-  - Cada snapshot mostra: `{file, mtime, age_h, _generated}`
+  - Cada snapshot rastreado: `{file, mtime, age_h, _generated}`
   - Warn automático quando snapshot >48h antigo
+- ✅ **Invariant 4 (SnapshotValidator)**: `_load_json_safe()` com warn@48h e fail-fast@168h
+  - Snapshots críticos: `fire_matrix`, `fire_trilha`, `fire_swr_percentis`
+  - Pipeline bloqueia com instrução de regeneração se snapshot expirado
 - ✅ **Invariant 5 (Output Validation)**: `_validate_ssot_basic()` ao final de `main()`
   - Checks: `pfire_base.source`, snapshot staleness, patrimônio holístico > 0, timestamps keys
 
-## Pendente
+## Pendente (baixa prioridade)
 
-- [ ] Invariant 1 (Sync): `_window_id` em reconstruct_*.py scripts — requer tocar cada script
 - [ ] Invariant 2 (Dep ordering): PIPELINE_PHASES DAG — informativo, não enforcement
-- [ ] Invariant 4 (Input validation): `SnapshotValidator.validate_snapshot()` com fail-fast
 - [ ] Invariant 6 (Prohibition tests): grep-based QA — complexo, muitas exceções a whitelist
-- [ ] Invariant 7 (Archive): 7-day rollback — nice-to-have, baixa prioridade
+- [ ] Invariant 7 (Archive): 7-day rollback — nice-to-have
 
 ---
 
