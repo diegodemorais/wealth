@@ -30,6 +30,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
 | DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | 🎯 Aguardando respostas de Quant/Dev/Head |
+| XX-test-parameters-audit | Auditoria de Testes — Validação de Parâmetros | Quant + Dev | 🔴 Alta | 🔵 Em Andamento — aguardando especialistas |
 
 ### Backlog
 > Issues prontas para execução, aguardando vez
