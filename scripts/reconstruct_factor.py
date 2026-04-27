@@ -269,7 +269,7 @@ def compute_factor_loadings(cache: dict) -> dict:
         return cache.get("factor_loadings", {})
 
 
-def main():
+def main(window_id: str = None):
     print("reconstruct_factor.py — factor snapshot")
     cache = _load_cache()
 
@@ -279,6 +279,7 @@ def main():
 
     snapshot = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "_window_id": window_id,  # DATA_PIPELINE_CENTRALIZATION: Invariant 1
         "factor_rolling":  factor_rolling,
         "factor_signal":   factor_signal,
         "factor_loadings": factor_loadings,
@@ -294,4 +295,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    _ap = argparse.ArgumentParser()
+    _ap.add_argument("--window-id", default=None, help="Pipeline run window ID for synchronization")
+    _args = _ap.parse_args()
+    main(window_id=_args.window_id)

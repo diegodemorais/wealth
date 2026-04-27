@@ -57,7 +57,7 @@ def _load_cache() -> dict:
 # All tax logic moved to scripts/tax_engine.py
 
 
-def main():
+def main(window_id: str = None):
     print("reconstruct_tax.py — tax snapshot (IR diferido Lei 14.754/2023)")
 
     state      = _load_state()
@@ -108,6 +108,7 @@ def main():
 
     snapshot = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "_window_id": window_id,  # DATA_PIPELINE_CENTRALIZATION: Invariant 1
         **tax_data,
     }
 
@@ -121,4 +122,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    _ap = argparse.ArgumentParser()
+    _ap.add_argument("--window-id", default=None, help="Pipeline run window ID for synchronization")
+    _args = _ap.parse_args()
+    main(window_id=_args.window_id)

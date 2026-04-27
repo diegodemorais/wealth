@@ -493,7 +493,7 @@ def build_pfire_request(scenario: str, premissas: dict) -> PFireRequest:
 
 
 # ─── 1b. RECONSTRUIR FIRE DATA (fire_trilha com P10/P90) ──────────────────────
-def rebuild_fire_data():
+def rebuild_fire_data(window_id: str = None):
     """Roda reconstruct_fire_data.py para gerar JSONs FIRE (fire_trilha, drawdown, fire_matrix, etc)."""
     if args.skip_scripts:
         print("  ⊘ reconstruct_fire_data.py (skip-scripts)")
@@ -501,7 +501,9 @@ def rebuild_fire_data():
 
     print("  ▶ reconstruct_fire_data.py: fire_trilha, drawdown, fire_swr_percentis ...")
     # Quick run: essential components (fire_matrix is slow, run separately with smaller n_sim)
-    out, err = run([VENV_PY, "scripts/reconstruct_fire_data.py"], cwd=ROOT)
+    # Pass --window-id so all outputs share same synchronization window (Invariant 1)
+    _wid_args = ["--window-id", window_id] if window_id else []
+    out, err = run([VENV_PY, "scripts/reconstruct_fire_data.py"] + _wid_args, cwd=ROOT)
     if err:
         print(f"  ⚠️ reconstruct_fire_data.py stderr: {err[:300]}")
 
@@ -2844,6 +2846,9 @@ def sync_nubank_resumo():
 def main():
     print("📊 generate_data.py — iniciando")
 
+    # DATA_PIPELINE_CENTRALIZATION: Invariant 1 — window_id para sincronização
+    _pipeline_run_id = datetime.now().strftime("%Y%m%dT%H%M%S")
+
     # Garantir que carteira_params.json está atualizado a partir de carteira.md
     try:
         from parse_carteira import parse as _parse_carteira
@@ -2888,7 +2893,7 @@ def main():
     premissas_raw, guardrails_raw, gasto_piso, spending_smile = get_premissas()
 
     # Reconstruir fire_trilha com P10/P90 percentis
-    rebuild_fire_data()
+    rebuild_fire_data(window_id=_pipeline_run_id)
 
     # P(FIRE) + Tornado
     pfire_aspiracional, pfire_base, tornado = get_pfire_tornado()
@@ -3829,17 +3834,22 @@ def main():
     # ─── Timestamps de fontes de dados ──────────────────────────────────────────
     timestamps = get_source_timestamps()
 
-    # ── Pipeline run ID (DATA_PIPELINE_CENTRALIZATION — Invariant 3: rastreabilidade) ─
-    _pipeline_run_id = datetime.now().strftime("%Y%m%dT%H%M%S")
+    # ── SnapshotValidator state (DATA_PIPELINE_CENTRALIZATION — Invariant 4) ────
     _snapshot_ages: dict = {}  # {label: {mtime_str, _generated, age_h}}
 
+    # ─── DATA_PIPELINE_CENTRALIZATION: Invariant 4 — SnapshotValidator ──────────
+    # Thresholds (hours): warn past WARN_H, fail-fast past FAIL_H
+    _SNAP_WARN_H = 48
+    _SNAP_FAIL_H = 168  # 7 days — beyond this, data is definitely stale
+    # Critical snapshots: generate_data cannot produce correct output without them
+    _SNAP_CRITICAL = {"fire_matrix", "fire_trilha", "fire_swr_percentis"}
+
     # ── Novos JSONs core HD-perplexity-review ───────────────────────────────────
-    def _load_json_safe(path, label):
+    def _load_json_safe(path, label, critical: bool = False):
         if path.exists():
             try:
                 d = json.loads(path.read_text())
-                print(f"  ✓ {label} ({path.name})")
-                # Track snapshot age for _snapshots_metadata
+                # Track snapshot age for _snapshots_metadata (Invariant 3)
                 mtime = datetime.fromtimestamp(path.stat().st_mtime)
                 age_h = (datetime.now() - mtime).total_seconds() / 3600
                 _snapshot_ages[label] = {
@@ -3848,11 +3858,23 @@ def main():
                     "age_h": round(age_h, 1),
                     "_generated": d.get("_generated") if isinstance(d, dict) else None,
                 }
-                if age_h > 48:
+                # Invariant 4: SnapshotValidator
+                is_critical = critical or (label in _SNAP_CRITICAL)
+                if age_h > _SNAP_FAIL_H and is_critical:
+                    print(f"\n❌ SNAPSHOT CRÍTICO EXPIRADO: '{label}' tem {age_h:.0f}h (limite: {_SNAP_FAIL_H}h)")
+                    print(f"   Rode: python3 scripts/reconstruct_fire_data.py")
+                    sys.exit(1)
+                elif age_h > _SNAP_WARN_H:
                     print(f"  ⚠️ {label}: snapshot {age_h:.0f}h antigo (>48h) — considere regenerar")
+                else:
+                    print(f"  ✓ {label} ({path.name}) [{age_h:.1f}h]")
                 return d
+            except SystemExit:
+                raise
             except Exception as e:
                 print(f"  ⚠️ {label}: {e}")
+        elif critical or (label in _SNAP_CRITICAL):
+            print(f"  ⚠️ {label}: arquivo não encontrado — {path.name}")
         return None
 
     backtest_r7_data    = _load_json_safe(BACKTEST_R7_PATH,      "backtest_r7")

@@ -50,6 +50,7 @@ from swr_engine import SWREngine, SWRRequest
 
 NOW = datetime.now().isoformat(timespec="seconds")
 DADOS = ROOT / "dados"
+_WINDOW_ID = None  # DATA_PIPELINE_CENTRALIZATION: Invariant 1 — set by CLI --window-id
 
 
 def _save(path: Path, data: dict):
@@ -71,6 +72,7 @@ def gen_etf_composition():
     """N2 — Composição regional e fatorial por ETF (dados de config.py)."""
     data = {
         "_generated": NOW,
+        "_window_id": _WINDOW_ID,
         "_source": "config.py ETF_COMPOSITION",
         "etfs": ETF_COMPOSITION,
     }
@@ -201,6 +203,7 @@ def gen_fire_trilha():
 
     data = {
         "_generated": NOW,
+        "_window_id": _WINDOW_ID,
         "_source": "reconstruct_fire_data.py",
         "dates": all_dates,
         "trilha_brl": all_trilha,
@@ -299,6 +302,7 @@ def gen_drawdown_history():
 
     data = {
         "_generated": NOW,
+        "_window_id": _WINDOW_ID,
         "_source": "reconstruct_fire_data.py → historico_carteira.csv",
         "dates": dates,
         "drawdown_pct": drawdowns,
@@ -368,6 +372,7 @@ def gen_bond_pool_runway():
     anos = list(range(2026, 2041))
     data = {
         "_generated": NOW,
+        "_window_id": _WINDOW_ID,
         "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
         "anos_pre_fire": anos,
         "pool_td2040_brl": pool_2040,
@@ -422,6 +427,7 @@ def gen_fire_swr_percentis():
 
     data = {
         "_generated": NOW,
+        "_window_id": _WINDOW_ID,
         "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
         "custo_vida_base": custo_vida,
         "patrimonio_p10_2040": p10,
@@ -475,6 +481,7 @@ def gen_fire_aporte_sensitivity(n_sim: int = 5_000):
 
     data = {
         "_generated": NOW,
+        "_window_id": _WINDOW_ID,
         "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
         "aportes_brl": aportes,
         "pfire_2040": pfire_list,
@@ -553,6 +560,7 @@ def gen_fire_matrix(n_sim: int = 3_000):
 
     data = {
         "_generated": NOW,
+        "_window_id": _WINDOW_ID,
         "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
         "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
         "patrimonios": patrimonios,
@@ -601,6 +609,7 @@ def gen_lumpy_events(n_sim: int = 5_000):
 
     data = {
         "_generated": NOW,
+        "_window_id": _WINDOW_ID,
         "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
         "base": {
             "pfire_2040": p_base,
@@ -661,7 +670,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Gera JSONs core para dashboard (Stage 1)")
     parser.add_argument("--only", type=str, help=f"Gerar só um JSON. Opções: {list(GENERATORS)}")
     parser.add_argument("--n-sim", type=int, default=5_000, help="Número de simulações MC (default: 5k)")
+    parser.add_argument("--window-id", default=None, help="Pipeline run window ID for synchronization")
     args = parser.parse_args()
+    if args.window_id:
+        _WINDOW_ID = args.window_id
 
     if args.only:
         if args.only not in GENERATORS:

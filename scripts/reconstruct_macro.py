@@ -205,7 +205,7 @@ def _calc_plano_status(state: dict, selic_meta: float | None) -> dict:
     }
 
 
-def main():
+def main(window_id: str = None):
     print("reconstruct_macro.py — macro snapshot")
     cache = _load_cache()
     state = _load_state()
@@ -244,6 +244,7 @@ def main():
 
     snapshot = {
         "_generated":              datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "_window_id":              window_id,  # DATA_PIPELINE_CENTRALIZATION: Invariant 1
         "selic_meta":              selic_meta,
         "fed_funds":               fed_funds,
         "spread_selic_ff":         spread,
@@ -263,4 +264,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    _ap = argparse.ArgumentParser()
+    _ap.add_argument("--window-id", default=None, help="Pipeline run window ID for synchronization")
+    _args = _ap.parse_args()
+    main(window_id=_args.window_id)
