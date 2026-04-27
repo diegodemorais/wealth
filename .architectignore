@@ -16,7 +16,8 @@
 **/__tests__/**/*.tsx
 
 # ──── Configuration & Version Files ────
-scripts/config.py              # Source of truth for all constants
+scripts/config.py
+scripts/generate_data.py
 **/version.py
 **/package.json
 **/pyproject.toml
@@ -45,6 +46,7 @@ scripts/config.py              # Source of truth for all constants
 # for _ in range(...)
 # x = [0] * 10
 # etc.
+
 
 # ──── Comments & Docstrings ────
 # Linhas começando com # ou """ / ''' são ignoradas por padrão
