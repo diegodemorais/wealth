@@ -37,8 +37,7 @@ export interface PFireResult {
   percentile_10: number; // 0-1
   percentile_50: number; // 0-1
   percentile_90: number; // 0-1
-  trajectories?: number[][];
-  endWealthDist?: number[];
+  endWealthDist: number[];
 }
 
 /**
@@ -87,11 +86,12 @@ function validateResult(res: PFireResult): void {
   }
 
   // Percentis em [0,1]
-  for (const [name, val] of [
-    ['p10', res.percentile_10],
-    ['p50', res.percentile_50],
-    ['p90', res.percentile_90],
-  ]) {
+  const percentiles = [
+    { name: 'p10', val: res.percentile_10 },
+    { name: 'p50', val: res.percentile_50 },
+    { name: 'p90', val: res.percentile_90 },
+  ];
+  for (const { name, val } of percentiles) {
     if (!(val >= 0 && val <= 1)) {
       throw new Error(`percentile_${name} deve estar em [0,1], got ${val}`);
     }
@@ -172,10 +172,9 @@ export class PFireEngine {
     const result: PFireResult = {
       canonical,
       scenario: request.scenario,
-      percentile_10: Math.max(0, canonical.decimal - 0.03),  // Approximation
-      percentile_50: canonical.decimal,
-      percentile_90: Math.min(1, canonical.decimal + 0.03),  // Approximation
-      trajectories: mcResult.trajectories,
+      percentile_10: mcResult.p10,
+      percentile_50: mcResult.p50,
+      percentile_90: mcResult.p90,
       endWealthDist: mcResult.endWealthDist,
     };
 
