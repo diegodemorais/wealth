@@ -1,0 +1,113 @@
+# Architect Whitelist — Hardcoding Detection Exceptions
+# Padrões para ignorar detecção de hardcoding em certos arquivos/contextos
+
+# ──── Test Files (Allowed Numeric Literals) ────
+**/test_*.py
+**/tests/**/*.py
+**/__tests__/**/*.py
+**/conftest.py
+
+# TypeScript/JavaScript tests
+**/*.spec.ts
+**/*.spec.tsx
+**/*.test.ts
+**/*.test.tsx
+**/__tests__/**/*.ts
+**/__tests__/**/*.tsx
+
+# ──── Configuration & Version Files ────
+scripts/config.py              # Source of truth for all constants
+**/version.py
+**/package.json
+**/pyproject.toml
+**/setup.py
+
+# ──── Documentation ────
+**/*.md
+**/*.txt
+**/*.rst
+**/*.adoc
+
+# ──── Generated Files & Build Output ────
+**/dist/**
+**/build/**
+**/node_modules/**
+**/.next/**
+**/out/**
+
+# ──── Type Definitions & Declarations ────
+**/*.d.ts
+**/types/**/*.ts
+
+# ──── Loop Counters & Temporary Variables ────
+# Padrões que naturalmente usam números:
+# for i in range(...)
+# for _ in range(...)
+# x = [0] * 10
+# etc.
+
+# ──── Comments & Docstrings ────
+# Linhas começando com # ou """ / ''' são ignoradas por padrão
+
+# ──── Data Files ────
+dados/**/*.json
+**/*.csv
+**/*.parquet
+**/*.json            # Exceto quando hardcoding em código vivo
+
+# ──── Migrations & Fixes for Existing Bugs ────
+# Padrão especial: se uma linha tem "# ARCHITECT-LEGACY" comment,
+# é marcada como conhecida exceção:
+# equity_weight = 0.50  # ARCHITECT-LEGACY: refactor in P3
+# (Detecta comentário especial, não bloqueia)
+
+# ──── Agent & System Files ────
+agentes/**
+.claude/**
+.git/**
+.github/**
+
+# ──── Environment & Secrets ────
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/**
+
+# ──── Editor & IDE ────
+.vscode/**
+.idea/**
+*.swp
+*.swo
+*~
+
+# ──── Cache ────
+.cache/**
+*.egg-info/**
+__pycache__/**
+.pytest_cache/**
+.mypy_cache/**
+
+# ──── Whitelist Patterns (Explicit Allow) ────
+# Estes padrões NUNCA geram violations, mesmo se têm números:
+
+# 1. Versioning (semver)
+#    1.0.0, 2.3.4, etc. — sempre permitido em version.py, package.json
+
+# 2. IDs e índices pequenos
+#    for i in range(10)  — range() é permitido
+#    list[0], list[1]    — indexação é permitida
+
+# 3. Porcentagens em comentários
+#    # Allocation: 50% stocks  — comentários não são processados
+
+# 4. URLs e IPs
+#    https://example.com/v1/api  — URLs ignoradas
+
+# 5. Datas e timestamps
+#    2026-04-27, 14:30:00  — datas ignoradas
+
+# ──── Per-File Overrides ────
+# Se um arquivo precisa ser 100% ignorado, adicione caminho exato:
+# (Nenhum por enquanto, adicione conforme necessário)
