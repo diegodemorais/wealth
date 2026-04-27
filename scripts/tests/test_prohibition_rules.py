@@ -256,6 +256,65 @@ class TestProhibitionRulesGuardrailEngine:
         ), "generate_data.py doesn't import GuardrailEngine"
 
 
+class TestProhibitionRulesWithdrawalEngine:
+    """Prohibition rules for WithdrawalEngine."""
+
+    def test_no_inline_withdrawal_strategy_outside_engine(self):
+        """Withdrawal strategy implementations must use WithdrawalEngine, not inline logic."""
+        # Look for: def withdrawal_* (strategy function definitions)
+        # Exclude withdrawal_engine.py and test files
+        matches = _grep_in_files(
+            r"def withdrawal_\|STRATEGY_FNS",
+            exclude_patterns=["withdrawal_engine.py", "test_"],
+        )
+        assert (
+            len(matches) == 0
+        ), f"Inline withdrawal strategy functions found outside engine: {matches}"
+
+    def test_no_hardcoded_strategy_constants_outside_engine(self):
+        """Withdrawal strategy constants must be in withdrawal_engine.py, not duplicated."""
+        # Look for: GASTO_TETO_*, VPW_*, GK_* constants
+        matches = _grep_in_files(
+            r"GASTO_TETO_PCT\|GASTO_TETO_VPW\|VPW_REAL_RATE\|GK_PRESERVATION",
+            exclude_patterns=["withdrawal_engine.py", "test_", "config.py"],
+        )
+        assert (
+            len(matches) == 0
+        ), f"Withdrawal strategy constants found outside engine: {matches}"
+
+    def test_withdrawal_engine_imported_by_fire_montecarlo(self):
+        """fire_montecarlo.py must import WithdrawalEngine."""
+        matches = _grep_in_files(r"from.*withdrawal_engine import.*WithdrawalEngine")
+        assert (
+            len(matches) > 0
+        ), "fire_montecarlo.py doesn't import WithdrawalEngine"
+
+    def test_withdrawal_ctx_not_duplicated(self):
+        """WithdrawalCtx must only be defined in withdrawal_engine.py."""
+        # Look for class WithdrawalCtx definitions
+        matches = _grep_in_files(
+            r"class WithdrawalCtx",
+            exclude_patterns=["withdrawal_engine.py"],
+        )
+        assert (
+            len(matches) == 0
+        ), f"WithdrawalCtx class defined outside withdrawal_engine.py: {matches}"
+
+    def test_strategy_functions_not_in_fire_montecarlo(self):
+        """fire_montecarlo.py should not have individual strategy functions."""
+        # Look for old pattern: def withdrawal_guardrails, def withdrawal_constant, etc.
+        fm_file = SCRIPTS_DIR / "fire_montecarlo.py"
+        content = fm_file.read_text()
+
+        strategies = ["withdrawal_guardrails", "withdrawal_constant", "withdrawal_pct_portfolio",
+                      "withdrawal_vpw", "withdrawal_guyton_klinger", "withdrawal_gk_hybrid"]
+
+        for strategy in strategies:
+            assert (
+                f"def {strategy}" not in content
+            ), f"Found old strategy function {strategy} in fire_montecarlo.py"
+
+
 class TestProhibitionRulesIntegration:
     """Integration tests ensuring engines are actually used."""
 
@@ -310,6 +369,36 @@ class TestProhibitionRulesIntegration:
         assert (
             "GuardrailEngine" in content
         ), "fire_montecarlo.py doesn't import GuardrailEngine"
+
+    def test_withdrawal_engine_imported_in_fire_montecarlo(self):
+        """fire_montecarlo.py must import WithdrawalEngine and WithdrawalRequest."""
+        fm_file = SCRIPTS_DIR / "fire_montecarlo.py"
+        content = fm_file.read_text()
+        assert (
+            "WithdrawalEngine" in content and "WithdrawalRequest" in content
+        ), "fire_montecarlo.py doesn't import WithdrawalEngine/WithdrawalRequest"
+
+    def test_all_five_engines_imported(self):
+        """All 5 engines must be imported and used across data pipeline."""
+        # Check each engine is imported somewhere in scripts
+        engines = {
+            "TaxEngine": "tax_engine.py",
+            "BondPoolEngine": "bond_pool_engine.py",
+            "SWREngine": "swr_engine.py",
+            "GuardrailEngine": "guardrail_engine.py",
+            "WithdrawalEngine": "withdrawal_engine.py",
+        }
+
+        for engine, source_file in engines.items():
+            # Verify engine exists
+            engine_file = SCRIPTS_DIR / source_file
+            assert engine_file.exists(), f"{source_file} doesn't exist"
+
+            # Verify engine is imported somewhere
+            matches = _grep_in_files(f"from.*{source_file.replace('.py', '')} import.*{engine}")
+            assert (
+                len(matches) > 0
+            ), f"{engine} from {source_file} not imported anywhere"
 
 
 if __name__ == "__main__":

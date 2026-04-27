@@ -273,7 +273,6 @@ def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retor
     """
     pat = patrimonio_inicial
     pat_pico = patrimonio_inicial
-    strategy_fn = STRATEGY_FNS[strategy]
     trajeto = [patrimonio_inicial]  # Começar com valor inicial
 
     ctx = WithdrawalCtx(
@@ -298,7 +297,17 @@ def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retor
         pat_pico = max(pat_pico, pat)
 
         gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)
-        gasto = strategy_fn(gasto_base, pat, pat_pico, ano, ctx)
+        withdrawal_req = WithdrawalRequest(
+            strategy=strategy,
+            gasto_smile=gasto_base,
+            patrimonio_atual=pat,
+            patrimonio_pico=pat_pico,
+            ano=ano,
+            ctx=ctx,
+            guardrails_config=GUARDRAILS,
+        )
+        withdrawal_result = WithdrawalEngine.calculate(withdrawal_req)
+        gasto = withdrawal_result.gasto_anual
 
         if inss_anual > 0 and ano >= inss_inicio_ano:
             gasto = max(0, gasto - inss_anual)
