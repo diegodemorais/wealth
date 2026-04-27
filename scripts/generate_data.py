@@ -3272,6 +3272,27 @@ def main():
                     try: _coe_net_brl = float(_last[_coe_col].replace(',', '.').replace(' ', ''))
                     except ValueError: pass
         except Exception: pass
+    # Mesclar com operacoes_td.json — TD aportes também contam como aporte do mês
+    _nb_ops_path = ROOT / "dados" / "nubank" / "operacoes_td.json"
+    if _nb_ops_path.exists():
+        try:
+            _nb_ops = json.loads(_nb_ops_path.read_text()).get("operacoes", [])
+            _aplicacoes = [op for op in _nb_ops if op.get("tipo") == "aplicacao"]
+            if _aplicacoes:
+                _mais_recente = max(_aplicacoes, key=lambda o: o.get("data", ""))
+                _td_data = _mais_recente.get("data", "")[:7]  # YYYY-MM
+                _td_brl = sum(op.get("valor_brl", 0) for op in _aplicacoes
+                              if op.get("data", "")[:7] == _td_data)
+                # Usar TD se for mais recente que o CSV
+                if _ultimo_aporte_data is None or _td_data > _ultimo_aporte_data:
+                    _ultimo_aporte_data = _td_data
+                    _ultimo_aporte_brl = _td_brl
+                elif _td_data == _ultimo_aporte_data:
+                    # Mesmo mês: somar equity + TD
+                    _ultimo_aporte_brl = (_ultimo_aporte_brl or 0) + _td_brl
+        except Exception:
+            pass
+
     if _ultimo_aporte_brl is not None:
         premissas["ultimo_aporte_brl"]  = round(_ultimo_aporte_brl)
         premissas["ultimo_aporte_data"] = _ultimo_aporte_data
