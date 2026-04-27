@@ -22,7 +22,8 @@ warnings.filterwarnings("ignore")
 import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).parent))
-from config import TICKER_SWRD_LSE, TICKER_VWRA_LSE, COLUMN_CLOSE, DATE_FORMAT_YM, \n     (
+from config import (
+    TICKER_SWRD_LSE, TICKER_VWRA_LSE, COLUMN_CLOSE, DATE_FORMAT_YM,
     APORTE_MENSAL, CUSTO_VIDA_BASE,
     IDADE_ATUAL, IDADE_CENARIO_BASE, IDADE_CENARIO_ASPIRACIONAL,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
