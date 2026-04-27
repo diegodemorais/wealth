@@ -41,6 +41,7 @@ from config import (
     update_dashboard_state,
 )
 from guardrail_engine import GuardrailEngine, GuardrailRequest
+from withdrawal_engine import WithdrawalEngine, WithdrawalRequest, WithdrawalCtx
 
 _SCRIPTS_DIR = _Path(__file__).parent
 _DADOS_DIR   = _SCRIPTS_DIR.parent / "dados"
@@ -195,136 +196,12 @@ GUARDRAILS = [
 
 STRATEGIES = ["guardrails", "constant", "pct_portfolio", "vpw", "guyton_klinger", "gk_hybrid"]
 
-# Strategy constants — withdrawal caps/floors and Guyton-Klinger thresholds
-GASTO_TETO_PCT      = 400_000  # R$/ano — teto percent-of-portfolio (evita overshooting em bull markets)
-GASTO_TETO_VPW      = 500_000  # R$/ano — teto VPW
-GASTO_TETO_GK_CAP   = 350_000  # R$/ano — teto GK híbrido (alinhado com guardrails teto)
-VPW_REAL_RATE        = 0.035   # 3.5% real conservador para projeção interna VPW
-GK_PRESERVATION_MULT = 1.20    # Capital Preservation: corta se WR > 120% do inicial
-GK_PROSPERITY_MULT   = 0.80    # Prosperity Rule: sobe se WR < 80% do inicial
-GK_CUT_FACTOR        = 0.90    # fator de corte Capital Preservation
-GK_RAISE_FACTOR      = 1.10    # fator de aumento Prosperity Rule
-GK_MAX_AGE           = 85      # idade-limite para regras de ajuste (paper Guyton-Klinger 2006)
 # SWR_FALLBACK imported from config.py (centralized constant)
+# WithdrawalCtx and strategy constants are now in withdrawal_engine.py
 
 
-@dataclass
-class WithdrawalCtx:
-    """State shared across years within a single withdrawal simulation."""
-    swr_inicial: float = SWR_FALLBACK
-    anos_total: int = 37
-    retorno_ano: float = 0.0
-    ipca_anual: float = 0.04
-    # Guyton-Klinger mutable state
-    gasto_prev_gk: float = 0.0
-    swr_inicial_gk: float = 0.0
-    _gk_initialized: bool = False
-
-    def init_gk(self, gasto_smile: float):
-        """Lazy-init GK state on first withdrawal year."""
-        if not self._gk_initialized:
-            self.gasto_prev_gk = gasto_smile
-            self.swr_inicial_gk = self.swr_inicial
-            self._gk_initialized = True
-
-
-def _clamp(gasto: float, teto: float = None) -> float:
-    """Aplica piso (GASTO_PISO) e teto opcional ao gasto."""
-    if teto is not None:
-        return max(GASTO_PISO, min(gasto, teto))
-    return max(GASTO_PISO, gasto)
-
-
-def withdrawal_guardrails(gasto_smile, pat, pat_pico, ano, ctx):
-    """Drawdown-based guardrails (nossa estrategia atual)."""
-    return GuardrailEngine.apply_drawdown_guardrail(
-        base_spending=gasto_smile,
-        patrimonio_atual=pat,
-        patrimonio_pico=pat_pico,
-        guardrails_config=GUARDRAILS,
-    )
-
-def withdrawal_constant(gasto_smile, pat, pat_pico, ano, ctx):
-    """Constant-dollar: spending smile puro, sem ajuste por mercado."""
-    return gasto_smile
-
-def withdrawal_pct_portfolio(gasto_smile, pat, pat_pico, ano, ctx):
-    """Percent-of-portfolio: SWR inicial aplicada ao patrimonio corrente."""
-    gasto = pat * ctx.swr_inicial
-    return _clamp(gasto, GASTO_TETO_PCT)
-
-def withdrawal_vpw(gasto_smile, pat, pat_pico, ano, ctx):
-    """Variable Percentage Withdrawal (Bogleheads).
-    PMT actuarial simplificado com r_real = VPW_REAL_RATE.
-    """
-    anos_restantes = ctx.anos_total - ano
-    if anos_restantes <= 0:
-        return pat
-
-    vpw_rate = VPW_REAL_RATE / (1 - (1 + VPW_REAL_RATE) ** (-anos_restantes))
-    gasto = pat * vpw_rate
-    return _clamp(gasto, GASTO_TETO_VPW)
-
-def withdrawal_guyton_klinger(gasto_smile, pat, pat_pico, ano, ctx):
-    """Guyton-Klinger Decision Rules (2006).
-    1. Withdrawal Rule: forgo inflation adjustment em anos de retorno negativo
-    2. Capital Preservation: corta se WR > 120% do inicial
-    3. Prosperity Rule: sobe se WR < 80% do inicial
-    """
-    ctx.init_gk(gasto_smile)
-    anos_gk_limit = GK_MAX_AGE - PREMISSAS["idade_fire_alvo"]
-
-    if ctx.retorno_ano >= 0:
-        gasto = ctx.gasto_prev_gk
-    else:
-        gasto = ctx.gasto_prev_gk / (1 + ctx.ipca_anual)
-
-    wr_current = gasto / pat if pat > 0 else 1.0
-
-    if ano < anos_gk_limit:
-        if wr_current > ctx.swr_inicial_gk * GK_PRESERVATION_MULT:
-            gasto *= GK_CUT_FACTOR
-        elif wr_current < ctx.swr_inicial_gk * GK_PROSPERITY_MULT:
-            gasto *= GK_RAISE_FACTOR
-
-    gasto = _clamp(gasto)
-    ctx.gasto_prev_gk = gasto
-    return gasto
-
-def withdrawal_gk_hybrid(gasto_smile, pat, pat_pico, ano, ctx):
-    """GK Híbrido: regras Guyton-Klinger + teto R$350k (guardrails cap) + floor R$180k.
-    Captura a flexibilidade de GK sem o runaway spending dos anos finais.
-    Implementado em FR-withdrawal-engine (Advocate, 2026-04-07).
-    """
-    ctx.init_gk(gasto_smile)
-    anos_gk_limit = GK_MAX_AGE - PREMISSAS["idade_fire_alvo"]
-
-    if ctx.retorno_ano >= 0:
-        gasto = ctx.gasto_prev_gk
-    else:
-        gasto = ctx.gasto_prev_gk / (1 + ctx.ipca_anual)
-
-    wr_current = gasto / pat if pat > 0 else 1.0
-
-    if ano < anos_gk_limit:
-        if wr_current > ctx.swr_inicial_gk * GK_PRESERVATION_MULT:
-            gasto *= GK_CUT_FACTOR
-        elif wr_current < ctx.swr_inicial_gk * GK_PROSPERITY_MULT:
-            gasto *= GK_RAISE_FACTOR
-
-    gasto = _clamp(gasto, GASTO_TETO_GK_CAP)
-    ctx.gasto_prev_gk = gasto
-    return gasto
-
-
-STRATEGY_FNS = {
-    "guardrails": withdrawal_guardrails,
-    "constant": withdrawal_constant,
-    "pct_portfolio": withdrawal_pct_portfolio,
-    "vpw": withdrawal_vpw,
-    "guyton_klinger": withdrawal_guyton_klinger,
-    "gk_hybrid": withdrawal_gk_hybrid,
-}
+# All 6 withdrawal strategies are now consolidated in WithdrawalEngine
+# Use WithdrawalEngine.calculate() to route to appropriate strategy
 
 
 # ─── CÁLCULOS ─────────────────────────────────────────────────────────────────
@@ -455,7 +332,6 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
     """
     pat = patrimonio_inicial
     pat_pico = patrimonio_inicial
-    strategy_fn = STRATEGY_FNS[strategy]
     gastos_hist = [] if track_spending else None
 
     ctx = WithdrawalCtx(
@@ -480,7 +356,17 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
         pat_pico = max(pat_pico, pat)
 
         gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)
-        gasto = strategy_fn(gasto_base, pat, pat_pico, ano, ctx)
+        withdrawal_req = WithdrawalRequest(
+            strategy=strategy,
+            gasto_smile=gasto_base,
+            patrimonio_atual=pat,
+            patrimonio_pico=pat_pico,
+            ano=ano,
+            ctx=ctx,
+            guardrails_config=GUARDRAILS,
+        )
+        withdrawal_result = WithdrawalEngine.calculate(withdrawal_req)
+        gasto = withdrawal_result.gasto_anual
 
         if inss_anual > 0 and ano >= inss_inicio_ano:
             gasto = max(0, gasto - inss_anual)
