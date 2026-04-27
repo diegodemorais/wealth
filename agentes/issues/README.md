@@ -30,7 +30,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
 | HD-ARCHITECT | Guardião de Arquitetura & Centralizations | Head | 🔴 CRÍTICA | 🟩 Ativo — Auditoria P0 concluída |
-| HD-ARCHITECT-P0P1 | Implementação P0 & P1 — Automação + Validação | Architect + Head | 🔴 CRÍTICA | 🟦 Em Andamento — executando agora |
+| HD-ARCHITECT-P0P1 | Implementação P0 & P1 — Automação + Validação | Architect + Head | 🔴 CRÍTICA | ✅ Done — P0 concluído, P1 pronto |
 
 ### Blocked
 > Issues aguardando dependências externas
