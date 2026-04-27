@@ -133,6 +133,12 @@ Pipeline: Scripts Python → `dados/` (JSON) → React (`react-app/`) → `dash/
 - Manter comentários existentes ao refatorar — carregam contexto
 - Referenciar issue ID quando linha existe por causa de bug específico
 
+### Antes de commitar novo componente (DEV-semantic-test-coverage)
+
+- Tem `data-testid` nos campos que exibem dados financeiros?
+- Tem assertion em `e2e/semantic-smoke.spec.ts` que valida o *valor* renderizado (não só estrutura)?
+- Se depende de campo do pipeline: tem assertion em `generate_data.py` que bloqueia geração se nulo?
+
 ### Higiene
 - Arquivos temporários vão em `/tmp` ou `.gitignore` — nunca no root do repo
 - Docs de auditoria/investigação são efêmeros — não commitar

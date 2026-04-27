@@ -173,6 +173,7 @@ export default function HomePage() {
           accent
           accentLeftBorder
           label="P(Cenário Aspiracional)"
+          data-testid="pfire-aspiracional"
           value={d.pfireAspiracional != null ? `${d.pfireAspiracional.toFixed(1)}%` : '—'}
           sub={
             d.pfireAspirFav != null && d.pfireAspirStress != null

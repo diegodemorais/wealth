@@ -73,7 +73,7 @@ export function KpiHero({
       {/* Card 1: Patrimônio Total */}
       <div className="kpi kpi-fire text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
         <div className="kpi-label">Patrimônio Total</div>
-        <div className="kpi-value text-4xl font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }}>
+        <div className="kpi-value text-4xl font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }} data-testid="patrimonio-total">
           {privacyMode ? fmtPrivacy(networth, true) : networthCompact}
         </div>
         <div className="kpi-sub">

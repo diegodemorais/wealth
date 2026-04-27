@@ -4104,6 +4104,32 @@ def main():
         return obj
     data = replace_nan(data)
 
+    # ─── Sanity assertions — bloqueia geração se campos críticos são nulos ─────────
+    # Campos que causaram bugs visuais silenciosos (DEV-semantic-test-coverage)
+    def _assert_critical(condition: bool, message: str) -> None:
+        if not condition:
+            print(f"\n❌ ASSERTION FAILED: {message}")
+            print("   Pipeline bloqueado — corrija os dados antes de continuar.")
+            sys.exit(1)
+
+    _assert_critical(
+        bool((data.get("fire_matrix") or {}).get("by_profile")),
+        "fire_matrix.by_profile vazio ou nulo — FIRE tab mostraria 'Data FIRE: —'"
+    )
+    _assert_critical(
+        (data.get("attribution") or {}).get("retornoUsd") not in (None, 0),
+        "attribution.retornoUsd é nulo/zero — Performance mostraria 'R$ 0'"
+    )
+    _ph = data.get("patrimonio_holistico") or {}
+    _assert_critical(
+        (_ph.get("financeiro_brl") or 0) > 1_000_000,
+        f"patrimonio_holistico.financeiro_brl={_ph.get('financeiro_brl')} — valor incoerente (< R$1M)"
+    )
+    _assert_critical(
+        (data.get("retornos_mensais") or {}).get("twr_real_brl_pct") is not None,
+        "retornos_mensais.twr_real_brl_pct é None — TWR ausente"
+    )
+
     OUT_PATH.parent.mkdir(exist_ok=True)
     OUT_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False))
     print(f"\n✅ {OUT_PATH.relative_to(ROOT)}")

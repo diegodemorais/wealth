@@ -31,6 +31,8 @@ export interface MetricCardProps {
   valueColor?: string;
   /** Extra Tailwind classes applied to the wrapper div */
   className?: string;
+  /** data-testid for Playwright assertions */
+  'data-testid'?: string;
 }
 
 /**
@@ -55,6 +57,7 @@ export function MetricCard({
   accentLeftBorder = false,
   valueColor,
   className,
+  'data-testid': dataTestId,
 }: MetricCardProps) {
   const isMd = size === 'md';
 
@@ -81,7 +84,7 @@ export function MetricCard({
   );
 
   return (
-    <div className={wrapperCls}>
+    <div className={wrapperCls} data-testid={dataTestId}>
       <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
         {label}
       </div>

@@ -32,7 +32,7 @@ export function VersionFooter() {
   }, [data]);
 
   return (
-    <footer style={styles.footer}>
+    <footer style={styles.footer} data-testid="version-footer">
       <div style={styles.container}>
         <div style={styles.group}>
           <span style={styles.label}>Dashboard</span>

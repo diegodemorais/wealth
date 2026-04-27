@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const localOnly = !!process.env.LOCAL_RENDER_ONLY;
+const semanticOnly = !!process.env.SEMANTIC_ONLY;
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -26,6 +29,8 @@ export default defineConfig({
       // Local render validation — serves the compiled dash/ folder.
       // Catches hydration mismatches, JS console errors, and blank pages
       // before they reach production (github.io).
+      // NOTE: JavaScript does NOT fully hydrate here (basePath /wealth != /),
+      // so this project tests structure only, not semantic values.
       name: 'local',
       testMatch: '**/local-render.spec.ts',
       use: {
@@ -33,32 +38,56 @@ export default defineConfig({
         baseURL: 'http://localhost:3001',
       },
     },
+    {
+      // Semantic smoke — validates that critical fields render real values.
+      // Uses Next.js dev server (basePath /wealth resolves correctly).
+      // Run: SEMANTIC_ONLY=1 npx playwright test --project=semantic
+      name: 'semantic',
+      testMatch: '**/semantic-smoke.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:3002',
+      },
+    },
   ],
 
-  // webServer array: index 0 = Next.js dev server (chromium/firefox projects)
-  //                   index 1 = static serve of dash/ (local project)
+  // webServer configuration depends on mode:
+  //   LOCAL_RENDER_ONLY=1  → only serve dash/ static at :3001
+  //   SEMANTIC_ONLY=1      → only start Next.js dev server at :3002
+  //   (default)            → both servers
   webServer: process.env.SKIP_WEB_SERVER
     ? undefined
-    : process.env.LOCAL_RENDER_ONLY
+    : localOnly
       ? {
-          // serve with --single enables SPA routing (serves index.html for unknown paths)
           command: 'npx serve ../dash -p 3001 --single --no-clipboard',
           url: 'http://localhost:3001',
           reuseExistingServer: true,
           timeout: 30_000,
         }
-      : [
-          {
-            command: 'npm run build:no-test && npm run start',
-            url: 'http://localhost:3000',
-            reuseExistingServer: !process.env.CI,
-          },
-          {
-            // serve with --single enables SPA routing (serves index.html for unknown paths)
-            command: 'npx serve ../dash -p 3001 --single --no-clipboard',
-            url: 'http://localhost:3001',
+      : semanticOnly
+        ? {
+            command: 'npm run dev -- --port 3002',
+            url: 'http://localhost:3002/wealth',
             reuseExistingServer: true,
-            timeout: 30_000,
-          },
-        ],
+            timeout: 60_000,
+          }
+        : [
+            {
+              command: 'npm run build:no-test && npm run start',
+              url: 'http://localhost:3000',
+              reuseExistingServer: !process.env.CI,
+            },
+            {
+              command: 'npx serve ../dash -p 3001 --single --no-clipboard',
+              url: 'http://localhost:3001',
+              reuseExistingServer: true,
+              timeout: 30_000,
+            },
+            {
+              command: 'npm run dev -- --port 3002',
+              url: 'http://localhost:3002/wealth',
+              reuseExistingServer: true,
+              timeout: 60_000,
+            },
+          ],
 });

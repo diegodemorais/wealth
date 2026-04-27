@@ -339,13 +339,13 @@ function FireSimuladorSection() {
         <div style={{ textAlign: 'center', minWidth: '140px' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>Com esses parâmetros</div>
           <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--muted)', marginBottom: '2px' }}>você pode aposentar em</div>
-          <div style={{ fontSize: '3rem', fontWeight: 800, lineHeight: 1 }} className="pv">
+          <div style={{ fontSize: '3rem', fontWeight: 800, lineHeight: 1 }} className="pv" data-testid="sim-fire-year">
             {result ? result.ano : '—'}
           </div>
           <div style={{ fontSize: '1.2rem', fontWeight: 700, margin: '2px 0' }} className="pv">
             {result ? `${result.idade} anos` : '—'}
           </div>
-          <div style={{ fontSize: '1rem', fontWeight: 700, marginTop: '4px', color: pfireCardColor }} className="pv">
+          <div style={{ fontSize: '1rem', fontWeight: 700, marginTop: '4px', color: pfireCardColor }} className="pv" data-testid="sim-pfire">
             {firePire !== null ? `P = ${firePire}%` : 'P = —%'}
           </div>
           {/* Semáforo badge */}
@@ -399,7 +399,7 @@ function FireSimuladorSection() {
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio projetado</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700 }} className="pv">
+              <div style={{ fontSize: '1rem', fontWeight: 700 }} className="pv" data-testid="sim-patrimonio">
                 {result && result.pat > 0 ? (fmtPrivacy(result.pat, privacyMode)) : '—'}
               </div>
             </div>

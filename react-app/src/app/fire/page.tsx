@@ -350,7 +350,7 @@ export default function FirePage() {
         {/* P(FIRE) */}
         <div style={{ textAlign: 'center', minWidth: 100 }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>P(FIRE 2040)</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: pfireHeroColor, lineHeight: 1 }}>
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: pfireHeroColor, lineHeight: 1 }} data-testid="pfire-hero">
             {pfireHero != null ? `${pfireHero.toFixed(1)}%` : '—'}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: pfireHeroColor, fontWeight: 600, marginTop: 4 }}>
@@ -362,7 +362,7 @@ export default function FirePage() {
         {/* Data FIRE */}
         <div style={{ textAlign: 'center', minWidth: 80 }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>Data FIRE</div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }} data-testid="fire-year">
             {fireYearHero ?? '—'}
           </div>
         </div>

@@ -66,6 +66,18 @@ fi
 echo "✅ Playwright local OK"
 echo ""
 
+# 1c. Playwright semantic smoke (Next.js dev server — valida valores renderizados)
+echo "1c. Playwright semantic smoke (dev server — valida valores reais, não só estrutura)..."
+cd react-app && SEMANTIC_ONLY=1 npx playwright test --project=semantic --reporter=line 2>&1
+SEMANTIC_PW_RESULT=$?
+cd ..
+if [ $SEMANTIC_PW_RESULT -ne 0 ]; then
+  echo "❌ Playwright semantic FAILED — campos críticos mostrando '—' ou nulo"
+  exit 1
+fi
+echo "✅ Playwright semantic OK"
+echo ""
+
 # 2. Run master test suite
 echo "2️⃣  Running complete test suite (5 níveis)..."
 python3 scripts/run_all_dashboard_tests.py "$@"
