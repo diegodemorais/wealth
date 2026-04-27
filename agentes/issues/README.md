@@ -53,6 +53,10 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Componente | Data | Descrição | Link |
 |----|-----------|------|-----------|------|
+| HD-ARCHITECT-P3 | **P3: 323 Violations Refactored** | 2026-04-27 | Estate tax centralized. React constants → data.json. 54 strings + 251 numerics → config | [agentes/issues/HD-ARCHITECT-P3.md](https://github.com/diegodemorais/wealth/blob/main/agentes/issues/HD-ARCHITECT-P3.md) |
+| HD-ARCHITECT-P3 | React: useConfig hook + 8 components | 2026-04-27 | GuardrailsChart, HODL11, BRL, DARF, NetWorth, Surplus, ReverseFire, RollingMetrics | [react-app/src/hooks/useConfig.ts](https://github.com/diegodemorais/wealth/blob/main/react-app/src/hooks/useConfig.ts) |
+| HD-ARCHITECT-P3 | Python Scripts: String dedup | 2026-04-27 | backtest_portfolio, btc_indicators, checkin_mensal, factor_regression, spending_analysis | [scripts/config.py#TICKER](https://github.com/diegodemorais/wealth/blob/main/scripts/config.py) |
+| HD-ARCHITECT-P3 | Python Scripts: Numeric literals | 2026-04-27 | fire_montecarlo, generate_data, portfolio_analytics, reconstruct_*, tax_engine | [scripts/tax_engine.py#calculate_us_estate_tax](https://github.com/diegodemorais/wealth/blob/main/scripts/tax_engine.py) |
 | XX-test-parameters-audit | **Issue Completa** | 2026-04-27 | Auditoria P0-P1 + 70+ testes (fixtures/mock) + pre-commit validation | [agentes/issues/XX-test-parameters-audit.md](https://github.com/diegodemorais/wealth/blob/main/agentes/issues/XX-test-parameters-audit.md) |
 | XX-test-parameters-audit | Config: TER (AVGS/AVEM/JPGL) | 2026-04-27 | Corrigido 0.25%→0.39%, 0.25%→0.35%, 0.38%→0.19% | [scripts/config.py#206-208](https://github.com/diegodemorais/wealth/blob/main/scripts/config.py#L206) |
 | VERIF-PFIRE-CANONICO | React: assumptions/page.tsx | 2026-04-26 | Exibição P(FIRE) corrigida (formato .percentStr) | [react-app/src/app/assumptions/page.tsx#632](https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/assumptions/page.tsx#L632) |

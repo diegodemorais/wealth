@@ -11,6 +11,7 @@
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useUiStore } from '@/store/uiStore';
+import { useConfig } from '@/hooks/useConfig';
 import type { EChartsOption } from 'echarts-for-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
@@ -56,6 +57,7 @@ function spendingSmile(year: number, fireYear: number): number {
 
 export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
+  const { config } = useConfig();
 
   const { years, surplusP10, surplusP50, surplusP90 } = useMemo(() => {
     const trilha = data?.fire_trilha;
@@ -110,7 +112,7 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
     const lastP90 = p90Map.get(lastYear) ?? 0;
 
     // Extrapolate beyond trilha with SWR drawdown model (blended post-FIRE returns)
-    const RETORNO_REAL: number = 0.035;  // Blended portfolio: 2.5-4.5% (post-FIRE glide path, not pure equity)
+    const RETORNO_REAL: number = config.ui?.surplusGap?.retornoReal ?? 0.035;  // Blended portfolio: 2.5-4.5% (post-FIRE glide path, not pure equity)
 
     function getPatrimonio(map: Map<number, number>, last: number, year: number): number {
       if (map.has(year)) return map.get(year)!;

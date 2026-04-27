@@ -1,6 +1,7 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
+import { useConfig } from '@/hooks/useConfig';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface BRLPurchasingPowerTimelineProps {
@@ -24,10 +25,11 @@ export default function BRLPurchasingPowerTimeline({
   patrimonioAtual,
 }: BRLPurchasingPowerTimelineProps) {
   const { privacyMode } = useUiStore();
+  const { config } = useConfig();
   const equityBRL = patrimonioAtual * equityPctUsd;
   const equityUSD = equityBRL / cambio;
   // retorno equity em USD (nominal): assume ~7% USD nominal para ETFs globais
-  const retornoUSD = 0.07;
+  const retornoUSD = config.ui?.brlTimeline?.retornoUSD ?? 0.07;
 
   const scenarios = [
     { label: 'BRL aprecia 3%/a', depBRL: -0.03, color: '#dc2626' },   // BRL fortalece = portfolio BRL vale menos

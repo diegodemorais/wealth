@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
+import { useConfig } from '@/hooks/useConfig';
 import { DashboardData } from '@/types/dashboard';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { fmtPrivacy } from '@/utils/privacyTransform';
@@ -24,6 +25,7 @@ export interface GuardrailsChartProps {
 export function GuardrailsChart({ data, gastoOverride }: GuardrailsChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
   const chartRef = useChartResize();
+  const { config } = useConfig();
 
   const option = useMemo(() => {
     const sg = (data as any)?.spending_guardrails ?? {};
@@ -42,9 +44,9 @@ export function GuardrailsChart({ data, gastoOverride }: GuardrailsChartProps) {
 
     // Healthcare model: VCMH 5.0%/year real + ANS age-bracket multiplier (FR-healthcare-recalibracao 2026-04-23)
     const saudeBase = (data as any)?.saude_base ?? 24_000;
-    const SAUDE_INFLATOR = 0.050;
-    const SAUDE_DECAY_THRESHOLD = 30;
-    const SAUDE_DECAY = 0.50;
+    const SAUDE_INFLATOR = config.ui?.guardrails?.saudeInflator ?? 0.050;
+    const SAUDE_DECAY_THRESHOLD = config.ui?.guardrails?.saudeDecayThreshold ?? 30;
+    const SAUDE_DECAY = config.ui?.guardrails?.saudeDecay ?? 0.50;
 
     const ansMultiplier = (yearPostFire: number): number => {
       const fireAge = 53;

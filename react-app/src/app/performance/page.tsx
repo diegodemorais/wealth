@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { usePageData } from '@/hooks/usePageData';
+import { useConfig } from '@/hooks/useConfig';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { TimelineChart } from '@/components/charts/TimelineChart';
@@ -36,6 +37,7 @@ type Period = (typeof PERIODS)[number]['key'];
 
 export default function PerformancePage() {
   const { data, isLoading, dataError, privacyMode } = usePageData();
+  const { config } = useConfig();
   const [timelinePeriod, setTimelinePeriod] = useState<Period>('all');
   const [alphaTab, setAlphaTab] = useState<'vwra' | 'swrd'>('vwra');
 
@@ -334,8 +336,8 @@ export default function PerformancePage() {
             ];
 
             // AVGS proxy: blend AVUV (US) + AVDV (Intl) via pesos canônicos
-            const wUS = 0.58;
-            const wIntl = 0.42;
+            const wUS = config.ui?.performance?.weightUS ?? 0.58;
+            const wIntl = config.ui?.performance?.weightIntl ?? 0.42;
             const avgsProxy: Record<string, number> = {};
             for (const fKey of fKeys) {
               const u = fl['AVUV']?.[fKey];
@@ -610,11 +612,11 @@ export default function PerformancePage() {
                   const wAvem = pt.AVEM ?? 0.158;
                   const wHodl11 = pt.HODL11 ?? 0.03;
                   const equityTotal = wSwrd + wAvgs + wAvem;
-                  const terSwrd = 0.0012;
-                  const terAvgs = 0.0039;
-                  const terAvem = 0.0035;
-                  const terHodl11 = 0.0020;
-                  const terVwra = 0.0022;
+                  const terSwrd = config.ui?.performance?.terSwrd ?? 0.0012;
+                  const terAvgs = config.ui?.performance?.terAvgs ?? 0.0039;
+                  const terAvem = config.ui?.performance?.terAvem ?? 0.0035;
+                  const terHodl11 = config.ui?.performance?.terHodl11 ?? 0.0020;
+                  const terVwra = config.ui?.performance?.terVwra ?? 0.0022;
                   const terEquityPortfolio = equityTotal > 0
                     ? (wSwrd * terSwrd + wAvgs * terAvgs + wAvem * terAvem) / equityTotal
                     : 0.00171;

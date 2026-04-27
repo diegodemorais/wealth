@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { usePageData } from '@/hooks/usePageData';
+import { useConfig } from '@/hooks/useConfig';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE, EC_TOOLTIP } from '@/utils/echarts-theme';
@@ -36,9 +37,6 @@ const MKT_RETORNOS: Record<Exclude<Mkt, 'aspiracional' | 'cambio_dinamico'>, num
   base:   0.0485,
   fav:    0.0585,
 };
-
-// Volatilidade da carteira equity (carteira.md)
-const SIGMA_ANUAL = 0.168;
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -135,9 +133,10 @@ function calcPFire(
   aporteMensal: number,
   metaFire: number,
   retornoAnual: number,
+  sigma_anual: number,
   N = 1000,
 ): number {
-  const sigma_m = SIGMA_ANUAL / Math.sqrt(12);
+  const sigma_m = sigma_anual / Math.sqrt(12);
   const mu_m = Math.log(1 + retornoAnual) / 12 - 0.5 * sigma_m * sigma_m;
   const rand = mulberry32(42);
   let hits = 0;
@@ -163,7 +162,11 @@ function calcPFire(
 
 export function ReverseFire() {
   const { data, privacyMode } = usePageData();
+  const { config } = useConfig();
   const { pv, pvLabel } = useEChartsPrivacy();
+
+  // Volatilidade da carteira equity (carteira.md) — centralized in config
+  const SIGMA_ANUAL = config.ui?.reverseFire?.sigmaAnual ?? 0.168;
 
   // Dados fixos do sistema
   const premissas = (data as any)?.premissas ?? {};
@@ -245,8 +248,8 @@ export function ReverseFire() {
       });
       return result.pFire;
     }
-    return calcPFire(patrimonioAtual, meses, aporte, metaFire, retornoAnual);
-  }, [patrimonioAtual, meses, aporte, metaFire, retornoAnual, isCambioDinamico]);
+    return calcPFire(patrimonioAtual, meses, aporte, metaFire, retornoAnual, SIGMA_ANUAL);
+  }, [patrimonioAtual, meses, aporte, metaFire, retornoAnual, isCambioDinamico, SIGMA_ANUAL]);
 
   // Status
   const statusColor = metaAtingida ? EC.green : aporteMinimo > aporte * 2 ? EC.red : EC.yellow;

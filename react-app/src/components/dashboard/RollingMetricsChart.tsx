@@ -3,6 +3,7 @@
 import React from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useConfig } from '@/hooks/useConfig';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
@@ -26,10 +27,11 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
   dates, sharpeBRL, sharpeUSD, sortino, volatilidade,
 }) => {
   const { privacyMode } = useEChartsPrivacy();
+  const { config } = useConfig();
   const [activeMetric, setActiveMetric] = React.useState<Metric>('sharpe');
 
-  // Thin dates to at most 36 points for legibility
-  const MAX_POINTS = 36;
+  // Thin dates to at most MAX_POINTS for legibility
+  const MAX_POINTS = config.ui?.rollingMetrics?.maxPoints ?? 36;
   const rawDates = dates.slice(-120);
   const step = Math.max(1, Math.floor(rawDates.length / MAX_POINTS));
   const thinIdx = rawDates.map((_, i) => i).filter(i => i % step === 0 || i === rawDates.length - 1);

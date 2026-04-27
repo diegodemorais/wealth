@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
 import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { useConfig } from '@/hooks/useConfig';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface BondStrategyPanelProps {
@@ -41,6 +42,7 @@ export default function BondStrategyPanel({
   ipcaAlvo,
   hodl11Alvo,
 }: BondStrategyPanelProps) {
+  const { config } = useConfig();
   const anoAtual = new Date().getFullYear();
   const anosAteFire = idadeFire - idadeAtual;
   const anoFire = anoAtual + anosAteFire;
@@ -49,7 +51,7 @@ export default function BondStrategyPanel({
   const anosAteCompra = anoCompraIPCAcurto - anoAtual;
 
   const TIMELINE_START = anoAtual;
-  const TIMELINE_END = 2042;
+  const TIMELINE_END = config.ui?.bondStrategy?.timelineEnd ?? 2042;
   const span = TIMELINE_END - TIMELINE_START;
   const toLeft = (ano: number) => Math.min(98, Math.max(2, ((ano - TIMELINE_START) / span) * 100));
 

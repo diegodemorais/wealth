@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { useConfig } from '@/hooks/useConfig';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 
@@ -46,8 +47,6 @@ interface DARFObligationProps {
   realizedPnl?: DARFData;
   cambio?: number;
 }
-
-const TAX_RATE_FOREIGN = 0.15; // 15% flat on foreign gains (Lei 14.754/2023)
 
 /**
  * Parse DARF due dates based on sale month.
@@ -112,7 +111,9 @@ const STATUS_CONFIG = {
 
 export default function DARFObligationsPanel({ realizedPnl, cambio = 5.15 }: DARFObligationProps) {
   const { privacyMode } = useUiStore();
+  const { config } = useConfig();
   const today = new Date('2026-04-25'); // Use provided date from data
+  const TAX_RATE_FOREIGN = config.ui?.darfPanel?.taxRateForeign ?? 0.15; // 15% flat on foreign gains (Lei 14.754/2023)
 
   const analysis = useMemo(() => {
     if (!realizedPnl?.detalhado?.length) {

@@ -44,6 +44,7 @@ export interface BaseChartOptions {
   data: DashboardData;
   privacyMode: boolean;
   theme: ChartTheme;
+  uiConfig?: Record<string, any>;
 }
 
 /**
@@ -343,7 +344,7 @@ export function createSankeyChartOption(options: BaseChartOptions) {
  * Net Worth Projection Chart (Percentile Lines)
  */
 export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
-  const { data, privacyMode, theme } = options;
+  const { data, privacyMode, theme, uiConfig } = options;
 
   const ft = (data as any)?.fire_trilha ?? {};
 
@@ -402,9 +403,9 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
 
   // Healthcare costs: VCMH grows 5.0%/year real, ANS age-bracket multipliers (FR-healthcare-recalibracao 2026-04-23)
   const saudeBase = (data as any)?.saude_base ?? 24_000;
-  const SAUDE_INFLATOR = 0.050;
-  const SAUDE_DECAY_THRESHOLD = 30;
-  const SAUDE_DECAY = 0.50;
+  const SAUDE_INFLATOR = uiConfig?.guardrails?.saudeInflator ?? 0.050;
+  const SAUDE_DECAY_THRESHOLD = uiConfig?.guardrails?.saudeDecayThreshold ?? 30;
+  const SAUDE_DECAY = uiConfig?.guardrails?.saudeDecay ?? 0.50;
 
   const ansMultiplier = (yearPostFire: number): number => {
     const currentAge = 53 + yearPostFire;

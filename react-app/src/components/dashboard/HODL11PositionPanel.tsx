@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { useConfig } from '@/hooks/useConfig';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
@@ -28,6 +29,7 @@ interface HODL11PositionPanelProps {
  */
 export default function HODL11PositionPanel({ hodl11 }: HODL11PositionPanelProps) {
   const { privacyMode } = useUiStore();
+  const { config } = useConfig();
   const [btcData, setBtcData] = useState<BtcIndicatorsData | null>(null);
   useEffect(() => {
     fetch(`${BASE_PATH}/btc_indicators.json`)
@@ -40,7 +42,7 @@ export default function HODL11PositionPanel({ hodl11 }: HODL11PositionPanelProps
   const avgCost = hodl11?.preco_medio ?? null;
   const allocPct = hodl11?.banda?.atual_pct ?? 0;
   const BANDS = { buy: 1.5, target: 3.0, sell: 5.0 };
-  const BAR_MAX = 6.5;
+  const BAR_MAX = config.ui?.hodl11?.barMax ?? 6.5;
   const pos = (v: number) => `${(Math.min(v, BAR_MAX) / BAR_MAX * 100).toFixed(2)}%`;
   const buyWidth = pos(BANDS.buy);
   const neutralWidth = `calc(${pos(BANDS.sell)} - ${pos(BANDS.buy)})`;
