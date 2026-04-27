@@ -3829,12 +3829,27 @@ def main():
     # ─── Timestamps de fontes de dados ──────────────────────────────────────────
     timestamps = get_source_timestamps()
 
+    # ── Pipeline run ID (DATA_PIPELINE_CENTRALIZATION — Invariant 3: rastreabilidade) ─
+    _pipeline_run_id = datetime.now().strftime("%Y%m%dT%H%M%S")
+    _snapshot_ages: dict = {}  # {label: {mtime_str, _generated, age_h}}
+
     # ── Novos JSONs core HD-perplexity-review ───────────────────────────────────
     def _load_json_safe(path, label):
         if path.exists():
             try:
                 d = json.loads(path.read_text())
                 print(f"  ✓ {label} ({path.name})")
+                # Track snapshot age for _snapshots_metadata
+                mtime = datetime.fromtimestamp(path.stat().st_mtime)
+                age_h = (datetime.now() - mtime).total_seconds() / 3600
+                _snapshot_ages[label] = {
+                    "file": path.name,
+                    "mtime": mtime.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "age_h": round(age_h, 1),
+                    "_generated": d.get("_generated") if isinstance(d, dict) else None,
+                }
+                if age_h > 48:
+                    print(f"  ⚠️ {label}: snapshot {age_h:.0f}h antigo (>48h) — considere regenerar")
                 return d
             except Exception as e:
                 print(f"  ⚠️ {label}: {e}")
@@ -3993,6 +4008,8 @@ def main():
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "_generated_brt": (datetime.utcnow() + timedelta(hours=-3)).strftime("%Y-%m-%dT%H:%M:%S") + "-03:00",
         "_schema_version": "2.0",  # Architect: schema versioning (V5 fix)
+        "_pipeline_run": _pipeline_run_id,  # DATA_PIPELINE_CENTRALIZATION: run ID para rastreabilidade
+        "_snapshots_metadata": _snapshot_ages,  # DATA_PIPELINE_CENTRALIZATION: age/mtime de cada snapshot usado
         "_data_sources": {  # Architect: rastreabilidade de cada fonte (V3 fix)
             "pfire_base": "carteira.md linha 33 (Base 86.4%, MC 10k, guardrails) vs dashboard_state.json (pode divergir)",
             "posicoes": "ibkr_sync.py fallback chain",
@@ -4188,6 +4205,42 @@ def main():
         (data.get("retornos_mensais") or {}).get("twr_real_brl_pct") is not None,
         "retornos_mensais.twr_real_brl_pct é None — TWR ausente"
     )
+
+    # ─── DATA_PIPELINE_CENTRALIZATION: Invariant 5 — Output Validation (SSOT) ──
+    def _validate_ssot_basic(d: dict) -> None:
+        """Warn (not fail) on cross-field inconsistencies in data.json."""
+        warnings = []
+
+        # Check P(FIRE) source is declared
+        pb_src = (d.get("pfire_base") or {}).get("source")
+        if pb_src not in ("mc", "heuristic", "fallback"):
+            warnings.append(f"pfire_base.source='{pb_src}' — valor inesperado")
+
+        # Check snapshots age (warn if any >48h)
+        stale = [(k, v["age_h"]) for k, v in d.get("_snapshots_metadata", {}).items() if v.get("age_h", 0) > 48]
+        if stale:
+            for name, age in stale:
+                warnings.append(f"snapshot '{name}' está {age:.0f}h antigo (>48h)")
+
+        # Check patrimônio holístico > 0
+        ph_fin = ((d.get("patrimonio_holistico") or {}).get("financeiro_brl") or 0)
+        if ph_fin <= 0:
+            warnings.append(f"patrimonio_holistico.financeiro_brl={ph_fin} — inconsistente")
+
+        # Check timestamps block has expected keys
+        ts = d.get("timestamps") or {}
+        for expected_key in ["geral", "posicoes_ibkr", "holdings_md"]:
+            if not ts.get(expected_key):
+                warnings.append(f"timestamps.{expected_key} ausente")
+
+        if warnings:
+            print(f"\n⚠️  SSOT Validation Warnings ({len(warnings)}):")
+            for w in warnings:
+                print(f"   - {w}")
+        else:
+            print(f"  ✓ SSOT validation: OK (pipeline_run={d['_pipeline_run']})")
+
+    _validate_ssot_basic(data)
 
     OUT_PATH.parent.mkdir(exist_ok=True)
     OUT_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False))

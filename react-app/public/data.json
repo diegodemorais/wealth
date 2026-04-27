@@ -1,7 +1,64 @@
 {
-  "_generated": "2026-04-27T18:56:04",
-  "_generated_brt": "2026-04-27T18:56:04-03:00",
+  "_generated": "2026-04-27T19:27:07",
+  "_generated_brt": "2026-04-27T19:27:07-03:00",
   "_schema_version": "2.0",
+  "_pipeline_run": "20260427T192706",
+  "_snapshots_metadata": {
+    "fire_matrix": {
+      "file": "fire_matrix.json",
+      "mtime": "2026-04-27T18:53:37",
+      "age_h": 0.6,
+      "_generated": "2026-04-27T18:51:44"
+    },
+    "fire_swr_percentis": {
+      "file": "fire_swr_percentis.json",
+      "mtime": "2026-04-27T18:51:44",
+      "age_h": 0.6,
+      "_generated": "2026-04-27T18:51:44"
+    },
+    "fire_aporte_sensitivity": {
+      "file": "fire_aporte_sensitivity.json",
+      "mtime": "2026-04-27T18:51:50",
+      "age_h": 0.6,
+      "_generated": "2026-04-27T18:51:44"
+    },
+    "fire_trilha": {
+      "file": "fire_trilha.json",
+      "mtime": "2026-04-27T18:51:44",
+      "age_h": 0.6,
+      "_generated": "2026-04-27T18:51:44"
+    },
+    "drawdown_history": {
+      "file": "drawdown_history.json",
+      "mtime": "2026-04-27T18:51:44",
+      "age_h": 0.6,
+      "_generated": "2026-04-27T18:51:44"
+    },
+    "etf_composition": {
+      "file": "etf_composition.json",
+      "mtime": "2026-04-27T18:51:44",
+      "age_h": 0.6,
+      "_generated": "2026-04-27T18:51:44"
+    },
+    "bond_pool_runway": {
+      "file": "bond_pool_runway.json",
+      "mtime": "2026-04-27T18:51:44",
+      "age_h": 0.6,
+      "_generated": "2026-04-27T18:51:44"
+    },
+    "lumpy_events": {
+      "file": "lumpy_events.json",
+      "mtime": "2026-04-27T18:51:52",
+      "age_h": 0.6,
+      "_generated": "2026-04-27T18:51:44"
+    },
+    "fire_by_profile": {
+      "file": "fire_by_profile.json",
+      "mtime": "2026-04-27T12:18:28",
+      "age_h": 7.1,
+      "_generated": null
+    }
+  },
   "_data_sources": {
     "pfire_base": "carteira.md linha 33 (Base 86.4%, MC 10k, guardrails) vs dashboard_state.json (pode divergir)",
     "posicoes": "ibkr_sync.py fallback chain",
@@ -2874,23 +2931,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 76840.26,
+      "btc_atual_usd": 76894.74,
       "hodl11_brl_atual": 108102,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.04,
-          "valor_fire_brl": 112547
+          "valor_fire_brl": 112468
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.25,
-          "valor_fire_brl": 351710
+          "valor_fire_brl": 351461
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.51,
-          "valor_fire_brl": 703420
+          "upside_factor": 6.5,
+          "valor_fire_brl": 702922
         }
       }
     }
@@ -7972,7 +8029,7 @@
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 0.0,
     "cds_brazil_5y_bps": null,
-    "bitcoin_usd": 76840.26,
+    "bitcoin_usd": 76894.74,
     "plano_status": {
       "status": "PLANO_PERMANECE",
       "gatilho_ativo": "DCA IPCA+ ativo — 7.07% ≥ 6.0%",
@@ -7989,9 +8046,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.977,
-    "btc_usd": 76840.26,
+    "btc_usd": 76894.74,
     "cambio_mtd_pct": 0.17,
-    "btc_mtd_pct": -1.26,
+    "btc_mtd_pct": -1.19,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": null,
     "ref_mes": "2026-04",
