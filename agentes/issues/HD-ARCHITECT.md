@@ -37,7 +37,93 @@ Garantir integridade arquitetural e conformidade com premissas.
 
 ---
 
-### 2. Engines (Centralizations Obrigatórias)
+### 2. Mapa Completo de Centralizações
+
+**Tudo que NÃO pode ser duplicado/hardcoded:**
+
+#### A. Engines (Lógica de Domínio)
+
+| Engine | Responsabilidade | Consumidores | Arquivo |
+|--------|-----------------|--------------|---------|
+| `pfire_transformer.py` | P(FIRE) 0-1 ↔ 0-100% com rastreabilidade | Python + React via data.json | `scripts/pfire_transformer.py` |
+| `tax_engine.py` | Lei 14.754/2023, DARF, carryforward, lotes FIFO | `generate_data.py`, CLI `/tax-calc` | `scripts/tax_engine.py` |
+| `bond_pool_engine.py` | Bond pool acúmulo/depreciação, sequência saque | `data_pipeline_engine.py` | `scripts/bond_pool_engine.py` |
+| `swr_engine.py` | SWR por percentil, floor logic, spending smile | `data_pipeline_engine.py` | `scripts/swr_engine.py` |
+| `guardrail_engine.py` | Dual-impl (P(FIRE) + drawdown), alerta de ação | `data_pipeline_engine.py` | `scripts/guardrail_engine.py` |
+| `withdrawal_engine.py` | Spending strategy, rebalanceamento trimestral | `data_pipeline_engine.py` | `scripts/withdrawal_engine.py` |
+| `portfolio_analytics.py` | TWR, frontier eficiente, stress test, CDaR | Scripts, CLI | `scripts/portfolio_analytics.py` |
+
+#### B. Data Pipeline & Schema (Garantias de Integridade)
+
+| Componente | Responsabilidade | Consumidores | Arquivo |
+|------------|-----------------|--------------|---------|
+| `data_pipeline_engine.py` | Orquestração DAG, snapshots, invariant validation | `generate_data.py` | `scripts/data_pipeline_engine.py` |
+| `snapshot_schemas.py` | Schema validators para data.json | `data_pipeline_engine.py`, testes | `scripts/snapshot_schemas.py` |
+| `validators.py` | Cross-field invariants (P10≤P50≤P90, patrimonio > 500k) | `data_pipeline_engine.py` | `scripts/validators.py` |
+| `snapshot_archive.py` | Archive, replay, time travel | `data_pipeline_engine.py`, análise | `scripts/snapshot_archive.py` |
+| **GUARANTEED_INVARIANTS.md** | Declaração formal de garantias | Todos os engines, validators | `agentes/referencia/GUARANTEED_INVARIANTS.md` |
+
+#### C. Configuration (Fonte de Parâmetros Financeiros)
+
+| Config | Responsabilidade | Consumidores | Arquivo |
+|--------|-----------------|--------------|---------|
+| `carteira.md` | Strategy, allocation, guardrails, FIRE decisions | Source of truth narrativo | `agentes/contexto/carteira.md` |
+| `config.py` | Constantes derivadas de carteira.md | Todos os scripts Python | `scripts/config.py` |
+| `carteira_params.json` | Parâmetros estruturados (gerado de carteira.md) | `config.py`, validators | `dados/carteira_params.json` |
+| **Parâmetros para Scripts** (em carteira.md) | Tabela de valores de input para parse_carteira.py | `parse_carteira.py` | `agentes/contexto/carteira.md` (seção) |
+
+#### D. React/Dashboard Configuration
+
+| Config | Responsabilidade | Consumidores | Arquivo |
+|--------|-----------------|--------------|---------|
+| `dashboard.ts` | UI tabs, sections, theme, open state | React pages | `react-app/src/config/dashboard.ts` |
+| `pfire-canonical.ts` | P(FIRE) canonicalization TypeScript | React components | `react-app/src/utils/pfire-canonical.ts` |
+| **spec.json** | Manifesto único do dashboard (deprecated, use dashboard.ts) | Legacy | `spec.json` |
+
+#### E. Data Outputs (Source of Truth por Fase)
+
+| Output | Schema | Consumidores | Arquivo |
+|--------|--------|--------------|---------|
+| **data.json** | GUARANTEED_INVARIANTS + SNAPSHOT-SCHEMA | React dashboard, análise | `react-app/public/data.json` |
+| **dashboard_state.json** | Snapshot atual com _generated timestamp | Análise, referencias | `dados/dashboard_state.json` |
+| **Snapshot Archive** | Histórico de snapshots com versionamento | Replay, time travel, auditoria | `dados/snapshots/` |
+| **carteira_params.json** | Parâmetros estruturados (JSON) | Scripts Python | `dados/carteira_params.json` |
+
+#### F. Scripts Utilitários (Não Duplicar Lógica)
+
+| Script | Responsabilidade | Consumidores | Comando |
+|--------|-----------------|--------------|---------|
+| `fire_montecarlo.py` | MC 10k trajetórias, P(FIRE), spending smile | `generate_data.py`, CLI | `python3 scripts/fire_montecarlo.py --tornado` |
+| `parse_carteira.py` | Extrai parâmetros de carteira.md → carteira_params.json | Build process, config | `python3 scripts/parse_carteira.py` |
+| `generate_data.py` | Master orchestrator: carrega dados, chama engines, salva data.json | GitHub Actions, CLI | `python3 scripts/generate_data.py` |
+| `portfolio_analytics.py` | TWR, frontier, stress, rebalance calc | CLI, análise | `python3 scripts/portfolio_analytics.py` |
+| `ibkr_sync.py` | IBKR Flex Query → posições, holdings snapshot | Reconciliação, rebalance | `python3 scripts/ibkr_sync.py --cambio 5.15` |
+| `fx_utils.py` | PTAX, macro BCB, decomposição BRL/USD | Scripts, análise | `python3 scripts/fx_utils.py` |
+
+#### G. Skills (Command-Line Interfaces)
+
+| Skill | Lógica Subjacente | Quando Usar |
+|-------|------------------|------------|
+| `/fire-status` | `fire_montecarlo.py` (3k sims paralelo) | Validar P(FIRE) rápido |
+| `/reconciliar` | `ibkr_sync.py` (3 camadas fallback) | Detectar divergências |
+| `/rebalance-calc` | Portfolio analytics (aporte ótimo) | Calcular distribuição aporte |
+| `/tax-calc` | `tax_engine.py` (Lei 14.754/2023) | Calcular impacto fiscal |
+| `/cambio` | `fx_utils.py` (PTAX histórica) | Validar estimativas BRL/USD |
+
+#### H. Referência (Documentação de Padrões)
+
+| Documento | Propósito | Consumidores |
+|-----------|----------|--------------|
+| **CLAUDE.md** | Protocolos de decisão (D1-D12), estilos de código | Head, Dev, Agents |
+| **GUARANTEED_INVARIANTS.md** | Garantias formais de data.json | Todos os engines, validators |
+| **PIPELINE-DAG.md** | Fluxo de execução, dependências | Arquiteto, Dev |
+| **SNAPSHOT-SCHEMA.md** | Schema de data.json com metadata | Validators, React |
+| **scripts.md** | Catálogo de scripts com uso | Dev, Arquiteto |
+| **CENTRALIZATION_ANALYSIS.md** | Análise de consolidação (74 testes, 5 engines) | Arquiteto |
+
+---
+
+### 3. Engines (Centralizations Obrigatórias — Resumo para Rápida Referência)
 
 | Engine | Responsabilidade | Consumidores | Localização |
 |--------|-----------------|--------------|-------------|
@@ -260,17 +346,141 @@ Se não: proponha novo engine se >2 casos de uso
 
 ---
 
+## Referências Bibliográficas (Sua Fundamentação Teórica)
+
+### 📘 Clássicos de Engenharia de Software
+
+**Design Patterns & Architecture:**
+1. **Design Patterns: Elements of Reusable Object-Oriented Software** (Gang of Four, 1994)
+   - *Capítulos aplicáveis*: Facade (centralização de interfaces), Strategy (engines parametrizáveis)
+   - *Para você*: Como estruturar engines sem duplicação
+
+2. **Clean Architecture: A Craftsman's Guide to Software Structure and Design** (Robert C. Martin, 2017)
+   - *Capítulos aplicáveis*: Architecture is about Intent, Entities, Use Cases, Interface Adapters
+   - *Para você*: Por que engines devem ser independent of delivery mechanism (CLI, React, data.json)
+
+3. **Domain-Driven Design: Tackling Complexity in the Heart of Software** (Eric Evans, 2003)
+   - *Capítulos aplicáveis*: Ubiquitous Language, Bounded Contexts, Aggregates
+   - *Para você*: Como definir fronteiras entre engines (SWR context vs Tax context vs FIRE context)
+
+4. **Code Complete: A Practical Handbook of Software Construction** (Steve McConnell, 2004)
+   - *Capítulos aplicáveis*: Architecture Decisions, Defensive Programming, Code Documentation
+   - *Para você*: Standards for consistency across codebase
+
+### 🤖 Multi-Agent Systems & AI
+
+**Distributed Systems & Multi-Agent Coordination:**
+
+5. **An Introduction to Distributed Systems** (Andrew S. Tanenbaum & Maarten van Steen, 2017)
+   - *Capítulos aplicáveis*: Consistency Models, Replication, Consensus
+   - *Para você*: Como garantir que 7 agents (Head, FIRE, Tax, Factor, RF, Advocate, Bookkeeper) chegam a decisões coerentes
+   - *Aplicação prática*: Multi-agent validation (HD-multi-llm-validation) requer compreensão de consensus
+
+6. **Agent Technology and Software Engineering** (Michael Wooldridge, 2001)
+   - *Capítulos aplicáveis*: Agent Architecture, Agent Communication, Cooperation
+   - *Para você*: Como agents (você, Head, FIRE, Tax) se comunicam sem criar inconsistências
+   - *Aplicação prática*: Seu papel é ser o "orchestrator" — garante que quando FIRE propõe mudança, Tax valida, e config.py atualiza coerentemente
+
+7. **Artificial Intelligence: A Modern Approach** (Russell & Norvig, 4th ed, 2020)
+   - *Capítulos aplicáveis*: Multi-Agent Systems (19), Cooperative Agents (20), Communication (22)
+   - *Para você*: Frameworks formais para verificar que múltiplos agents não entram em conflito
+   - *Aplicação prática*: Como detectar quando Advocate stress-tests e encontra violação que ninguém viu
+
+8. **Designing Multi-Agent Systems: A New Paradigm for Distributed Intelligent Systems** (Vlad Dignum, 2019)
+   - *Capítulos aplicáveis*: Requirements Engineering, Norms & Governance, Conflict Resolution
+   - *Para você*: EXATAMENTE seu papel — você é o "governance agent" que define norms (regras de centralização)
+   - *Aplicação prática*: Como estabelecer e fazer cumprir "norms" sem bloquear inovação
+
+### 💰 Finanças & Portfolio Management
+
+**Academic/Research:**
+
+9. **Evidence-Based Investing** (Arnott et al., 2015)
+   - *Para você*: Entender premissas de factor premium, why FF5 factors matter
+   - *Aplicação*: Validar que guardrails refletem evidência, não opinião
+
+10. **Rational Expectations and the Theory of Price Movements** (Malkiel, 1973) + **A Random Walk Down Wall Street** (2015 ed)
+    - *Para você*: Entender que hardcoding de "otimizações" pode violar market efficiency
+    - *Aplicação*: Recusar propostas de market-timing ou signal-based allocation changes sem evidência formal
+
+11. **The Intelligent Investor** (Graham & Dodd, 1949/2006)
+    - *Para você*: Princípios de margin of safety aplicados a guardrails
+    - *Aplicação*: P(FIRE) 86.4% base vs 92% otimista vs 82.5% stress → margens explícitas
+
+### 🔗 Seus 3 Pilares Teóricos
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                 ARCHITECT's Foundations                 │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  1. DESIGN PATTERNS (Gang of Four, Evans DDD)           │
+│     → Como estruturar engines sem duplicação            │
+│     → Bounded contexts, aggregates, facades             │
+│                                                          │
+│  2. MULTI-AGENT COORDINATION (Wooldridge, Dignum)       │
+│     → Como 7 agents chegam a consenso                   │
+│     → Governance norms, communication, conflict         │
+│                                                          │
+│  3. FINANCIAL PRINCIPLES (Evidence-based investing)     │
+│     → Premissas são baseadas em evidência              │
+│     → Guardrails têm margem de segurança                │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Issue Ativa: Primeira Implementação
 
 **Objetivo**: Tomar conhecimento, revisar recentes commits, propor primeira iteração de guardrails.
 
-### Tarefas Iniciais
+### Tarefas Iniciais (Sequência Recomendada)
 
-1. ✅ Ler briefing acima (fim: agora)
-2. ⏳ Ler 7 documentos de referência (fim: em paralelo)
-3. ⏳ Revisar últimos 3 commits no main (análise arquitetural)
-4. ⏳ Propor checklist de guardrails para próxima PR
-5. ⏳ Documentar desvios encontrados em analysis/ARCHITECT-AUDIT.md
+1. ✅ **Ler briefing completo** (Seção 2 "Mapa Completo de Centralizações") — 15 min
+   - Absorva: 7 categorias de centralizações (Engines, Pipeline, Config, React, Data, Scripts, Skills)
+   - Não é necessário implementar, apenas CONHECER o que existe
+
+2. ⏳ **Ler 3 referências bibliográficas** (Seção "Referências") — 20 min
+   - Gang of Four (Design Patterns)
+   - Wooldridge (Multi-Agent Systems)
+   - Evans (Domain-Driven Design)
+   - Goal: entender PRINCÍPIOS, não detalhes
+
+3. ⏳ **Ler 7 documentos de referência técnica** — 70 min
+   - `CLAUDE.md` (10m) — protocolos
+   - `GUARANTEED_INVARIANTS.md` (10m) — schema garantias
+   - `PIPELINE-DAG.md` (10m) — data flow
+   - `SNAPSHOT-SCHEMA.md` (10m) — data.json structure
+   - `carteira.md` primeiras 150 linhas (15m) — estratégia
+   - `scripts/config.py` primeiras 100 linhas (5m) — constantes
+   - `agentes/referencia/scripts.md` (10m) — catálogo
+
+4. ⏳ **Mapear todas as centralizações no codebase** — 30 min
+   - Execute: `grep -r "def " scripts/*.py | grep -E "(calculate|compute|generate)" | head -20`
+   - Verificar: Quais estão em engines vs quais estão inline
+   - Criar lista de "Oportunidades de consolidação"
+
+5. ⏳ **Revisar últimos 5 commits no main** — 45 min
+   ```bash
+   git log --oneline main -5
+   git show <sha> --stat  # para cada commit
+   git show <sha> --patch | head -150  # diff
+   ```
+   - Procurar por anti-patterns (hardcoding, engine bypasses, fake data)
+   - Documentar conformidades e desvios
+
+6. ⏳ **Propor primeira Checklist de Governança** — 30 min
+   - 10-12 itens para validar PRs futuras
+   - Baseado em centralizations encontradas
+
+7. ⏳ **Documentar em `/tmp/architect-audit.md`** — 20 min
+   - ✅ Conformidades encontradas
+   - ⚠️ Desvios aceitáveis
+   - ❌ Violações críticas
+   - 💡 Propostas de melhoria
+
+**Total**: ~210 min (3.5 horas) para profunda compreensão do projeto.
 
 ---
 
