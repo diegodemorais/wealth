@@ -1487,12 +1487,15 @@ def get_rf(state):
     taxa_ipca, taxa_renda = read_holdings_taxas()
 
     # Normaliza schema: state usa "valor_brl", template espera "valor"
-    rf = {}
+    # Initialize with known RF assets to prevent empty RF when state is empty
     notas_map = {
         "ipca2029":  "Reserva · Nubank · migrar 2029",
         "ipca2040":  "DCA ativo · XP · HTM SEMPRE",
         "renda2065": f"Tático · Nubank · Vender ≤{PISO_VENDA_RENDA_PLUS}%",
     }
+
+    # Start with known RF assets from state or initialize empty
+    rf = {}
     for key, raw in rf_raw.items():
         if key == "hodl11":
             rf[key] = raw  # hodl11 tratado separadamente
@@ -1507,6 +1510,17 @@ def get_rf(state):
             "tipo":  raw.get("tipo"),
             "notas": raw.get("notas", notas_map.get(key, "")),
         }
+
+    # Initialize missing RF assets with empty placeholders (prevents RF vazio)
+    for asset_key in ["ipca2029", "ipca2040", "renda2065"]:
+        if asset_key not in rf:
+            rf[asset_key] = {
+                "cotas": None,
+                "valor": 0,
+                "taxa": None,
+                "tipo": "Tesouro Direto",
+                "notas": notas_map.get(asset_key, ""),
+            }
 
     # Atualizar taxas do holdings.md (mais atualizado que o state)
     # Usar mercado_mtd como fonte primária se disponível (mais atual que holdings.md)

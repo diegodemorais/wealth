@@ -76,8 +76,9 @@ def main():
             cambio_atual = CAMBIO_FALLBACK
             print(f"  ⚠️ câmbio não encontrado no state — usando CAMBIO_FALLBACK {cambio_atual}")
         except Exception:
-            cambio_atual = 5.70
-            print(f"  ⚠️ câmbio não encontrado — usando fallback hardcoded {cambio_atual}")
+            from config import CAMBIO_EMERGENCY
+            cambio_atual = CAMBIO_EMERGENCY
+            print(f"  ⚠️ câmbio não encontrado — usando CAMBIO_EMERGENCY {cambio_atual}")
 
     print("  ▶ calculando IR diferido via TaxEngine (Lei 14.754/2023) ...")
     try:
@@ -114,6 +115,7 @@ def main():
     OUT.write_text(json.dumps(snapshot, indent=2))
 
     n_etfs = len(tax_data["ir_por_etf"])
+    ptax_source = tax_data.get("ptax_source", "unknown")
     print(f"\n✅ {OUT.relative_to(ROOT)}")
     print(f"   IR diferido: R${tax_data['ir_diferido_total_brl']:,.0f} sobre {n_etfs} ETFs ({ptax_source})")
 

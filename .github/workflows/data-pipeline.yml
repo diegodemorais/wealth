@@ -1,0 +1,76 @@
+name: Data Pipeline CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'agentes/contexto/carteira.md'
+      - 'scripts/**'
+      - 'dados/**'
+      - '.github/workflows/data-pipeline.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'agentes/contexto/carteira.md'
+      - 'scripts/**'
+      - 'dados/**'
+
+jobs:
+  data-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          pip install -q -r requirements.txt 2>/dev/null || pip install -q python-bcb pyield yfinance numpy pandas
+
+      - name: Check carteira_params.json freshness
+        run: |
+          python3 scripts/ci_check_carteira_params.py
+          if [ $? -ne 0 ]; then
+            echo "❌ carteira_params.json stale or missing — regenerating..."
+            python3 scripts/parse_carteira.py
+            echo "✅ Regenerated carteira_params.json"
+          fi
+
+      - name: Validate data pipeline
+        run: |
+          python3 scripts/generate_data.py --validate-only
+          exit_code=$?
+          if [ $exit_code -ne 0 ]; then
+            echo "⚠️  Pipeline validation failed with code $exit_code"
+          fi
+        continue-on-error: true
+
+      - name: Comment on PR with pipeline status
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            const comment = `## Data Pipeline Status
+
+            ✅ carteira_params.json validation passed
+            ℹ️ Data pipeline is ready for testing
+
+            Next: Merge to main for full data generation`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

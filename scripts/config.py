@@ -216,10 +216,28 @@ APORTE_MENSAL = APORTE_CENARIO_BASE
 # ─── FALLBACKS MACRO (snapshot — atualizar quando taxas mudarem) ─────────────
 
 CAMBIO_FALLBACK      = _P.get("cambio_fallback",      5.07)
+CAMBIO_EMERGENCY     = 5.70  # Last resort if all imports fail (reconstruct_tax.py emergency handler)
 IPCA_CAGR_FALLBACK   = _P.get("ipca_cagr_fallback",   6.14)
 SELIC_META_SNAPSHOT  = _P.get("selic_meta_snapshot",  14.75)
 FED_FUNDS_SNAPSHOT   = _P.get("fed_funds_snapshot",   3.64)
 DEPRECIACAO_BRL_BASE = _P.get("depreciacao_brl_base", 0.5)
+
+
+# ─── GENERATORS CONFIG (controla timeout e n_sim por gerador) ────────────────
+# Utilizado por reconstruct_fire_data.py para impedir que geradores lentos
+# bloqueiem todo o pipeline. Cada gerador tem timeout em segundos e n_sim
+# configurável (None = usar default do gerador).
+
+GENERATORS_CONFIG = {
+    "fire_matrix": {"n_sim": 1000, "timeout_seconds": 120},
+    "fire_trilha": {"n_sim": None, "timeout_seconds": 60},
+    "lumpy_events": {"n_sim": 5000, "timeout_seconds": 180},
+    "bond_pool_runway": {"n_sim": None, "timeout_seconds": 30},
+    "fire_swr_percentis": {"n_sim": None, "timeout_seconds": 30},
+    "etf_composition": {"n_sim": None, "timeout_seconds": 10},
+    "drawdown_history": {"n_sim": None, "timeout_seconds": 10},
+    "fire_aporte_sensitivity": {"n_sim": 2000, "timeout_seconds": 90},
+}
 
 
 # ─── GLIDE PATH (tabela de alocação por idade — estrutural) ─────────────────
