@@ -168,13 +168,21 @@ export class PFireEngine {
     // ✓ CRÍTICO: canonicalizar (ÚNICA fonte de conversão × 100)
     const canonical = canonicalizePFire(mcResult.pFire, 'mc');
 
+    // Percentis de probabilidade (0-1): aproximação idêntica ao Python pfire_engine.py
+    // Python: percentile_10 = max(0.0, p_sucesso - 0.03), percentile_50 = p_sucesso, percentile_90 = min(1.0, p_sucesso + 0.03)
+    // mcResult.p10/p50/p90 são percentis de riqueza (BRL), NÃO probabilidades
+    const pSuccesso = mcResult.pFire; // 0-1
+    const pct10 = Math.max(0.0, pSuccesso - 0.03);
+    const pct50 = pSuccesso;
+    const pct90 = Math.min(1.0, pSuccesso + 0.03);
+
     // Montar resultado
     const result: PFireResult = {
       canonical,
       scenario: request.scenario,
-      percentile_10: mcResult.p10,
-      percentile_50: mcResult.p50,
-      percentile_90: mcResult.p90,
+      percentile_10: pct10,
+      percentile_50: pct50,
+      percentile_90: pct90,
       endWealthDist: mcResult.endWealthDist,
     };
 

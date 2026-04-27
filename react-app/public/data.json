@@ -141,7 +141,7 @@
     }
   },
   "premissas": {
-    "patrimonio_atual": 3294519,
+    "patrimonio_atual": 3719845,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -595,6 +595,69 @@
       2.65,
       -5.3,
       4.27
+    ],
+    "annual_returns": [
+      {
+        "year": 2021,
+        "months": 8,
+        "twr_nominal_brl": 8.66,
+        "twr_real_brl": 1.07,
+        "ipca": 7.51,
+        "cdi": 3.72,
+        "alpha_vs_vwra": 2.69,
+        "twr_usd": 3.13
+      },
+      {
+        "year": 2022,
+        "months": 12,
+        "twr_nominal_brl": -24.52,
+        "twr_real_brl": -28.64,
+        "ipca": 5.78,
+        "cdi": 12.38,
+        "alpha_vs_vwra": 3.5,
+        "twr_usd": -18.58
+      },
+      {
+        "year": 2023,
+        "months": 12,
+        "twr_nominal_brl": 10.14,
+        "twr_real_brl": 5.28,
+        "ipca": 4.62,
+        "cdi": 13.03,
+        "alpha_vs_vwra": -0.71,
+        "twr_usd": 18.27
+      },
+      {
+        "year": 2024,
+        "months": 12,
+        "twr_nominal_brl": 44.83,
+        "twr_real_brl": 38.15,
+        "ipca": 4.83,
+        "cdi": 10.89,
+        "alpha_vs_vwra": -3.56,
+        "twr_usd": 12.76
+      },
+      {
+        "year": 2025,
+        "months": 12,
+        "twr_nominal_brl": 19.5,
+        "twr_real_brl": 14.61,
+        "ipca": 4.26,
+        "cdi": 14.33,
+        "alpha_vs_vwra": 2.16,
+        "twr_usd": 35.17
+      },
+      {
+        "year": 2026,
+        "months": 4,
+        "twr_nominal_brl": 1.02,
+        "twr_real_brl": -1.28,
+        "ipca": 2.33,
+        "cdi": 4.31,
+        "alpha_vs_vwra": 4.47,
+        "twr_usd": 9.99,
+        "ytd": true
+      }
     ]
   },
   "rolling_sharpe": {
@@ -2028,24 +2091,36 @@
   "rf": {
     "ipca2029": {
       "cotas": null,
-      "valor": 0,
-      "taxa": null,
+      "valor": 86554.71,
+      "taxa": 7.07,
       "tipo": "Tesouro Direto",
-      "notas": "Reserva · Nubank · migrar 2029"
+      "notas": "Reserva · Nubank · migrar 2029",
+      "custo_base_brl": 86554.71,
+      "total_aplicado_brl": 86554.71,
+      "total_resgatado_brl": 0,
+      "n_aplicacoes": 1
     },
     "ipca2040": {
       "cotas": null,
-      "valor": 0,
+      "valor": 113015.0,
       "taxa": 7.07,
       "tipo": "Tesouro Direto",
-      "notas": "DCA ativo · XP · HTM SEMPRE"
+      "notas": "DCA ativo · XP · HTM SEMPRE",
+      "custo_base_brl": 113015.0,
+      "total_aplicado_brl": 113015.0,
+      "total_resgatado_brl": 0,
+      "n_aplicacoes": 5
     },
     "renda2065": {
       "cotas": null,
-      "valor": 0,
-      "taxa": null,
+      "valor": 117832.62,
+      "taxa": 6.93,
       "tipo": "Tesouro Direto",
       "notas": "Tático · Nubank · Vender ≤6.0%",
+      "custo_base_brl": 117832.62,
+      "total_aplicado_brl": 117832.62,
+      "total_resgatado_brl": 0,
+      "n_aplicacoes": 3,
       "duration": {
         "macaulay_anos": 21.2,
         "modificada_anos": 19.8,
@@ -2061,19 +2136,23 @@
     },
     "ipca2050": {
       "cotas": null,
-      "valor": 0,
+      "valor": 11660.0,
       "taxa": null,
       "tipo": "Tesouro Direto",
-      "notas": ""
+      "notas": "",
+      "custo_base_brl": 11660.0,
+      "total_aplicado_brl": 11660.0,
+      "total_resgatado_brl": 0,
+      "n_aplicacoes": 1
     }
   },
   "hodl11": {
-    "qty": 0,
+    "qty": 1473.278237,
     "preco": 65.34,
-    "valor": 0,
-    "preco_medio": null,
-    "pnl_brl": null,
-    "pnl_pct": null,
+    "valor": 96264.0,
+    "preco_medio": 45.74,
+    "pnl_brl": 28879.2,
+    "pnl_pct": 30.0,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
@@ -2915,14 +2994,14 @@
     "ptax_atual": 4.9684
   },
   "passivos": {
-    "hipoteca_brl": 0.0,
+    "hipoteca_brl": 453417.0,
     "hipoteca_vencimento": "2051-02-15",
     "ir_diferido_brl": 170017.83,
-    "total_brl": 170017.83,
-    "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
+    "total_brl": 623434.83,
+    "_fonte": "carteira.md (Ap Pinheiros SAC R$453.417) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3294519,
+    "financeiro_brl": 3719845,
     "imovel_equity_brl": 0.0,
     "imovel_valor_mercado": 0.0,
     "saldo_devedor_brl": 0.0,
@@ -2934,23 +3013,23 @@
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
-    "brasil_pct": 1.9,
-    "cripto_pct": 0.1,
+    "brasil_pct": 10.6,
+    "cripto_pct": 2.7,
     "composicao": {
-      "hodl11_brl": 0,
-      "rf_total_brl": 0,
+      "hodl11_brl": 96264,
+      "rf_total_brl": 329062,
       "rf_detalhe": {
-        "ipca2029": 0,
-        "ipca2040": 0,
-        "renda2065": 0,
-        "ipca2050": 0
+        "ipca2029": 86555,
+        "ipca2040": 113015,
+        "renda2065": 117833,
+        "ipca2050": 11660
       },
       "coe_net_brl": 64081,
       "crypto_legado_brl": 3944
     },
-    "total_brasil_brl": 64081,
-    "total_cripto_brl": 3944,
-    "total_portfolio_brl": 3294519,
+    "total_brasil_brl": 393143,
+    "total_cripto_brl": 100208,
+    "total_portfolio_brl": 3719845,
     "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
   },
   "premissas_vs_realizado": {
