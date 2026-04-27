@@ -3659,6 +3659,17 @@ def main():
         except Exception:
             return None
 
+    # ─── Realized PnL (IBKR FIFO) → DARF panel ──────────────────────────────
+    if not args.skip_scripts and not REALIZED_PNL_PATH.exists():
+        print("  ▶ Gerando realized_pnl.json via reconstruct_realized_pnl.py ...")
+        _venv_py = Path.home() / "claude" / "finance-tools" / ".venv" / "bin" / "python3"
+        _rp_cmd = [str(_venv_py), str(ROOT / "scripts" / "reconstruct_realized_pnl.py")]
+        _rp_out, _rp_err = run(_rp_cmd)
+        if _rp_out:
+            print("  " + _rp_out.strip().replace("\n", "\n  "))
+        if _rp_err:
+            print(f"  ⚠️ reconstruct_realized_pnl stderr: {_rp_err[:200]}")
+
     # ─── Mini-log: últimas operações IBKR + XP ───────────────────────────────
     def _build_minilog():
         """Retorna as 10 últimas operações: IBKR (compras + depósitos) + XP (compras/vendas) + Nubank (Tesouro Direto) + Binance (airdrops/resgates)"""

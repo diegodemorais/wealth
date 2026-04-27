@@ -91,6 +91,17 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
   - Fix extra: factor_signal agora persiste em factor_cache.json → `--skip-scripts` não perde o valor
   - Fix extra: pfire skip-scripts path agora inclui source="mc"/is_canonical=True quando state tem MC values
 
+## Resolvido Nesta Sessão (2026-04-27 — sessão 3)
+
+- ✅ **Blocker 1: Realized PnL via IBKR Flex Query** — `build_realized_pnl()` em `ibkr_lotes.py` + `reconstruct_realized_pnl.py`
+  - FIFO re-run capturando ganhos de cada venda; filtra forex pairs (`EUR.USD`)
+  - Flex Query via `ibflex` client com credenciais `.env` (IBKR_TOKEN + IBKR_QUERY_POSITIONS)
+  - `realized_pnl.json`: 53 trades, USD 26,119 (CSV 2021-2026 + Flex 2025-2026)
+  - `generate_data.py`: auto-gera se arquivo ausente (com Flex) — DARF panel ativado
+  - Wiring: `REALIZED_PNL_PATH` já existia; auto-call adicionado ao pipeline
+- ✅ **Dashboard stress macro card** — `fire/page.tsx` CollapsibleSection `section-stress-macro`
+  - Base vs Stagflation (17.1%) vs Hyperinflation (0.0%) em grid 3-col com color coding
+
 ## Oportunidades (Média Prioridade)
 
 - **OPO 5: Timestamps** (+0.2): ✅ CONCLUÍDO (2026-04-27)
@@ -135,8 +146,8 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 
 ## Checklist
 
-- [ ] Obter flex_query.xml de IBKR ou expandir sync
-- [ ] Parsear 213 lotes → realized_pnl.json
+- [x] ~~Obter flex_query.xml de IBKR ou expandir sync~~ (Flex Query API via ibflex + credenciais configuradas)
+- [x] ~~Parsear 213 lotes → realized_pnl.json~~ (`build_realized_pnl()` em ibkr_lotes.py + `reconstruct_realized_pnl.py`; 53 trades USD 26,119 com Flex)
 - [ ] Testar DARF panel no Portfolio
 - [x] ~~Resolver yfinance + numpy incompatibilidade~~ (Yahoo Finance v8 direto, sem pandas conflict)
 - [x] ~~Calcular correlation_90d BTC/SWRD~~ (live 33%, série 244 pts, chart implementado)
@@ -145,7 +156,7 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 - [x] ~~4 falhas schema-validation~~ (563/563 testes ✓)
 - [x] ~~Adicionar 2 cenários ao MC (stagflation + hyperinflation)~~ (compute_extended_mc_scenarios())
 - [x] ~~Re-rodar 10k simulações com cenários estendidos~~ (Stagflation 17.1%, Hyper 0.0%)
-- [ ] Atualizar dashboard stress scenarios card (exibir pfire_cenarios_estendidos)
+- [x] ~~Atualizar dashboard stress scenarios card~~ (fire/page.tsx CollapsibleSection "stress-macro", Base/Stagflation/Hyperinflation 3-col grid)
 - [x] ~~OPO 5: timestamps PTAX/RF/HODL11 em data.json~~ (ptax/rf/hodl11 _updated + factor_signal cache)
 - [ ] Changelog Phase 3b completo
 - [ ] Validar 10.0/10 final

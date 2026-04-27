@@ -88,6 +88,7 @@ def fetch_flex_trades() -> list[dict]:
             "Quantity": str(qty),
             "Price": t.get("tradePrice", "0"),
             "Commission": t.get("ibCommission", "0"),
+            "Currency": t.get("currency", "USD"),
             "_source": "flex",
         })
 
@@ -236,6 +237,72 @@ def build_lots_fifo(trades: list[dict]) -> list[dict]:
                 open_lots.append(lot)
 
     return open_lots
+
+
+def build_realized_pnl(trades: list[dict]) -> list[dict]:
+    """FIFO simulation that captures realized gains from sell trades."""
+    equity_trades = []
+    for t in trades:
+        tx_type = t.get("Transaction Type", "").strip()
+        if tx_type not in ("Buy", "Sell"):
+            continue
+        symbol = t.get("Symbol", "").strip()
+        if not symbol or symbol == "-":
+            continue
+        try:
+            qty = float(t.get("Quantity", "0"))
+            price = float(t.get("Price", "0"))
+        except (ValueError, TypeError):
+            continue
+        if qty == 0 or price == 0:
+            continue
+        # Skip forex pairs (e.g. EUR.USD) — not equity instruments
+        if "." in symbol:
+            continue
+        currency = (t.get("Currency", "") or "").strip() or "USD"
+        equity_trades.append({
+            "date": t.get("Date", "").strip(),
+            "symbol": SYMBOL_MAP.get(symbol, symbol),
+            "qty": qty,
+            "price": price,
+            "currency": currency,
+        })
+
+    equity_trades.sort(key=lambda x: x["date"])
+
+    lots_by_symbol: dict[str, list[dict]] = defaultdict(list)
+    realized: list[dict] = []
+
+    for trade in equity_trades:
+        sym, qty, price, date, currency = (
+            trade["symbol"], trade["qty"], trade["price"], trade["date"], trade["currency"]
+        )
+        if qty > 0:
+            lots_by_symbol[sym].append({"date": date, "qty": qty, "price": price})
+        else:
+            remaining = abs(qty)
+            while remaining > 1e-6 and lots_by_symbol[sym]:
+                lot = lots_by_symbol[sym][0]
+                qty_closed = min(lot["qty"], remaining)
+                gain = round(qty_closed * (price - lot["price"]), 2)
+                realized.append({
+                    "date": date,
+                    "symbol": sym,
+                    "qty_sold": round(qty_closed, 6),
+                    "cost_per_share": lot["price"],
+                    "sell_price": price,
+                    "gain_usd": gain,
+                    "lot_date": lot["date"],
+                    "currency": currency,
+                })
+                if lot["qty"] <= remaining + 1e-6:
+                    remaining -= lot["qty"]
+                    lots_by_symbol[sym].pop(0)
+                else:
+                    lot["qty"] -= remaining
+                    remaining = 0
+
+    return realized
 
 
 def enrich_lots(lots: list[dict], ptax_cache: dict | None = None) -> list[dict]:
