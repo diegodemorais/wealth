@@ -1,16 +1,43 @@
 {
   "_source": "binance_saldo.pdf",
   "_report_date": "2026-03-23",
-  "_nota": "Quantidades extraídas do Account Statement Binance. Earn = staking/savings. Atualizar ao receber novo extrato.",
+  "_nota": "Gerado por binance_parse_pdf.py. Atualizar ao receber novo extrato.",
   "balances": {
-    "BTC":   { "spot": 0.000006, "earn": 0.004353 },
-    "ETH":   { "spot": 0.000231, "earn": 0.067386 },
-    "BNB":   { "spot": 0.205195, "earn": 0.0 },
-    "ADA":   { "spot": 48.392193, "earn": 0.0 },
-    "ENA":   { "spot": 2.771429, "earn": 0.0 },
-    "PENGU": { "spot": 35.317619, "earn": 0.0 },
-    "ETHFI": { "spot": 0.189516, "earn": 0.0 },
-    "LISTA": { "spot": 0.756960, "earn": 0.0 },
-    "TON":   { "spot": 0.075076, "earn": 0.0 }
+    "ADA": {
+      "spot": 48.392193,
+      "earn": 0.0
+    },
+    "BNB": {
+      "spot": 0.205195,
+      "earn": 0.0
+    },
+    "BTC": {
+      "spot": 6e-06,
+      "earn": 0.004354
+    },
+    "ENA": {
+      "spot": 2.771429,
+      "earn": 0.0
+    },
+    "ETH": {
+      "spot": 0.000231,
+      "earn": 0.067386
+    },
+    "ETHFI": {
+      "spot": 0.189516,
+      "earn": 0.0
+    },
+    "LISTA": {
+      "spot": 0.75696,
+      "earn": 0.0
+    },
+    "PENGU": {
+      "spot": 35.317619,
+      "earn": 0.0
+    },
+    "TON": {
+      "spot": 0.075076,
+      "earn": 0.0
+    }
   }
 }
