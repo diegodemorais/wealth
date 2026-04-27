@@ -37,22 +37,23 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Blocked
 > Issues aguardando dependências externas
 
-| ID | Titulo | Dono | Prioridade | Bloqueador |
-|----|--------|------|------------|-----------|
-| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | 🔴 IBKR flex data não disponível em dev |
-| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | 🔴 IBKR flex data não disponível em dev |
-| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | 🔴 IBKR flex data não disponível em dev |
+(vazio)
 
 ### Backlog
 > Issues prontas para execução, aguardando vez
 
-(vazio)
+| ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
+|----|--------|------|------------|----------|
+| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | ✅ IBKR posições carregam via ibkr_posicoes_sync (fallback chain) |
+| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | ✅ generate_data.py roda completo, data.json gerado com P(FIRE) |
+| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | ✅ Lotes históricos carregam, Flex Query merge implementado |
 
 ### Done — Últimos Componentes Alterados (Dashboard Changelog)
 > Mudanças visualmente percebidas no dashboard (últimas 10 alterações)
 
 | ID | Componente | Data | Descrição | Link |
 |----|-----------|------|-----------|------|
+| IBKR-PHASE-3B | Data Pipeline: IBKR posições loading | 2026-04-27 | Posições carregam via load_posicoes_from_ibkr() fallback; patrimônio R$3.31M em data.json | [scripts/generate_data.py#2598](https://github.com/diegodemorais/wealth/blob/main/scripts/generate_data.py#L2598) |
 | HD-ARCHITECT-P3 | **P3: 323 Violations Refactored** | 2026-04-27 | Estate tax centralized. React constants → data.json. 54 strings + 251 numerics → config | [agentes/issues/HD-ARCHITECT-P3.md](https://github.com/diegodemorais/wealth/blob/main/agentes/issues/HD-ARCHITECT-P3.md) |
 | HD-ARCHITECT-P3 | React: useConfig hook + 8 components | 2026-04-27 | GuardrailsChart, HODL11, BRL, DARF, NetWorth, Surplus, ReverseFire, RollingMetrics | [react-app/src/hooks/useConfig.ts](https://github.com/diegodemorais/wealth/blob/main/react-app/src/hooks/useConfig.ts) |
 | HD-ARCHITECT-P3 | Python Scripts: String dedup | 2026-04-27 | backtest_portfolio, btc_indicators, checkin_mensal, factor_regression, spending_analysis | [scripts/config.py#TICKER](https://github.com/diegodemorais/wealth/blob/main/scripts/config.py) |

@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Literal
+from config import DATE_FORMAT_YMD
 
 ROOT = Path(__file__).parent.parent
 

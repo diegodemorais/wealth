@@ -71,6 +71,11 @@ from config import (
     update_dashboard_state,
 )
 
+# Fallback constants (used when source files missing/corrupted)
+_HIPOTECA_FALLBACK_BRL = 452_124
+_IMOVEL_EQUITY_FALLBACK = 367_875
+_PATRIMONIO_FALLBACK = 1_000_000
+
 # Cenários BTC para projeção de display do HODL11 no FIRE Day (não drive estratégia)
 BTC_CENARIOS_USD = {"bear": 80_000, "base": 250_000, "bull": 500_000}
 
@@ -165,7 +170,7 @@ def get_passivos(tax_data=None):
             hipoteca_brl = hdata["estado_atual"]["saldo_devedor"]
             hipoteca_vencimento = hdata.get("contrato", {}).get("data_fim_prevista", hipoteca_vencimento)
         except Exception:
-            hipoteca_brl = 452_124  # fallback se arquivo corrompido
+            hipoteca_brl = _HIPOTECA_FALLBACK_BRL
 
     # IR diferido — vem de tax_data se disponível
     ir_diferido_brl = 0.0
@@ -205,7 +210,7 @@ def compute_patrimonio_holistico(total_financeiro_brl: float, state: dict, vp_ca
             saldo_devedor_brl = hdata.get("estado_atual", {}).get("saldo_devedor", 452_124)
             imovel_equity_brl = max(0.0, imovel_valor_mercado - saldo_devedor_brl)
         except Exception:
-            imovel_equity_brl = 367_875  # fallback: 820k - 452k
+            imovel_equity_brl = _IMOVEL_EQUITY_FALLBACK
 
     # Capital humano: usar valor correto do cálculo Boldin-style se disponível
     if vp_capital_humano is None or vp_capital_humano <= 0:
@@ -436,9 +441,9 @@ def build_pfire_request(scenario: str, premissas: dict) -> PFireRequest:
     Returns:
         PFireRequest pronto para PFireEngine.calculate()
     """
-    patrimonio = premissas.get("patrimonio_atual", 1_000_000)
+    patrimonio = premissas.get("patrimonio_atual", _PATRIMONIO_FALLBACK)
     if patrimonio is None or patrimonio <= 0:
-        patrimonio = 1_000_000  # fallback
+        patrimonio = _PATRIMONIO_FALLBACK
 
     # Para fire_montecarlo, meta_fire é calculada dinamicamente
     # Usar meta_fire = patrimonio (dummy, pois PFireEngine usa PREMISSAS)
@@ -2595,6 +2600,39 @@ def get_dca_status(rf: dict, total_brl: float) -> dict:
 
 # ─── SINCRONIZAÇÃO: operacoes_td.json → resumo_td.json ──────────────────────
 
+def load_posicoes_from_ibkr():
+    """Fallback: load current posições from dados/ibkr/lotes.json if available"""
+    lotes_path = Path("dados/ibkr/lotes.json")
+
+    if not lotes_path.exists():
+        return {}
+
+    try:
+        with open(lotes_path) as f:
+            lotes_data = json.load(f)
+
+        posicoes = {}
+        for ticker, ticker_data in lotes_data.items():
+            lotes = ticker_data.get("lotes", [])
+            if not lotes:
+                continue
+
+            total_qty = sum(lot.get("qty", 0) for lot in lotes)
+            total_cost = sum(lot.get("qty", 0) * lot.get("custo_por_share", 0) for lot in lotes)
+
+            if total_qty > 0:
+                posicoes[ticker] = {
+                    "qty": total_qty,
+                    "avg_cost": round(total_cost / total_qty, 4),
+                    "status": ticker_data.get("status", "alvo"),
+                }
+
+        return posicoes
+    except Exception as e:
+        print(f"  ⚠️ load_posicoes_from_ibkr: {e}")
+        return {}
+
+
 def sync_nubank_resumo():
     """Sincroniza operacoes_td.json → resumo_td.json.
 
@@ -2742,6 +2780,13 @@ def main():
     sync_nubank_resumo()
 
     state = load_state()
+
+    # Carregar posições IBKR se não estão no state (fallback inteligente)
+    if not state.get("posicoes") or len(state.get("posicoes", {})) == 0:
+        ibkr_posicoes = load_posicoes_from_ibkr()
+        if ibkr_posicoes:
+            state["posicoes"] = ibkr_posicoes
+            print(f"  ✓ Posições IBKR carregadas: {len(ibkr_posicoes)} tickers")
 
     # Premissas do fire_montecarlo.py
     print("  ▶ lendo premissas ...")
@@ -3984,7 +4029,6 @@ def main():
     print(f"   Macro: Selic {macro.get('selic_meta')}% | Fed Funds {macro.get('fed_funds')}% | Spread {macro.get('spread_selic_ff')}pp | Exp. USD {macro.get('exposicao_cambial_pct')}%")
     print(f"   Brasil: {concentracao_brasil['brasil_pct']}%" if concentracao_brasil else "   Brasil: N/A")
     print(f"   Premissas vs Real: aporte R${premissas_vs_realizado['aporte_mensal']['realizado_media_brl']/1e3:.0f}k/mês" if premissas_vs_realizado and premissas_vs_realizado.get('aporte_mensal') else "   Premissas vs Real: N/A")
-
 
 if __name__ == "__main__":
     main()
