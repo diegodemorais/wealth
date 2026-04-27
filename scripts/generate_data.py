@@ -328,6 +328,14 @@ def get_source_timestamps():
     # Data geral (hoje)
     timestamps["geral"] = str(date.today())
 
+    # OPO 5: timestamps específicos para PTAX, RF, HODL11
+    # PTAX: vem do mesmo pipeline de preços (yfinance/BCB), usa data de hoje se online
+    timestamps["ptax_updated"]   = str(date.today()) if not args.skip_prices else timestamps.get("posicoes_ibkr")
+    # RF: mtime de holdings.md (mesmo que holdings_md, alias explícito)
+    timestamps["rf_updated"]     = timestamps.get("holdings_md")
+    # HODL11: yfinance fetch date (mesmo que precos_yfinance)
+    timestamps["hodl11_updated"] = timestamps.get("precos_yfinance")
+
     return timestamps
 
 
@@ -536,13 +544,18 @@ def get_pfire_tornado():
             })
         # pfire_aspiracional = P(FIRE@49) — Cenário Aspiracional (FIRE 2035, 49 anos)
         # pfire_base = P(FIRE@53) — Cenário Base (FIRE 2040, 53 anos)
+        # State values come from last MC run → source="mc", is_canonical=True
+        _pfire_has_mc = bool(fire.get("pfire_base") or fire.get("pfire49_base"))
+        _source = "mc" if _pfire_has_mc else "fallback"
         return (
             {"base": fire.get("pfire49_base", fire.get("pfire50_base", fire.get("pfire_base"))),
              "fav":  fire.get("pfire49_fav",  fire.get("pfire50_fav",  fire.get("pfire_fav"))),
-             "stress": fire.get("pfire49_stress", fire.get("pfire50_stress", fire.get("pfire_stress")))},
+             "stress": fire.get("pfire49_stress", fire.get("pfire50_stress", fire.get("pfire_stress"))),
+             "source": _source, "is_canonical": _pfire_has_mc},
             {"base": fire.get("pfire53_base", fire.get("pfire_base")),
              "fav":  fire.get("pfire53_fav",  fire.get("pfire_fav")),
-             "stress": fire.get("pfire53_stress", fire.get("pfire_stress"))},
+             "stress": fire.get("pfire53_stress", fire.get("pfire_stress")),
+             "source": _source, "is_canonical": _pfire_has_mc},
             norm_tornado
         )
 
@@ -1243,14 +1256,19 @@ def get_factor_signal():
     AVGS_LAUNCH_STR = "2024-10-14"
 
     if args.skip_scripts:
-        try:
-            s = json.loads((ROOT / "dados" / "dashboard_state.json").read_text())
-            fs = s.get("factor_signal")
-            if fs:
-                print("  ✓ factor_signal (state)")
-                return fs
-        except Exception:
-            pass
+        # Try dashboard_state first, then factor_cache
+        for src_path, src_name in [
+            (ROOT / "dados" / "dashboard_state.json", "state"),
+            (FACTOR_CACHE, "cache"),
+        ]:
+            try:
+                s = json.loads(src_path.read_text())
+                fs = s.get("factor_signal")
+                if fs:
+                    print(f"  ✓ factor_signal ({src_name})")
+                    return fs
+            except Exception:
+                pass
         return None
 
     print("  ▶ factor signal (YTD + since launch) ...")
@@ -1503,6 +1521,12 @@ def get_rf(state):
     rf_raw = state.get("rf", {})
     taxa_ipca, taxa_renda = read_holdings_taxas()
 
+    # OPO 5: RF _updated from holdings.md mtime
+    _rf_updated = (
+        datetime.fromtimestamp(HOLDINGS_PATH.stat().st_mtime).strftime(DATE_FORMAT_YMD)
+        if HOLDINGS_PATH.exists() else str(date.today())
+    )
+
     # Normaliza schema: state usa "valor_brl", template espera "valor"
     # Initialize with known RF assets to prevent empty RF when state is empty
     notas_map = {
@@ -1526,6 +1550,7 @@ def get_rf(state):
             "taxa":  taxa,
             "tipo":  raw.get("tipo"),
             "notas": raw.get("notas", notas_map.get(key, "")),
+            "_updated": _rf_updated,
         }
 
     # Fallback: Se RF está vazio em state, ler de resumo_td.json (Nubank via parse_nubank_operations.py)
@@ -1542,6 +1567,7 @@ def get_rf(state):
                     "taxa": data.get("taxa"),
                     "tipo": data.get("tipo", "Tesouro Direto"),
                     "notas": notas_map.get(key, ""),
+                    "_updated": _rf_updated,
                 }
                 print(f"  ✓ RF {key}: R${data.get('liquido_aplicado', 0):,.0f} @ {data.get('taxa')}%")
         except Exception as e:
@@ -1556,6 +1582,7 @@ def get_rf(state):
                 "taxa": None,
                 "tipo": "Tesouro Direto",
                 "notas": notas_map.get(asset_key, ""),
+                "_updated": _rf_updated,
             }
 
     # Atualizar taxas do holdings.md (mais atualizado que o state)
@@ -2934,8 +2961,9 @@ def main():
 
     if _factor_snap:
         factor_rolling  = _factor_snap.get("factor_rolling",  {"dates": [], "avgs_vs_swrd_12m": [], "threshold": FACTOR_UNDERPERF_THRESHOLD})
-        factor_signal   = _factor_snap.get("factor_signal")
         factor_loadings = _factor_snap.get("factor_loadings", {})
+        # factor_signal may be absent or null in older caches — recompute live
+        factor_signal   = _factor_snap.get("factor_signal") or get_factor_signal()
     else:
         # Fallback: calcular inline (comportamento anterior)
         if args.skip_scripts and not FACTOR_CACHE.exists():
@@ -2944,12 +2972,14 @@ def main():
         factor_signal   = get_factor_signal()
         factor_loadings = get_factor_loadings()
         # Persist legacy cache para compatibilidade
-        if factor_rolling.get("dates") or factor_loadings:
+        if factor_rolling.get("dates") or factor_loadings or factor_signal:
             _factor_cache = {}
             if factor_rolling.get("dates"):
                 _factor_cache["factor_rolling"] = factor_rolling
             if factor_loadings:
                 _factor_cache["factor_loadings"] = factor_loadings
+            if factor_signal:
+                _factor_cache["factor_signal"] = factor_signal
             try:
                 FACTOR_CACHE.parent.mkdir(exist_ok=True)
                 FACTOR_CACHE.write_text(json.dumps(_factor_cache, indent=2))
@@ -3107,6 +3137,7 @@ def main():
         "preco_medio":  hodl11_preco_medio,
         "pnl_brl":      pnl_brl,
         "pnl_pct":      pnl_pct,
+        "_updated":     str(date.today()) if not args.skip_prices else None,
     }
 
     # DEV-coe-hodl11-classificacao: lê coe_brl da última linha do CSV antes de compute_drift

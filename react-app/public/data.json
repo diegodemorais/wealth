@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-27T18:41:13",
-  "_generated_brt": "2026-04-27T18:41:13-03:00",
+  "_generated": "2026-04-27T18:56:04",
+  "_generated_brt": "2026-04-27T18:56:04-03:00",
   "_schema_version": "2.0",
   "_data_sources": {
     "pfire_base": "carteira.md linha 33 (Base 86.4%, MC 10k, guardrails) vs dashboard_state.json (pode divergir)",
@@ -24,7 +24,10 @@
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-25",
     "fire_mc": "2026-04-27",
-    "geral": "2026-04-27"
+    "geral": "2026-04-27",
+    "ptax_updated": "2026-04-27",
+    "rf_updated": "2026-04-25",
+    "hodl11_updated": "2026-04-27"
   },
   "cambio": 4.977,
   "posicoes": {
@@ -118,31 +121,18 @@
     "hodl11TetoPct": 5.0
   },
   "pfire_aspiracional": {
-    "base": 91.9,
-    "fav": 94.9,
-    "stress": 83.9,
+    "base": 86.1,
+    "fav": 91.9,
+    "stress": 81.4,
     "source": "mc",
     "is_canonical": true
   },
   "pfire_base": {
     "base": 86.1,
-    "fav": 89.1,
-    "stress": 78.1,
+    "fav": 91.9,
+    "stress": 81.4,
     "source": "mc",
-    "is_canonical": true,
-    "percentiles": {
-      "p5": 85.49,
-      "p10": 85.58,
-      "p25": 85.7,
-      "p50": 86.0,
-      "p75": 86.275,
-      "p90": 86.31,
-      "p95": 86.355,
-      "mean": 85.96000000000001,
-      "std": 0.3292415526630858,
-      "n_rodadas": 10,
-      "n_sim_por_rodada": 10000
-    }
+    "is_canonical": true
   },
   "premissas": {
     "patrimonio_atual": 3727914,
@@ -252,14 +242,14 @@
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.3,
       "menos10": 2.3,
-      "delta": 4.7
+      "delta": 4.6
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 4.6,
       "menos10": -3.3,
-      "delta": 7.9
+      "delta": 7.8999999999999995
     },
     {
       "label": "Aporte mensal (+/-10%)",
@@ -370,8 +360,8 @@
     "base": {
       "idade": 53,
       "base": 86.1,
-      "fav": 89.1,
-      "stress": 78.1,
+      "fav": 91.9,
+      "stress": 81.4,
       "pat_mediano": 11597034.0,
       "pat_p10": 7097769.0,
       "pat_p90": 18230356.0,
@@ -380,9 +370,9 @@
     },
     "aspiracional": {
       "idade": 49,
-      "base": 91.9,
-      "fav": 94.9,
-      "stress": 83.9,
+      "base": 86.1,
+      "fav": 91.9,
+      "stress": 81.4,
       "pat_mediano": 0,
       "pat_p10": null,
       "pat_p90": null,
@@ -392,8 +382,8 @@
     "fire53": {
       "idade": 53,
       "base": 86.1,
-      "fav": 89.1,
-      "stress": 78.1,
+      "fav": 91.9,
+      "stress": 81.4,
       "pat_mediano": 11597034.0,
       "pat_p10": 7097769.0,
       "pat_p90": 18230356.0,
@@ -402,9 +392,9 @@
     },
     "fire50": {
       "idade": 49,
-      "base": 91.9,
-      "fav": 94.9,
-      "stress": 83.9,
+      "base": 86.1,
+      "fav": 91.9,
+      "stress": 81.4,
       "pat_mediano": 0,
       "pat_p10": null,
       "pat_p90": null,
@@ -2274,7 +2264,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -2527,7 +2517,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -2538,7 +2528,7 @@
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -2748,7 +2738,7 @@
     "DGS": {
       "alpha": -0.00126,
       "mkt_rf": 0.8246,
-      "smb": 0.6262,
+      "smb": 0.6263,
       "hml": 0.1524,
       "rmw": 0.2273,
       "cma": 0.1373,
@@ -2813,6 +2803,7 @@
       "taxa": 7.58,
       "tipo": "Tesouro Direto",
       "notas": "Reserva emergencia",
+      "_updated": "2026-04-25",
       "custo_base_brl": 86554.71,
       "total_aplicado_brl": 86554.71,
       "total_resgatado_brl": 0.0,
@@ -2824,6 +2815,7 @@
       "taxa": 7.07,
       "tipo": "Tesouro Direto",
       "notas": "DCA ativo — HTM SEMPRE",
+      "_updated": "2026-04-25",
       "custo_base_brl": 113015.0,
       "total_aplicado_brl": 113015.0,
       "total_resgatado_brl": 0.0,
@@ -2835,6 +2827,7 @@
       "taxa": 6.85,
       "tipo": "Tesouro Direto",
       "notas": "Bloco IPCA+ longo 20%",
+      "_updated": "2026-04-25",
       "custo_base_brl": 11660.71,
       "total_aplicado_brl": 11660.71,
       "total_resgatado_brl": 0.0,
@@ -2846,6 +2839,7 @@
       "taxa": 6.93,
       "tipo": "Tesouro Direto",
       "notas": "Tatico — vender <= 6.0%",
+      "_updated": "2026-04-25",
       "custo_base_brl": 117832.62,
       "total_aplicado_brl": 117832.62,
       "total_resgatado_brl": 0.0,
@@ -2871,6 +2865,7 @@
     "preco_medio": 79.03,
     "pnl_brl": -24352.28,
     "pnl_pct": -18.39,
+    "_updated": "2026-04-27",
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
@@ -2879,23 +2874,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 76951.92,
+      "btc_atual_usd": 76840.26,
       "hodl11_brl_atual": 108102,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.04,
-          "valor_fire_brl": 112384
+          "valor_fire_brl": 112547
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.25,
-          "valor_fire_brl": 351200
+          "valor_fire_brl": 351710
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.5,
-          "valor_fire_brl": 702400
+          "upside_factor": 6.51,
+          "valor_fire_brl": 703420
         }
       }
     }
@@ -7977,7 +7972,7 @@
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 0.0,
     "cds_brazil_5y_bps": null,
-    "bitcoin_usd": 76951.92,
+    "bitcoin_usd": 76840.26,
     "plano_status": {
       "status": "PLANO_PERMANECE",
       "gatilho_ativo": "DCA IPCA+ ativo — 7.07% ≥ 6.0%",
@@ -7994,9 +7989,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.977,
-    "btc_usd": 76951.92,
+    "btc_usd": 76840.26,
     "cambio_mtd_pct": 0.17,
-    "btc_mtd_pct": -1.12,
+    "btc_mtd_pct": -1.26,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": null,
     "ref_mes": "2026-04",
@@ -8599,7 +8594,7 @@
   "earliest_fire": {
     "ano": 2036,
     "idade": 49,
-    "pfire": 91.9,
+    "pfire": 86.1,
     "status": "aspiracional"
   },
   "spending_guardrails": {
@@ -8686,23 +8681,9 @@
   },
   "head_relay": null,
   "backtest_r7": null,
-  "fire_montecarlo_liquido": {
-    "patrimonio_bruto": 3320426.84,
-    "ir_diferido": 168954.35,
-    "patrimonio_liquido": 3151472.49,
-    "pfire_bruto": 86.1,
-    "pfire_liquido": 85.3,
-    "delta_pp": -0.8,
-    "pat_mediana_fire_bruto": 11597034.0,
-    "pat_mediana_fire_liquido": 11285501.0,
-    "n_sim": 10000,
-    "seed": 42,
-    "cenario": "base",
-    "metodologia": "IR diferido descontado antes de simulação per Lei 14.754/2023. patrimonio_liquido = patrimonio_atual - ir_diferido_total_brl (fonte: tax_snapshot.json). Todas as demais premissas idênticas ao MC canônico (seed=42, 10k sims, spending smile, guardrails, bond tent, INSS R$18k/ano@65, VCMH 5.0%).",
-    "_generated": "2026-04-27"
-  },
+  "fire_montecarlo_liquido": null,
   "fire_matrix": {
-    "_generated": "2026-04-27T18:38:28",
+    "_generated": "2026-04-27T18:51:44",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -9004,7 +8985,7 @@
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-04-27T18:38:28",
+    "_generated": "2026-04-27T18:51:44",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 7097769.0,
@@ -9019,7 +9000,7 @@
     "mc_date": "2026-04-27"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-04-27T18:38:28",
+    "_generated": "2026-04-27T18:51:44",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -9043,7 +9024,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-27T18:38:28",
+    "_generated": "2026-04-27T18:51:44",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -10649,7 +10630,7 @@
     "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
   },
   "drawdown_history": {
-    "_generated": "2026-04-27T18:38:28",
+    "_generated": "2026-04-27T18:51:44",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-04",
@@ -10806,7 +10787,7 @@
     "_fonte": "backtest.metrics.target.maxdd (fallback)"
   },
   "etf_composition": {
-    "_generated": "2026-04-27T18:38:28",
+    "_generated": "2026-04-27T18:51:44",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -10863,7 +10844,7 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-04-27T18:38:28",
+    "_generated": "2026-04-27T18:51:44",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -10997,7 +10978,7 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-04-27T18:38:28",
+    "_generated": "2026-04-27T18:51:44",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.8498,
