@@ -26,7 +26,10 @@ from pathlib import Path as _Path
 _sys_path = _Path(__file__).parent
 if str(_sys_path) not in sys.path:
     sys.path.insert(0, str(_sys_path))
-from config import SPENDING_ANOMALY_THRESHOLD_BRL
+from config import (
+    SPENDING_ANOMALY_THRESHOLD_BRL, DATE_FORMAT_YM, DATE_FORMAT_YMD, OPTIONAL_FLAG_MINIMUM_BRL,
+    SPENDING_CATEGORY_ESSENTIALS, SPENDING_CATEGORY_OPTIONALS, SPENDING_CATEGORY_UNEXPECTED
+)
 
 # ─── Configuração de categorias ────────────────────────────────────────────────
 
@@ -100,11 +103,11 @@ def find_latest_csv():
 
 def categorize(cat):
     if cat in ESSENTIALS:
-        return 'Essenciais'
+        return SPENDING_CATEGORY_ESSENTIALS
     if cat in OPTIONALS:
-        return 'Opcionais'
+        return SPENDING_CATEGORY_OPTIONALS
     if cat in UNEXPECTED:
-        return 'Imprevistos'
+        return SPENDING_CATEGORY_UNEXPECTED
     return None  # skip
 
 
@@ -178,7 +181,7 @@ def analyze(transactions):
         payee_totals[payee]              += amount
 
         # Anomalias: opcionais > threshold
-        if group == 'Opcionais' and abs(amount) >= ANOMALY_THRESHOLD:
+        if group == SPENDING_CATEGORY_OPTIONALS and abs(amount) >= ANOMALY_THRESHOLD:
             anomalies.append(t)
 
         # Hipoteca completa
@@ -233,16 +236,16 @@ def report(data, csv_path):
 
     # ── Totais mensais ──
     print_section("TOTAIS MENSAIS")
-    print(f"  {'Mês':<10} {'Essenciais':>12} {'Opcionais':>12} {'Imprevistos':>13} {'TOTAL':>10}")
+    print(f"  {'Mês':<10} {SPENDING_CATEGORY_ESSENTIALS:>12} {SPENDING_CATEGORY_OPTIONALS:>12} {SPENDING_CATEGORY_UNEXPECTED:>13} {'TOTAL':>10}")
     print(f"  {'-'*10} {'-'*12} {'-'*12} {'-'*13} {'-'*10}")
     for m in months:
         g = mg[m]
-        print(f"  {m:<10} {g['Essenciais']:>12,.0f} {g['Opcionais']:>12,.0f} {g['Imprevistos']:>13,.0f} {g['TOTAL']:>10,.0f}")
+        print(f"  {m:<10} {g[SPENDING_CATEGORY_ESSENTIALS]:>12,.0f} {g[SPENDING_CATEGORY_OPTIONALS]:>12,.0f} {g[SPENDING_CATEGORY_UNEXPECTED]:>13,.0f} {g['TOTAL']:>10,.0f}")
 
     # Médias
-    avg_ess  = sum(mg[m]['Essenciais']  for m in months) / n
-    avg_opt  = sum(mg[m]['Opcionais']   for m in months) / n
-    avg_imp  = sum(mg[m]['Imprevistos'] for m in months) / n
+    avg_ess  = sum(mg[m][SPENDING_CATEGORY_ESSENTIALS]  for m in months) / n
+    avg_opt  = sum(mg[m][SPENDING_CATEGORY_OPTIONALS]   for m in months) / n
+    avg_imp  = sum(mg[m][SPENDING_CATEGORY_UNEXPECTED] for m in months) / n
     avg_tot  = sum(mg[m]['TOTAL']       for m in months) / n
     ann_tot  = avg_tot * 12
 
@@ -314,9 +317,9 @@ def report(data, csv_path):
     # Checar meses com optionals > 2x média
     opt_avg_val = abs(avg_opt)
     for m in months:
-        opt_m = abs(mg[m]['Opcionais'])
-        if opt_m > opt_avg_val * 2.0 and opt_m > 3000:
-            flags.append(f"🟡 {m}: Opcionais R${opt_m:,.0f} — acima de 2× a média")
+        opt_m = abs(mg[m][SPENDING_CATEGORY_OPTIONALS])
+        if opt_m > opt_avg_val * 2.0 and opt_m > OPTIONAL_FLAG_MINIMUM_BRL:
+            flags.append(f"🟡 {m}: {SPENDING_CATEGORY_OPTIONALS} R${opt_m:,.0f} — acima de 2× a média")
 
     for f in flags:
         print(f"  {f}")
@@ -337,9 +340,9 @@ def export_json(data, csv_path, output_path=None):
         print("Nenhum dado para exportar.")
         return
 
-    avg_ess = sum(mg[m]['Essenciais']  for m in months) / n
-    avg_opt = sum(mg[m]['Opcionais']   for m in months) / n
-    avg_imp = sum(mg[m]['Imprevistos'] for m in months) / n
+    avg_ess = sum(mg[m][SPENDING_CATEGORY_ESSENTIALS]  for m in months) / n
+    avg_opt = sum(mg[m][SPENDING_CATEGORY_OPTIONALS]   for m in months) / n
+    avg_imp = sum(mg[m][SPENDING_CATEGORY_UNEXPECTED] for m in months) / n
     avg_tot = sum(mg[m]['TOTAL']       for m in months) / n
 
     # Valores são negativos no CSV (saídas); armazenar como positivos
@@ -348,9 +351,9 @@ def export_json(data, csv_path, output_path=None):
     monthly_breakdown = [
         {
             "mes": m,
-            "essenciais": round(abs(mg[m].get('Essenciais', 0))),
-            "opcionais":  round(abs(mg[m].get('Opcionais', 0))),
-            "imprevistos": round(abs(mg[m].get('Imprevistos', 0))),
+            "essenciais": round(abs(mg[m].get(SPENDING_CATEGORY_ESSENTIALS, 0))),
+            "opcionais":  round(abs(mg[m].get(SPENDING_CATEGORY_OPTIONALS, 0))),
+            "imprevistos": round(abs(mg[m].get(SPENDING_CATEGORY_UNEXPECTED, 0))),
             "total":      round(abs(mg[m].get('TOTAL', 0))),
         }
         for m in recent_months

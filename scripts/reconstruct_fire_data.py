@@ -38,6 +38,7 @@ from config import (
     IDADE_ATUAL, IDADE_CENARIO_BASE,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
     ETF_COMPOSITION, MACRO_REGRAS, HORIZONTE_VIDA,
+    DATE_FORMAT_YM, DATE_FORMAT_YMD, ANOS_COBERTURA_POS_FIRE,
 )
 from fire_montecarlo import (
     PREMISSAS, rodar_monte_carlo, projetar_acumulacao,
@@ -352,7 +353,7 @@ def gen_bond_pool_runway():
     # Runway pós-FIRE: simples depleção sem crescimento (v = v - custo_vida)
     pool_no_fire = pool_total[-1]  # valor no último ano = 2040
     custo_vida_anual = CUSTO_VIDA_BASE  # R$250k
-    anos_cobertura = 10  # projetar 10 anos pós-FIRE
+    anos_cobertura = ANOS_COBERTURA_POS_FIRE
 
     anos_pos_fire = list(range(1, anos_cobertura + 1))
     pool_disponivel = []

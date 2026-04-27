@@ -184,6 +184,17 @@ SPENDING_SMILE_GO_GO   = _P.get("spending_smile_go_go",   242_000)
 SPENDING_SMILE_SLOW_GO = _P.get("spending_smile_slow_go", 200_000)
 SPENDING_SMILE_NO_GO   = _P.get("spending_smile_no_go",   187_000)
 
+# Spending Analysis — anomaly flagging threshold (fonte: spending_analysis.py)
+OPTIONAL_FLAG_MINIMUM_BRL = _P.get("optional_flag_minimum_brl", 3_000)
+
+# Post-FIRE runway projection period (fonte: reconstruct_fire_data.py)
+ANOS_COBERTURA_POS_FIRE = _P.get("anos_cobertura_pos_fire", 10)
+
+# Spending category display names (fonte: spending_analysis.py)
+SPENDING_CATEGORY_ESSENTIALS = "Essenciais"
+SPENDING_CATEGORY_OPTIONALS = "Opcionais"
+SPENDING_CATEGORY_UNEXPECTED = "Imprevistos"
+
 # Guardrails (fonte: §Guardrails aprovados 2026-03-20)
 GUARDRAILS_BANDA1_MIN = _P.get("guardrails_banda1_min", 0.15)
 GUARDRAILS_BANDA2_MIN = _P.get("guardrails_banda2_min", 0.25)
