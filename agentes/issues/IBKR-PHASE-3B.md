@@ -75,7 +75,7 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 
 ---
 
-## Resolvido Nesta Sessão (2026-04-27)
+## Resolvido Nesta Sessão (2026-04-27 — sessão 2)
 
 - ✅ **IR diferido:** `tax.ir_diferido_total_brl = R$169,155` sobre 9 ETFs (4 falhas schema-validation fixas)
   - Causa raiz: `dados/tax_snapshot.json` stale com IR R$0 (posicoes vazia em dashboard_state.json)
@@ -85,12 +85,17 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
   - Fix: rodar `generate_data.py` sem `--skip-scripts` → yfinance computa AVGS vs SWRD YTD + since launch
 - ✅ **Testes:** 563 passed | 32 skipped (0 falhas, vs 4 falhas anteriores)
 - ✅ **ibkr_lotes.py:** `DATE_FORMAT_YMD` importado de config (fix NameError pré-existente)
+- ✅ **OPO 5 timestamps:** `timestamps.{ptax,rf,hodl11}_updated` + `_updated` inline em RF bonds e hodl11
+  - Fix extra: factor_signal agora persiste em factor_cache.json → `--skip-scripts` não perde o valor
+  - Fix extra: pfire skip-scripts path agora inclui source="mc"/is_canonical=True quando state tem MC values
 
 ## Oportunidades (Média Prioridade)
 
-- **OPO 5: Timestamps** (+0.2): Adicionar `timestamp` fields a PTAX/RF/HODL11 em data.json
-  - Simple: 2h wiring + dashboard inline displays
-  - Status: Code-ready, aguarda data structure enhancement
+- **OPO 5: Timestamps** (+0.2): ✅ CONCLUÍDO (2026-04-27)
+  - `timestamps.{ptax,rf,hodl11}_updated` adicionados
+  - RF bonds e hodl11 têm `_updated` field inline
+  - factor_signal agora persiste em factor_cache.json (fix: always None em --skip-scripts)
+  - pfire skip-scripts path inclui source/is_canonical corretos
 
 ---
 
@@ -139,7 +144,7 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 - [ ] Adicionar 2 cenários ao MC (stagflation + hyperinflation)
 - [ ] Re-rodar 10k simulações com cenários estendidos
 - [ ] Atualizar dashboard stress scenarios card
-- [ ] OPO 5: timestamps PTAX/RF/HODL11 em data.json
+- [x] ~~OPO 5: timestamps PTAX/RF/HODL11 em data.json~~ (ptax/rf/hodl11 _updated + factor_signal cache)
 - [ ] Changelog Phase 3b completo
 - [ ] Validar 10.0/10 final
 
