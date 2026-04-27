@@ -89,11 +89,21 @@ TICKER_AVGS_LSE = "AVGS.L"
 TICKER_AVEM_LSE = "AVEM.L"
 TICKER_VWRA_LSE = "VWRA.L"
 TICKER_JPGL_LSE = "JPGL.L"
+TICKER_HODL11_SA = "HODL11.SA"
 
 
 # ──── DATAFRAME COLUMN NAMES (centralized) ──────────────────────────────────
 COLUMN_CLOSE = "Close"
 COLUMN_DELTA_PP = "Delta (pp)"
+
+# ──── FACTOR NAMES (Fama-French 5-factor model) ──────────────────────────────
+FACTOR_MKT_RF = "Mkt-RF"
+FACTOR_SMB = "SMB"
+FACTOR_HML = "HML"
+FACTOR_RMW = "RMW"
+FACTOR_CMA = "CMA"
+FACTOR_MOM = "MOM"
+FACTOR_RF = "RF"
 
 
 # ──── DATE/TIME FORMATS (centralized) ────────────────────────────────────────
@@ -204,6 +214,18 @@ GUARDRAILS_CORTE2_PCT = _P.get("guardrails_corte2_pct", 0.20)
 GUARDRAILS_PISO_PCT   = _P.get("guardrails_piso_pct",   0.28)
 GASTO_PISO            = _P.get("gasto_piso",             180_000)
 SAUDE_BASE            = _P.get("saude_base",              24_000)
+
+# Withdrawal Engine — VPW / Guyton-Klinger constants (fonte: withdrawal_engine.py)
+GASTO_TETO_PCT        = _P.get("gasto_teto_pct",        400_000)
+GASTO_TETO_VPW        = _P.get("gasto_teto_vpw",        500_000)
+GASTO_TETO_GK_CAP     = _P.get("gasto_teto_gk_cap",     350_000)
+VPW_REAL_RATE         = _P.get("vpw_real_rate",          0.035)
+GK_PRESERVATION_MULT  = _P.get("gk_preservation_mult",  1.20)
+GK_PROSPERITY_MULT    = _P.get("gk_prosperity_mult",    0.80)
+GK_CUT_FACTOR         = _P.get("gk_cut_factor",         0.90)
+GK_RAISE_FACTOR       = _P.get("gk_raise_factor",       1.10)
+GK_MAX_AGE            = _P.get("gk_max_age",            85)
+GK_CONSERVATIVE_YEARS = _P.get("gk_conservative_years", 32)   # horizon applying GK rules (FIRE_50→82)
 
 # Renda Fixa — Tesouro IPCA+ (snapshot — atualizar em carteira.md quando taxa mudar)
 IPCA_PLUS_TAXA_ANUAL = _P.get("ipca_plus_taxa_anual", 0.0716)

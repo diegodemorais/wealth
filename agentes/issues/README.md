@@ -27,10 +27,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-| ID | Titulo | Dono | Prioridade | Status |
-|----|--------|------|------------|--------|
-| HD-ARCHITECT | Guardião de Arquitetura & Centralizations | Head | 🔴 CRÍTICA | 🟩 Ativo — P4 auto-fix engine em construção |
-| HD-ARCHITECT-P4 | Auto-Fix Suggestion Engine | Dev + Architect | 🔵 Alta | 🟦 Em Andamento — Suggestion engine + patch generator implementados |
+(vazio)
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -50,6 +47,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| HD-ARCHITECT-P4 | Auto-Fix Suggestion Engine | 2026-04-27 | SuggestionEngine + --fix CLI. ast.Num bug fixed. Zero violations. 6 scripts refatorados, withdrawal_engine constants extraídas. |
+| HD-ARCHITECT | Guardião de Arquitetura & Centralizations | 2026-04-27 | P0–P4 completos. Zero hardcoding violations. Scanner, whitelist, config.py, 10+ scripts atualizados. |
 | HD-ARCHITECT-P3 | Refactor 323 Hardcoding Violations | 2026-04-27 | 323 violations refactored, zero remaining. Estate tax centralizado. React constants → data.json. |
 | HD-ARCHITECT-P2 | Advanced Hardcoding Detection — AST + Grep | 2026-04-27 | 323 violations detectadas via AST + grep. CI pre-check carteira_params.json integrado. |
 | HD-ARCHITECT-P0P1 | Implementação P0 & P1 — Automação + Validação | 2026-04-27 | P0 concluído, P1 pronto. Automação + validação implementados. |

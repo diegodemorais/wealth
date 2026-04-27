@@ -307,10 +307,10 @@ def cumulative_shares_at_date(ticker, as_of_date_str):
     """Sum all lotes for ticker with data <= as_of_date"""
     if ticker not in lotes_data:
         return 0.0
-    as_of = datetime.strptime(as_of_date_str, "%Y-%m-%d").date()
+    as_of = datetime.strptime(as_of_date_str, DATE_FORMAT_YMD).date()
     total = 0.0
     for lote in lotes_data[ticker]["lotes"]:
-        lote_date = datetime.strptime(lote["data"], "%Y-%m-%d").date()
+        lote_date = datetime.strptime(lote["data"], DATE_FORMAT_YMD).date()
         if lote_date <= as_of:
             total += lote["qty"]
     return total
@@ -323,9 +323,9 @@ def get_price(ticker, date_str):
     if date_str in prices:
         return prices[date_str]
     # Try nearby dates (within 3 days)
-    target = datetime.strptime(date_str, "%Y-%m-%d").date()
+    target = datetime.strptime(date_str, DATE_FORMAT_YMD).date()
     for d_str, p in prices.items():
-        d = datetime.strptime(d_str, "%Y-%m-%d").date()
+        d = datetime.strptime(d_str, DATE_FORMAT_YMD).date()
         if abs((d - target).days) <= 3:
             return p
     return None
@@ -335,9 +335,9 @@ def get_ptax(date_str):
     """Get PTAX rate for date_str. Uses hardcoded quarterly cache first, then BCB API fallback."""
     if date_str in PTAX:
         return PTAX[date_str]
-    target = datetime.strptime(date_str, "%Y-%m-%d").date()
+    target = datetime.strptime(date_str, DATE_FORMAT_YMD).date()
     for d_str, rate in PTAX.items():
-        d = datetime.strptime(d_str, "%Y-%m-%d").date()
+        d = datetime.strptime(d_str, DATE_FORMAT_YMD).date()
         if abs((d - target).days) <= 3:
             return rate
     # Fallback: fetch from BCB API via fx_utils
@@ -435,8 +435,8 @@ for qe in QUARTER_ENDS:
                 # Use last known purchase price as fallback
                 price = 0
                 for lote in lotes_data[etf]["lotes"]:
-                    lote_date = datetime.strptime(lote["data"], "%Y-%m-%d").date()
-                    target_date = datetime.strptime(qe, "%Y-%m-%d").date()
+                    lote_date = datetime.strptime(lote["data"], DATE_FORMAT_YMD).date()
+                    target_date = datetime.strptime(qe, DATE_FORMAT_YMD).date()
                     if lote_date <= target_date:
                         price = lote["custo_por_share"]
                 if price == 0:
@@ -494,8 +494,8 @@ def interpolate_monthly(quarterly_data):
     for i in range(len(quarterly_data) - 1):
         d1_str, v1 = quarterly_data[i]
         d2_str, v2 = quarterly_data[i + 1]
-        d1 = datetime.strptime(d1_str, "%Y-%m-%d").date()
-        d2 = datetime.strptime(d2_str, "%Y-%m-%d").date()
+        d1 = datetime.strptime(d1_str, DATE_FORMAT_YMD).date()
+        d2 = datetime.strptime(d2_str, DATE_FORMAT_YMD).date()
 
         # Generate month-end dates between d1 and d2
         total_days = (d2 - d1).days

@@ -32,7 +32,7 @@ from config import (
     EQUITY_WEIGHTS, TICKERS_YF,
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, RENDA_PLUS_PCT,
     PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS,
-    TICKER_SWRD_LSE, TICKER_VWRA_LSE, TICKER_JPGL_LSE, COLUMN_CLOSE,
+    TICKER_SWRD_LSE, TICKER_VWRA_LSE, TICKER_JPGL_LSE, TICKER_AVGS_LSE, TICKER_AVEM_LSE, COLUMN_CLOSE,
 )
 
 
@@ -148,7 +148,7 @@ def analise_fronteira(precos: pd.DataFrame):
     print("  FRONTEIRA EFICIENTE — 4 ETFs")
     print("─"*60)
 
-    n_dias = len(precos.dropna(subset=["AVGS.L"]))
+    n_dias = len(precos.dropna(subset=[TICKER_AVGS_LSE]))
     print(f"\n  AVGS.L: {n_dias} dias úteis de histórico (~{n_dias/252:.1f} anos)")
     if n_dias < 500:
         print(f"  ⚠️  Histórico curto. Rodando também com proxy AVUV+AVDV (5 anos).")
@@ -182,8 +182,8 @@ def analise_fronteira(precos: pd.DataFrame):
 
         pesos_proxy = {
             "IDEV":       PESOS_ALVO[TICKER_SWRD_LSE],
-            "AVGS_proxy": PESOS_ALVO["AVGS.L"],
-            "AVEM":       PESOS_ALVO["AVEM.L"],
+            "AVGS_proxy": PESOS_ALVO[TICKER_AVGS_LSE],
+            "AVEM":       PESOS_ALVO[TICKER_AVEM_LSE],
             "JPGL_proxy": PESOS_ALVO[TICKER_JPGL_LSE],
         }
 
@@ -207,10 +207,10 @@ def stress_test_quant_crisis(precos: pd.DataFrame):
     print("─"*60)
 
     cenarios = [
-        ("AVGS -30% (correção moderada)",    {"AVGS.L": -0.30}),
-        ("AVGS -39% (Max DD histórico)",     {"AVGS.L": -0.39}),
-        ("AVGS -60% (2008-style extremo)",   {"AVGS.L": -0.60}),
-        ("AVGS -60% + AVEM -40% (quant+EM crise simultânea)", {"AVGS.L": -0.60, "AVEM.L": -0.40}),
+        ("AVGS -30% (correção moderada)",    {TICKER_AVGS_LSE: -0.30}),
+        ("AVGS -39% (Max DD histórico)",     {TICKER_AVGS_LSE: -0.39}),
+        ("AVGS -60% (2008-style extremo)",   {TICKER_AVGS_LSE: -0.60}),
+        ("AVGS -60% + AVEM -40% (quant+EM crise simultânea)", {TICKER_AVGS_LSE: -0.60, TICKER_AVEM_LSE: -0.40}),
     ]
 
     patrimonio_ref = 3_372_673  # R$ — atualizar se necessário
@@ -546,7 +546,7 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
         # Mostrar preços atuais equity para referência
         aporte_usd = aporte_brl / usd_brl
         print(f"\n  Aporte: R$ {aporte_brl:,.0f} = US$ {aporte_usd:,.2f}")
-        for ticker, nome in [(TICKER_SWRD_LSE,"SWRD"), ("AVGS.L","AVGS"), ("AVEM.L","AVEM")]:
+        for ticker, nome in [(TICKER_SWRD_LSE,"SWRD"), (TICKER_AVGS_LSE,"AVGS"), (TICKER_AVEM_LSE,"AVEM")]:
             if ticker in precos.columns:
                 p = float(precos[ticker].iloc[-1])
                 print(f"  {nome}: US$ {p:.2f} = R$ {p*usd_brl:.2f}  |  {aporte_usd/p:.4f} cotas")
@@ -607,7 +607,7 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
         print(f"\n  {'Ativo':<10} {'Alvo':>8}  {'Preço (USD)':>12}  {'Preço (R$)':>12}  {'Cotas c/ 100%':>14}")
         print("  " + "-"*70)
         for ticker, (nome, alvo) in zip(
-            [TICKER_SWRD_LSE, "AVGS.L", "AVEM.L"],
+            [TICKER_SWRD_LSE, TICKER_AVGS_LSE, TICKER_AVEM_LSE],
             [("SWRD", 0.50), ("AVGS", 0.30), ("AVEM", 0.20)]
         ):
             if ticker in precos.columns:
@@ -623,7 +623,7 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
 
 # Shadow portfolios para comparação (scorecard HD-scorecard)
 SHADOWS = {
-    "Target (50/30/20)": {TICKER_SWRD_LSE: 0.50, "AVGS.L": 0.30, "AVEM.L": 0.20},
+    "Target (50/30/20)": {TICKER_SWRD_LSE: 0.50, TICKER_AVGS_LSE: 0.30, TICKER_AVEM_LSE: 0.20},
     "Shadow A — VWRA":   {TICKER_VWRA_LSE: 1.00},
     "Shadow B — SWRD100": {TICKER_SWRD_LSE: 1.00},
     # Shadow C: 60/40 global (SWRD 60% + IEF proxy via yfinance SPY/AGG — usamos SWRD+IGLN)

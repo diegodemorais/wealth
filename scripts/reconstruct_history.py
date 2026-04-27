@@ -49,7 +49,7 @@ def parse_ibkr_trades() -> list[dict]:
             if tx not in ("Buy", "Sell"):
                 continue
             try:
-                dt = datetime.strptime(date_str.strip(), "%Y-%m-%d").date()
+                dt = datetime.strptime(date_str.strip(), DATE_FORMAT_YMD).date()
                 qty_f = float(qty.strip().replace(",", ""))
                 sym = symbol.strip()
                 if sym:
@@ -131,8 +131,8 @@ def build_xp_positions_by_month() -> dict[str, dict[str, float]]:
     first_month = months_sorted[0]
     today_month = date.today().strftime(DATE_FORMAT_YM)
 
-    current = datetime.strptime(first_month + "-01", "%Y-%m-%d").date()
-    end = datetime.strptime(today_month + "-01", "%Y-%m-%d").date()
+    current = datetime.strptime(first_month + "-01", DATE_FORMAT_YMD).date()
+    end = datetime.strptime(today_month + "-01", DATE_FORMAT_YMD).date()
 
     while current <= end:
         month_str = current.strftime(DATE_FORMAT_YM)
@@ -273,8 +273,8 @@ def build_nubank_rf_by_month() -> dict[str, float]:
     first_month = min(ops_by_month.keys())
     today_month = date.today().strftime(DATE_FORMAT_YM)
 
-    current = datetime.strptime(first_month + "-01", "%Y-%m-%d").date()
-    end_dt = datetime.strptime(today_month + "-01", "%Y-%m-%d").date()
+    current = datetime.strptime(first_month + "-01", DATE_FORMAT_YMD).date()
+    end_dt = datetime.strptime(today_month + "-01", DATE_FORMAT_YMD).date()
 
     rf_monthly = {}
     ntnb_mtm_ok = 0
@@ -290,7 +290,7 @@ def build_nubank_rf_by_month() -> dict[str, float]:
             for op in ops_by_month[month_str]:
                 titulo = op.get("titulo", "")
                 bond_type, maturity = _map_titulo_to_ntnb(titulo)
-                op_date = datetime.strptime(op["data"], "%Y-%m-%d").date()
+                op_date = datetime.strptime(op["data"], DATE_FORMAT_YMD).date()
 
                 if op["tipo"] == "aplicacao":
                     if bond_type == "NTN-B" and maturity:
@@ -605,7 +605,7 @@ def main():
         ibkr_ap = json.loads(IBKR_APORTES.read_text())
         for dep in ibkr_ap.get("depositos", []):
             month = dep["data"][:7]
-            dep_date = datetime.strptime(dep["data"], "%Y-%m-%d").date()
+            dep_date = datetime.strptime(dep["data"], DATE_FORMAT_YMD).date()
             usd = dep.get("usd", dep.get("amount_usd", 0))
             cambio_mes = fx.get(month) or _last_known_fx(fx, month)
             aportes_by_month[month].append((dep_date, usd * cambio_mes))
@@ -616,11 +616,11 @@ def main():
         for op in xp_ops:
             if op["cv"] == "C" and op.get("valor"):
                 month = op["data"][:7]
-                op_date = datetime.strptime(op["data"], "%Y-%m-%d").date()
+                op_date = datetime.strptime(op["data"], DATE_FORMAT_YMD).date()
                 aportes_by_month[month].append((op_date, op["valor"]))
             elif op["cv"] == "V" and op.get("valor"):
                 month = op["data"][:7]
-                op_date = datetime.strptime(op["data"], "%Y-%m-%d").date()
+                op_date = datetime.strptime(op["data"], DATE_FORMAT_YMD).date()
                 aportes_by_month[month].append((op_date, -op["valor"]))
 
     # Nubank TD (BRL)
@@ -628,7 +628,7 @@ def main():
         nb_data = json.loads(NUBANK_OPS.read_text())
         for op in nb_data.get("operacoes", []):
             month = op["data"][:7]
-            op_date = datetime.strptime(op["data"], "%Y-%m-%d").date()
+            op_date = datetime.strptime(op["data"], DATE_FORMAT_YMD).date()
             if op["tipo"] == "aplicacao":
                 aportes_by_month[month].append((op_date, op["valor_brl"]))
             elif op["tipo"] == "resgate":
@@ -640,7 +640,7 @@ def main():
         ibkr_ap = json.loads(IBKR_APORTES.read_text())
         for dep in ibkr_ap.get("depositos", []):
             month = dep["data"][:7]
-            dep_date = datetime.strptime(dep["data"], "%Y-%m-%d").date()
+            dep_date = datetime.strptime(dep["data"], DATE_FORMAT_YMD).date()
             usd = dep.get("usd", dep.get("amount_usd", 0))
             ibkr_aportes_usd_by_month[month].append((dep_date, usd))
 
@@ -682,7 +682,7 @@ def main():
         cambio = fx.get(month)
         if not cambio:
             for offset in range(1, 4):
-                m = datetime.strptime(month + "-01", "%Y-%m-%d").date()
+                m = datetime.strptime(month + "-01", DATE_FORMAT_YMD).date()
                 for delta in [-offset, offset]:
                     candidate = (m.replace(day=1) + timedelta(days=32 * delta)).strftime(DATE_FORMAT_YM)
                     if candidate in fx:
@@ -877,8 +877,8 @@ def _compute_information_ratio(dates: list[str], twr_usd_pct: list) -> dict | No
 
     # Período: do primeiro mês até o último (+ margem para capturar o mês inteiro)
     from datetime import datetime as _dt, timedelta as _td
-    d_start = _dt.strptime(valid_dates[0] + "-01", "%Y-%m-%d")
-    d_end   = _dt.strptime(valid_dates[-1] + "-01", "%Y-%m-%d")
+    d_start = _dt.strptime(valid_dates[0] + "-01", DATE_FORMAT_YMD)
+    d_end   = _dt.strptime(valid_dates[-1] + "-01", DATE_FORMAT_YMD)
     # Avançar d_end para o primeiro dia do mês seguinte (para garantir que o mês fechado entre)
     if d_end.month == 12:
         d_end_fetch = _dt(d_end.year + 1, 1, 1)
@@ -1095,8 +1095,8 @@ def _generate_core_jsons(rows: list[dict]):
         _ipca_cagr = None
         if dates:
             try:
-                _d0 = datetime.strptime(dates[0] + "-01", "%Y-%m-%d")
-                _d1 = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+                _d0 = datetime.strptime(dates[0] + "-01", DATE_FORMAT_YMD)
+                _d1 = datetime.strptime(dates[-1] + "-01", DATE_FORMAT_YMD)
                 _d1_last = (_d1.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
                 _dt_ini = _d0.strftime("%d/%m/%Y")
                 _dt_fim = _d1_last.strftime("%d/%m/%Y")
@@ -1167,8 +1167,8 @@ def _generate_core_jsons(rows: list[dict]):
     ipca_mensal_by_ym: dict[str, float] = {}
     if dates:
         try:
-            _d0_ipca = datetime.strptime(dates[0] + "-01", "%Y-%m-%d")
-            _d1_ipca = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+            _d0_ipca = datetime.strptime(dates[0] + "-01", DATE_FORMAT_YMD)
+            _d1_ipca = datetime.strptime(dates[-1] + "-01", DATE_FORMAT_YMD)
             _d1_last_ipca = (_d1_ipca.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
             _bcb_url_ipca = (
                 f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados"
@@ -1190,8 +1190,8 @@ def _generate_core_jsons(rows: list[dict]):
     cdi_mensal_by_ym: dict[str, float] = {}
     if dates:
         try:
-            _d0_cdi2 = datetime.strptime(dates[0] + "-01", "%Y-%m-%d")
-            _d1_cdi2 = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+            _d0_cdi2 = datetime.strptime(dates[0] + "-01", DATE_FORMAT_YMD)
+            _d1_cdi2 = datetime.strptime(dates[-1] + "-01", DATE_FORMAT_YMD)
             _d1_last_cdi2 = (_d1_cdi2.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
             _bcb_cdi_url2 = (
                 f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.4391/dados"
@@ -1217,8 +1217,8 @@ def _generate_core_jsons(rows: list[dict]):
             import warnings as _warnings
             import yfinance as _yf
             import pandas as _pd
-            _d0_vwra = datetime.strptime(dates[0] + "-01", "%Y-%m-%d") - timedelta(days=5)
-            _d1_vwra = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+            _d0_vwra = datetime.strptime(dates[0] + "-01", DATE_FORMAT_YMD) - timedelta(days=5)
+            _d1_vwra = datetime.strptime(dates[-1] + "-01", DATE_FORMAT_YMD)
             if _d1_vwra.month == 12:
                 _d1_vwra_fetch = datetime(_d1_vwra.year + 1, 1, 1)
             else:
@@ -1379,8 +1379,8 @@ def _generate_core_jsons(rows: list[dict]):
         try:
             import urllib.request as _url_req2
             import json as _json2
-            _d0_cdi = datetime.strptime(dates[0] + "-01", "%Y-%m-%d")
-            _d1_cdi = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+            _d0_cdi = datetime.strptime(dates[0] + "-01", DATE_FORMAT_YMD)
+            _d1_cdi = datetime.strptime(dates[-1] + "-01", DATE_FORMAT_YMD)
             _d1_cdi_last = (_d1_cdi.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
             _dt_ini_cdi = _d0_cdi.strftime("%d/%m/%Y")
             _dt_fim_cdi = _d1_cdi_last.strftime("%d/%m/%Y")
@@ -1531,8 +1531,8 @@ def _generate_core_jsons(rows: list[dict]):
 
     # CAGR via TWR acumulado (não via patrimônio bruto, que inclui aportes)
     twr_total = cum - 1  # retorno acumulado TWR
-    d0 = datetime.strptime(first["data"][:10], "%Y-%m-%d")
-    d1 = datetime.strptime(last["data"][:10], "%Y-%m-%d")
+    d0 = datetime.strptime(first["data"][:10], DATE_FORMAT_YMD)
+    d1 = datetime.strptime(last["data"][:10], DATE_FORMAT_YMD)
     anos = (d1 - d0).days / 365.25
     cagr_twr = ((1 + twr_total) ** (1 / anos) - 1) * 100 if anos > 0 else 0
 

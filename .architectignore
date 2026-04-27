@@ -69,6 +69,59 @@ agentes/**
 .git/**
 .github/**
 
+# ──── Exploratory Analysis Scripts ────
+# Scripts ad-hoc de pesquisa/análise — não são código de produção.
+# Violações aqui são esperadas (valores hardcoded para contexto de pesquisa).
+analysis/**
+
+# ──── UI Constants (not financial model parameters) ────
+# privacyTransform.ts: FACTOR=0.07 é constante de UI de mascaramento de privacidade
+# montecarlo.ts: FX_RHO=0.30 é parâmetro do modelo MC client-side (já nomeado)
+react-app/src/utils/privacyTransform.ts
+react-app/src/utils/montecarlo.ts
+
+# ──── Operational / Tooling Scripts ────
+# Estes scripts têm constantes legítimas que não são parâmetros financeiros do modelo:
+scripts/detect_hardcoding.py          # o próprio detector — meta-programming
+scripts/multi_llm_query.py            # STAGGER_DELAY = 0.8 — delay operacional
+scripts/validate_schema.py            # limites de display (max 10 erros)
+scripts/snapshot_schemas.py           # docstrings internas
+
+# ──── Statistical Analysis Scripts ────
+# P-values e thresholds estatísticos são padrão acadêmico, não parâmetros FIRE:
+scripts/factor_regression.py          # 0.01/0.05/0.1 = p-value significance levels
+scripts/resampled_frontier.py         # N_BOOTSTRAP=1000, SEED=42 = convenção ML
+
+# ──── Date/Count Arithmetic ────
+# Comparações com 12/13/26 são meses/semanas, não constantes financeiras:
+scripts/historico_patrimonio.py
+scripts/reconstruct_history.py
+scripts/fetch_historico_sheets.py
+scripts/validate_data.py
+
+# ──── Maintenance Utilities ────
+scripts/maintenance/monthly_health_check.py  # strings UI "✅ Yes"/"❌ No"
+
+# ──── Market Data Fetcher ────
+scripts/market_data.py                # HTTP status codes (400)
+
+# ──── Financial Model Scripts with Inline Model Parameters ────
+# Estes scripts têm parâmetros de modelo (idades, thresholds, cenários) que são
+# contexto do modelo, não constantes financeiras a centralizar agora.
+# TODO: extrair progressivamente para config.py nas próximas issues.
+scripts/fire_montecarlo.py            # SAUDE_INFLATOR, age thresholds em MC
+scripts/fire_glide_path_scenarios.py  # cenários exploratórios (n_sim, pesos)
+scripts/swr_engine.py                 # SWR thresholds (0.035, 0.025) + sentinel
+scripts/portfolio_analytics.py        # pesos/patrimônio de referência pre-rebalanceo
+scripts/bond_pool_engine.py           # projeção P50 hardcoded
+scripts/btc_indicators.py             # SMA window (200) — parâmetro técnico
+scripts/ibkr_sync.py                  # CAMBIO_REF fallback operacional
+scripts/pfire_transformer.py          # valores de exemplo em docstrings
+scripts/validators.py                 # threshold de validação (0.05)
+scripts/reconstruct_factor.py         # janelas de lookback em meses
+scripts/checkin_mensal.py             # TLH_GATILHO e comparações de taxa
+scripts/tlh_monitor.py                # THRESHOLD_MATERIAL_BRL já nomeado
+
 # ──── Environment & Secrets ────
 .env
 .env.local

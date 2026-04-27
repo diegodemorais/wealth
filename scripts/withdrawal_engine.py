@@ -32,20 +32,11 @@ ROOT = Path(__file__).parent.parent
 
 import sys as _sys
 _sys.path.insert(0, str(ROOT / "scripts"))
-from config import GASTO_PISO
+from config import GASTO_PISO, GASTO_TETO_PCT, GASTO_TETO_VPW, GASTO_TETO_GK_CAP, VPW_REAL_RATE, GK_PRESERVATION_MULT, GK_PROSPERITY_MULT, GK_CUT_FACTOR, GK_RAISE_FACTOR, GK_MAX_AGE, GK_CONSERVATIVE_YEARS
 from guardrail_engine import GuardrailEngine
 
 
-# Strategy constants
-GASTO_TETO_PCT      = 400_000  # Percent-of-portfolio teto
-GASTO_TETO_VPW      = 500_000  # VPW teto
-GASTO_TETO_GK_CAP   = 350_000  # GK híbrido teto
-VPW_REAL_RATE        = 0.035   # VPW real rate
-GK_PRESERVATION_MULT = 1.20    # GK Capital Preservation threshold
-GK_PROSPERITY_MULT   = 0.80    # GK Prosperity threshold
-GK_CUT_FACTOR        = 0.90    # GK cut factor
-GK_RAISE_FACTOR      = 1.10    # GK raise factor
-GK_MAX_AGE           = 85      # GK age limit
+# Strategy constants — imported from config.py
 
 
 @dataclass
@@ -197,7 +188,7 @@ class WithdrawalEngine:
         # Apply decision rules (but only before age limit)
         # Age limit: GK_MAX_AGE - idade_fire_alvo (ex: 85 - 53 = 32 anos)
         # This would be handled by caller setting an age threshold
-        if request.ano < 32:  # Conservative: apply rules for first 32 years
+        if request.ano < GK_CONSERVATIVE_YEARS:  # Conservative: apply rules for first 32 years
             if wr_current > ctx.swr_inicial_gk * GK_PRESERVATION_MULT:
                 gasto *= GK_CUT_FACTOR
             elif wr_current < ctx.swr_inicial_gk * GK_PROSPERITY_MULT:
@@ -226,7 +217,7 @@ class WithdrawalEngine:
         wr_current = gasto / request.patrimonio_atual if request.patrimonio_atual > 0 else 1.0
 
         # Apply GK rules (first 32 years)
-        if request.ano < 32:
+        if request.ano < GK_CONSERVATIVE_YEARS:
             if wr_current > ctx.swr_inicial_gk * GK_PRESERVATION_MULT:
                 gasto *= GK_CUT_FACTOR
             elif wr_current < ctx.swr_inicial_gk * GK_PROSPERITY_MULT:

@@ -28,7 +28,7 @@ from datetime import datetime, date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import IR_ALIQUOTA
+from config import IR_ALIQUOTA, TICKER_AVGS_LSE, TICKER_AVEM_LSE, TICKER_SWRD_LSE
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 
@@ -41,8 +41,8 @@ LOTES_FILE = ROOT / "data" / "tlh_lotes.json"
 TICKER_MAP = {
     "SWRD":      TICKER_SWRD_LSE,
     "EIMI":      "EIMI.L",
-    "AVGS":      "AVGS.L",
-    "AVEM":      "AVEM.L",
+    "AVGS":      TICKER_AVGS_LSE,
+    "AVEM":      TICKER_AVEM_LSE,
     "IWVL":      "IWVL.L",
     "USSC":      "USSC.L",
     "AVUV":      "AVUV",
@@ -60,14 +60,14 @@ TRANSITORIOS = {"EIMI", "USSC", "IWVL", "AVDV", "AVUV", "DGS", "AVES", "JPGL"}
 
 # Substituto UCITS para cada transitório (para recompra pós-TLH)
 SUBSTITUTO_UCITS = {
-    "EIMI":  "AVEM.L",
-    "AVES":  "AVEM.L",
-    "DGS":   "AVEM.L",
-    "AVUV":  "AVGS.L",
-    "AVDV":  "AVGS.L",
-    "USSC":  "AVGS.L",
+    "EIMI":  TICKER_AVEM_LSE,
+    "AVES":  TICKER_AVEM_LSE,
+    "DGS":   TICKER_AVEM_LSE,
+    "AVUV":  TICKER_AVGS_LSE,
+    "AVDV":  TICKER_AVGS_LSE,
+    "USSC":  TICKER_AVGS_LSE,
     "IWVL":  TICKER_SWRD_LSE,
-    "JPGL":  "AVGS.L",
+    "JPGL":  TICKER_AVGS_LSE,
 }
 
 # Alíquota IR sobre ganho de capital (Lei 14.754/2023) — fonte: config.py

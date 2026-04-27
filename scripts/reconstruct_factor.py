@@ -26,7 +26,7 @@ from pathlib import Path
 
 # Add scripts dir to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
-from config import TICKER_SWRD_LSE, TICKER_VWRA_LSE, TICKER_AVGS_LSE, COLUMN_CLOSE, DATE_FORMAT_YM
+from config import TICKER_SWRD_LSE, TICKER_VWRA_LSE, TICKER_AVGS_LSE, COLUMN_CLOSE, DATE_FORMAT_YM, FACTOR_MKT_RF, FACTOR_SMB, FACTOR_HML, FACTOR_RMW, FACTOR_CMA, FACTOR_MOM, FACTOR_RF
 
 ROOT = Path(__file__).parent.parent
 OUT  = ROOT / "dados" / "factor_snapshot.json"
@@ -71,7 +71,7 @@ def _download_ff(url: str):
     header_line = None
     for line in lines:
         stripped = line.strip()
-        if "Mkt-RF" in stripped or "Mkt_RF" in stripped:
+        if FACTOR_MKT_RF in stripped or "Mkt_RF" in stripped:
             header_line = stripped
             break
 
@@ -80,7 +80,7 @@ def _download_ff(url: str):
     else:
         n_cols = len(data_lines[0].split(",")) - 1
         if n_cols == 6:
-            cols = ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "RF"]
+            cols = [FACTOR_MKT_RF, FACTOR_SMB, FACTOR_HML, FACTOR_RMW, FACTOR_CMA, "RF"]
         elif n_cols == 2:
             cols = ["WML", "RF"]
         else:
@@ -193,10 +193,10 @@ def compute_factor_loadings(cache: dict) -> dict:
         ff5 = _download_ff("https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/Developed_5_Factors_CSV.zip")
         mom = _download_ff("https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/Developed_Mom_Factor_CSV.zip")
         if "WML" in mom.columns:
-            mom = mom.rename(columns={"WML": "MOM"})
-        elif len(mom.columns) >= 1 and mom.columns[0] != "MOM":
-            mom = mom.rename(columns={mom.columns[0]: "MOM"})
-        factors = ff5.join(mom[["MOM"]], how="inner")
+            mom = mom.rename(columns={"WML": FACTOR_MOM})
+        elif len(mom.columns) >= 1 and mom.columns[0] != FACTOR_MOM:
+            mom = mom.rename(columns={mom.columns[0]: FACTOR_MOM})
+        factors = ff5.join(mom[[FACTOR_MOM]], how="inner")
 
         etf_map = {
             TICKER_SWRD_LSE: "SWRD", TICKER_AVGS_LSE: "AVGS", "AVEM.L": "AVEM",
@@ -218,7 +218,7 @@ def compute_factor_loadings(cache: dict) -> dict:
                 if "Close" in price_data.columns:
                     prices[label] = price_data[COLUMN_CLOSE].dropna()
 
-        factor_cols = [f for f in ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "MOM"] if f in factors.columns]
+        factor_cols = [f for f in [FACTOR_MKT_RF, FACTOR_SMB, FACTOR_HML, FACTOR_RMW, FACTOR_CMA, FACTOR_MOM] if f in factors.columns]
         loadings = {}
 
         for label, price_series in prices.items():
@@ -239,22 +239,22 @@ def compute_factor_loadings(cache: dict) -> dict:
 
                 loadings[label] = {
                     "alpha":    round(float(model.params["const"] * 12), 5),
-                    "mkt_rf":   round(float(model.params.get("Mkt-RF", 0)), 4),
-                    "smb":      round(float(model.params.get("SMB", 0)), 4),
-                    "hml":      round(float(model.params.get("HML", 0)), 4),
-                    "rmw":      round(float(model.params.get("RMW", 0)), 4),
-                    "cma":      round(float(model.params.get("CMA", 0)), 4),
-                    "mom":      round(float(model.params.get("MOM", 0)), 4),
+                    "mkt_rf":   round(float(model.params.get(FACTOR_MKT_RF, 0)), 4),
+                    "smb":      round(float(model.params.get(FACTOR_SMB, 0)), 4),
+                    "hml":      round(float(model.params.get(FACTOR_HML, 0)), 4),
+                    "rmw":      round(float(model.params.get(FACTOR_RMW, 0)), 4),
+                    "cma":      round(float(model.params.get(FACTOR_CMA, 0)), 4),
+                    "mom":      round(float(model.params.get(FACTOR_MOM, 0)), 4),
                     "r2":       round(float(model.rsquared), 4),
                     "n_months": int(model.nobs),
                     "t_stats": {
                         "alpha":  round(float(model.tvalues["const"]), 3),
-                        "mkt_rf": round(float(model.tvalues.get("Mkt-RF", 0)), 3),
-                        "smb":    round(float(model.tvalues.get("SMB", 0)), 3),
-                        "hml":    round(float(model.tvalues.get("HML", 0)), 3),
-                        "rmw":    round(float(model.tvalues.get("RMW", 0)), 3),
-                        "cma":    round(float(model.tvalues.get("CMA", 0)), 3),
-                        "mom":    round(float(model.tvalues.get("MOM", 0)), 3),
+                        "mkt_rf": round(float(model.tvalues.get(FACTOR_MKT_RF, 0)), 3),
+                        "smb":    round(float(model.tvalues.get(FACTOR_SMB, 0)), 3),
+                        "hml":    round(float(model.tvalues.get(FACTOR_HML, 0)), 3),
+                        "rmw":    round(float(model.tvalues.get(FACTOR_RMW, 0)), 3),
+                        "cma":    round(float(model.tvalues.get(FACTOR_CMA, 0)), 3),
+                        "mom":    round(float(model.tvalues.get(FACTOR_MOM, 0)), 3),
                     },
                 }
             except Exception as e:

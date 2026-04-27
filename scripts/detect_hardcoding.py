@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Architect P2: Advanced Hardcoding Detection
+Architect P2/P4: Advanced Hardcoding Detection + Auto-Fix Suggestions
 
 Detecta padrões de hardcoding além * 100 / / 100:
 1. Valores numéricos fora de config.py
@@ -8,16 +8,17 @@ Detecta padrões de hardcoding além * 100 / / 100:
 3. Strings duplicadas (tickers, nomes de blocos)
 4. Constantes mágicas em código
 
-AST parsing + grep avançado + static analysis
+P4: generate_suggestions() → risco + nome de constante + seção de config + patch inline
 """
 
 import ast
 import argparse
+import json
 import sys
 import os
 import re
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Dict, Set, Tuple, Optional
 from collections import defaultdict
 import subprocess
@@ -41,6 +42,36 @@ class Violation:
         return f"{symbol} {self.file}:{self.line_num} [{self.violation_type}] {self.pattern}"
 
 
+@dataclass
+class Suggestion:
+    """Sugestão de refatoração para uma Violation"""
+    violation: Violation
+    constant_name: str
+    category: str          # TICKER_, COLUMN_, DATE_FORMAT_, CALC_, etc.
+    config_section: str    # scripts/config.py ou react-app/src/config/constants.ts
+    import_line: str       # 'from config import X' ou 'import { X } from "@/config/constants"'
+    replacement: str       # trecho original → constante
+    risk: str              # LOW / MEDIUM / HIGH
+    risk_reason: str
+    estimated_time_min: float
+
+    def to_dict(self) -> dict:
+        return {
+            "file": self.violation.file,
+            "line": self.violation.line_num,
+            "type": self.violation.violation_type,
+            "value": self.violation.pattern,
+            "constant_name": self.constant_name,
+            "category": self.category,
+            "config_section": self.config_section,
+            "import_line": self.import_line,
+            "replacement": self.replacement,
+            "risk": self.risk,
+            "risk_reason": self.risk_reason,
+            "estimated_time_min": self.estimated_time_min,
+        }
+
+
 # ────────────────────────────────────────────────────────────────
 # Whitelist Parser
 # ────────────────────────────────────────────────────────────────
@@ -54,159 +85,129 @@ class WhitelistMatcher:
         self.load_whitelist(whitelist_file)
 
     def load_whitelist(self, whitelist_file: Optional[str]):
-        """Carrega .architectignore se existir"""
         if not whitelist_file:
             whitelist_file = ".architectignore"
-
         if not os.path.exists(whitelist_file):
             return
-
         with open(whitelist_file, "r") as f:
             for line in f:
                 line = line.strip()
                 if not line or line.startswith("#"):
                     continue
-
-                # Padrão glob (ex: **/test_*.py)
+                # Strip inline comments (e.g. "scripts/foo.py  # reason")
+                line = line.split("#")[0].strip()
+                if not line:
+                    continue
                 if "*" in line:
                     self.patterns.append(self._glob_to_regex(line))
-                # Padrão regex (ex: ^#)
                 elif line.startswith("^"):
                     self.patterns.append(re.compile(line))
-                # Arquivo exato
                 else:
                     self.exact_files.add(line)
 
     @staticmethod
     def _glob_to_regex(pattern: str) -> re.Pattern:
-        """Converte glob pattern para regex"""
         regex = pattern.replace(".", r"\.").replace("*", ".*").replace("?", ".")
         return re.compile(f"^{regex}$")
 
     def is_whitelisted(self, file: str, content: Optional[str] = None) -> bool:
-        """Verifica se arquivo ou conteúdo está whitelisted"""
-        # Arquivo exato
-        if file in self.exact_files:
+        # Normalize: strip leading ./ so patterns like "analysis/**" match "./analysis/foo.py"
+        normalized = file.lstrip("./")
+        if file in self.exact_files or normalized in self.exact_files:
             return True
-
-        # Padrões glob/regex
         for pattern in self.patterns:
-            if pattern.match(file):
+            if pattern.match(file) or pattern.match(normalized):
                 return True
-
         return False
 
 
 # ────────────────────────────────────────────────────────────────
-# AST-based Detection
+# AST-based Detection (Python 3.8+ compatible — ast.Constant only)
 # ────────────────────────────────────────────────────────────────
 
 class NumericLiteralDetector(ast.NodeVisitor):
     """Detecta atribuições de valores numéricos em código"""
 
-    def __init__(self, file: str, lines: List[str], config_file: str = None):
+    def __init__(self, file: str, lines: List[str]):
         self.file = file
         self.lines = lines
-        self.config_file = config_file or "scripts/config.py"
         self.violations: List[Violation] = []
-        self.numeric_pattern = re.compile(r"^(0\.\d+|[1-9]\d*\.?\d*|\.?\d+)$")
 
     def visit_Assign(self, node: ast.Assign):
-        """Visita atribuições: x = 0.50"""
         if self._is_numeric_literal(node.value):
             var_name = self._get_var_name(node.targets)
             value = self._get_literal_value(node.value)
             line_content = self.lines[node.lineno - 1] if node.lineno <= len(self.lines) else ""
 
-            # Skip típicos falsos positivos
-            if self._should_skip(var_name, value, line_content):
-                self.generic_visit(node)
-                return
-
-            self.violations.append(Violation(
-                file=self.file,
-                line_num=node.lineno,
-                violation_type="numeric_literal",
-                pattern=f"{var_name} = {value}",
-                content=line_content.strip(),
-                severity="error"
-            ))
-
+            if not self._should_skip(var_name, value, line_content):
+                self.violations.append(Violation(
+                    file=self.file,
+                    line_num=node.lineno,
+                    violation_type="numeric_literal",
+                    pattern=f"{var_name} = {value}",
+                    content=line_content.strip(),
+                    severity="error"
+                ))
         self.generic_visit(node)
 
     def visit_Compare(self, node: ast.Compare):
-        """Visita comparações: if x < 0.85"""
-        if self._is_numeric_literal(node.comparators[0] if node.comparators else None):
-            value = self._get_literal_value(node.comparators[0])
-            line_num = node.lineno
-            line_content = self.lines[line_num - 1] if line_num <= len(self.lines) else ""
-
-            if self._should_skip(None, value, line_content):
-                self.generic_visit(node)
-                return
-
-            self.violations.append(Violation(
-                file=self.file,
-                line_num=line_num,
-                violation_type="numeric_literal",
-                pattern=f"comparison with {value}",
-                content=line_content.strip(),
-                severity="warning"
-            ))
-
+        comparator = node.comparators[0] if node.comparators else None
+        if self._is_numeric_literal(comparator):
+            value = self._get_literal_value(comparator)
+            line_content = self.lines[node.lineno - 1] if node.lineno <= len(self.lines) else ""
+            if not self._should_skip(None, value, line_content):
+                self.violations.append(Violation(
+                    file=self.file,
+                    line_num=node.lineno,
+                    violation_type="numeric_literal",
+                    pattern=f"comparison with {value}",
+                    content=line_content.strip(),
+                    severity="warning"
+                ))
         self.generic_visit(node)
 
     def _is_numeric_literal(self, node) -> bool:
-        """Verifica se node é um literal numérico"""
         if node is None:
             return False
-        return isinstance(node, (ast.Num, ast.Constant)) and isinstance(
-            self._get_literal_value(node), (int, float)
-        )
+        # ast.Num removed in Python 3.12 — use ast.Constant only
+        return isinstance(node, ast.Constant) and isinstance(node.value, (int, float))
 
     def _get_literal_value(self, node) -> Optional[float]:
-        """Extrai valor numérico de um node"""
-        if isinstance(node, ast.Num):
-            return node.n
         if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
             return node.value
         return None
 
     def _get_var_name(self, targets) -> Optional[str]:
-        """Extrai nome de variável de alvo de atribuição"""
         if targets and isinstance(targets[0], ast.Name):
             return targets[0].id
         return None
 
-    def _should_skip(self, var_name: Optional[str], value: float, line_content: str) -> bool:
-        """Verifica se deve ignorar esta violação"""
-        # Skip loop counters
+    def _should_skip(self, var_name: Optional[str], value: Optional[float], line_content: str) -> bool:
         if "range(" in line_content or "for " in line_content:
             return True
-
-        # Skip test files
         if "test_" in self.file or "/tests/" in self.file or ".spec.ts" in self.file:
             return True
-
-        # Skip comments
         if line_content.strip().startswith("#"):
             return True
-
-        # Skip pequenas constantes (loop counters, índices)
-        if isinstance(value, int) and value < 10:
+        if isinstance(value, int) and abs(value) < 10:
             return True
-
-        # Skip 1.0, 0.0, etc. (operações comuns)
         if value in (0.0, 1.0):
             return True
-
+        # Floating-point epsilon / precision thresholds
+        if isinstance(value, float) and abs(value) < 1e-4:
+            return True
+        # Standard ML/stats conventions
+        if var_name in ("SEED", "seed", "N_BOOTSTRAP", "n_bootstrap"):
+            return True
+        # Standard p-value thresholds in statistical analysis
+        if isinstance(value, float) and value in (0.01, 0.05, 0.1) and "pval" in line_content.lower():
+            return True
         return False
 
 
 class InlineCalculationDetector:
     """Detecta cálculos inline (SWR, Tax, guardrails)"""
 
-    # Padrões financeiros perigosos
     FINANCIAL_PATTERNS = {
         "swr": [
             r"swr\s*=\s*[\d.]+\s*\*\s*",
@@ -236,12 +237,9 @@ class InlineCalculationDetector:
         self.violations: List[Violation] = []
 
     def detect(self) -> List[Violation]:
-        """Executa detecção de cálculos inline"""
         for line_num, line in enumerate(self.lines, 1):
-            # Skip comments e docstrings
             if line.strip().startswith("#") or line.strip().startswith('"""'):
                 continue
-
             for calc_type, patterns in self.FINANCIAL_PATTERNS.items():
                 for pattern in patterns:
                     if re.search(pattern, line, re.IGNORECASE):
@@ -254,21 +252,19 @@ class InlineCalculationDetector:
                             severity="error"
                         ))
                         break
-
         return self.violations
 
 
 class StringDuplicateDetector:
     """Detecta strings duplicadas que devem ser constantes"""
 
-    # Strings que naturalmente se repetem e podem ser ignoradas
     SAFE_PATTERNS = [
-        r'^[A-Z]{3,4}$',  # Tickers curtos (SWRD, etc)
-        r'^[a-z_][a-z0-9_]*$',  # Variáveis (nome_variavel)
-        r'^[a-z0-9-]+$',  # URLs, IDs (api-v1, etc)
-        r'.*_usd$',  # Financial fields (price_usd, etc)
-        r'.*_brl$',  # Currency fields
-        r'^id$',  # Common field names
+        r'^[A-Z]{3,4}$',
+        r'^[a-z_][a-z0-9_]*$',
+        r'^[a-z0-9-]+$',
+        r'.*_usd$',
+        r'.*_brl$',
+        r'^id$',
         r'^name$',
         r'^value$',
         r'^data$',
@@ -276,7 +272,7 @@ class StringDuplicateDetector:
         r'^status$',
     ]
 
-    DUPLICATE_THRESHOLD = 5  # Quantas repetições = violação? (aumentado)
+    DUPLICATE_THRESHOLD = 5
 
     def __init__(self, file: str, content: str):
         self.file = file
@@ -286,42 +282,154 @@ class StringDuplicateDetector:
         self.string_counts: Dict[str, List[int]] = defaultdict(list)
 
     def detect(self) -> List[Violation]:
-        """Executa detecção de strings duplicadas"""
-        # Coleta todas as strings e suas linhas
         for line_num, line in enumerate(self.lines, 1):
             if line.strip().startswith("#"):
                 continue
-
-            # Regex para strings (simples e duplas)
             strings = re.findall(r'(["\'])((?:(?=(\\?))\3.)*?)\1', line)
             for quote, string_val, _ in strings:
-                if len(string_val) > 3:  # Ignorar strings muito curtas (aumentado)
+                if len(string_val) > 3:
                     self.string_counts[string_val].append(line_num)
 
-        # Reporta strings que aparecem >THRESHOLD vezes
         for string_val, line_nums in self.string_counts.items():
             if len(line_nums) >= self.DUPLICATE_THRESHOLD:
-                # Skip padrões seguros
-                if self._is_safe_pattern(string_val):
-                    continue
-
-                self.violations.append(Violation(
-                    file=self.file,
-                    line_num=line_nums[0],
-                    violation_type="duplicate_string",
-                    pattern=f'"{string_val}" (appears {len(line_nums)} times)',
-                    content=f"Lines: {line_nums}",
-                    severity="warning"
-                ))
-
+                if not self._is_safe_pattern(string_val):
+                    self.violations.append(Violation(
+                        file=self.file,
+                        line_num=line_nums[0],
+                        violation_type="duplicate_string",
+                        pattern=f'"{string_val}" (appears {len(line_nums)} times)',
+                        content=f"Lines: {line_nums}",
+                        severity="warning"
+                    ))
         return self.violations
 
     def _is_safe_pattern(self, string_val: str) -> bool:
-        """Verifica se string é pattern seguro para ignorar"""
         for pattern in self.SAFE_PATTERNS:
             if re.match(pattern, string_val):
                 return True
         return False
+
+
+# ────────────────────────────────────────────────────────────────
+# P4: Auto-Fix Suggestion Engine
+# ────────────────────────────────────────────────────────────────
+
+class SuggestionEngine:
+    """Gera sugestões de refatoração para cada Violation (P4.1)"""
+
+    # Heurísticas para inferir categoria e nome de constante
+    TICKER_KEYWORDS = {"swrd", "avgs", "avem", "avuv", "avdv", "jpgl", "hodl", "vwra", "iwmo", "xdem"}
+    CALC_KEYWORDS = {"swr", "tax", "ir", "guardrail", "drawdown", "dd", "rho", "vol", "sigma", "alpha", "beta"}
+    DATE_KEYWORDS = {"date", "dt", "fmt", "format", "strftime"}
+    WINDOW_KEYWORDS = {"window", "period", "lookback", "lag", "n_sim", "n_years", "horizon"}
+
+    def generate(self, violations: List[Violation]) -> List[Suggestion]:
+        suggestions = []
+        for v in violations:
+            s = self._suggest(v)
+            if s:
+                suggestions.append(s)
+        return suggestions
+
+    def _suggest(self, v: Violation) -> Optional[Suggestion]:
+        content_lower = v.content.lower()
+        file_is_ts = v.file.endswith((".ts", ".tsx"))
+
+        # Inferir categoria
+        category, const_name = self._infer_category(v, content_lower, file_is_ts)
+
+        # Config section
+        if file_is_ts:
+            config_section = "react-app/src/config/constants.ts"
+            import_line = f'import {{ {const_name} }} from "@/config/constants";'
+        else:
+            config_section = "scripts/config.py"
+            import_line = f"from config import {const_name}"
+
+        # Risk assessment
+        risk, risk_reason, est_time = self._assess_risk(v, category)
+
+        # Replacement hint
+        replacement = self._replacement_hint(v, const_name)
+
+        return Suggestion(
+            violation=v,
+            constant_name=const_name,
+            category=category,
+            config_section=config_section,
+            import_line=import_line,
+            replacement=replacement,
+            risk=risk,
+            risk_reason=risk_reason,
+            estimated_time_min=est_time,
+        )
+
+    def _infer_category(self, v: Violation, content_lower: str, is_ts: bool) -> Tuple[str, str]:
+        # Ticker detection
+        for ticker in self.TICKER_KEYWORDS:
+            if ticker in content_lower:
+                const_name = f"TICKER_{ticker.upper()}_LSE"
+                return "TICKER_", const_name
+
+        # Calc / financial params
+        for kw in self.CALC_KEYWORDS:
+            if kw in content_lower:
+                # Extract var name if assignment
+                m = re.search(r"(?:const\s+|)(\w+)\s*=", v.content)
+                var = m.group(1).upper() if m else kw.upper()
+                const_name = f"CALC_{var}"
+                return "CALC_", const_name
+
+        # Window / simulation params
+        for kw in self.WINDOW_KEYWORDS:
+            if kw in content_lower:
+                m = re.search(r"(?:const\s+|)(\w+)\s*=", v.content)
+                var = m.group(1).upper() if m else kw.upper()
+                const_name = f"SIM_{var}"
+                return "SIM_", const_name
+
+        # Date format
+        for kw in self.DATE_KEYWORDS:
+            if kw in content_lower:
+                m = re.search(r"(?:const\s+|)(\w+)\s*=", v.content)
+                var = m.group(1).upper() if m else "DATE_FORMAT"
+                return "DATE_FORMAT_", var
+
+        # Duplicate string → try to infer from value
+        if v.violation_type == "duplicate_string":
+            raw = re.search(r'"([^"]+)"', v.pattern)
+            val = raw.group(1) if raw else "STRING"
+            const_name = f"STR_{re.sub(r'[^A-Z0-9]', '_', val.upper())[:30]}"
+            return "STRING_", const_name
+
+        # Generic fallback
+        m = re.search(r"(?:const\s+|)(\w+)\s*=", v.content)
+        var = m.group(1).upper() if m else "CONSTANT"
+        return "CALC_", f"CALC_{var}"
+
+    def _assess_risk(self, v: Violation, category: str) -> Tuple[str, str, float]:
+        if v.violation_type == "duplicate_string":
+            return "LOW", "exact string literal — substituição direta sem ambiguidade", 2.0
+
+        if v.violation_type == "inline_calculation":
+            return "HIGH", "cálculo inline — requer análise de contexto e testes", 10.0
+
+        if category == "TICKER_":
+            return "LOW", "ticker string — padrão unambíguo, só substituição", 2.0
+
+        if category in ("CALC_", "SIM_"):
+            return "MEDIUM", "constante numérica financeira — verificar contexto antes de centralizar", 5.0
+
+        if category == "DATE_FORMAT_":
+            return "LOW", "formato de data — pattern strftime, substituição segura", 2.0
+
+        return "MEDIUM", "contexto não determinado — revisão manual recomendada", 5.0
+
+    def _replacement_hint(self, v: Violation, const_name: str) -> str:
+        # Extract the literal value from content
+        m = re.search(r"=\s*(['\"]?[\d.]+['\"]?)", v.content)
+        literal = m.group(1) if m else "???"
+        return f"{literal} → {const_name}"
 
 
 # ────────────────────────────────────────────────────────────────
@@ -336,28 +444,22 @@ class HardcodingDetector:
         self.violations: List[Violation] = []
 
     def scan_files(self, file_list: Optional[List[str]] = None) -> List[Violation]:
-        """Escaneia arquivos Python/TypeScript"""
         if file_list is None:
             file_list = self._get_all_source_files()
-
         for file_path in file_list:
             if self.whitelist.is_whitelisted(file_path):
                 continue
-
             try:
                 self._scan_file(file_path)
             except Exception as e:
                 print(f"⚠️  Skipping {file_path}: {e}", file=sys.stderr)
-
         return self.violations
 
     def scan_staged_only(self) -> List[Violation]:
-        """Escaneia apenas arquivos em git staged area (para pre-commit)"""
         try:
             result = subprocess.run(
                 ["git", "diff", "--cached", "--name-only"],
-                capture_output=True,
-                text=True,
+                capture_output=True, text=True,
                 cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             )
             staged_files = [f for f in result.stdout.strip().split("\n") if f]
@@ -367,102 +469,147 @@ class HardcodingDetector:
             return []
 
     def _scan_file(self, file_path: str):
-        """Escaneia um arquivo individual"""
         if not os.path.exists(file_path):
             return
-
         with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
             content = f.read()
-
-        # Python: AST + Grep
         if file_path.endswith(".py"):
             self._scan_python(file_path, content)
-
-        # TypeScript: Grep only
         if file_path.endswith((".ts", ".tsx")):
             self._scan_typescript(file_path, content)
 
     def _scan_python(self, file_path: str, content: str):
-        """Escaneia arquivo Python"""
         try:
             tree = ast.parse(content)
             lines = content.split("\n")
-
-            # 1. Numeric literals
             detector = NumericLiteralDetector(file_path, lines)
             detector.visit(tree)
             self.violations.extend(detector.violations)
 
-            # 2. Inline calculations
             calc_detector = InlineCalculationDetector(file_path, content)
             self.violations.extend(calc_detector.detect())
 
-            # 3. String duplicates
             string_detector = StringDuplicateDetector(file_path, content)
             self.violations.extend(string_detector.detect())
-
         except SyntaxError:
-            pass  # Skip files with syntax errors
+            pass
 
     def _scan_typescript(self, file_path: str, content: str):
-        """Escaneia arquivo TypeScript/JavaScript"""
-        # Padrões similares ao Python, mas adaptados para TS
         patterns = {
-            "numeric": r"const\s+\w+\s*=\s*(0\.\d+|[1-9]\d*\.\d+)",
+            "numeric_ts": r"const\s+\w+\s*=\s*(0\.\d+|[1-9]\d*\.\d+)",
             "inline_calc": r"(swr|tax|drawdown|guardrail)\s*=\s*.*?\*\s*0\.\d+",
         }
-
         for line_num, line in enumerate(content.split("\n"), 1):
             if line.strip().startswith("//") or line.strip().startswith("/*"):
                 continue
-
             for violation_type, pattern in patterns.items():
                 if re.search(pattern, line):
                     self.violations.append(Violation(
                         file=file_path,
                         line_num=line_num,
-                        violation_type=f"{violation_type}_ts",
+                        violation_type=violation_type,
                         pattern=pattern,
                         content=line.strip(),
                         severity="warning"
                     ))
 
     def _get_all_source_files(self) -> List[str]:
-        """Retorna todos os arquivos source do projeto"""
         files = []
         for root, dirs, filenames in os.walk("."):
-            # Skip comum
             dirs[:] = [d for d in dirs if d not in {".git", "node_modules", "__pycache__", ".venv"}]
-
             for filename in filenames:
                 if filename.endswith((".py", ".ts", ".tsx")):
                     files.append(os.path.join(root, filename))
-
         return files
 
     def generate_report(self) -> str:
-        """Gera relatório formatado de violações"""
         if not self.violations:
             return "✅ No hardcoding violations found!"
 
-        # Agrupa por tipo
         by_type = defaultdict(list)
         for v in self.violations:
             by_type[v.violation_type].append(v)
 
-        report = []
-        report.append(f"🔴 Found {len(self.violations)} hardcoding violations:\n")
-
+        report = [f"🔴 Found {len(self.violations)} hardcoding violations:\n"]
         for violation_type, violations in sorted(by_type.items()):
             report.append(f"## {violation_type.upper()} ({len(violations)})")
-            for v in violations[:5]:  # Mostra primeiras 5
+            for v in violations[:5]:
                 report.append(f"{v}")
                 report.append(f"   {v.content[:80]}")
             if len(violations) > 5:
                 report.append(f"   ... and {len(violations) - 5} more")
             report.append("")
-
         return "\n".join(report)
+
+
+# ────────────────────────────────────────────────────────────────
+# P4: --fix workflow
+# ────────────────────────────────────────────────────────────────
+
+def run_fix_generate_only(violations: List[Violation]) -> None:
+    """--fix --generate-only: mostra sugestões em JSON sem alterar nada"""
+    engine = SuggestionEngine()
+    suggestions = engine.generate(violations)
+
+    summary = {"LOW": 0, "MEDIUM": 0, "HIGH": 0, "total_time_min": 0.0}
+    for s in suggestions:
+        summary[s.risk] += 1
+        summary["total_time_min"] += s.estimated_time_min
+
+    output = {
+        "violations_analyzed": len(violations),
+        "suggestions_generated": len(suggestions),
+        "summary": summary,
+        "suggestions": [s.to_dict() for s in suggestions],
+    }
+
+    print(json.dumps(output, indent=2, ensure_ascii=False))
+
+
+def run_fix_interactive(violations: List[Violation]) -> None:
+    """--fix: modo interativo — revisão por violation"""
+    if not violations:
+        print("✅ Nenhuma violation para revisar.")
+        return
+
+    engine = SuggestionEngine()
+    suggestions = engine.generate(violations)
+
+    risk_icon = {"LOW": "🟢", "MEDIUM": "🟡", "HIGH": "🔴"}
+    applied, skipped = 0, 0
+
+    print(f"\n📋 {len(suggestions)} sugestões de refatoração:\n")
+
+    for i, s in enumerate(suggestions, 1):
+        icon = risk_icon.get(s.risk, "⚪")
+        print(f"[{i}/{len(suggestions)}] {icon} {s.risk} — {s.violation.file}:{s.violation.violation_num if hasattr(s.violation, 'violation_num') else s.violation.line_num}")
+        print(f"  Código:    {s.violation.content[:70]}")
+        print(f"  Constante: {s.constant_name}  ({s.category})")
+        print(f"  Config:    {s.config_section}")
+        print(f"  Import:    {s.import_line}")
+        print(f"  Troca:     {s.replacement}")
+        print(f"  Motivo:    {s.risk_reason}")
+        print(f"  Tempo est: {s.estimated_time_min:.0f} min")
+
+        if s.risk == "LOW":
+            print(f"  → AUTO-APPLY elegível (LOW risk)")
+
+        try:
+            choice = input("  [s]kip / [v]iew context / [Enter para próxima]: ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print("\nInterrompido.")
+            break
+
+        if choice == "v":
+            print(f"\n  Contexto completo: {s.violation.content}\n")
+            skipped += 1
+        else:
+            skipped += 1
+
+        print()
+
+    print(f"Revisão concluída: {applied} aplicadas, {skipped} pendentes.")
+    print("💡 Aplique manualmente ou use --fix-json para exportar patches.")
 
 
 # ────────────────────────────────────────────────────────────────
@@ -471,19 +618,22 @@ class HardcodingDetector:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Advanced Hardcoding Detection (Architect P2)",
+        description="Advanced Hardcoding Detection + Auto-Fix Suggestions (P2/P4)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   python3 detect_hardcoding.py --staged              # Pre-commit mode
   python3 detect_hardcoding.py --report              # Full report
+  python3 detect_hardcoding.py --fix                 # Interactive fix review
+  python3 detect_hardcoding.py --fix --json          # Generate suggestions JSON (no changes)
   python3 detect_hardcoding.py scripts/config.py     # Single file
         """
     )
 
     parser.add_argument("--staged", action="store_true", help="Scan only staged files (git diff)")
     parser.add_argument("--report", action="store_true", help="Generate detailed report")
-    parser.add_argument("--fix", action="store_true", help="Suggest fixes (future)")
+    parser.add_argument("--fix", action="store_true", help="Suggest fixes interactively (P4)")
+    parser.add_argument("--json", action="store_true", help="With --fix: output JSON only, no interaction")
     parser.add_argument("--whitelist", type=str, help="Path to .architectignore file")
     parser.add_argument("files", nargs="*", help="Files to scan (optional)")
 
@@ -491,7 +641,6 @@ Examples:
 
     detector = HardcodingDetector(whitelist_file=args.whitelist)
 
-    # Determina quais arquivos scanear
     if args.staged:
         violations = detector.scan_staged_only()
     elif args.files:
@@ -499,11 +648,18 @@ Examples:
     else:
         violations = detector.scan_files()
 
-    # Output
+    # P4 fix mode
+    if args.fix:
+        if args.json:
+            run_fix_generate_only(violations)
+        else:
+            run_fix_interactive(violations)
+        return
+
+    # Standard report / pre-commit
     if args.report or not args.staged:
         print(detector.generate_report())
     else:
-        # Pre-commit mode: compact output
         if violations:
             print(f"❌ Hardcoding violations found: {len(violations)}")
             for v in violations[:3]:

@@ -30,7 +30,7 @@ OUTPUT_DIR = Path(__file__).parent.parent / "dados"
 OUTPUT_FILE = OUTPUT_DIR / "tlh_lotes.json"
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import BUCKET_MAP
+from config import BUCKET_MAP, IR_ALIQUOTA
 
 # Classificação de ETFs
 ALVO = {"SWRD", "AVGS", "AVEM"}
@@ -313,7 +313,7 @@ def enrich_ir_brl(lots: list[dict], current_prices: dict[str, float] | None = No
         ptax_lookup = {}
 
     # Enrich each lot
-    aliquota_ir = 0.15
+    aliquota_ir = IR_ALIQUOTA
     for lot in lots:
         sym = lot["symbol"]
         ptax_compra = ptax_lookup.get(lot["date"], ptax_atual)

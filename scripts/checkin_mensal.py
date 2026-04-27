@@ -25,7 +25,7 @@ from bcb import sgs
 sys.path.insert(0, os.path.dirname(__file__))
 from config import (
     PESOS_TARGET, PESOS_SHADOW_C, IR_ALIQUOTA, BUCKET_TICKERS, update_dashboard_state, load_dashboard_state,
-    TICKER_SWRD_LSE, TICKER_VWRA_LSE, COLUMN_CLOSE
+    TICKER_SWRD_LSE, TICKER_AVGS_LSE, TICKER_AVEM_LSE, TICKER_JPGL_LSE, TICKER_VWRA_LSE, TICKER_HODL11_SA, COLUMN_CLOSE
 )
 
 
@@ -33,11 +33,11 @@ from config import (
 
 TICKERS = {
     "SWRD": TICKER_SWRD_LSE,
-    "AVGS": "AVGS.L",
-    "AVEM": "AVEM.L",
-    "JPGL": "JPGL.L",
+    "AVGS": TICKER_AVGS_LSE,
+    "AVEM": TICKER_AVEM_LSE,
+    "JPGL": TICKER_JPGL_LSE,
     "VWRA": TICKER_VWRA_LSE,
-    "HODL11": "HODL11.SA",
+    "HODL11": TICKER_HODL11_SA,
     "BTC":    "BTC-USD",
     "USD_BRL": "USDBRL=X",   # ETFs UCITS na LSE são cotados em USD
 }
@@ -53,14 +53,14 @@ from config import IPCA_PLUS_TAXA_ANUAL, IPCA_PLUS_CUSTODIA
 
 TLH_TRANSITORIOS = {
     # US-listed (NYSE/NASDAQ) — estate tax risk adicional
-    "AVUV":  {"nome": "Avantis US SC Value",          "ucits_substituto": "AVGS.L", "cotacao": "USD"},
-    "AVDV":  {"nome": "Avantis Int'l SC Value",        "ucits_substituto": "AVGS.L", "cotacao": "USD"},
-    "AVES":  {"nome": "Avantis EM Value",              "ucits_substituto": "AVEM.L", "cotacao": "USD"},
-    "DGS":   {"nome": "WisdomTree EM SmallCap Div",    "ucits_substituto": "AVEM.L", "cotacao": "USD"},
+    "AVUV":  {"nome": "Avantis US SC Value",          "ucits_substituto": TICKER_AVGS_LSE, "cotacao": "USD"},
+    "AVDV":  {"nome": "Avantis Int'l SC Value",        "ucits_substituto": TICKER_AVGS_LSE, "cotacao": "USD"},
+    "AVES":  {"nome": "Avantis EM Value",              "ucits_substituto": TICKER_AVEM_LSE, "cotacao": "USD"},
+    "DGS":   {"nome": "WisdomTree EM SmallCap Div",    "ucits_substituto": TICKER_AVEM_LSE, "cotacao": "USD"},
     # UCITS LSE — sem estate tax, mas transitórios (migrar para alvo quando oportuno)
-    "EIMI.L": {"nome": "iShares Core MSCI EM IMI",    "ucits_substituto": "AVEM.L", "cotacao": "USD"},
-    "USSC.L": {"nome": "SPDR MSCI World SC",          "ucits_substituto": "AVGS.L", "cotacao": "GBp"},
-    "IWVL.L": {"nome": "iShares MSCI Wld Value Fac",  "ucits_substituto": "JPGL.L", "cotacao": "GBp"},
+    "EIMI.L": {"nome": "iShares Core MSCI EM IMI",    "ucits_substituto": TICKER_AVEM_LSE, "cotacao": "USD"},
+    "USSC.L": {"nome": "SPDR MSCI World SC",          "ucits_substituto": TICKER_AVGS_LSE, "cotacao": "GBp"},
+    "IWVL.L": {"nome": "iShares MSCI Wld Value Fac",  "ucits_substituto": TICKER_JPGL_LSE, "cotacao": "GBp"},
 }
 
 TLH_GATILHO_PERDA = 0.05   # alertar se perda >= 5%
@@ -146,11 +146,11 @@ def retorno_target(inicio: date, fim: date, usd_brl_ini: float, usd_brl_fim: flo
     """Target: pesos alvo dos 4 ETFs + IPCA+ + HODL11."""
     r = {}
     r["SWRD"]   = retorno_etf_brl(TICKER_SWRD_LSE, inicio, fim, usd_brl_ini, usd_brl_fim)
-    r["AVGS"]   = retorno_etf_brl("AVGS.L", inicio, fim, usd_brl_ini, usd_brl_fim)
-    r["AVEM"]   = retorno_etf_brl("AVEM.L", inicio, fim, usd_brl_ini, usd_brl_fim)
-    r["JPGL"]   = retorno_etf_brl("JPGL.L", inicio, fim, usd_brl_ini, usd_brl_fim)
+    r["AVGS"]   = retorno_etf_brl(TICKER_AVGS_LSE, inicio, fim, usd_brl_ini, usd_brl_fim)
+    r["AVEM"]   = retorno_etf_brl(TICKER_AVEM_LSE, inicio, fim, usd_brl_ini, usd_brl_fim)
+    r["JPGL"]   = retorno_etf_brl(TICKER_JPGL_LSE, inicio, fim, usd_brl_ini, usd_brl_fim)
     r["IPCA"]   = retorno_shadow_b(ipca_mensal)
-    hodl_ini, hodl_fim = get_preco_mensal("HODL11.SA", inicio, fim)
+    hodl_ini, hodl_fim = get_preco_mensal(TICKER_HODL11_SA, inicio, fim)
     r["HODL11"] = hodl_fim / hodl_ini - 1
 
     retorno = sum(PESOS_TARGET[k] * r[k] for k in r)
@@ -765,8 +765,8 @@ def main():
     # Retornos ETFs individuais
     print("  Buscando preços dos ETFs...")
     detalhes_etfs = {}
-    for nome, ticker in [(TICKER_SWRD_LSE, TICKER_SWRD_LSE), ("AVGS.L", "AVGS.L"),
-                          ("AVEM.L", "AVEM.L"), ("JPGL.L", "JPGL.L"), (TICKER_VWRA_LSE, TICKER_VWRA_LSE)]:
+    for nome, ticker in [(TICKER_SWRD_LSE, TICKER_SWRD_LSE), (TICKER_AVGS_LSE, TICKER_AVGS_LSE),
+                          (TICKER_AVEM_LSE, TICKER_AVEM_LSE), (TICKER_JPGL_LSE, TICKER_JPGL_LSE), (TICKER_VWRA_LSE, TICKER_VWRA_LSE)]:
         try:
             r = retorno_etf_brl(ticker, inicio, fim, usd_brl_ini, usd_brl_fim)
             detalhes_etfs[nome] = r
@@ -776,11 +776,11 @@ def main():
 
     # Retorno HODL11
     try:
-        h_ini, h_fim = get_preco_mensal("HODL11.SA", inicio, fim)
-        detalhes_etfs["HODL11.SA"] = h_fim / h_ini - 1
+        h_ini, h_fim = get_preco_mensal(TICKER_HODL11_SA, inicio, fim)
+        detalhes_etfs[TICKER_HODL11_SA] = h_fim / h_ini - 1
     except Exception as e:
         print(f"  ⚠️  HODL11.SA: {e}")
-        detalhes_etfs["HODL11.SA"] = None
+        detalhes_etfs[TICKER_HODL11_SA] = None
 
     # Calcular retornos
     r_atual = metodo_dietz(pat_anterior, pat_atual, aportes)
@@ -804,7 +804,7 @@ def main():
 
     # Gatilhos
     hodl11_pct = args.hodl11_pct
-    if hodl11_pct is None and detalhes_etfs.get("HODL11.SA") is not None:
+    if hodl11_pct is None and detalhes_etfs.get(TICKER_HODL11_SA) is not None:
         hodl11_valor_aprox = pat_atual * 0.031  # estimativa; idealmente vem do Bookkeeper
         hodl11_pct = hodl11_valor_aprox / pat_atual
     alertas = verificar_gatilhos(hodl11_pct or 0.031, pat_atual)
