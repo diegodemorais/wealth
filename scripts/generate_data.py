@@ -133,6 +133,19 @@ def load_state():
     except Exception:
         return {}
 
+def load_binance_brl() -> float:
+    """Retorna total_brl das posições Binance (dados/binance/posicoes.json) ou fallback config."""
+    try:
+        p = ROOT / "dados" / "binance" / "posicoes.json"
+        if p.exists():
+            data = json.loads(p.read_text())
+            val = data.get("total_brl")
+            if val is not None and val == val:  # NaN guard
+                return float(val)
+    except Exception:
+        pass
+    return CRYPTO_LEGADO_BRL
+
 def read_holdings_taxas():
     """Parseia taxas IPCA+ 2040 e Renda+ 2065 do holdings.md."""
     taxa_ipca2040 = None
@@ -1639,7 +1652,7 @@ def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float, c
         rf_composicao[key] = round(valor)
 
     # Crypto legado (Binance: BTC/ETH/BNB/ADA — global, não Brasil soberano)
-    crypto_legado = load_state().get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
+    crypto_legado = load_state().get("crypto_legado_brl") or load_binance_brl()
 
     # Brasil = RF soberano + COE XP — crypto_legado removido (é cripto global)
     brasil_total = rf_total_brl + coe_net_brl
@@ -1944,7 +1957,7 @@ def compute_drift(posicoes, rf, hodl11_brl, cambio, coe_net_brl: float = 0.0):
     eq_usd = sum(p["qty"] * p.get("price", p.get("avg_cost", 0)) for p in posicoes.values())
     rf_brl = sum(v.get("valor", 0) for k, v in rf.items() if k != "hodl11")
     # Crypto legado: precisa estar consistente com concentracao_brasil
-    crypto_legado = load_state().get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
+    crypto_legado = load_state().get("crypto_legado_brl") or load_binance_brl()
     total  = eq_usd * cambio + rf_brl + hodl11_brl + crypto_legado + coe_net_brl
 
     # Bucket USD sums
@@ -3993,7 +4006,7 @@ def main():
         ],
 
         # Valores auxiliares para o dashboard (evitar hardcoded no template)
-        "cryptoLegado": CRYPTO_LEGADO_BRL,
+        "cryptoLegado": load_binance_brl(),
         "tlhGatilho":   TLH_GATILHO,
         "tax":          tax_data,     # IR diferido Lei 14.754/2023 (ETFs UCITS ACC)
         "passivos":     passivos_data,  # Hipoteca + IR diferido

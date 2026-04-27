@@ -1,0 +1,63 @@
+{
+  "_generated": "2026-04-27",
+  "_saldo_source": "2026-03-23",
+  "_cambio": 5.8,
+  "total_usd": 627.85,
+  "total_brl": 3641.53,
+  "holdings": [
+    {
+      "coin": "BTC",
+      "qty": 0.004359,
+      "qty_spot": 6e-06,
+      "qty_earn": 0.004353,
+      "price_usd": 76688.640625,
+      "value_usd": 334.29,
+      "value_brl": 1938.86
+    },
+    {
+      "coin": "ETH",
+      "qty": 0.067617,
+      "qty_spot": 0.000231,
+      "qty_earn": 0.067386,
+      "price_usd": 2275.530029,
+      "value_usd": 153.86,
+      "value_brl": 892.41
+    },
+    {
+      "coin": "BNB",
+      "qty": 0.205195,
+      "qty_spot": 0.205195,
+      "qty_earn": 0.0,
+      "price_usd": 621.299988,
+      "value_usd": 127.49,
+      "value_brl": 739.43
+    },
+    {
+      "coin": "ADA",
+      "qty": 48.392193,
+      "qty_spot": 48.392193,
+      "qty_earn": 0.0,
+      "price_usd": 0.2447,
+      "value_usd": 11.84,
+      "value_brl": 68.68
+    },
+    {
+      "coin": "ENA",
+      "qty": 2.771429,
+      "qty_spot": 2.771429,
+      "qty_earn": 0.0,
+      "price_usd": 0.1047,
+      "value_usd": 0.29,
+      "value_brl": 1.68
+    },
+    {
+      "coin": "ETHFI",
+      "qty": 0.189516,
+      "qty_spot": 0.189516,
+      "qty_earn": 0.0,
+      "price_usd": 0.426,
+      "value_usd": 0.08,
+      "value_brl": 0.47
+    }
+  ]
+}
