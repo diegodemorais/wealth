@@ -30,7 +30,7 @@ OUTPUT_DIR = Path(__file__).parent.parent / "dados"
 OUTPUT_FILE = OUTPUT_DIR / "tlh_lotes.json"
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import BUCKET_MAP, IR_ALIQUOTA
+from config import BUCKET_MAP, IR_ALIQUOTA, DATE_FORMAT_YMD
 
 # Classificação de ETFs
 ALVO = {"SWRD", "AVGS", "AVEM"}
