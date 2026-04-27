@@ -189,6 +189,27 @@ INSS_ANUAL           = _P.get("inss_anual",           18_000)
 INSS_INICIO_ANO_POS_FIRE = _P.get("inss_inicio_ano_pos_fire", 12)
 FIRE_P_THRESHOLD     = _P.get("p_threshold",          85.0)
 
+# Cenários Estendidos MC — Stagflation + Hyperinflation (fonte: IBKR-PHASE-3B)
+# Parâmetros em termos reais BRL. Equity -15% hiper = USD real + BRL dep parcial.
+CENARIOS_ESTENDIDOS = {
+    "stagflation": {
+        "label":              "Stagflation",
+        "retorno_equity_base": 0.00,    # equity flat (real BRL)
+        "retorno_ipca_plus":   0.045,   # IPCA+ taxa cai para 4.5% real
+        "ipca_anual":          0.10,    # IPCA 10% (afeta IR sobre equity)
+        "dep_brl_base":        0.005,   # depreciação BRL inalterada
+        "descricao":          "IPCA 10%, equity 0%, IPCA+ 4.5%",
+    },
+    "hyperinflation": {
+        "label":              "Hyperinflation",
+        "retorno_equity_base": -0.15,   # equity -15% real BRL (pior caso)
+        "retorno_ipca_plus":   0.03,    # IPCA+ taxa cai para 3% real
+        "ipca_anual":          0.15,    # IPCA 15% (afeta IR sobre equity)
+        "dep_brl_base":        0.08,    # BRL deprecia 8%/ano vs USD
+        "descricao":          "IPCA 15%, equity -15%, IPCA+ 3%, BRL -8%/a",
+    },
+}
+
 # Spending Smile (fonte: FR-spending-smile 2026-03-27)
 SPENDING_SMILE_GO_GO   = _P.get("spending_smile_go_go",   242_000)
 SPENDING_SMILE_SLOW_GO = _P.get("spending_smile_slow_go", 200_000)

@@ -68,6 +68,7 @@ from config import (
     GUARDRAILS_BANDA1_MIN, GUARDRAILS_BANDA2_MIN, GUARDRAILS_BANDA3_MIN,
     GUARDRAILS_CORTE1_PCT, GUARDRAILS_CORTE2_PCT, GUARDRAILS_PISO_PCT,
     GASTO_PISO, SAUDE_BASE,
+    CENARIOS_ESTENDIDOS,
     update_dashboard_state,
 )
 
@@ -525,6 +526,48 @@ def rebuild_fire_data(window_id: str = None):
     except Exception as e:
         print(f"  ⚠️ rebuild_fire_data: {e}")
     return
+
+
+# ─── Cenários Estendidos MC (stagflation + hyperinflation) ───────────────────
+def compute_extended_mc_scenarios(premissas_base: dict) -> dict:
+    """
+    Roda MC para cenários estendidos (stagflation + hyperinflation).
+    Override de parâmetros sobre premissas_base; demais permanentes.
+    Returns: {cenario: {p_sucesso_pct, descricao, params}} — nunca lança exceção.
+    """
+    results = {}
+    try:
+        import fire_montecarlo as fm
+        from pfire_transformer import canonicalize_pfire
+    except Exception as e:
+        print(f"  ⚠️ extended_mc: import falhou ({e})")
+        return {}
+
+    for nome, cfg in CENARIOS_ESTENDIDOS.items():
+        try:
+            premissas_mod = {**premissas_base,
+                             "retorno_equity_base": cfg["retorno_equity_base"],
+                             "retorno_ipca_plus":   cfg["retorno_ipca_plus"],
+                             "ipca_anual":          cfg["ipca_anual"],
+                             "dep_brl_base":        cfg["dep_brl_base"]}
+            resultado = fm.rodar_monte_carlo(premissas_mod, n_sim=10_000, cenario="base",
+                                             seed=42, strategy="guardrails")
+            canonical = canonicalize_pfire(resultado["p_sucesso"], source='mc')
+            results[nome] = {
+                "p_sucesso_pct": canonical.percentage,
+                "label":         cfg["label"],
+                "descricao":     cfg["descricao"],
+                "params": {
+                    "retorno_equity_base": cfg["retorno_equity_base"],
+                    "retorno_ipca_plus":   cfg["retorno_ipca_plus"],
+                    "ipca_anual":          cfg["ipca_anual"],
+                    "dep_brl_base":        cfg["dep_brl_base"],
+                },
+            }
+            print(f"  ✓ MC {cfg['label']}: P(FIRE)={canonical.pct_str}")
+        except Exception as e:
+            print(f"  ⚠️ MC {nome}: {e}")
+    return results
 
 
 # ─── 2. P(FIRE) + TORNADO ────────────────────────────────────────────────────
@@ -2949,6 +2992,49 @@ def main():
             print(f"  ⚠️ RF-2 falhou ({e}) — usando fallback (componente usa offsets)")
             pfire_base["percentiles"] = None
 
+    # Cenários Estendidos MC (stagflation + hyperinflation)
+    pfire_cenarios_estendidos: dict = {}
+    if not args.skip_scripts:
+        print("  ▶ Cenários Estendidos MC (stagflation + hyperinflation) ...")
+        try:
+            import fire_montecarlo as fm
+            pat_atual = float(state.get("patrimonio", {}).get("total_brl", 3_372_673.0))
+            premissas_ext_base = {
+                "patrimonio_atual":    pat_atual,
+                "aporte_mensal":       APORTE_MENSAL,
+                "custo_vida_base":     CUSTO_VIDA_BASE,
+                "horizonte_vida":      HORIZONTE_VIDA,
+                "idade_atual":         IDADE_ATUAL,
+                "idade_fire_alvo":     IDADE_CENARIO_BASE,
+                "idade_safe_harbor":   IDADE_CENARIO_BASE,
+                "anos_simulacao":      HORIZONTE_VIDA - IDADE_CENARIO_BASE,
+                "retorno_equity_base": RETORNO_EQUITY_BASE,
+                "retorno_ipca_plus":   RETORNO_IPCA_PLUS,
+                "volatilidade_equity": VOLATILIDADE_EQUITY,
+                "t_dist_df":           5,
+                "dep_brl_base":        DEP_BRL_BASE,
+                "dep_brl_favoravel":   DEP_BRL_FAVORAVEL,
+                "dep_brl_stress":      DEP_BRL_STRESS,
+                "adj_favoravel":       ADJ_FAVORAVEL,
+                "adj_stress":          ADJ_STRESS,
+                "pct_ipca_longo":      IPCA_LONGO_PCT,
+                "pct_ipca_curto":      IPCA_CURTO_PCT,
+                "pct_equity":          EQUITY_PCT,
+                "pct_cripto":          CRIPTO_PCT,
+                "ipca_anual":          IPCA_ANUAL,
+                "aplicar_ir_desacumulacao": True,
+                "anos_bond_pool":      BOND_TENT_META_ANOS,
+                "aliquota_ir_equity":  IR_ALIQUOTA,
+                "inss_anual":          INSS_ANUAL,
+                "inss_inicio_ano":     INSS_INICIO_ANO_POS_FIRE,
+                "vol_bond_pool":       EQUITY_PCT * VOLATILIDADE_EQUITY,
+                "patrimonio_gatilho":  PATRIMONIO_GATILHO,
+                "swr_gatilho":         SWR_GATILHO,
+            }
+            pfire_cenarios_estendidos = compute_extended_mc_scenarios(premissas_ext_base)
+        except Exception as e:
+            print(f"  ⚠️ cenários estendidos: {e}")
+
     # Backtest
     backtest_data = get_backtest()
 
@@ -4051,8 +4137,9 @@ def main():
         "pesosTarget": pesos_target,
         "pisos":      pisos,
 
-        "pfire_aspiracional":    pfire_aspiracional,
-        "pfire_base":    pfire_base,
+        "pfire_aspiracional":       pfire_aspiracional,
+        "pfire_base":              pfire_base,
+        "pfire_cenarios_estendidos": pfire_cenarios_estendidos,
         "premissas":  premissas,
         "guardrails": guardrails,
         "gasto_piso": gasto_piso,
