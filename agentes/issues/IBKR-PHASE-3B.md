@@ -60,18 +60,20 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 
 ### 3. MC Re-run com Cenários Estendidos (Stagflation + Hyperinflation)
 
-**O quê:** Rodar `fire_montecarlo.py` com 2 cenários adicionais:
-- **Stagflation:** IPCA +10%, Equity 0%, IPCA+ cai para 4.5%
-- **Hyperinflation:** IPCA +15%, Equity -15%, IPCA+ 3%, BRL -8%/a
+**Status:** ✅ RESOLVIDO COMPLETO (2026-04-27)
 
-**Status:** Premissas em carteira.md (HD-006), mas MC limitado a 3 cenários (base/fav/stress).
+**Implementado:**
+- `config.py`: `CENARIOS_ESTENDIDOS` dict com parâmetros stagflation + hyperinflation
+- `generate_data.py`: `compute_extended_mc_scenarios()` roda MC 10k simulações para cada cenário
+- `data.json`: `pfire_cenarios_estendidos` com p_sucesso_pct, label, descricao, params
 
-**Impacto:**
-- P(FIRE) em cada cenário
-- Dashboard stress scenarios card: "Base 78.8% | Fav 85% | Stress 72% | Stagflation 68% | Hyper 55%"
-- +0.3 audit score (OPO 1)
+**Resultados (base P(FIRE)=86.1%):**
+- Stagflation (equity 0%, IPCA+ 4.5%, IPCA 10%): **P(FIRE)=17.1%** (-69pp)
+- Hyperinflation (equity -15%, IPCA+ 3%, IPCA 15%, BRL -8%): **P(FIRE)=0.0%** (catastrófico)
 
-**Deps:** IBKR data (asset correlations em stress), MC recompile
+**Nota:** Cenários são worst-case permanentes (não transitórios). P(FIRE)=0% em hyperinflation é coerente — portfolio perde 15%/ano real em equity enquanto IPCA+ rende só 3%.
+
+**Deps:** Resolvido sem deps adicionais
 
 ---
 
@@ -141,9 +143,9 @@ Completar Phase 3a → Phase 3b: integração IBKR data + cenários stress esten
 - [x] ~~tax.ir_diferido_total_brl~~ (R$169,155 sobre 9 ETFs)
 - [x] ~~factor_signal~~ (AVGS vs SWRD YTD + since launch)
 - [x] ~~4 falhas schema-validation~~ (563/563 testes ✓)
-- [ ] Adicionar 2 cenários ao MC (stagflation + hyperinflation)
-- [ ] Re-rodar 10k simulações com cenários estendidos
-- [ ] Atualizar dashboard stress scenarios card
+- [x] ~~Adicionar 2 cenários ao MC (stagflation + hyperinflation)~~ (compute_extended_mc_scenarios())
+- [x] ~~Re-rodar 10k simulações com cenários estendidos~~ (Stagflation 17.1%, Hyper 0.0%)
+- [ ] Atualizar dashboard stress scenarios card (exibir pfire_cenarios_estendidos)
 - [x] ~~OPO 5: timestamps PTAX/RF/HODL11 em data.json~~ (ptax/rf/hodl11 _updated + factor_signal cache)
 - [ ] Changelog Phase 3b completo
 - [ ] Validar 10.0/10 final
