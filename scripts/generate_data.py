@@ -559,6 +559,8 @@ def get_pfire_tornado():
             "base": canonical_aspiracional.percentage,
             "fav": min(100, canonical_aspiracional.percentage + 3),  # Heurística: +3pp para otimista
             "stress": max(0, canonical_aspiracional.percentage - 8),  # Heurística: -8pp para stress
+            "source": canonical_aspiracional.source,
+            "is_canonical": canonical_aspiracional.is_canonical,
         }
         print(f"  ✓ Aspiracional (P@49): {canonical_aspiracional.pct_str} (canônico, source={canonical_aspiracional.source})")
     except Exception as e:
@@ -574,6 +576,8 @@ def get_pfire_tornado():
             "base": canonical_base.percentage,
             "fav": min(100, canonical_base.percentage + 3),  # Heurística: +3pp
             "stress": max(0, canonical_base.percentage - 8),  # Heurística: -8pp
+            "source": canonical_base.source,
+            "is_canonical": canonical_base.is_canonical,
         }
         print(f"  ✓ Base (P@53): {canonical_base.pct_str} (canônico, source={canonical_base.source})")
     except Exception as e:
