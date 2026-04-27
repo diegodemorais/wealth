@@ -2,10 +2,10 @@
 
 **ID**: PFIRE_PHASE4_DATA_GEN  
 **Dono**: Head  
-**Status**: 📋 Backlog  
+**Status**: ✅ Concluída  
 **Prioridade**: 🔴 Alta  
 **Criado em**: 2026-04-26  
-**Dias**: 0  
+**Concluída em**: 2026-04-27  
 
 ## Contexto
 

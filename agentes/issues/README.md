@@ -40,13 +40,13 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
 | DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta | ✅ IBKR posições carregam via ibkr_posicoes_sync (fallback chain) |
-| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | Head + Dev | 🔴 Alta | ✅ generate_data.py roda completo, data.json gerado com P(FIRE) |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | Bookkeeper + Dev + Quant | 🔴 Alta | ✅ Lotes históricos carregam, Flex Query merge implementado |
 
 ### Done — Últimas Issues Concluídas
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | 2026-04-27 | generate_data.py completo. pfire_base.source="mc", is_canonical=true. 563/563 testes. IR diferido R$169k, factor_signal populado. |
 | HD-ARCHITECT-P4 | Auto-Fix Suggestion Engine | 2026-04-27 | SuggestionEngine + --fix CLI. ast.Num bug fixed. Zero violations. 6 scripts refatorados, withdrawal_engine constants extraídas. |
 | HD-ARCHITECT | Guardião de Arquitetura & Centralizations | 2026-04-27 | P0–P4 completos. Zero hardcoding violations. Scanner, whitelist, config.py, 10+ scripts atualizados. |
 | HD-ARCHITECT-P3 | Refactor 323 Hardcoding Violations | 2026-04-27 | 323 violations refactored, zero remaining. Estate tax centralizado. React constants → data.json. |
