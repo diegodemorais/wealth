@@ -29,9 +29,10 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| HD-ARCHITECT | Guardião de Arquitetura & Centralizations | Head | 🔴 CRÍTICA | 🟩 Ativo — Auditoria P0 concluída |
+| HD-ARCHITECT | Guardião de Arquitetura & Centralizations | Head | 🔴 CRÍTICA | 🟩 Ativo — P3 refactoring em andamento |
 | HD-ARCHITECT-P0P1 | Implementação P0 & P1 — Automação + Validação | Architect + Head | 🔴 CRÍTICA | ✅ Done — P0 concluído, P1 pronto |
-| HD-ARCHITECT-P2 | Advanced Hardcoding Detection — AST + Grep | Architect | 🔵 Alta | ✅ Concluído — detector operacional, whitelist + docs |
+| HD-ARCHITECT-P2 | Advanced Hardcoding Detection — AST + Grep | Architect | 🔵 Alta | ✅ Concluído — 323 violations detectadas, P3 iniciado |
+| HD-ARCHITECT-P3 | Refactor 323 Hardcoding Violations | Head + Dev | 🔴 CRÍTICA | 🟦 Em Andamento — Mapeamento pronto, Dev tasks criadas |
 
 ### Blocked
 > Issues aguardando dependências externas
