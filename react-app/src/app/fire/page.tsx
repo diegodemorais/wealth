@@ -720,6 +720,54 @@ export default function FirePage() {
         />
       </CollapsibleSection>
 
+      {/* Stress Macroeconômico — Stagflation + Hyperinflation */}
+      {(() => {
+        const ext = (data as any)?.pfire_cenarios_estendidos as Record<string, { p_sucesso_pct: number; label: string; descricao: string }> | null | undefined;
+        if (!ext || Object.keys(ext).length === 0) return null;
+        const base = (data as any)?.pfire_base?.base as number | null;
+        const cenarios = [
+          { id: 'base',          label: 'Base',          descricao: 'Premissas HD-006',   pct: base,    cor: 'var(--green)' },
+          ...Object.entries(ext).map(([, v]) => ({
+            id: v.label,
+            label: v.label,
+            descricao: v.descricao,
+            pct: v.p_sucesso_pct,
+            cor: v.p_sucesso_pct >= 70 ? 'var(--yellow)' : 'var(--red)',
+          })),
+        ];
+        return (
+          <CollapsibleSection
+            id="section-stress-macro"
+            title={secTitle('fire', 'section-stress-macro', 'Stress Macroeconômico — Stagflation & Hyperinflation')}
+            defaultOpen={secOpen('fire', 'section-stress-macro', false)}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: 16 }}>
+                Cenários permanentes de stress extremo. P(FIRE) com mesmo patrimônio e estratégia atual.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {cenarios.map(c => (
+                  <div key={c.id} className="kpi" style={{ textAlign: 'center', padding: '12px 8px' }}>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      {c.label}
+                    </div>
+                    <div style={{ fontSize: '2rem', fontWeight: 700, color: c.cor, lineHeight: 1.1, marginBottom: 4 }}>
+                      {c.pct != null ? `${c.pct.toFixed(0)}%` : '—'}
+                    </div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.4 }}>
+                      {c.descricao}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="src" style={{ marginTop: 12 }}>
+                Cenários são permanentes (não transitórios) — worst-case para toda a fase de desacumulação. MC 10k simulações cada.
+              </div>
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
+
       {/* Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
       {(data as any)?.premissas?.tem_conjuge === true && (
         <>
