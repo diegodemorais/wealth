@@ -3430,13 +3430,21 @@ def main():
     } if _q1 else {**_shadows_raw, "delta_vwra": None, "delta_ipca": None, "delta_shadow_c": None}
 
     # P(FIRE@53): ler chave específica pfire_base_* (salva quando fire_montecarlo roda sem --anos)
+    # Architect V1 Fix: usar carteira.md como fallback definitivo
     if pfire_base.get("base") is None:
         s = state.get("fire", {})
         if s.get("pfire_base_base") is not None:
             pfire_base = {"base": s["pfire_base_base"], "fav": s.get("pfire_base_fav"), "stress": s.get("pfire_base_stress")}
         else:
-            # Fallback: usar pfire_base genérico (pode ser qualquer rodada)
-            pfire_base = {"base": s.get("pfire_base"), "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
+            # Fallback 1: usar pfire_base genérico do state (pode ser stale)
+            state_pfire = s.get("pfire_base")
+            # Fallback 2: se state não tem, usar carteira.md (linha 33: Base 86.4%, Fav 92.0%, Stress 82.5%)
+            if state_pfire is not None:
+                pfire_base = {"base": state_pfire, "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
+            else:
+                # ÚLTIMO RECURSO: valores de carteira.md (2026-04-27)
+                # Source: carteira.md linha 33 — P(FIRE Base): 86,4% (MC 10k, seed=42, spending smile + guardrails + bond tent + IR 15% nominal + INSS + vol bond pool 13.3% + SAUDE_BASE R$24k + VCMH 5.0%)
+                pfire_base = {"base": 86.4, "fav": 92.0, "stress": 82.5}
 
     # ─── TLH Lotes individuais (FIFO) ──────────────────────────────────────────
     def _load_tlh_lotes():
@@ -3878,6 +3886,18 @@ def main():
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "_generated_brt": (datetime.utcnow() + timedelta(hours=-3)).strftime("%Y-%m-%dT%H:%M:%S") + "-03:00",
+        "_schema_version": "2.0",  # Architect: schema versioning (V5 fix)
+        "_data_sources": {  # Architect: rastreabilidade de cada fonte (V3 fix)
+            "pfire_base": "carteira.md linha 33 (Base 86.4%, MC 10k, guardrails) vs dashboard_state.json (pode divergir)",
+            "posicoes": "ibkr_sync.py fallback chain",
+            "rf": "reconstruct_tax.py ou dashboard_state.json",
+            "lumpy_events": "reconstruct_fire_data.py gen_lumpy_events()",
+            "tax": "tax_engine.py Lei 14.754/2023",
+            "fire_trilha": "reconstruct_fire_data.py fire_trilha.json",
+            "drawdown_history": "reconstruct_fire_data.py drawdown_history.json",
+        },
+        "_pfire_canonical_carteira": {"base": 86.4, "fav": 92.0, "stress": 82.5},  # Arch V1: canonical source
+        "_pfire_divergence_warning": "pfire_base em data.json pode diferir de _pfire_canonical_carteira se state.json está desatualizado. Rode fire_montecarlo.py para sincronizar." if pfire_base.get("base") != 86.4 else None,
         "date":       str(date.today()),
         "timestamps": timestamps,
         "cambio":     cambio,

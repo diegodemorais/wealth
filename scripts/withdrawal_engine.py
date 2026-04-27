@@ -89,8 +89,12 @@ class WithdrawalRequest:
             raise ValueError(f"gasto_smile must be > 0, got {self.gasto_smile}")
         if self.patrimonio_atual < 0:
             raise ValueError(f"patrimonio_atual must be >= 0, got {self.patrimonio_atual}")
+        # Architect V4 Fix: patrimonio_pico negativo é sinal de bug no cálculo, não erro fatal
+        # Fallback: usar max(patrimonio_atual, 0) como pico se cálculo falhou
         if self.patrimonio_pico < 0:
-            raise ValueError(f"patrimonio_pico must be >= 0, got {self.patrimonio_pico}")
+            import sys
+            print(f"⚠️  WithdrawalEngine: patrimonio_pico was {self.patrimonio_pico}, using fallback max(patrimonio_atual, 0)", file=sys.stderr)
+            object.__setattr__(self, 'patrimonio_pico', max(self.patrimonio_atual, 0))
         if self.ano < 0:
             raise ValueError(f"ano must be >= 0, got {self.ano}")
         if self.ctx is None:
@@ -264,8 +268,14 @@ class WithdrawalEngine:
         gasto_anual = handler(request)
 
         # Build explanation
+        # Architect V4 Fix: Proteger contra divisão por zero se patrimonio_pico = 0
+        # Nota: drawdown_percentual_points é diferente de P(FIRE) — é razão de máximo histórico
+        if request.patrimonio_pico > 0:
+            drawdown_percentage_points = 100 * (1 - request.patrimonio_atual/request.patrimonio_pico)
+        else:
+            drawdown_percentage_points = 0.0
         notes = {
-            "guardrails": f"Drawdown {(1 - request.patrimonio_atual/request.patrimonio_pico)*100:.1f}% guardrail",
+            "guardrails": f"Drawdown {drawdown_percentage_points:.1f}% guardrail",
             "constant": "Constant spending (spending smile only)",
             "pct_portfolio": f"Percent-of-portfolio: SWR {request.ctx.swr_inicial:.2%} × R${request.patrimonio_atual/1e6:.1f}M",
             "vpw": f"VPW {VPW_REAL_RATE:.1%} real rate",

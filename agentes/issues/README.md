@@ -54,6 +54,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Componente | Data | Descrição | Link |
 |----|-----------|------|-----------|------|
+| HD-ARCHITECT | Data Integrity Fixes: Schema + Rastreabilidade | 2026-04-27 | _schema_version 2.0, _data_sources mapping, _pfire_canonical_carteira, patrimonio_pico fallback | [scripts/generate_data.py](https://github.com/diegodemorais/wealth/blob/main/scripts/generate_data.py) + [scripts/withdrawal_engine.py](https://github.com/diegodemorais/wealth/blob/main/scripts/withdrawal_engine.py) |
 | IBKR-PHASE-3B | Data Pipeline: Complete Audit & Fixes | 2026-04-27 | 14/14 data.json fields ✅. Fixed imports (DATE_FORMAT, TICKER_*), pandas compat, fire_matrix regen | [scripts/generate_data.py](https://github.com/diegodemorais/wealth/blob/main/scripts/generate_data.py) |
 | IBKR-PHASE-3B | reconstruct_fire_data.py + spending_analysis | 2026-04-27 | Added missing DATE_FORMAT imports; full JSON rebuild (fire_trilha, drawdown, fire_matrix) | [scripts/reconstruct_fire_data.py](https://github.com/diegodemorais/wealth/blob/main/scripts/reconstruct_fire_data.py) |
 | IBKR-PHASE-3B | spending_analysis.py — Import Fixes | 2026-04-27 | Fixed DATE_FORMAT_YM, DATE_FORMAT_YMD imports; full transaction analysis pipeline | [scripts/spending_analysis.py](https://github.com/diegodemorais/wealth/blob/main/scripts/spending_analysis.py) |
