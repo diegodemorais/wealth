@@ -230,29 +230,18 @@ export function SequenceOfReturnsRisk({
         color: 'var(--text)',
       }}>
         <div style={{ fontWeight: 700, fontSize: 'var(--text-base)', marginBottom: 8 }}>
-          Sequence of Returns Risk — Como o risco se propaga
+          Sequence of Returns Risk
         </div>
         <p style={{ margin: '0 0 10px' }}>
-          SoRR (Sequence of Returns Risk) descreve o perigo de mercados adversos
-          nos <strong>primeiros anos do FIRE</strong>. Karsten (ERN Part 28, 2016) demonstra
-          que retiradas durante queda forçam liquidação a preços deprimidos, reduzindo
-          permanentemente o capital produtivo — mesmo que o mercado se recupere depois.
-          Um bear market de &minus;30% no ano 1 reduz P(FIRE) em &minus;15,6pp (FR-spending-smile, 2026-03-27).
-        </p>
-        <p style={{ margin: '0 0 10px' }}>
-          A defesa primária é o <strong>bond pool</strong>: TD 2040 vence exatamente no FIRE
-          Day (&sim;R$1,9M BRL) + IPCA+ curto 3% comprado aos 50 (&sim;2 anos duration).
-          Saques vêm <em>do pool primeiro</em> — equity só é tocado quando o pool esgota
-          (FR-fire2040, 2026-03-27). Isso cria um período de imunização de 7 anos
-          enquanto o equity se recupera.
+          Um bear market nos <strong>primeiros anos do FIRE</strong> força venda de ativos
+          deprimidos para cobrir retiradas — destruindo capital que não se recupera
+          mesmo quando o mercado sobe depois (Karsten, ERN Part 28).
         </p>
         <p style={{ margin: 0 }}>
-          A defesa secundária é a <strong>interação P(FIRE) ↔ guardrails de drawdown</strong>
-          (FR-guardrails-p-fire-integração, 2026-04-25). As duas camadas são complementares:
-          guardrails reagem a quedas <em>observadas</em>; P(FIRE) gate anual
-          (janeiro) avalia a <em>trajetória prospectiva</em>. P(FIRE) {"<"} 80% é o sinal
-          de que os thresholds dos guardrails precisam ser apertados — não um gatilho
-          de corte automático.
+          Defesa em duas camadas: (1) <strong>bond pool</strong> — TD 2040 ~R$1,9M cobre os
+          saques dos primeiros 7 anos sem tocar equity; (2) <strong>guardrails de drawdown</strong>
+          cortam spending automaticamente se o equity cair, com o P(FIRE) gate anual
+          (janeiro) recalibrando os thresholds quando P{"<"}80%.
         </p>
       </div>
 

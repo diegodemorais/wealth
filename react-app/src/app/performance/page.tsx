@@ -60,6 +60,27 @@ export default function PerformancePage() {
         <PerformanceSummary data={safeData} />
       </section>
 
+      {/* 8. Retornos Mensais — Heatmap (logo após tabela anual para contexto temporal) */}
+      <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          <MonthlyReturnsHeatmap data={(() => {
+            if (safeData.monthly_returns && Object.keys(safeData.monthly_returns).length > 0) return safeData.monthly_returns;
+            const rm = (safeData as any).retornos_mensais;
+            if (rm?.dates && rm?.values) {
+              const result: Record<string, number> = {};
+              (rm.dates as string[]).forEach((d: string, i: number) => {
+                result[d] = (rm.values as number[])[i] / 100;
+              });
+              return result;
+            }
+            return {};
+          })()} />
+          <div className="src">
+            Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.
+          </div>
+        </div>
+      </CollapsibleSection>
+
       <SectionDivider label="Visão Geral" />
       {/* 1. Patrimônio — Evolução Histórica (moved first: contexto geral antes de análise) */}
       <section className="section" id="timelineSection">
@@ -549,28 +570,7 @@ export default function PerformancePage() {
       </CollapsibleSection>
 
       <SectionDivider label="Análise Técnica" />
-      {/* NOTE: Rolling Metrics, Fee Analysis, Heatmap all defaultOpen=false (collapsed) */}
-      {/* 8. Retornos Mensais — Heatmap (collapsible, collapsed) */}
-      <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          <MonthlyReturnsHeatmap data={(() => {
-            if (safeData.monthly_returns && Object.keys(safeData.monthly_returns).length > 0) return safeData.monthly_returns;
-            const rm = (safeData as any).retornos_mensais;
-            if (rm?.dates && rm?.values) {
-              const result: Record<string, number> = {};
-              (rm.dates as string[]).forEach((d: string, i: number) => {
-                result[d] = (rm.values as number[])[i] / 100;
-              });
-              return result;
-            }
-            return {};
-          })()} />
-          <div className="src">
-            Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.
-          </div>
-        </div>
-      </CollapsibleSection>
-
+      {/* NOTE: Rolling Metrics, Fee Analysis all defaultOpen=false (collapsed) */}
       {/* 9. Rolling Metrics Chart — superset (substitui RollingSharp) */}
       <CollapsibleSection id="section-rolling-metrics" title={secTitle('performance', 'rolling-metrics', 'Rolling Metrics — Sharpe / Sortino / Volatilidade')} defaultOpen={secOpen('performance', 'rolling-metrics', false)}>
         <div style={{ padding: '0 16px 16px' }}>
