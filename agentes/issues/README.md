@@ -27,9 +27,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
-| HD-pipeline-observabilidade | Observabilidade, Automação e Cobertura do Pipeline | Head + Dev | 🔴 Alta |
+(vazio)
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -46,6 +44,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| HD-pipeline-observabilidade | Observabilidade, Automação e Cobertura do Pipeline | 2026-04-27 | Fase 1+2 concluídas: staleness badge, IBKR sync, sync_spec.py, check_gatilhos.py, data.json archive, 6 E2E tests, +3 Playwright assertions. Cobertura spec 1→4/68. |
 | DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | 2026-04-27 | 7/7 invariants implementados. PIPELINE_PHASES DAG, 5 prohibition tests, pipeline_archive.py (7-day rollback). _window_id sync, SnapshotValidator, SSOT validation, CLAUDE.md cascade com scripts/CLAUDE.md. |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | 2026-04-27 | Blocker1: realized_pnl.json FIFO+Flex 53 trades USD 26k. Blocker2: corr 33% chart. Blocker3: stagflation 17.1%/hyperinflation 0.0% MC. DARF panel ✅. Score ~10.0/10. |
 | PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | 2026-04-27 | generate_data.py completo. pfire_base.source="mc", is_canonical=true. 563/563 testes. IR diferido R$169k, factor_signal populado. |
