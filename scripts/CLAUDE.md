@@ -34,7 +34,8 @@ Nunca editar `config.py` diretamente para parâmetros financeiros.
 
 ## Invariantes
 
-- Zero hardcoded em `generate_data.py` — parâmetros vêm de `config.py` / `carteira_params.json`
+- **Zero hardcoded em QUALQUER script Python do pipeline** — parâmetros financeiros (pesos, taxas, durações, volatilidades, thresholds) vêm de `config.py`, `carteira_params.json` ou do `data` dict passado à função. Isso inclui scripts auxiliares (`risk_metrics.py`, `reconstruct_fire_data.py`, etc.), não só `generate_data.py`.
+- Constantes numéricas financeiras hardcoded são bug — devem ser extraídas do data.json ou ter fallback explícito documentado com origem (ex: `# fallback carteira.md 2026-04-28`)
 - Todo campo gerado para o dashboard precisa de assertion de schema em `generate_data.py` (bloqueia se nulo)
 - Outputs são JSON — validar estrutura antes de salvar
 
