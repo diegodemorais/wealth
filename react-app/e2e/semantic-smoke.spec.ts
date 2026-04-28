@@ -630,6 +630,12 @@ test.describe('Tier1 gaps — Portfolio tab', () => {
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
 
+  // Gap U: Factor Value Spread widget
+  test('factor-value-spread widget is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="factor-value-spread"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
   // Gap E: Exposição Geográfica (renamed from geo-donut)
   test('exposicao-geografica is visible', async ({ page }) => {
     const el = page.locator('[data-testid="exposicao-geografica"]');

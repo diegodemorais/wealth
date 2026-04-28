@@ -207,6 +207,110 @@ def factors() -> dict:
         return {"error": str(e)}
 
 
+def factor_value_spread() -> dict:
+    """Calcula proxy de value spread para AVGS usando AQR HML Devil Monthly.
+
+    HML_AVGS(t) = 0.58 × HML_Devil_USA(t) + 0.42 × HML_Devil_GlobalExUS(t)
+    SMB_AVGS(t) = 0.58 × SMB_US_KF(t) + 0.42 × SMB_DevExUS_KF(t)
+    SV_proxy(t) = HML_AVGS(t) + SMB_AVGS(t)
+
+    Pesos 0.58/0.42 vêm de proxies-canonicos.md (universo global SC).
+    Percentis calculados sobre série pós-alinhamento (~1991–hoje).
+    """
+    import io
+    import requests
+    import pandas as pd
+    from getfactormodels import FamaFrenchFactors
+
+    # ─── 1. AQR HML Devil ────────────────────────────────────────────────────
+    AQR_URL = (
+        "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/"
+        "The-Devil-in-HMLs-Details-Factors-Monthly.xlsx"
+    )
+    r = requests.get(AQR_URL, timeout=60)
+    r.raise_for_status()
+
+    # Row 18 (0-indexed) = column headers; row 19+ = data
+    df_raw = pd.read_excel(io.BytesIO(r.content), sheet_name="HML Devil", header=None)
+    header_row = 18
+    df_hml = df_raw.iloc[header_row:].copy()
+    df_hml.columns = df_raw.iloc[header_row].tolist()
+    df_hml = df_hml.iloc[1:].reset_index(drop=True)  # remove duplicated header row
+    df_hml = df_hml.rename(columns={df_hml.columns[0]: "DATE"})
+
+    df_hml["DATE"] = pd.to_datetime(df_hml["DATE"], errors="coerce")
+    df_hml = df_hml.dropna(subset=["DATE"])
+    df_hml = df_hml.set_index("DATE").sort_index()
+
+    hml_usa = df_hml["USA"].astype(float)
+    hml_exus = df_hml["Global Ex USA"].astype(float)
+
+    # ─── 2. Ken French SMB — US and Developed ex-US ──────────────────────────
+    ff_us = FamaFrenchFactors(model="5", frequency="m", region="us").load().to_pandas()
+    ff_dev = FamaFrenchFactors(model="5", frequency="m", region="developed").load().to_pandas()
+
+    # KF delivers in % with datetime.date index; normalize to Timestamp month-end
+    def _to_month_end_ts(series: "pd.Series") -> "pd.Series":
+        idx = pd.to_datetime(series.index) + pd.offsets.MonthEnd(0)
+        return series.set_axis(idx)
+
+    smb_us  = _to_month_end_ts(ff_us["SMB"].astype(float))  / 100.0
+    smb_dev = _to_month_end_ts(ff_dev["SMB"].astype(float)) / 100.0
+
+    # ─── 3. Alinha índice ao período de overlap (≥1991) ──────────────────────
+    W_US, W_DEV = 0.58, 0.42  # proxies-canonicos.md — universo global SC
+    common = hml_usa.index.intersection(hml_exus.index).intersection(smb_us.index).intersection(smb_dev.index)
+    common = common[common >= pd.Timestamp("1991-01-01")]
+
+    hml_comp = W_US * hml_usa.loc[common] + W_DEV * hml_exus.loc[common]
+    smb_comp = W_US * smb_us.loc[common]  + W_DEV * smb_dev.loc[common]
+    sv_proxy = hml_comp + smb_comp
+
+    # ─── 4. Rolling 36-month sum → 3-month moving average ────────────────────
+    hml_roll36 = hml_comp.rolling(36).sum()
+    sv_roll36  = sv_proxy.rolling(36).sum()
+    hml_3m_ma  = hml_roll36.rolling(3).mean()
+    sv_3m_ma   = sv_roll36.rolling(3).mean()
+
+    hml_valid = hml_3m_ma.dropna()
+    sv_valid  = sv_3m_ma.dropna()
+
+    hml_current = float(hml_valid.iloc[-1])
+    sv_current  = float(sv_valid.iloc[-1])
+
+    pct_hml = float((hml_valid < hml_current).mean() * 100)
+    pct_sv  = float((sv_valid  < sv_current).mean()  * 100)
+
+    # ─── 5. Status semáforo (based on SV proxy as primary metric) ────────────
+    if pct_sv > 75:
+        status, label = "wide", "Value Barato"
+    elif pct_sv < 25:
+        status, label = "compressed", "Value Comprimido"
+    else:
+        status, label = "neutral", "Neutro"
+
+    last_date = hml_valid.index[-1].strftime("%Y-%m")
+    hist_start = hml_valid.index[0].strftime("%Y-%m")
+
+    return {
+        "hml_composite_3m_pct": round(hml_current * 100, 4),
+        "sv_proxy_3m_pct":      round(sv_current  * 100, 4),
+        "percentile_hml": round(pct_hml, 1),
+        "percentile_sv":  round(pct_sv,  1),
+        "status":         status,
+        "status_label":   label,
+        "weights":        {"us": W_US, "dev_ex_us": W_DEV},
+        "source_hml":     "AQR HML Devil Monthly",
+        "source_smb":     "Ken French FF5 (US + Developed)",
+        "history_start":  hist_start,
+        "last_updated":   last_date,
+        "note": (
+            "HML timely (AQR). SMB via KF. Pesos = universo global SC "
+            "(proxies-canonicos.md). Rolling 36m sum → 3m MA."
+        ),
+    }
+
+
 def etfs() -> dict:
     """Preços de ETFs da carteira via yfinance."""
     try:
@@ -248,6 +352,7 @@ def main():
     parser.add_argument("--tesouro", action="store_true", help="Taxas IPCA+, Renda+, NTN-B ANBIMA")
     parser.add_argument("--factors", action="store_true", help="FF5 últimos 12 meses")
     parser.add_argument("--etfs", action="store_true", help="Preços ETFs da carteira")
+    parser.add_argument("--value-spread", action="store_true", help="Factor value spread AVGS (AQR HML Devil + KF SMB)")
     parser.add_argument("--all", action="store_true", help="Tudo acima")
     args = parser.parse_args()
 
@@ -266,6 +371,8 @@ def main():
         output["factors"] = factors()
     if args.all or args.etfs:
         output["etfs"] = etfs()
+    if args.all or args.value_spread:
+        output["factor_value_spread"] = factor_value_spread()
 
     json.dump(output, sys.stdout, indent=2, ensure_ascii=False, default=str)
     print()

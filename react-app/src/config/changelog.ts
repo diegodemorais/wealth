@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — Gap U: Factor Value Spread widget (AQR HML Devil, proxy 58/42) ──
+  { datetime: '2026-04-28T23:00:00', type: 'dado', component: 'Factor Value Spread', tab: 'portfolio', anchor: '', de: '—', para: 'widget semáforo value spread AVGS — AQR HML Devil + KF SMB, proxy 58/42, status P42 neutro (wide >P75, compressed <P25)' },
   // ── 2026-04-28 — ContributionReturnsCrossover: EC colors + axis theme padrão ──
   { datetime: '2026-04-28T22:45:00', type: 'visual', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'CSS vars (var(--muted), var(--yellow)) nas séries e eixos sem theme padrão', para: 'EC.muted / EC.yellow (hex canvas-safe), EC_AXIS_LINE + EC_SPLIT_LINE + EC_TOOLTIP + EC_AXIS_LABEL em todos os eixos' },
   // ── 2026-04-28 — ContributionReturnsCrossover: UI fixes (tooltip K, legenda bottom, banda, label) ──

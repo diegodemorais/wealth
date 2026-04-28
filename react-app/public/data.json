@@ -14504,5 +14504,24 @@
       ]
     ],
     "nota": "Stress = meses com retorno BRL < -5%. Proxy equity = TWR USD (carteira total, não ETF individual). Limitação: sem retornos separados por ETF."
+  },
+  "factor": {
+    "value_spread": {
+      "hml_composite_3m_pct": 0.4094,
+      "sv_proxy_3m_pct": 0.2125,
+      "percentile_hml": 42.3,
+      "percentile_sv": 42.3,
+      "status": "neutral",
+      "status_label": "Neutro",
+      "weights": {
+        "us": 0.58,
+        "dev_ex_us": 0.42
+      },
+      "source_hml": "AQR HML Devil Monthly",
+      "source_smb": "Ken French FF5 (US + Developed)",
+      "history_start": "1994-02",
+      "last_updated": "2026-02",
+      "note": "HML timely (AQR). SMB via KF. Pesos = universo global SC (proxies-canonicos.md). Rolling 36m sum → 3m MA."
+    }
   }
 }

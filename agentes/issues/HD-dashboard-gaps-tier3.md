@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-dashboard-gaps-tier3 |
 | **Dono** | Head + Time |
-| **Status** | Em andamento (T fechado; U/V/W pendentes) |
+| **Status** | Em andamento (T e U fechados; V/W pendentes) |
 | **Prioridade** | Baixa |
 | **Participantes** | Factor, RF, FIRE, Macro, Quant, Fact-Checker |
 | **Co-sponsor** | Dev (implementação após decisão) |
@@ -126,6 +126,6 @@ Critério Tier 3: metodologia controversa, dados externos não disponíveis, ou 
 ## Próximos Passos
 
 - [x] Gap T — fechado sem implementação (bloqueio: guardrails não separam saúde de lifestyle)
-- [ ] Gap U (valuation spreads) — verificar fonte pública via Fact-Checker
+- [x] Gap U (valuation spreads) — **RESOLVIDO 2026-04-28**: AQR HML Devil Monthly (URL pública sem auth). Proxy AVGS = HML 58/42 + KF SMB. Widget semáforo implementado em Portfolio tab. Status atual: P42 neutro.
 - [ ] Gap V (imóvel) — aguarda input de Diego sobre intenção futura com imóvel e terreno
 - [ ] Gap W (tracking error) — pode ser discutido junto com Gap H (factor drought) do Tier 1

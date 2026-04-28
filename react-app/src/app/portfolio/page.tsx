@@ -188,6 +188,68 @@ export default function PortfolioPage() {
         );
       })()}
 
+      {/* Gap U: Factor Value Spread — AQR HML Devil + KF SMB */}
+      {(() => {
+        const fvs = (data as any)?.factor?.value_spread;
+        if (!fvs) return null;
+        const status: string = fvs.status ?? 'neutral';
+        const pctSv: number = fvs.percentile_sv ?? 0;
+        const svPct: number = fvs.sv_proxy_3m_pct ?? 0;
+        const lastUpdated: string = fvs.last_updated ?? '';
+        const statusColor =
+          status === 'wide'       ? 'var(--green)'  :
+          status === 'compressed' ? 'var(--red)'    : 'var(--yellow)';
+        const label: string = fvs.status_label ?? 'Neutro';
+        return (
+          <div
+            data-testid="factor-value-spread"
+            style={{
+              background: 'var(--card)',
+              border: `1px solid ${statusColor}40`,
+              borderLeft: `3px solid ${statusColor}`,
+              borderRadius: 'var(--radius-sm)',
+              padding: '10px 16px',
+              marginBottom: 12,
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 16,
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Factor Value Spread — AVGS</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 800, color: statusColor }}>
+                {label}
+              </div>
+            </div>
+            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Percentil HML</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)' }}>
+                P{Math.round(fvs.percentile_hml ?? 0)}
+              </div>
+            </div>
+            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Percentil SV</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: statusColor }}>
+                P{Math.round(pctSv)}
+              </div>
+            </div>
+            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>SV Proxy Rolling 36m</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: svPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                {svPct >= 0 ? '+' : ''}{svPct.toFixed(2)}%/mês
+              </div>
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', width: '100%', marginTop: -4 }}>
+              AVGS · AQR HML Devil + KF SMB · Pesos 58/42 · {lastUpdated} · wide &gt;P75 · compressed &lt;P25
+            </div>
+          </div>
+        );
+      })()}
+
       {/* 2b. Drift Intra-Equity — SWRD / AVGS / AVEM */}
       {data?.drift && (() => {
         // Threshold constants (mirror dataWiring.ts)

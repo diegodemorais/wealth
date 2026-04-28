@@ -93,6 +93,24 @@ Fatores: value + momentum + quality + low volatility + size (inverse-vol weighte
 
 ---
 
+## Factor Data — Fontes Primárias
+
+> Aprovado em 2026-04-28 (Gap U — HD-dashboard-gaps-tier3).
+
+| Fator | Fonte | Motivo |
+|-------|-------|--------|
+| HML (value spread) | **AQR HML Devil Monthly** — `The-Devil-in-HMLs-Details-Factors-Monthly.xlsx` | B/M contemporâneo (timely) — supera HML Fama-French que usa B/M lagged |
+| SMB (size spread) | **Ken French FF5** — `getfactormodels` (region=us/developed) | AQR Devil não provê SMB; KF é fonte canônica para size |
+| Proxy AVGS | `HML_AVGS = 0.58 × HML_Devil_USA + 0.42 × HML_Devil_GlobalExUS` | Pesos = universo global SC (proxies-canonicos.md), NÃO etf_composition.json |
+| | `SMB_AVGS = 0.58 × SMB_US_KF + 0.42 × SMB_DevExUS_KF` | |
+| | `SV_proxy = HML_AVGS + SMB_AVGS` | Small-value proxy para AVGS |
+
+Script: `scripts/market_data.py --value-spread`
+Cache: `dados/factor_cache.json` → chave `factor_value_spread`
+Export: `data.json` → `factor.value_spread`
+
+---
+
 ## Critérios de validação de proxy
 
 Validação obrigatória em USD, retornos mensais, no período de overlap entre proxy e ETF real.

@@ -21,6 +21,23 @@ Enforcement real: assertions de schema em `generate_data.py` bloqueiam output in
 
 Catálogo completo de scripts: `agentes/referencia/scripts.md`
 
+## Dados em tempo real — market_data.py
+
+```bash
+python3 scripts/market_data.py --macro-br        # Selic, IPCA, PTAX
+python3 scripts/market_data.py --macro-us        # Fed Funds, Treasury, VIX
+python3 scripts/market_data.py --tesouro         # Taxas ANBIMA
+python3 scripts/market_data.py --etfs            # SWRD/AVGS/AVEM/HODL11
+python3 scripts/market_data.py --factors         # FF5 últimos 12 meses
+python3 scripts/market_data.py --value-spread    # Factor value spread AVGS (AQR HML Devil + KF SMB — fonte primária de HML)
+python3 scripts/market_data.py --all             # Tudo acima
+```
+
+**Fontes de factor data:**
+- HML: **AQR HML Devil Monthly** (B/M contemporâneo, timely) — URL pública sem auth
+- SMB: **Ken French FF5** via `getfactormodels` (US + Developed) — fallback se AQR indisponível
+- Cache: `dados/factor_cache.json` → chave `factor_value_spread`
+
 ## Fluxo de dados
 
 ```

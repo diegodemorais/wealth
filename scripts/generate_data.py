@@ -3691,6 +3691,47 @@ def compute_correlation_stress(retornos_mensais_data: dict) -> dict | None:
     }
 
 
+# ─── Gap U: Factor Value Spread (AQR HML Devil + KF SMB) ─────────────────────
+def get_factor_value_spread() -> dict | None:
+    """Carrega factor value spread de factor_cache.json ou computa via market_data.
+
+    Salva resultado em factor_cache.json sob chave 'factor_value_spread'.
+    Retorna None em caso de falha (sem bloquear pipeline).
+    """
+    # Tentar cache primeiro
+    if FACTOR_CACHE.exists():
+        try:
+            cache = json.loads(FACTOR_CACHE.read_text())
+            if "factor_value_spread" in cache:
+                print("  ✓ factor_value_spread (cache)")
+                return cache["factor_value_spread"]
+        except Exception:
+            pass
+
+    print("  ▶ factor value spread (AQR HML Devil + KF SMB) ...")
+    try:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from market_data import factor_value_spread as _compute
+        result = _compute()
+
+        # Persistir no cache
+        try:
+            cache: dict = {}
+            if FACTOR_CACHE.exists():
+                cache = json.loads(FACTOR_CACHE.read_text())
+            cache["factor_value_spread"] = result
+            FACTOR_CACHE.parent.mkdir(exist_ok=True)
+            FACTOR_CACHE.write_text(json.dumps(cache, indent=2))
+            print(f"  ✓ factor_value_spread salvo → {FACTOR_CACHE.relative_to(ROOT)}")
+        except Exception as e:
+            print(f"  ⚠️ factor_value_spread cache write: {e}")
+
+        return result
+    except Exception as e:
+        print(f"  ⚠️ factor_value_spread: {e}")
+        return None
+
+
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
 def main():
     print("📊 generate_data.py — iniciando")
@@ -5305,6 +5346,17 @@ def main():
     assert data.get("correlation_stress") is not None, \
         "correlation_stress missing — retornos_mensais insuficiente"
     print(f"  ✓ Gap P correlation_stress: n_stress={correlation_stress.get('n_stress_months')} meses | equity-RF normal={correlation_stress.get('correlacoes_normais', {}).get('equity_rf')}")
+
+    # Gap U: Factor Value Spread (AQR HML Devil + KF SMB)
+    # Non-blocking: se falhar, exporta None (componente React trata gracefully)
+    _fvs = get_factor_value_spread()
+    if "factor" not in data or not isinstance(data.get("factor"), dict):
+        data["factor"] = {}
+    data["factor"]["value_spread"] = _fvs
+    if _fvs:
+        print(f"  ✓ Gap U factor_value_spread: SV={_fvs.get('sv_proxy_3m_pct')}% pct={_fvs.get('percentile_sv')} status={_fvs.get('status')}")
+    else:
+        print("  ⚠️ Gap U factor_value_spread: None (componente desativado no dashboard)")
 
     # ─── Limpar NaN valores antes de escrever JSON ──────────────────────────────────
     # Python's NaN can't be serialized to JSON. Replace with None.
