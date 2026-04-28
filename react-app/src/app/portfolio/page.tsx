@@ -264,26 +264,38 @@ export default function PortfolioPage() {
               borderRadius: 'var(--radius-sm)',
               padding: '10px 16px',
               marginBottom: 12,
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 8 }}>
               <div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>
                   Tracking Error Rolling 12m — AVGS vs SWRD
                 </div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 800, color: statusColor }}>
                   {latestDiff >= 0 ? '+' : ''}{latestDiff.toFixed(2)}pp
-                  <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--muted)', marginLeft: 8 }}>
-                    {droughtLabel}
-                  </span>
                 </div>
               </div>
-              <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'right', lineHeight: 1.5 }}>
-                Amarelo ≤{thresholdYellow}pp · Vermelho ≤{thresholdRed}pp<br />
-                {dates.length} pontos · janela 12m
+              <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Drought atual</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: droughtMonths === 0 ? 'var(--green)' : 'var(--yellow)' }}>
+                  {droughtLabel}
+                </div>
+              </div>
+              <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Pontos</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)' }}>
+                  {dates.length} · janela 12m
+                </div>
               </div>
             </div>
             <EChart option={chartOption} style={{ height: 160 }} />
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', width: '100%', marginTop: -4 }}>
+              Amarelo ≤{thresholdYellow}pp · Vermelho ≤{thresholdRed}pp
+            </div>
           </div>
         );
       })()}
