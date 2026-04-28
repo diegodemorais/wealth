@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — Header: restaurar ícone Hammer na version pill ──
+  { datetime: '2026-04-28T23:25:00', type: 'visual', component: 'Header — Version Pill', tab: 'now', anchor: '', de: 'sem ícone', para: 'ícone Hammer (9px) restaurado na tag de versão/build — perdido no merge da version pill' },
   // ── 2026-04-28 — Gap V: Projeção de Ativos Não-Financeiros (imóvel + terreno) ──
   { datetime: '2026-04-28T23:30:00', type: 'dado', component: 'Ativos Não-Financeiros — Projeção de Venda', tab: 'assumptions', anchor: 'non-financial-assets', de: '—', para: 'seção Gap V: imóvel (venda 2027, equity ~R$367k, IR 15%, FV@FIRE) + terreno (venda 2031, equity ~R$127.5k), total FV consolidado — upside não incluído no P(FIRE) baseline' },
   // ── 2026-04-28 — Gap U: Factor Value Spread widget (AQR HML Devil, proxy 58/42) ──
