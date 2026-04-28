@@ -129,6 +129,65 @@ export default function PortfolioPage() {
       </div>
 
       <SectionDivider label="Alocação & Drift" />
+
+      {/* Gap H: Factor Drought Counter — badge AVGS vs SWRD */}
+      {(() => {
+        const fs = (data as any)?.factor_signal;
+        if (!fs) return null;
+        const excessYtd: number = fs.excess_ytd_pp ?? 0;
+        const excessSinceLaunch: number = fs.excess_since_launch_pp ?? 0;
+        const mesesDesde: number = Math.round(fs.meses_desde_launch ?? 0);
+        const avgsLaunchDate: string = fs.avgs_launch_date ?? '';
+        // Drought = meses de underperformance consecutiva. Se excess > 0 atualmente, drought = 0.
+        // Use backtest_r7.factor_drought for historical context (max drought = 153m).
+        const maxMesesHistorico: number = (data as any)?.backtest_r7?.factor_drought?.max_meses ?? 153;
+        // Current drought: approximation — if excess_since_launch >= 0, AVGS is ahead; no drought right now.
+        const droughtAtual = excessSinceLaunch >= 0 ? 0 : mesesDesde;
+        const droughtStatus = droughtAtual === 0 ? 'verde' : droughtAtual < 12 ? 'verde' : droughtAtual < 24 ? 'amarelo' : 'vermelho';
+        const droughtColor = droughtStatus === 'verde' ? 'var(--green)' : droughtStatus === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+        return (
+          <div
+            data-testid="factor-drought-counter"
+            style={{
+              background: 'var(--card)',
+              border: `1px solid ${droughtColor}40`,
+              borderLeft: `3px solid ${droughtColor}`,
+              borderRadius: 'var(--radius-sm)',
+              padding: '10px 16px',
+              marginBottom: 12,
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 16,
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Factor Drought — AVGS vs SWRD</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 800, color: droughtColor }}>
+                {droughtAtual === 0 ? 'Sem drought' : `${droughtAtual}m underperformance`}
+              </div>
+            </div>
+            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Excess YTD</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: excessYtd >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                {excessYtd >= 0 ? '+' : ''}{excessYtd.toFixed(2)}pp
+              </div>
+            </div>
+            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Excess Desde Lançamento</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: excessSinceLaunch >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                {excessSinceLaunch >= 0 ? '+' : ''}{excessSinceLaunch.toFixed(2)}pp · {mesesDesde}m
+              </div>
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', width: '100%', marginTop: -4 }}>
+              Desde {avgsLaunchDate} · Pior drought histórico: {maxMesesHistorico}m · Threshold: verde &lt;12m · amarelo 12–24m · vermelho &gt;24m
+            </div>
+          </div>
+        );
+      })()}
+
       {/* 2b. Drift Intra-Equity — SWRD / AVGS / AVEM */}
       {data?.drift && (() => {
         // Threshold constants (mirror dataWiring.ts)
@@ -240,7 +299,7 @@ export default function PortfolioPage() {
 
       {/* 3. Exposição Geográfica — via ETFRegionComposition (mais detalhado; DonutCharts removido por redundância) */}
       {/* 4. Composição por Região — ETFs da Carteira (collapsible) */}
-      <div data-testid="geo-donut">
+      <div data-testid="exposicao-geografica">
       <CollapsibleSection
         id="section-etf-region"
         title={secTitle('portfolio', 'etf-region')}
@@ -366,6 +425,66 @@ export default function PortfolioPage() {
       })()}
 
       <SectionDivider label="Renda Fixa & Cripto" />
+
+      {/* Gap D: Widget Gatilho Renda+ 2065 */}
+      {(() => {
+        const rp = (data as any)?.dca_status?.renda_plus;
+        if (!rp) return null;
+        const taxaAtual: number = rp.taxa_atual ?? 0;
+        const pisoCompra: number = rp.piso_compra ?? 6.5;
+        const pisoVenda: number = rp.piso_venda ?? 6.0;
+        const gapPp: number = rp.gap_pp ?? 0; // distância para piso compra
+        const dcaAtivo: boolean = rp.ativo ?? false;
+        // Status: verde=longe, amarelo=dentro de 50bps, vermelho=abaixo do piso compra
+        const rendaStatus = taxaAtual < pisoVenda ? 'vermelho' : taxaAtual < pisoCompra ? 'amarelo' : gapPp <= 0.5 ? 'amarelo' : 'verde';
+        const rendaColor = rendaStatus === 'verde' ? 'var(--green)' : rendaStatus === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+        const gapParaGatilho = taxaAtual - pisoCompra; // positivo = acima do gatilho de compra
+        return (
+          <div
+            data-testid="renda-plus-gatilho"
+            style={{
+              background: 'var(--card)',
+              border: `1px solid ${rendaColor}40`,
+              borderLeft: `3px solid ${rendaColor}`,
+              borderRadius: 'var(--radius-sm)',
+              padding: '12px 16px',
+              marginBottom: 12,
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 16,
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Renda+ 2065 — Taxa Atual</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: rendaColor }}>{taxaAtual.toFixed(2)}%</div>
+            </div>
+            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gatilho DCA (compra)</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)' }}>≥ {pisoCompra.toFixed(1)}%</div>
+            </div>
+            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Distância do Gatilho</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: rendaColor }}>
+                {gapParaGatilho >= 0 ? '+' : ''}{(gapParaGatilho * 100).toFixed(0)}bps
+              </div>
+            </div>
+            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Status DCA</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: dcaAtivo ? 'var(--green)' : 'var(--muted)' }}>
+                {dcaAtivo ? '● Ativo' : '○ Pausado'}
+              </div>
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', width: '100%', marginTop: -4 }}>
+              Gatilho venda: ≤{pisoVenda.toFixed(1)}% · {rp.proxima_acao ?? ''}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* 8. Renda Fixa */}
       <RFCryptoComposition />
 

@@ -53,8 +53,46 @@ export default function PerformancePage() {
   if (stateEl) return stateEl;
   const safeData = data!;
 
+  // Gap J: Drawdown Context Banner data
+  const ddHistory = (safeData as any)?.drawdown_history ?? {};
+  const ddPctList: number[] = ddHistory.drawdown_pct ?? [];
+  const ddAtual: number = ddPctList.length > 0 ? ddPctList[ddPctList.length - 1] : 0;
+  const ddAtualAbs = Math.abs(ddAtual);
+  const showDrawdownBanner = ddAtualAbs > 5;
+  const ddGuardrailAtivo = (safeData as any)?.spending_guardrails?.zona !== 'normal';
+  const ddGuardrailZona: string = (safeData as any)?.spending_guardrails?.zona ?? 'normal';
+
   return (
     <div>
+      {/* Gap J: Drawdown Context Banner — aparece quando drawdown atual > 5% */}
+      {showDrawdownBanner && (
+        <div
+          data-testid="drawdown-context-banner"
+          style={{
+            background: ddAtualAbs >= 25 ? 'rgba(239,68,68,0.08)' : ddAtualAbs >= 15 ? 'rgba(234,179,8,0.08)' : 'rgba(248,113,113,0.06)',
+            border: `1px solid ${ddAtualAbs >= 25 ? 'rgba(239,68,68,0.4)' : 'rgba(234,179,8,0.4)'}`,
+            borderRadius: 'var(--radius-sm)',
+            padding: '12px 16px',
+            marginBottom: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 14,
+            flexWrap: 'wrap',
+          }}
+        >
+          <span style={{ fontSize: 22 }}>{ddAtualAbs >= 25 ? '🔴' : ddAtualAbs >= 15 ? '🟡' : '🟠'}</span>
+          <div>
+            <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: ddAtualAbs >= 25 ? 'var(--red)' : 'var(--yellow)' }}>
+              Drawdown Ativo: {privacyMode ? '••%' : `${ddAtual.toFixed(1)}%`}
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+              {ddGuardrailAtivo ? `Guardrail ativo — zona: ${ddGuardrailZona}` : 'Guardrail: zona normal'} ·
+              Ação: {ddAtualAbs >= 35 ? 'corte de 28% (piso)' : ddAtualAbs >= 25 ? 'corte 20%' : ddAtualAbs >= 15 ? 'corte 10%' : 'monitorar · hold'}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 0. Performance Summary — KPIs + Annual Returns Table */}
       <SectionDivider label="Resumo de Performance" />
       <section className="section" id="performanceSummarySection">

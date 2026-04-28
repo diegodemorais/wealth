@@ -16,6 +16,7 @@ import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
 import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
 import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
+import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Trophy, Target, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
@@ -509,12 +510,39 @@ export default function HomePage() {
           <PatrimonioLiquidoIR
             irDiferido={(data as any)?.tax?.ir_diferido_total_brl ?? 0}
             patrimonioFinanceiro={(data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual ?? 0}
+            pfireLiquidoPct={(data as any)?.fire_montecarlo_liquido?.pfire_liquido ?? null}
+            pfireBrutoPct={(data as any)?.fire_montecarlo_liquido?.pfire_bruto ?? null}
           />
           <div className="src">
             IR diferido = imposto latente sobre ganho de capital não realizado (equity internacional).
           </div>
         </div>
       </CollapsibleSection>
+
+      {/* Gap A: Balanço Holístico — Patrimônio Total (financeiro + ilíquido + INSS + cap humano) */}
+      {(data as any)?.patrimonio_holistico && (
+        <div data-testid="balanco-holistico">
+        <CollapsibleSection
+          id="section-balanco-holistico"
+          title={secTitle('now', 'balanco-holistico', 'Balanço Holístico — Patrimônio Total')}
+          defaultOpen={secOpen('now', 'balanco-holistico', false)}
+          summary={(() => {
+            const h = (data as any)?.patrimonio_holistico;
+            if (!h?.total_brl) return undefined;
+            return (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 'var(--text-xs)' }}>
+                <span style={{ fontWeight: 700, fontSize: '1rem', fontFamily: 'monospace', color: 'var(--green)' }}>
+                  {fmtPrivacy(h.total_brl, privacyMode)}
+                </span>
+                <span style={{ color: 'var(--muted)' }}>total holístico</span>
+              </div>
+            );
+          })()}
+        >
+          <BalancoHolistico data={data as any} showCapitalHumanoBadge />
+        </CollapsibleSection>
+        </div>
+      )}
 
       {/* Rebalancing Status — collapsed */}
       <CollapsibleSection id="section-rebalancing-status" title={secTitle('now', 'rebalancing-status', 'Rebalancing Status — Drift por Classe')} defaultOpen={secOpen('now', 'rebalancing-status', false)}>
@@ -624,8 +652,12 @@ export default function HomePage() {
               </div>
               {(() => {
                 const sem = risk?.semaforos ?? {};
+                const cdsBps: number | null = (data as any)?.macro?.cds_brazil_5y_bps ?? null;
+                // Gap B: CDS semáforo — verde<250bps, amarelo 250-400bps, vermelho>400bps
+                const cdsStatus = cdsBps == null ? 'verde' : cdsBps >= 400 ? 'vermelho' : cdsBps >= 250 ? 'amarelo' : 'verde';
+                const cdsDisplay = cdsBps != null ? `${cdsBps}bps` : '—';
                 const icon = (status: string) => status === 'verde' ? '🟢' : status === 'amarelo' ? '🟡' : '🔴';
-                const rows: Array<{ label: string; display: string; status: string }> = [
+                const rows: Array<{ label: string; display: string; status: string; testid?: string }> = [
                   {
                     label: 'Drift Equity',
                     display: sem.equity_drift?.label ?? sem.equity_drift?.status ?? '—',
@@ -641,11 +673,18 @@ export default function HomePage() {
                     display: sem.renda_plus_taxa?.label ?? sem.renda_plus_taxa?.status ?? '—',
                     status: sem.renda_plus_taxa?.status ?? 'verde',
                   },
+                  // Gap B: CDS Brasil 5Y
+                  {
+                    label: 'CDS Brasil 5Y',
+                    display: cdsDisplay,
+                    status: cdsStatus,
+                    testid: 'cds-brasil-semaforo',
+                  },
                 ];
                 return (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {rows.map(r => (
-                      <div key={r.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div key={r.label} data-testid={r.testid} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <span style={{ fontSize: 18, lineHeight: 1 }}>{icon(r.status)}</span>
                         <div>
                           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600 }}>{r.label}</div>
@@ -658,10 +697,60 @@ export default function HomePage() {
                         Vol portfolio: {(risk.vol_portfolio * 100).toFixed(1)}% · VaR 95%: {risk.var_95_pct != null ? (risk.var_95_pct * 100).toFixed(1) + '%' : '—'}
                       </div>
                     )}
+                    {/* CDS threshold note */}
+                    <div style={{ marginTop: 4, fontSize: 10, color: 'var(--muted)' }}>
+                      CDS: verde &lt;250bps · amarelo 250–400 · vermelho &gt;400 (revisar RF Brasil)
+                    </div>
                   </div>
                 );
               })()}
             </div>
+          </div>
+        );
+      })()}
+
+      {/* Gap K: IPS Summary Card — 30-second rules */}
+      {(() => {
+        const prem = (data as any)?.premissas ?? {};
+        const pisos = (data as any)?.pisos ?? {};
+        const guardrails = (data as any)?.guardrails ?? [];
+        const swr = prem.swr_gatilho ?? 0.03;
+        const equityAlvo = ((data as any)?.pesosTarget?.SWRD ?? 0) + ((data as any)?.pesosTarget?.AVGS ?? 0) + ((data as any)?.pesosTarget?.AVEM ?? 0);
+        const guardrailPiso = Array.isArray(guardrails) && guardrails.length > 0 ? guardrails[guardrails.length - 1] : null;
+        const pisoGasto: number = (data as any)?.gasto_piso ?? guardrailPiso?.retirada ?? 180000;
+        const cdsThresh = 400;
+        const ipca_piso = pisos.pisoTaxaIpcaLongo ?? 6.0;
+        const renda_gatilho = pisos.pisoTaxaRendaPlus ?? 6.5;
+        const rules: Array<{ label: string; value: string }> = [
+          { label: 'Equity alvo', value: `${(equityAlvo * 100).toFixed(0)}%` },
+          { label: 'SWR', value: `${(swr * 100).toFixed(1)}%` },
+          { label: 'IPCA+ piso DCA', value: `≥${ipca_piso.toFixed(1)}%` },
+          { label: 'Renda+ gatilho', value: `≥${renda_gatilho.toFixed(1)}%` },
+          { label: 'Guardrail piso (retirada)', value: fmtPrivacy(pisoGasto, privacyMode) + '/ano' },
+          { label: 'CDS revisar RF Brasil', value: `>${cdsThresh}bps` },
+          { label: 'Drift threshold', value: '±5pp por classe' },
+        ];
+        return (
+          <div data-testid="ips-summary">
+          <CollapsibleSection
+            id="section-ips-summary"
+            title={secTitle('now', 'ips-summary', 'IPS — 30-Second Rules')}
+            defaultOpen={secOpen('now', 'ips-summary', false)}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {rules.map(r => (
+                  <div key={r.label} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 6, padding: '8px 10px' }}>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.3px', marginBottom: 2 }}>{r.label}</div>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)' }}>{r.value}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="src" style={{ marginTop: 8 }}>
+                Read-only · Regras derivadas de data.json (swr_gatilho, pisos, pesosTarget, guardrails)
+              </div>
+            </div>
+          </CollapsibleSection>
           </div>
         );
       })()}

@@ -333,8 +333,9 @@ test.describe('Portfolio — DARF panel', () => {
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
 
-  test('geo-donut block is visible', async ({ page }) => {
-    const el = page.locator('[data-testid="geo-donut"]');
+  test('exposicao-geografica block is visible', async ({ page }) => {
+    // HD-dashboard-gaps-tier1 Gap E: testid renamed from geo-donut to exposicao-geografica
+    const el = page.locator('[data-testid="exposicao-geografica"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
 
@@ -556,6 +557,95 @@ test.describe('Risk Dashboard — R6 (FIRE tab)', () => {
   // R6: SoRR Indicator — P2 exists (inside collapsible)
   test('sorr-indicator element exists in DOM', async ({ page }) => {
     const el = page.locator('[data-testid="sorr-indicator"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HD-dashboard-gaps-tier1 — novos componentes A–K
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Tier1 gaps — NOW tab', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.now);
+  });
+
+  // Gap C: pfire-liquido in PatrimonioLiquidoIR (inside collapsible, may be closed)
+  test('pfire-liquido exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="pfire-liquido"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  // Gap B: CDS semáforo in R2
+  test('cds-brasil-semaforo exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="cds-brasil-semaforo"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  // Gap A: Balanço Holístico section
+  test('balanco-holistico exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="balanco-holistico"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  // Gap K: IPS Summary
+  test('ips-summary exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="ips-summary"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+});
+
+test.describe('Tier1 gaps — FIRE tab', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.fire);
+  });
+
+  // Gap G: FIRE Number Meta
+  test('fire-number-meta is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="fire-number-meta"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  // Gap F: Renda Floor Katia
+  test('renda-floor-katia exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="renda-floor-katia"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+});
+
+test.describe('Tier1 gaps — Portfolio tab', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.portfolio);
+  });
+
+  // Gap D: Renda+ Gatilho widget
+  test('renda-plus-gatilho is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="renda-plus-gatilho"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  // Gap H: Factor Drought Counter
+  test('factor-drought-counter is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="factor-drought-counter"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  // Gap E: Exposição Geográfica (renamed from geo-donut)
+  test('exposicao-geografica is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="exposicao-geografica"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+});
+
+test.describe('Tier1 gaps — Performance tab', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.performance);
+  });
+
+  // Gap J: Drawdown Context Banner (conditional — only visible when dd > 5%)
+  test('drawdown-context-banner exists in DOM when drawdown > 5%', async ({ page }) => {
+    // Current data has drawdown ~-7%, so banner should be visible
+    const el = page.locator('[data-testid="drawdown-context-banner"]');
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
 });

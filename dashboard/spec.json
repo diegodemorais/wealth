@@ -1056,6 +1056,76 @@
       "purpose": "P(FIRE) ajustado em diferentes cenários de crash",
       "data_fields": ["risk.sorr_scenarios"],
       "optional": false
+    },
+    {
+      "id": "pfire-liquido",
+      "description": "P(FIRE) líquido de IR — probabilidade calculada sobre patrimônio com IR diferido deduzido antes da simulação MC",
+      "tab": "now",
+      "data_fields": ["fire_montecarlo_liquido.pfire_liquido", "fire_montecarlo_liquido.pfire_bruto", "fire_montecarlo_liquido.delta_pp"],
+      "optional": false
+    },
+    {
+      "id": "fire-number-meta",
+      "description": "FIRE Number explícito: Meta (gastos/SWR) | Patrimônio atual | Gap | Barra de progresso",
+      "tab": "fire",
+      "data_fields": ["premissas.patrimonio_gatilho", "premissas.patrimonio_atual", "premissas.swr_gatilho", "premissas.custo_vida_base"],
+      "optional": false
+    },
+    {
+      "id": "cds-brasil-semaforo",
+      "description": "Semáforo CDS Brasil 5Y integrado no R2 — verde<250bps, amarelo 250-400bps, vermelho>400bps",
+      "tab": "now",
+      "data_fields": ["macro.cds_brazil_5y_bps"],
+      "optional": false
+    },
+    {
+      "id": "balanco-holistico",
+      "description": "Balanço holístico: financeiro + imóvel equity + terreno + capital humano + INSS como seção colapsável no NOW",
+      "tab": "now",
+      "data_fields": ["patrimonio_holistico.total_brl", "patrimonio_holistico.financeiro_brl", "patrimonio_holistico.capital_humano_vp", "patrimonio_holistico.imovel_equity_brl", "patrimonio_holistico.inss_pv_brl"],
+      "optional": false
+    },
+    {
+      "id": "renda-plus-gatilho",
+      "description": "Widget gatilho Renda+ 2065: taxa atual vs gatilho DCA (≥6.5%), distância em bps, status DCA",
+      "tab": "portfolio",
+      "data_fields": ["dca_status.renda_plus.taxa_atual", "dca_status.renda_plus.piso_compra", "dca_status.renda_plus.gap_pp", "dca_status.renda_plus.ativo"],
+      "optional": false
+    },
+    {
+      "id": "renda-floor-katia",
+      "description": "Renda floor implícita de Katia (INSS Katia + PGBL) com nota conservadora sobre modelo MC",
+      "tab": "fire",
+      "data_fields": ["premissas.inss_katia_anual", "premissas.pgbl_katia_saldo_fire", "pfire_aspiracional.base"],
+      "optional": false
+    },
+    {
+      "id": "factor-drought-counter",
+      "description": "Badge contador de drought fatorial AVGS vs SWRD — meses sem/com underperformance + excess YTD",
+      "tab": "portfolio",
+      "data_fields": ["factor_signal.excess_ytd_pp", "factor_signal.excess_since_launch_pp", "factor_signal.meses_desde_launch", "backtest_r7.factor_drought.max_meses"],
+      "optional": false
+    },
+    {
+      "id": "exposicao-geografica",
+      "description": "Exposição geográfica consolidada do portfolio equity por região (EUA, Europa, EM, outros)",
+      "tab": "portfolio",
+      "data_fields": ["etf_composition.etfs"],
+      "optional": false
+    },
+    {
+      "id": "drawdown-context-banner",
+      "description": "Banner contextual na aba Performance quando drawdown atual > 5% — mostra drawdown, guardrail e ação recomendada",
+      "tab": "performance",
+      "data_fields": ["drawdown_history.drawdown_pct", "spending_guardrails.zona"],
+      "optional": false
+    },
+    {
+      "id": "ips-summary",
+      "description": "Card resumo das 30-second rules do IPS — equity alvo, SWR, pisos IPCA+/Renda+, guardrail piso, CDS threshold, drift threshold",
+      "tab": "now",
+      "data_fields": ["premissas.swr_gatilho", "pisos.pisoTaxaIpcaLongo", "pisos.pisoTaxaRendaPlus", "pesosTarget", "guardrails", "gasto_piso"],
+      "optional": false
     }
   ]
 }

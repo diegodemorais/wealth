@@ -388,6 +388,67 @@ export default function FirePage() {
         </div>
       </div>
 
+      {/* Gap G: FIRE Number explícito — Meta / Atual / Gap / Progresso */}
+      {(() => {
+        const patrimonioAtual: number = prem.patrimonio_atual ?? 0;
+        const fireNumberMeta: number | null = patrimonioAlvoHero;
+        if (fireNumberMeta == null || patrimonioAtual === 0) return null;
+        const gap = fireNumberMeta - patrimonioAtual;
+        const progressoPct = Math.min(100, (patrimonioAtual / fireNumberMeta) * 100);
+        const progressoColor = progressoPct >= 80 ? 'var(--green)' : progressoPct >= 50 ? 'var(--yellow)' : 'var(--accent)';
+        const custoVida: number = prem.custo_vida_base ?? 250000;
+        const swrGatilho: number = prem.swr_gatilho ?? 0.03;
+        return (
+          <div
+            data-testid="fire-number-meta"
+            style={{
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '14px 18px',
+              marginBottom: 16,
+            }}
+          >
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 10 }}>
+              FIRE Number — Progresso Patrimonial
+            </div>
+            {/* Row: Meta | Atual | Gap */}
+            <div className="grid grid-cols-3 gap-4" style={{ marginBottom: 12 }}>
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Meta (FIRE Number)</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text)' }}>{fmtPrivacy(fireNumberMeta, privacyMode)}</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{(custoVida / 1000).toFixed(0)}k ÷ {(swrGatilho * 100).toFixed(1)}%</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio Atual</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: progressoColor }}>{fmtPrivacy(patrimonioAtual, privacyMode)}</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: progressoColor }}>{progressoPct.toFixed(1)}% da meta</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gap Restante</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--red)' }}>{fmtPrivacy(gap, privacyMode)}</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{(100 - progressoPct).toFixed(1)}% a acumular</div>
+              </div>
+            </div>
+            {/* Barra de progresso */}
+            <div style={{ height: 10, background: 'var(--border)', borderRadius: 5, overflow: 'hidden', position: 'relative' }}>
+              <div
+                style={{
+                  height: '100%',
+                  width: `${progressoPct}%`,
+                  background: progressoColor,
+                  borderRadius: 5,
+                  transition: 'width 0.4s',
+                }}
+              />
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 5 }}>
+              FIRE Number = gastos anuais / SWR · Patrimônio gatilho = {fmtPrivacy(prem.patrimonio_gatilho ?? fireNumberMeta, privacyMode)}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* P(FIRE) Distribution — Percentiles & Tail Risks */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
         <h2 style={{ margin: 0 }}>P(FIRE) Distribuição Monte Carlo — Percentis</h2>
@@ -494,6 +555,53 @@ export default function FirePage() {
           })()}
         </div>
       </CollapsibleSection>
+
+      {/* Gap F: Renda Floor Katia — nota conservadora no modelo MC */}
+      {(() => {
+        const inssKatiaAnual: number = prem.inss_katia_anual ?? 0;
+        const pfireCasal: number | null = (data as any)?.pfire_aspiracional?.base ?? null; // proxy: aspiracional inclui Katia
+        if (!inssKatiaAnual) return null;
+        return (
+          <div
+            data-testid="renda-floor-katia"
+            style={{
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderLeft: '3px solid var(--accent)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '12px 16px',
+              marginBottom: 12,
+              display: 'flex',
+              alignItems: 'flex-start',
+              flexWrap: 'wrap',
+              gap: 16,
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Renda Floor Katia</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent)' }}>
+                {fmtPrivacy(inssKatiaAnual, privacyMode)}/ano
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>INSS Katia · a partir de 2049</div>
+            </div>
+            {pfireCasal != null && (
+              <>
+                <div style={{ width: 1, height: 40, background: 'var(--border)' }} />
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>P(FIRE) c/ Katia</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--green)' }}>
+                    {privacyMode ? '••%' : `~${pfireCasal.toFixed(1)}%`}
+                  </div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>cenário aspiracional</div>
+                </div>
+              </>
+            )}
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', width: '100%', marginTop: -4, fontStyle: 'italic' }}>
+              Nota conservadora: renda de Katia NÃO incluída no modelo MC por default. Inclui PGBL Katia ~{fmtPrivacy(prem.pgbl_katia_saldo_fire ?? 490000, privacyMode)} no FIRE Day.
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Tracking FIRE — Realizado vs Projeção */}
       <div data-testid="fire-trilha">
