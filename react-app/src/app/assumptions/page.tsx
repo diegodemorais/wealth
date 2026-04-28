@@ -119,7 +119,8 @@ function ChangelogTable() {
           </thead>
           <tbody>
             {entries.map((e, i) => {
-              const href = `/${e.tab}${e.anchor ? '#' + e.anchor : ''}`;
+              const tabPath = e.tab === 'now' ? '' : `/${e.tab}`;
+              const href = `${tabPath}${e.anchor ? '#' + e.anchor : ''}`;
               return (
                 <tr key={i} style={{ borderBottom: '1px solid var(--border)', opacity: i > 9 ? 0.75 : 1 }}>
                   <td style={{ padding: '6px 8px', color: 'var(--muted)', fontFamily: 'monospace', whiteSpace: 'nowrap', fontSize: 11 }}>
