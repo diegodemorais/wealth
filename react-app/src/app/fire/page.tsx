@@ -726,9 +726,16 @@ export default function FirePage() {
 
       {/* ── R6: SoRR Indicator Table ──────────────────────────────────────────── */}
       {(() => {
-        const sorrScenarios: Array<{ crash_label: string; crash_pct: number; pfire_ajustado: number }> =
-          (data as any)?.risk?.sorr_scenarios ?? [];
+        const risk = (data as any)?.risk;
+        const sorrScenarios: Array<{
+          crash_label: string;
+          crash_pct: number;
+          pfire_ajustado: number;
+          is_static_estimate?: boolean;
+        }> = risk?.sorr_scenarios ?? [];
         if (sorrScenarios.length === 0) return null;
+        // Base P(FIRE) used for delta calculation — from MC pipeline, dynamic
+        const sorrBasePfire: number = risk?.sorr_base_pfire ?? (data as any)?.pfire_base?.base ?? null;
         return (
           <CollapsibleSection
             id="section-sorr-indicator"
@@ -736,6 +743,11 @@ export default function FirePage() {
             defaultOpen={secOpen('fire', 'sorr-indicator', false)}
           >
             <div style={{ padding: '0 16px 16px' }}>
+              {sorrBasePfire != null && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8 }}>
+                  Base P(FIRE): <strong style={{ color: 'var(--text)' }}>{privacyMode ? '••%' : `${sorrBasePfire.toFixed(1)}%`}</strong>
+                </div>
+              )}
               <div data-testid="sorr-indicator" style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
                   <thead>
@@ -767,7 +779,8 @@ export default function FirePage() {
                 </table>
               </div>
               <div className="src">
-                P(FIRE) ajustado = impacto de queda imediata no portfolio sobre probabilidade de sucesso (Monte Carlo). Alerta se &lt;75%.
+                Estimativa estática — delta aplicado sobre P(FIRE) base. Para análise completa, ver simulações Monte Carlo.
+                P(FIRE) ajustado = base + delta de impacto de queda imediata no portfolio. Alerta se &lt;75%.
               </div>
             </div>
           </CollapsibleSection>

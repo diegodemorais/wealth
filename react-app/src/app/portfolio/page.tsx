@@ -626,7 +626,7 @@ export default function PortfolioPage() {
                 ))}
               </div>
               <div className="src">
-                Contribuição ao risco = volatilidade implícita × peso, normalizado. Volatilidades: SWRD 14%, AVGS 19%, AVEM 18%, HODL11 75%, RF 5%.
+                Contribuição ao risco = volatilidade implícita × peso, normalizado. Não considera correlação entre ativos. Volatilidades: SWRD 14%, AVGS 19%, AVEM 18%, HODL11 75%, RF 5%.
               </div>
             </div>
           </CollapsibleSection>
@@ -636,8 +636,13 @@ export default function PortfolioPage() {
       {/* ── R4: Duration Scenarios Table ─────────────────────────────────────── */}
       {(() => {
         const risk = (data as any)?.risk;
-        const scenarios: Array<{ shift_pp: number; renda_plus_mtm_pct: number; renda_plus_mtm_brl: number | null }> =
-          risk?.duration_scenarios ?? [];
+        const scenarios: Array<{
+          shift_pp: number;
+          renda_plus_mtm_pct: number;
+          renda_plus_mtm_brl: number | null;
+          renda_plus_mtm_portfolio_pct?: number;
+          with_convexity_note?: boolean;
+        }> = risk?.duration_scenarios ?? [];
         if (scenarios.length === 0) return null;
         return (
           <CollapsibleSection
@@ -653,6 +658,7 @@ export default function PortfolioPage() {
                       <th style={{ textAlign: 'left', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>Shift de Juros</th>
                       <th style={{ textAlign: 'right', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>MtM Renda+ (%)</th>
                       <th style={{ textAlign: 'right', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>MtM Renda+ (R$)</th>
+                      <th style={{ textAlign: 'right', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>% do Portfólio</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -660,12 +666,17 @@ export default function PortfolioPage() {
                       <tr key={s.shift_pp} style={{ borderBottom: '1px solid var(--card2)' }}>
                         <td style={{ padding: '8px 10px', fontWeight: 700 }}>+{s.shift_pp}pp</td>
                         <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--red)', fontWeight: 700 }}>
-                          {privacyMode ? '••%' : `${s.renda_plus_mtm_pct?.toFixed(2)}%`}
+                          {privacyMode ? '••%' : `${(s.renda_plus_mtm_pct * 100).toFixed(2)}%`}
                         </td>
                         <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--muted)' }}>
                           {privacyMode ? '••••' : (s.renda_plus_mtm_brl != null
                             ? fmtBRL(s.renda_plus_mtm_brl)
                             : '—')}
+                        </td>
+                        <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>
+                          {s.renda_plus_mtm_portfolio_pct != null
+                            ? (privacyMode ? '••%' : `${(s.renda_plus_mtm_portfolio_pct * 100).toFixed(2)}%`)
+                            : '—'}
                         </td>
                       </tr>
                     ))}
@@ -673,7 +684,8 @@ export default function PortfolioPage() {
                 </table>
               </div>
               <div className="src">
-                MtM = Mark-to-Market. Modified Duration {43.25} × shift. Impacto sobre posição Renda+ 2065 (IPCA+).
+                MtM = Mark-to-Market. Modified Duration × shift (sem convexidade — estimativa conservadora).
+                Renda+ 2065 é posição tática (~3.4% do portfólio). Impacto no portfólio total = % Renda+ × peso da posição.
               </div>
             </div>
           </CollapsibleSection>

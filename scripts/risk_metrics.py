@@ -10,24 +10,24 @@ Metodologia:
     duration addon, concentração BR, e desconto por diversificação.
   - VaR/CVaR: paramétrico normal 95% 1 ano (não histórico).
   - Risk Contribution: volatilidade implícita × peso, normalizado para 100%.
+    Nota: assume correlação zero entre ativos — proxy; RC formal exigiria matriz de covariância.
   - Duration Scenarios: MtM da Renda+ dado shift paralelo na curva.
 """
 
 from __future__ import annotations
-import json
 import math
-from pathlib import Path
 from scipy.stats import norm  # type: ignore[import-untyped]
 
 
 # ── Constantes de risco ───────────────────────────────────────────────────────
 
-EQUITY_PCT         = 0.79
+# Fallback para MODIFIED_DURATION: 46.24 anos (pyield ANBIMA-compliant, carteira.md 2026-04-25).
+# Em runtime, lemos data["rf"]["renda2065"]["duration"]["modificada_anos"] se disponível.
+MODIFIED_DURATION_FALLBACK = 46.24
+
 BTC_PCT            = 0.029
 VOL_EQUITY         = 0.168   # vol portfolio proxy (equity dominante)
 VOL_BTC            = 0.75    # BTC vol anual histórica
-MODIFIED_DURATION  = 43.25   # Renda+ 2065 modified duration
-RENDA_PLUS_PCT     = 0.027
 BR_RF_PCT          = 0.10    # concentração RF Brasil
 
 MU_PORTFOLIO       = 0.097   # expected return portfolio (premissa)
@@ -42,20 +42,12 @@ ASSET_VOLS = {
     "RF":     0.05,
 }
 
-# Pesos dos ativos no portfolio total
-ASSET_WEIGHTS = {
-    "SWRD":   EQUITY_PCT * 0.50,
-    "AVGS":   EQUITY_PCT * 0.30,
-    "AVEM":   EQUITY_PCT * 0.20,
-    "HODL11": BTC_PCT,
-    "RF":     BR_RF_PCT,
-}
-
-# SoRR P(FIRE) ajustado (valores estáticos baseados em análise MC)
-SORR_SCENARIOS = [
-    {"crash_label": "Queda -20%", "crash_pct": -0.20, "pfire_ajustado": 0.82},
-    {"crash_label": "Queda -30%", "crash_pct": -0.30, "pfire_ajustado": 0.76},
-    {"crash_label": "Queda -40%", "crash_pct": -0.40, "pfire_ajustado": 0.68},
+# SoRR P(FIRE) ajustado (deltas estáticos baseados em análise MC — is_static_estimate)
+# Valores derivados por heurística; Monte Carlo completo em fire_montecarlo.py é canônico.
+_SORR_DELTAS = [
+    {"crash_label": "Queda -20%", "crash_pct": -0.20, "delta_pfire": -0.041},
+    {"crash_label": "Queda -30%", "crash_pct": -0.30, "delta_pfire": -0.083},
+    {"crash_label": "Queda -40%", "crash_pct": -0.40, "delta_pfire": -0.161},
 ]
 
 
@@ -74,11 +66,82 @@ def _score_label(score: float) -> str:
     return "Agressivo"
 
 
-def _compute_score() -> tuple[float, dict[str, float]]:
+def _extract_equity_pct(data: dict) -> float:
+    """Calcula equity_pct dinamicamente a partir de drift.atual (pesos correntes).
+
+    drift[bucket].atual está em % (e.g. 35.4 = 35.4%). Soma SWRD+AVGS+AVEM.
+    Fallback: data.allocation.equity_pct → constante carteira.md (0.79 = pesos-alvo equity).
+    """
+    drift = data.get("drift") or {}
+    equity_buckets = ("SWRD", "AVGS", "AVEM")
+    if all(b in drift for b in equity_buckets):
+        return sum(drift[b]["atual"] for b in equity_buckets) / 100.0
+    # Fallback: pesos-alvo da carteira.md (SWRD 39.5% + AVGS 23.7% + AVEM 15.8% = 79%)
+    return data.get("allocation", {}).get("equity_pct", 0.79)  # type: ignore[return-value]
+
+
+def _extract_modified_duration(data: dict) -> float:
+    """Lê modified duration da Renda+ 2065 de data['rf']['renda2065']['duration'].
+
+    Gerado dinamicamente por generate_data.py (calcular_duration_modificada_ntnb).
+    Fallback: MODIFIED_DURATION_FALLBACK (46.24, pyield ANBIMA-compliant, carteira.md).
+    """
+    dur = (
+        (data.get("rf") or {})
+        .get("renda2065", {})
+        .get("duration", {})
+        .get("modificada_anos")
+    )
+    return float(dur) if dur is not None else MODIFIED_DURATION_FALLBACK
+
+
+def _extract_renda_plus_pct(data: dict) -> float:
+    """Calcula peso da Renda+ 2065 no portfolio total a partir de data."""
+    renda_brl = (data.get("rf") or {}).get("renda2065", {}).get("valor")
+    total_brl = (data.get("concentracao_brasil") or {}).get("total_portfolio_brl")
+    if renda_brl and total_brl and total_brl > 0:
+        return float(renda_brl) / float(total_brl)
+    # Fallback: ~3.4% conforme carteira.md (R$117.832 / R$3.47M)
+    return 0.034
+
+
+def _compute_equity_drift_status(data: dict) -> dict:
+    """Calcula semáforo de equity drift a partir de drift real no data.
+
+    Thresholds: <5pp verde · 5–10pp amarelo · >=10pp vermelho.
+    Se drift não disponível, retorna 'desconhecido'.
+    """
+    drift = data.get("drift") or {}
+    if not drift:
+        return {"value": None, "status": "desconhecido", "label": "Drift não disponível"}
+
+    max_drift_pp = max(
+        abs(v.get("atual", 0) - v.get("alvo", 0))
+        for v in drift.values()
+        if isinstance(v, dict)
+    )
+    max_drift_pp = round(max_drift_pp, 2)
+
+    if max_drift_pp < 5.0:
+        status = "verde"
+    elif max_drift_pp < 10.0:
+        status = "amarelo"
+    else:
+        status = "vermelho"
+
+    return {
+        "value":         max_drift_pp,
+        "status":        status,
+        "threshold_amarelo": 5.0,
+        "threshold_vermelho": 10.0,
+    }
+
+
+def _compute_score(equity_pct: float, modified_duration: float, renda_plus_pct: float) -> tuple[float, dict[str, float]]:
     """Calcula risk score 0-10 e breakdown dos componentes."""
-    score_base     = EQUITY_PCT * 10
+    score_base     = equity_pct * 10
     addon_btc      = BTC_PCT * (VOL_BTC / VOL_EQUITY - 1) * 0.5
-    addon_duration = RENDA_PLUS_PCT * (MODIFIED_DURATION / 46) * 0.5
+    addon_duration = renda_plus_pct * (modified_duration / 46) * 0.5
     addon_conc_br  = max(0.0, BR_RF_PCT - 0.20) * 3
     discount       = DISCOUNT_DIVERSIF
 
@@ -103,47 +166,69 @@ def _compute_var_cvar(sigma: float, mu: float) -> tuple[float, float]:
     return round(var_95, 4), round(cvar_95, 4)
 
 
-def _compute_risk_contributions() -> list[dict]:
-    """Contribuição ao risco por ativo (vol × peso, normalizado para 100%)."""
-    contribs_raw: dict[str, float] = {}
-    for asset, vol in ASSET_VOLS.items():
-        w = ASSET_WEIGHTS.get(asset, 0.0)
-        contribs_raw[asset] = vol * w
+def _compute_risk_contributions(equity_pct: float) -> list[dict]:
+    """Contribuição ao risco por ativo (vol × peso, normalizado para 100%).
 
+    Proxy sem correlação: RC formal exigiria matriz de covariância completa.
+    """
+    asset_weights = {
+        "SWRD":   equity_pct * 0.50,
+        "AVGS":   equity_pct * 0.30,
+        "AVEM":   equity_pct * 0.20,
+        "HODL11": BTC_PCT,
+        "RF":     BR_RF_PCT,
+    }
+    contribs_raw: dict[str, float] = {
+        asset: ASSET_VOLS[asset] * asset_weights.get(asset, 0.0)
+        for asset in ASSET_VOLS
+    }
     total = sum(contribs_raw.values())
-    result = []
-    for asset in ASSET_VOLS:
-        w = ASSET_WEIGHTS.get(asset, 0.0)
-        contrib_pct = contribs_raw[asset] / total if total > 0 else 0.0
-        result.append({
+    return [
+        {
             "name": asset,
-            "weight": round(w, 4),
-            "risk_contribution_pct": round(contrib_pct, 4),
-        })
-    return result
+            "weight": round(asset_weights.get(asset, 0.0), 4),
+            "risk_contribution_pct": round(contribs_raw[asset] / total if total > 0 else 0.0, 4),
+        }
+        for asset in ASSET_VOLS
+    ]
 
 
-def _compute_hhi(weights: dict[str, float]) -> float:
+def _compute_hhi(equity_pct: float) -> float:
     """Herfindahl-Hirschman Index de concentração."""
+    weights = {
+        "SWRD":   equity_pct * 0.50,
+        "AVGS":   equity_pct * 0.30,
+        "AVEM":   equity_pct * 0.20,
+        "HODL11": BTC_PCT,
+        "RF":     BR_RF_PCT,
+    }
     return round(sum(w ** 2 for w in weights.values()), 4)
 
 
-def _compute_duration_scenarios(portfolio_value: float | None) -> list[dict]:
+def _compute_duration_scenarios(
+    portfolio_value: float | None,
+    modified_duration: float,
+    renda_plus_pct: float,
+) -> list[dict]:
     """MtM da Renda+ para shift paralelo de +1pp e +2pp.
 
-    Convenção: mtm_pct = -modified_duration × shift (e.g. -43.25 × 0.01 = -0.4325 para +1pp)
-    Representa a variação % no preço do título (não % do portfolio).
+    Campos:
+    - renda_plus_mtm_pct: variação % no preço do título (não % do portfolio)
+    - renda_plus_mtm_portfolio_pct: impacto sobre o portfolio total (= mtm_pct × peso Renda+)
+    - with_convexity_note: True — valores sem ajuste de convexidade (conservador)
     """
     scenarios = []
     for shift_pp in [1, 2]:
-        # Δprice% = -modified_duration × Δy (Δy = shift_pp / 100)
-        mtm_pct = round(-MODIFIED_DURATION * (shift_pp / 100), 4)
-        # R$ = posição renda+ no portfolio × mtm_pct
-        mtm_brl = round(portfolio_value * RENDA_PLUS_PCT * mtm_pct, 2) if portfolio_value else None
+        # Δprice% = -modified_duration × Δy (sem convexidade — valor conservador)
+        mtm_pct = round(-modified_duration * (shift_pp / 100), 4)
+        mtm_brl = round(portfolio_value * renda_plus_pct * mtm_pct, 2) if portfolio_value else None
+        mtm_portfolio_pct = round(mtm_pct * renda_plus_pct, 6)
         scenarios.append({
-            "shift_pp": shift_pp,
-            "renda_plus_mtm_pct": mtm_pct,
-            "renda_plus_mtm_brl": mtm_brl,
+            "shift_pp":                       shift_pp,
+            "renda_plus_mtm_pct":             mtm_pct,
+            "renda_plus_mtm_brl":             mtm_brl,
+            "renda_plus_mtm_portfolio_pct":   mtm_portfolio_pct,
+            "with_convexity_note":            True,
         })
     return scenarios
 
@@ -186,19 +271,44 @@ def _get_max_drawdown_real(data: dict) -> float | None:
     return None
 
 
+def _build_sorr_scenarios(sorr_base_pfire: float) -> list[dict]:
+    """Constrói cenários SoRR aplicando deltas fixos sobre P(FIRE) base.
+
+    is_static_estimate=True: deltas são heurísticos, não output direto do MC.
+    Monte Carlo completo (fire_montecarlo.py) é canônico para análise precisa.
+    """
+    return [
+        {
+            "crash_label":        s["crash_label"],
+            "crash_pct":          s["crash_pct"],
+            "pfire_ajustado":     round(sorr_base_pfire / 100 + s["delta_pfire"], 4),
+            "is_static_estimate": True,
+        }
+        for s in _SORR_DELTAS
+    ]
+
+
 def compute_risk_metrics(data: dict) -> dict:
     """Calcula todas as métricas de risco e retorna dict `risk`."""
     portfolio_value = _get_portfolio_value(data)
     sigma = VOL_EQUITY
 
-    score, breakdown = _compute_score()
+    # Parâmetros dinâmicos extraídos do data (zero hardcoded financeiro)
+    equity_pct       = _extract_equity_pct(data)
+    modified_duration = _extract_modified_duration(data)
+    renda_plus_pct   = _extract_renda_plus_pct(data)
+
+    score, breakdown = _compute_score(equity_pct, modified_duration, renda_plus_pct)
     var_95, cvar_95 = _compute_var_cvar(sigma=sigma, mu=MU_PORTFOLIO)
-    contribs = _compute_risk_contributions()
-    hhi = _compute_hhi(ASSET_WEIGHTS)
-    duration_scenarios = _compute_duration_scenarios(portfolio_value)
+    contribs = _compute_risk_contributions(equity_pct)
+    hhi = _compute_hhi(equity_pct)
+    duration_scenarios = _compute_duration_scenarios(portfolio_value, modified_duration, renda_plus_pct)
 
     # Max drawdown real — usa pico histórico absoluto via cummax desde início da série
     max_drawdown_real = _get_max_drawdown_real(data)
+
+    # P(FIRE) base para SoRR (em %, de pfire_base.base gerado pelo MC)
+    sorr_base_pfire = float((data.get("pfire_base") or {}).get("base", 86.4))
 
     # Semáforos de risco
     btc_pct_val = round(BTC_PCT, 4)
@@ -207,6 +317,7 @@ def compute_risk_metrics(data: dict) -> dict:
         else "amarelo" if btc_pct_val < 0.015
         else "vermelho"
     )
+    equity_drift_semaforo = _compute_equity_drift_status(data)
 
     return {
         "score":               score,
@@ -219,12 +330,9 @@ def compute_risk_metrics(data: dict) -> dict:
         "calmar_ratio":        None,  # requer série de retornos histórica
         "max_drawdown_real":   max_drawdown_real,
         "contribution_by_asset": contribs,
+        "contribution_methodology": "vol×peso normalizado (proxy sem correlação — RC formal exigiria matriz de covariância)",
         "semaforos": {
-            "equity_drift": {
-                "value":  None,
-                "status": "verde",
-                "label":  "Calculado no portfolio",
-            },
+            "equity_drift": equity_drift_semaforo,
             "btc_pct": {
                 "value":         btc_pct_val,
                 "status":        btc_status,
@@ -237,6 +345,7 @@ def compute_risk_metrics(data: dict) -> dict:
                 "label":  "Ver gatilhos",
             },
         },
-        "duration_scenarios": duration_scenarios,
-        "sorr_scenarios":     SORR_SCENARIOS,
+        "duration_scenarios":   duration_scenarios,
+        "sorr_scenarios":       _build_sorr_scenarios(sorr_base_pfire),
+        "sorr_base_pfire":      sorr_base_pfire,
     }

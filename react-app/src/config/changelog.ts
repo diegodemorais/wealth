@@ -15,6 +15,11 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — risk_metrics fixes ─────────────────────────────────────────
+  { datetime: '2026-04-28T00:00:00', type: 'cálculo', component: 'RiskDashboard', tab: 'portfolio', anchor: '', de: 'ModDur hardcoded 43.25, EQUITY_PCT hardcoded 0.79, semáforo drift hardcoded verde', para: 'ModDur lido de rf.renda2065.duration (fallback 46.24 ANBIMA), equity_pct de drift.atual, drift semáforo lê max deviation real' },
+  { datetime: '2026-04-28T00:00:00', type: 'dado', component: 'RiskDashboard', tab: 'portfolio', anchor: 'section-duration-scenarios', de: 'tabela duration sem contexto proporcional; MtM exibido como % título sem % portfólio', para: 'coluna % do Portfólio (mtm × peso Renda+) + nota "posição tática ~3.4%"' },
+  { datetime: '2026-04-28T00:00:00', type: 'dado', component: 'RiskDashboard', tab: 'fire', anchor: 'section-sorr-indicator', de: 'SoRR valores estáticos sem sinalização; baseline P(FIRE) implícito', para: 'caption "estimativa estática" + baseline dinâmico do MC (sorr_base_pfire)' },
+  { datetime: '2026-04-28T00:00:00', type: 'dado', component: 'RiskDashboard', tab: 'portfolio', anchor: 'section-risk-contribution', de: 'nota de risco sem mencionar limitação metodológica', para: 'caption "Não considera correlação entre ativos"' },
   // ── 2026-04-27 — HD-risco-portfolio ─────────────────────────────────────────
   { datetime: '2026-04-27T00:00:00', type: 'gráfico', component: 'RiskDashboard', tab: 'now', anchor: '', de: 'sem visão de risco consolidada', para: 'Risk Score gauge + semáforos de alertas (R1+R2)' },
   { datetime: '2026-04-27T00:00:00', type: 'gráfico', component: 'RiskDashboard', tab: 'portfolio', anchor: '', de: 'sem visão de risco', para: 'Risk Contribution chart + Duration Scenarios table (R3+R4)' },
