@@ -27,7 +27,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| HD-risco-portfolio | Mapeamento Completo de Risco do Portfolio | Head + Time | 🔴 Alta |
 
 ### Blocked
 > Issues aguardando dependências externas
