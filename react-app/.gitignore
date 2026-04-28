@@ -47,3 +47,5 @@ next-env.d.ts
 /cypress/screenshots/
 /cypress/videos/
 /cypress/support/
+test-results/
+playwright-report/
