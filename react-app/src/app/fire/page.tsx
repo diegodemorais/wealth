@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import Link from 'next/link';
-import { EC } from '@/utils/echarts-theme';
+import { EC, EC_AXIS_LABEL, EC_AXIS_LINE, EC_SPLIT_LINE, EC_TOOLTIP } from '@/utils/echarts-theme';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 
 import { pfireColor as pfireColorFn } from '@/utils/fire';
@@ -355,11 +355,12 @@ function ContributionReturnsCrossover({
         data: ['Rentabilidade Anual', 'Aportes Anuais'],
         bottom: 4,
         right: 16,
-        textStyle: { fontSize: 11 },
+        textStyle: { color: EC.muted, fontSize: 11 },
       },
       grid: { left: 60, right: 20, top: 20, bottom: 52 },
       tooltip: {
         trigger: 'axis' as const,
+        ...EC_TOOLTIP,
         formatter: (params: CrossoverTooltipParam[]) => {
           const year = params[0]?.axisValue ?? '';
           const yearNum = parseInt(year);
@@ -371,14 +372,13 @@ function ContributionReturnsCrossover({
               return `<div>${p.marker}${p.seriesName}: <b>${v}</b></div>`;
             })
             .join('');
-          // Nota especial para anos com capital inicial não-DCA
           let extraNote = '';
           if (pt?.tipo === 'estimado') {
-            extraNote = `<div style="color:var(--yellow);margin-top:4px;font-size:11px">&#9888; ${pt.nota ?? 'Estimado'}</div>`;
+            extraNote = `<div style="color:${EC.yellow};margin-top:4px;font-size:11px">&#9888; ${pt.nota ?? 'Estimado'}</div>`;
           } else if (pt?.capital_inicial_brl) {
             const cap = pt.capital_inicial_brl.toLocaleString('pt-BR');
             const dca = (pt.aporte_dca_brl ?? 0).toLocaleString('pt-BR');
-            extraNote = `<div style="color:var(--muted);margin-top:4px;font-size:11px">Capital inicial: R$${cap} | DCA: R$${dca}</div>`;
+            extraNote = `<div style="color:${EC.muted};margin-top:4px;font-size:11px">Capital inicial: R$${cap} | DCA: R$${dca}</div>`;
           }
           return `<div style="font-size:12px"><b>${year}</b><br/>${lines}${extraNote}</div>`;
         },
@@ -386,13 +386,18 @@ function ContributionReturnsCrossover({
       xAxis: {
         type: 'category' as const,
         data: labels,
-        axisLabel: { fontSize: 11 },
+        axisLine: EC_AXIS_LINE,
+        axisTick: { show: false },
+        axisLabel: { ...EC_AXIS_LABEL, fontSize: 11 },
       },
       yAxis: {
         type: 'value' as const,
+        axisLine: EC_AXIS_LINE,
+        axisTick: { show: false },
+        splitLine: EC_SPLIT_LINE,
         axisLabel: {
+          ...EC_AXIS_LABEL,
           formatter: (v: number) => pvLabel(v),
-          fontSize: 10,
         },
       },
       series: [
@@ -422,24 +427,22 @@ function ContributionReturnsCrossover({
           silent: true,
           legendHoverLink: false,
         },
-        // Aportes Anuais — estimado com opacidade 80%, capital inicial com símbolo triangular
+        // Aportes Anuais — estimado com opacidade 80%, capital inicial com diamante amarelo
         {
           name: 'Aportes Anuais',
           type: 'line' as const,
           data: aportesSeries.map((v, i) => ({
             value: pv(v),
-            lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
-            // Estimado: opacidade reduzida. Capital inicial: destaque com diamante
             symbol: hasCapitalInicial[i] ? 'diamond' : undefined,
             symbolSize: hasCapitalInicial[i] ? 10 : undefined,
             itemStyle: isParcial[i]
-              ? { color: 'var(--muted)', opacity: 0.8 }
+              ? { color: EC.muted, opacity: 0.6 }
               : hasCapitalInicial[i]
-                ? { color: 'var(--yellow)', opacity: 0.9 }
-                : { color: 'var(--muted)' },
+                ? { color: EC.yellow, opacity: 0.9 }
+                : { color: EC.muted },
           })),
-          lineStyle: { color: 'var(--muted)', width: 2 },
-          itemStyle: { color: 'var(--muted)' },
+          lineStyle: { color: EC.muted, width: 2 },
+          itemStyle: { color: EC.muted },
           symbol: 'circle',
           symbolSize: 5,
           smooth: false,
@@ -450,9 +453,7 @@ function ContributionReturnsCrossover({
           type: 'line' as const,
           data: ganhosSeries.map((v, i) => ({
             value: pv(v),
-            lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
-            // Estimado: opacidade 80%. Capital inicial não altera ganho visual.
-            itemStyle: isParcial[i] ? { color: EC.accent, opacity: 0.8 } : { color: EC.accent },
+            itemStyle: isParcial[i] ? { color: EC.accent, opacity: 0.6 } : { color: EC.accent },
           })),
           lineStyle: { color: EC.accent, width: 2.5 },
           itemStyle: { color: EC.accent },
@@ -462,8 +463,8 @@ function ContributionReturnsCrossover({
           markLine: crossIdx >= 0 ? {
             silent: true,
             data: [{ xAxis: crossIdx }],
-            label: { show: true, formatter: `Crossover ${crossYear}`, position: 'insideEndTop', fontSize: 11, color: 'var(--yellow)' },
-            lineStyle: { type: 'dashed' as const, color: 'var(--yellow)', width: 1.5 },
+            label: { show: true, formatter: `Crossover ${crossYear}`, position: 'insideEndTop', fontSize: 11, color: EC.yellow },
+            lineStyle: { type: 'dashed' as const, color: EC.yellow, width: 1.5 },
           } : undefined,
         },
       ],

@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — ContributionReturnsCrossover: EC colors + axis theme padrão ──
+  { datetime: '2026-04-28T22:45:00', type: 'visual', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'CSS vars (var(--muted), var(--yellow)) nas séries e eixos sem theme padrão', para: 'EC.muted / EC.yellow (hex canvas-safe), EC_AXIS_LINE + EC_SPLIT_LINE + EC_TOOLTIP + EC_AXIS_LABEL em todos os eixos' },
   // ── 2026-04-28 — ContributionReturnsCrossover: UI fixes (tooltip K, legenda bottom, banda, label) ──
   { datetime: '2026-04-28T22:30:00', type: 'visual', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'tooltip em M ("R$ R$0M"), legenda top, banda opacity 8%, sub-label "VALOR ABSOLUTO" desnecessário, card "Aporte Anual Modelo"', para: 'tooltip pvLabel() nativo (R$392k), legenda bottom, banda 15%, sub-label removido, card renomeado para "Aporte Anual"' },
   // ── 2026-04-28 — ContributionReturnsCrossover: remove flywheel (%) sub-chart ──
