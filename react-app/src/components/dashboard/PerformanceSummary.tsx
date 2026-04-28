@@ -163,12 +163,17 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
           label="CAGR Real BRL"
           value={cagrReal != null ? `${cagrReal.toFixed(1)}%` : '--'}
           accent={cagrReal != null ? cagrSemaphore(cagrReal) : 'var(--muted)'}
-          delta={cagrRealDelta != null ? {
-            text: `${cagrRealDelta >= 0 ? '+' : ''}${cagrRealDelta.toFixed(1)}pp vs ${premissa.toFixed(1)}%`,
+          delta={alphaAnual != null ? {
+            text: `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(2)}pp vs VWRA`,
+            positive: alphaAnual >= 0,
+          } : cagrRealDelta != null ? {
+            text: `${cagrRealDelta >= 0 ? '+' : ''}${cagrRealDelta.toFixed(1)}pp vs premissa`,
             positive: cagrRealDelta >= 0,
           } : undefined}
           progress={cagrReal != null ? cagrReal / (premissa * 1.5) : undefined}
-          sub={periodoAnos != null ? `desde abr/2021 · ${periodoAnos.toFixed(1)} anos` : 'desde abr/2021'}
+          sub={periodoAnos != null
+            ? `desde abr/2021 · ${periodoAnos.toFixed(1)}a · meta ${premissa.toFixed(1)}%`
+            : `desde abr/2021 · meta ${premissa.toFixed(1)}%`}
         />
         <KpiCard
           label="CAGR Nominal BRL"

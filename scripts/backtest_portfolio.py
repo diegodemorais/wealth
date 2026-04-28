@@ -1181,9 +1181,22 @@ def main():
                         help="Data início customizada YYYY-MM (sobrepõe --regime).")
     parser.add_argument("--json",    action="store_true",
                         help="Emitir JSON para dashboard (regime 4 + regime 6). Usado por generate_data.py.")
+    parser.add_argument("--r7",      action="store_true",
+                        help="Emitir JSON do Regime 7 (1989-2026) para stdout. Salvar em dados/backtest_r7.json.")
     args = parser.parse_args()
 
-    # ── Regime 7 ──────────────────────────────────────────────────────────────
+    # ── Regime 7 JSON (para pipeline) ─────────────────────────────────────────
+    if args.r7:
+        import json as _json, sys as _sys, io, contextlib
+        print("  ▶ backtest regime 7 (1989-2026)...", file=_sys.stderr)
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            r7_data = run_regime7()
+        if r7_data:
+            _sys.stdout.write(_json.dumps(r7_data) + "\n")
+        return
+
+    # ── Regime 7 (modo texto) ──────────────────────────────────────────────────
     if args.regime == 7:
         run_regime7()
         return

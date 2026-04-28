@@ -3548,6 +3548,63 @@ def main():
         "Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos."
     )
 
+    # ── Crises históricas: drawdowns > 20% na série de backtest ──────────────
+    def _compute_backtest_crises(bt: dict, threshold: float = 0.20) -> list:
+        dates = bt.get("dates", [])
+        target = bt.get("target", [])
+        if not dates or not target or len(dates) != len(target):
+            return []
+        _CRISIS_NAMES = {
+            "2019": "Volatilidade Pré-COVID",
+            "2020": "COVID-19 Crash",
+            "2021": "Rotação Pós-COVID",
+            "2022": "Crash Taxa Juros 2022",
+            "2025": "Crash Tarifas 2025",
+            "2008": "Grande Crise Financeira (GFC)",
+            "2001": "Dotcom Crash",
+        }
+        crises = []
+        peak = target[0]
+        peak_idx = 0
+        trough = target[0]
+        trough_idx = 0
+        in_dd = False
+        for i, val in enumerate(target):
+            if val >= peak:
+                if in_dd:
+                    depth = (trough - peak) / peak
+                    if depth <= -threshold:
+                        year = dates[trough_idx][:4]  # nomear pelo ano do fundo, não do pico
+                        crises.append({
+                            "label": _CRISIS_NAMES.get(year, f"Drawdown {year}"),
+                            "periodo": f"{dates[peak_idx]} → {dates[trough_idx]}",
+                            "drawdown": round(depth * 100, 1),
+                            "recovery_months": i - trough_idx,
+                        })
+                    in_dd = False
+                peak = val
+                peak_idx = i
+                trough = val
+                trough_idx = i
+            else:
+                in_dd = True
+                if val < trough:
+                    trough = val
+                    trough_idx = i
+        if in_dd:
+            depth = (trough - peak) / peak
+            if depth <= -threshold:
+                year = dates[trough_idx][:4]
+                crises.append({
+                    "label": _CRISIS_NAMES.get(year, f"Drawdown {year}"),
+                    "periodo": f"{dates[peak_idx]} → {dates[trough_idx]} (em curso)",
+                    "drawdown": round(depth * 100, 1),
+                    "recovery_months": None,
+                })
+        return crises
+
+    backtest["crises"] = _compute_backtest_crises(backtest)
+
     # ── metrics_by_period: recalcula métricas CAGR/Sharpe/Vol/MaxDD por período ──
     def _compute_period_metrics_py(dates_list, target_series, shadow_series, start_ym):
         """Filtra séries pelo período e recalcula métricas usando pure Python."""
@@ -3659,6 +3716,24 @@ def main():
             }
         except Exception:
             return None
+
+    # ─── Backtest R7 (regime longo 1989-2026) → dados/backtest_r7.json ─────────
+    if not args.skip_scripts and not BACKTEST_R7_PATH.exists():
+        print("  ▶ Gerando backtest_r7.json (backtest_portfolio.py --r7) ...")
+        _venv_py = Path.home() / "claude" / "finance-tools" / ".venv" / "bin" / "python3"
+        _r7_cmd = [str(_venv_py), str(ROOT / "scripts" / "backtest_portfolio.py"), "--r7"]
+        _r7_out, _r7_err = run(_r7_cmd)
+        if _r7_err:
+            print(f"  ℹ backtest_r7 stderr: {_r7_err[:300]}")
+        if _r7_out and _r7_out.strip():
+            try:
+                _r7_data = json.loads(_r7_out)
+                BACKTEST_R7_PATH.write_text(json.dumps(_r7_data, ensure_ascii=False, indent=2))
+                print(f"  ✓ backtest_r7.json salvo")
+            except Exception as _e:
+                print(f"  ✗ Erro ao salvar backtest_r7.json: {_e}")
+        else:
+            print("  ✗ backtest_r7: sem output JSON")
 
     # ─── Realized PnL (IBKR FIFO) → DARF panel ──────────────────────────────
     if not args.skip_scripts and not REALIZED_PNL_PATH.exists():

@@ -128,6 +128,13 @@ Pipeline: Scripts Python → `dados/` (JSON) → React (`react-app/`) → `dash/
 - `npm run test` (Vitest) para unit/component tests
 - Bug fix → regression test
 
+**Changelog de Componentes (obrigatório):**
+- Antes de qualquer `git commit` com arquivos em `react-app/src/`, adicionar entrada no INÍCIO de `react-app/src/config/changelog.ts`
+- Formato: `{ datetime: 'ISO', type, component, tab, anchor, de, para }`
+- `tab`: rota sem barra ('now' | 'performance' | 'fire' | 'backtest' | 'portfolio' | 'withdraw' | 'assumptions')
+- `anchor`: id do `<CollapsibleSection>` mais próximo, sem '#' (vazio = só a aba)
+- Apenas alterações visíveis no dashboard (não pipeline internals, não chore/docs)
+
 ### Comentários
 - POR QUÊ, não O QUÊ. Skip `// increment counter`
 - Manter comentários existentes ao refatorar — carregam contexto

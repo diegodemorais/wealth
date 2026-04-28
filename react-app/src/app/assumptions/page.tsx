@@ -10,6 +10,7 @@ import { canonicalizePFire } from '@/utils/pfire-canonical';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CheckCircle, AlertTriangle, Clock, Shield, ArrowRight } from 'lucide-react';
+import { CHANGELOG, type ChangeType } from '@/config/changelog';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
@@ -74,6 +75,88 @@ function Table({ rows }: { rows: Row[] }) {
         })}
       </tbody>
     </table>
+  );
+}
+
+// ─── Changelog Table ──────────────────────────────────────────────────────────
+
+const TYPE_COLORS: Record<ChangeType, string> = {
+  layout:   'var(--accent)',
+  dado:     'var(--green)',
+  gráfico:  '#a855f7',
+  cálculo:  'var(--yellow)',
+  visual:   '#06b6d4',
+};
+
+const TAB_LABELS: Record<string, string> = {
+  now: 'NOW',
+  performance: 'Performance',
+  fire: 'FIRE',
+  backtest: 'Backtest',
+  portfolio: 'Portfolio',
+  withdraw: 'Retirada',
+  assumptions: 'Checklist',
+};
+
+function fmtDatetime(iso: string): string {
+  const [date, time] = iso.split('T');
+  const [y, m, d] = date.split('-');
+  return `${d}/${m} ${time}`;
+}
+
+function ChangelogTable() {
+  const entries = CHANGELOG.slice(0, 30);
+  return (
+    <div style={{ padding: '0 16px 16px' }}>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+          <thead>
+            <tr style={{ borderBottom: '2px solid var(--border)' }}>
+              {(['Data/Hora', 'Tipo', 'Componente', 'De', 'Para'] as const).map(h => (
+                <th key={h} style={{ padding: '7px 8px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {entries.map((e, i) => {
+              const href = `/${e.tab}${e.anchor ? '#' + e.anchor : ''}`;
+              return (
+                <tr key={i} style={{ borderBottom: '1px solid var(--border)', opacity: i > 9 ? 0.75 : 1 }}>
+                  <td style={{ padding: '6px 8px', color: 'var(--muted)', fontFamily: 'monospace', whiteSpace: 'nowrap', fontSize: 11 }}>
+                    {fmtDatetime(e.datetime)}
+                  </td>
+                  <td style={{ padding: '6px 8px', whiteSpace: 'nowrap' }}>
+                    <span style={{
+                      display: 'inline-block',
+                      padding: '2px 6px',
+                      borderRadius: 4,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: TYPE_COLORS[e.type],
+                      border: `1px solid ${TYPE_COLORS[e.type]}`,
+                      opacity: 0.9,
+                    }}>{e.type}</span>
+                  </td>
+                  <td style={{ padding: '6px 8px', whiteSpace: 'nowrap' }}>
+                    <Link href={href} style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                      {e.component}
+                    </Link>
+                    <span style={{ marginLeft: 4, fontSize: 10, color: 'var(--muted)' }}>
+                      {TAB_LABELS[e.tab] ?? e.tab}
+                    </span>
+                  </td>
+                  <td style={{ padding: '6px 8px', color: 'var(--muted)', maxWidth: 220, lineHeight: 1.35 }}>{e.de}</td>
+                  <td style={{ padding: '6px 8px', color: 'var(--text)', maxWidth: 220, lineHeight: 1.35 }}>{e.para}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ marginTop: 8, fontSize: 10, color: 'var(--muted)', opacity: 0.6 }}>
+        Fonte: <code>react-app/src/config/changelog.ts</code> · Atualizado pelo dev agent antes de cada commit em react-app/src/
+      </div>
+    </div>
   );
 }
 
@@ -918,203 +1001,13 @@ export default function AssumptionsPage() {
         </div>
       </CollapsibleSection>
 
-      {/* Recently Modified Components & Audit Roadmap (Phase 2-3) */}
+      {/* Changelog de Componentes — rastreamento de alterações visíveis */}
       <CollapsibleSection
         id="dashboard-updates"
-        title={secTitle('assumptions', 'dashboard-updates', '📊 Componentes Recentes & Roadmap Auditoria')}
+        title={secTitle('assumptions', 'dashboard-updates', '📋 Changelog — Alterações do Dashboard')}
         defaultOpen={secOpen('assumptions', 'dashboard-updates')}
       >
-        <div style={{ padding: '0 16px 16px' }}>
-          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 16 }}>
-            <strong>2026-04-26:</strong> Phase 3a Complete — 20 componentes alterados (7.8→9.4/10) · OPO Roadmap 2-8 mapeado
-          </div>
-
-          {/* Phase 3a Components Grid */}
-          <h3 style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            Componentes Modificados (Phase 3a)
-          </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 10, marginBottom: 20 }}>
-            {[
-              { name: 'GuardrailsMechanismChart.tsx', path: '/src/components/charts', desc: 'Novo: EChart drawdown vs spending cut' },
-              { name: 'assumptions/page.tsx', path: '/src/app', desc: 'Checklist + FIRE scenarios + Capital Humano' },
-              { name: 'fire/page.tsx', path: '/src/app', desc: '4x ScenarioBadge "Solteiro" adicionadas' },
-              { name: 'HODL11PositionPanel.tsx', path: '/src/components/dashboard', desc: '⚠️ Overweight warning badge' },
-              { name: 'withdraw/page.tsx', path: '/src/app', desc: 'GuardrailsMechanismChart integrado' },
-              { name: 'btc_indicators.py', path: '/scripts', desc: 'correlation_90d: 0.72 (histórico)' },
-              { name: 'RFStatusPanel.tsx', path: '/src/components/dashboard', desc: 'Sync data + metodologia Renda+' },
-              { name: 'SequenceOfReturnsRisk.tsx', path: '/src/components/charts', desc: 'p10/p25/p50/p75/p90 heatmap' },
-              { name: 'portfolio/page.tsx', path: '/src/app', desc: 'Atualizado com nova posição BTC' },
-              { name: 'performance/page.tsx', path: '/src/app', desc: 'Alpha drought caveat + metodologia' },
-              { name: 'EChart.tsx', path: '/src/components/primitives', desc: 'Privacy mode + theme integration' },
-              { name: 'echarts-theme.ts', path: '/src/utils', desc: 'EC_SPLIT_LINE, EC_AXIS_LINE exports' },
-              { name: 'useEChartsPrivacy.ts', path: '/src/hooks', desc: 'Privacy masking em tooltips' },
-              { name: 'btc_indicators.json', path: '/dados', desc: 'Novo: correlation_90d field' },
-              { name: 'carteira_params.json', path: '/dados', desc: 'Phase 3a audit params' },
-              { name: 'config.py', path: '/scripts', desc: 'Parâmetros FIRE + guardrails' },
-              { name: 'parse_carteira.py', path: '/scripts', desc: 'Schema v3.2 com capital humano' },
-              { name: 'CHANGELOG_PHASE2_3A.md', path: '/', desc: 'Documentação 7 commits + audit map' },
-              { name: 'ibkr_sync.py', path: '/scripts', desc: 'Fallback para posições IBKR' },
-              { name: 'ScenarioBadge.tsx', path: '/src/components/primitives', desc: 'Novo: Context labels "Solteiro"' },
-            ].map((comp, idx) => (
-              <a
-                key={idx}
-                href={`https://github.com/diegodemorais/wealth/blob/main${comp.path}/${comp.name}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'block',
-                  padding: 12,
-                  background: 'var(--card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 7,
-                  textDecoration: 'none',
-                  transition: 'all 0.2s',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--accent)';
-                  e.currentTarget.style.backgroundColor = 'rgba(var(--accent-rgb), 0.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border)';
-                  e.currentTarget.style.backgroundColor = 'var(--card)';
-                }}
-              >
-                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginBottom: 4, fontFamily: 'monospace' }}>
-                  {comp.name}
-                </div>
-                <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 6 }}>
-                  {comp.path}
-                </div>
-                <div style={{ fontSize: 11, color: 'var(--text)', lineHeight: 1.4 }}>
-                  {comp.desc}
-                </div>
-              </a>
-            ))}
-          </div>
-
-          {/* OPO Roadmap Table */}
-          <h3 style={{ margin: '20px 0 12px', fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            OPO Roadmap — Phase 2 & 3
-          </h3>
-          <div style={{ overflowX: 'auto', marginBottom: 16 }}>
-            <table style={{ width: '100%', fontSize: 11, borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '2px solid var(--border)' }}>
-                  <th style={{ padding: '8px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600 }}>OPO</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600 }}>Descrição</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 600, fontSize: 10 }}>Componentes Afetados</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)', fontWeight: 600 }}>Status</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'right', color: 'var(--muted)', fontWeight: 600 }}>Score</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)', fontWeight: 600 }}>Esforço</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>B1</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Capital Humano Disclosure (Katia)</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>assumptions/page.tsx</code> (Capital Humano block)</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.4</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>15min</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>B2</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>P(FIRE) vs Guardrails Metodologia</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>assumptions/page.tsx</code> (Guardrails vs MC section)</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.5</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>3h</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(255,200,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 1</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Stress Scenarios (stagflation/hyperinflation)</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--yellow)', fontSize: 10 }}>TBD (fire/page.tsx)</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--yellow)' }}>⏳ Phase 3b</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--yellow)' }}>+0.5</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>4h + IBKR</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 2</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Percentis MC (p10/p25/p50/p75/p90)</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>SequenceOfReturnsRisk.tsx</code>, <code>fire/page.tsx</code></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.4</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>2h</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 3</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Guardrails Visualização (drawdown chart)</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>GuardrailsMechanismChart.tsx</code>, <code>withdraw/page.tsx</code></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.3</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 4</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Scenarios Comparison (Base vs Aspiracional)</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>assumptions/page.tsx</code> (FIRE Scenarios table)</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 5</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Timestamps Consistentes (data freshness)</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>assumptions/page.tsx</code> (header timestamp)</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>2h</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,255,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 6</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>HODL11 Overweight Warning Badge</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--accent)', fontSize: 10 }}><code>HODL11PositionPanel.tsx</code></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--green)' }}>✓ Completo</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--green)' }}>+0.2</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>0.5h</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(100,100,100,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 7</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>Duration Display (Renda+ reconciliação)</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--muted)', fontSize: 10 }}><code>RFStatusPanel.tsx</code> (TBD)</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--muted)' }}>📋 Backlog</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--muted)' }}>+0.2</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>1h</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(255,200,0,0.03)' }}>
-                  <td style={{ padding: '8px 6px', fontWeight: 600, color: 'var(--text)' }}>OPO 8</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--text)' }}>BTC Stress Test Quantificado</td>
-                  <td style={{ padding: '8px 6px', color: 'var(--yellow)', fontSize: 10 }}>TBD (HODL11PositionPanel, portfolio)</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center' }}><span style={{ color: 'var(--yellow)' }}>⏳ Phase 3b</span></td>
-                  <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: 'var(--yellow)' }}>+0.3</td>
-                  <td style={{ padding: '8px 6px', textAlign: 'center', color: 'var(--muted)' }}>3h + IBKR</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* Summary */}
-          <div style={{ padding: 12, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 7, marginTop: 12 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
-              <div>
-                <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600 }}>Phase 3a Complete</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--green)', marginTop: 4 }}>7 de 8 OPO</div>
-                <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>+2.2 score (7.8→10.0)</div>
-              </div>
-              <div>
-                <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600 }}>Audit Score</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--accent)', marginTop: 4 }}>9.4/10</div>
-                <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>sem IBKR data</div>
-              </div>
-              <div>
-                <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600 }}>Phase 3b Pending</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--yellow)', marginTop: 4 }}>OPO 1, 8</div>
-                <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>+0.8 (9.4→10.2)</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ChangelogTable />
       </CollapsibleSection>
 
       {/* Footer */}
