@@ -173,7 +173,6 @@
         "factor_signal.excess_ytd_pp",
         "factor_signal.excess_since_launch_pp"
       ],
-      "optional": true,
       "privacy": false
     },
     {
@@ -555,7 +554,6 @@
         "backtest.metrics.target.cagr",
         "backtest.metrics.shadowA.cagr"
       ],
-      "optional": true,
       "privacy": false
     },
     {
