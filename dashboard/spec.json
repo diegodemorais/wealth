@@ -1002,6 +1002,60 @@
         "pfire_base.base"
       ],
       "privacy": false
+    },
+    {
+      "id": "risk-score-gauge",
+      "tab": "now",
+      "label": "Risk Score Gauge",
+      "type": "chart",
+      "purpose": "gauge de risco do portfolio 0-10",
+      "data_fields": ["risk.score", "risk.label"],
+      "optional": false
+    },
+    {
+      "id": "risk-semaforos",
+      "tab": "now",
+      "label": "Risk Semáforos",
+      "type": "table",
+      "purpose": "status dos principais indicadores de risco",
+      "data_fields": ["risk.semaforos"],
+      "optional": false
+    },
+    {
+      "id": "risk-contribution-chart",
+      "tab": "portfolio",
+      "label": "Risk Contribution",
+      "type": "chart",
+      "purpose": "contribuição % de cada ativo ao risco total",
+      "data_fields": ["risk.contribution_by_asset"],
+      "optional": false
+    },
+    {
+      "id": "duration-scenarios-table",
+      "tab": "portfolio",
+      "label": "Duration Scenarios",
+      "type": "table",
+      "purpose": "cenários de impacto de mudança de juros na Renda+",
+      "data_fields": ["risk.duration_scenarios"],
+      "optional": false
+    },
+    {
+      "id": "drawdown-monitor",
+      "tab": "performance",
+      "label": "Drawdown Monitor",
+      "type": "kpi",
+      "purpose": "drawdown atual vs histórico com badge de guardrail",
+      "data_fields": ["risk.max_drawdown_real"],
+      "optional": false
+    },
+    {
+      "id": "sorr-indicator",
+      "tab": "fire",
+      "label": "SoRR Indicator",
+      "type": "table",
+      "purpose": "P(FIRE) ajustado em diferentes cenários de crash",
+      "data_fields": ["risk.sorr_scenarios"],
+      "optional": false
     }
   ]
 }

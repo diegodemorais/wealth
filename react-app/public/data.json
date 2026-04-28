@@ -13310,5 +13310,96 @@
         "currency": "USD"
       }
     ]
+  },
+  "risk": {
+    "score": 7.66,
+    "label": "Agressivo-Moderado",
+    "score_breakdown": {
+      "base_equity": 7.9,
+      "addon_btc": 0.0502,
+      "addon_duration": 0.0127,
+      "addon_conc_br": 0.0,
+      "discount_diversificacao": -0.3
+    },
+    "vol_portfolio": 0.168,
+    "var_95_pct": 0.1794,
+    "cvar_95_pct": 0.2495,
+    "hhi": 0.248,
+    "calmar_ratio": null,
+    "max_drawdown_real": -14.74,
+    "contribution_by_asset": [
+      {
+        "name": "SWRD",
+        "weight": 0.395,
+        "risk_contribution_pct": 0.3556
+      },
+      {
+        "name": "AVGS",
+        "weight": 0.237,
+        "risk_contribution_pct": 0.2895
+      },
+      {
+        "name": "AVEM",
+        "weight": 0.158,
+        "risk_contribution_pct": 0.1829
+      },
+      {
+        "name": "HODL11",
+        "weight": 0.029,
+        "risk_contribution_pct": 0.1399
+      },
+      {
+        "name": "RF",
+        "weight": 0.1,
+        "risk_contribution_pct": 0.0322
+      }
+    ],
+    "semaforos": {
+      "equity_drift": {
+        "value": null,
+        "status": "verde",
+        "label": "Calculado no portfolio"
+      },
+      "btc_pct": {
+        "value": 0.029,
+        "status": "verde",
+        "threshold_min": 0.015,
+        "threshold_max": 0.05
+      },
+      "renda_plus_taxa": {
+        "value": null,
+        "status": "verde",
+        "label": "Ver gatilhos"
+      }
+    },
+    "duration_scenarios": [
+      {
+        "shift_pp": 1,
+        "renda_plus_mtm_pct": -0.4325,
+        "renda_plus_mtm_brl": -43531.7
+      },
+      {
+        "shift_pp": 2,
+        "renda_plus_mtm_pct": -0.865,
+        "renda_plus_mtm_brl": -87063.4
+      }
+    ],
+    "sorr_scenarios": [
+      {
+        "crash_label": "Queda -20%",
+        "crash_pct": -0.2,
+        "pfire_ajustado": 0.82
+      },
+      {
+        "crash_label": "Queda -30%",
+        "crash_pct": -0.3,
+        "pfire_ajustado": 0.76
+      },
+      {
+        "crash_label": "Queda -40%",
+        "crash_pct": -0.4,
+        "pfire_ajustado": 0.68
+      }
+    ]
   }
 }

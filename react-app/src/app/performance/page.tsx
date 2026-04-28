@@ -22,6 +22,7 @@ import { SectionDivider } from '@/components/primitives/SectionDivider';
 import PerformanceSummary from '@/components/dashboard/PerformanceSummary';
 import { BarChart3 } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { EC } from '@/utils/echarts-theme';
 
 // Period buttons for timeline
 const PERIODS = [
@@ -702,6 +703,59 @@ export default function PerformancePage() {
           </div>
         </div>
       </CollapsibleSection>
+
+      {/* ── R5: Drawdown Monitor ─────────────────────────────────────────────── */}
+      {(() => {
+        const risk = (safeData as any)?.risk;
+        const ddHistory = (safeData as any)?.drawdown_history;
+        // max_drawdown_real em % (negativo): vem do risk.max_drawdown_real (via cummax histórico)
+        const maxDdRaw: number | null = risk?.max_drawdown_real ?? ddHistory?.max_drawdown ?? null;
+        // Drawdown atual = último valor da série (já em %)
+        const ddSeries: number[] = ddHistory?.drawdown_pct ?? [];
+        const currentDd: number | null = ddSeries.length > 0 ? ddSeries[ddSeries.length - 1] : null;
+        const absCurrent = currentDd != null ? Math.abs(currentDd) : null;
+        const absMax = maxDdRaw != null ? Math.abs(maxDdRaw) : null;
+        // Badge color baseado em nível de guardrail
+        const ddBadge = (dd: number | null): { color: string; label: string } => {
+          if (dd == null) return { color: EC.muted, label: '—' };
+          if (dd < 15) return { color: EC.green, label: 'Seguro' };
+          if (dd < 25) return { color: EC.warning, label: 'Cautela 1' };
+          if (dd < 35) return { color: EC.red, label: 'Cautela 2' };
+          return { color: '#7c3aed', label: 'Defesa' };
+        };
+        const badge = ddBadge(absCurrent);
+        return (
+          <>
+            <SectionDivider label="Monitor de Drawdown" />
+            <div data-testid="drawdown-monitor" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '14px 16px', marginBottom: 12 }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 8 }}>Monitor de Drawdown</div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Drawdown atual</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: badge.color }}>
+                    {absCurrent != null ? (privacyMode ? '••%' : `-${absCurrent.toFixed(1)}%`) : '—'}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Max drawdown histórico</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)' }}>
+                    {absMax != null ? (privacyMode ? '••%' : `-${absMax.toFixed(1)}%`) : '—'}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Guardrail</div>
+                  <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, background: `${badge.color}22`, border: `1px solid ${badge.color}66`, color: badge.color, fontWeight: 700, fontSize: 'var(--text-sm)' }}>
+                    {badge.label}
+                  </div>
+                </div>
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 10, borderTop: '1px solid var(--border)', paddingTop: 8 }}>
+                Níveis: &lt;15% seguro · 15–25% Cautela 1 (−10% gasto) · 25–35% Cautela 2 (−20%) · &gt;35% Defesa (piso essencial). Drawdown histórico = pico absoluto via cummax desde Apr/2021.
+              </div>
+            </div>
+          </>
+        );
+      })()}
     </div>
     </div>
   );

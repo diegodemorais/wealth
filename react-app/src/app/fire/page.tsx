@@ -724,6 +724,56 @@ export default function FirePage() {
         />
       </CollapsibleSection>
 
+      {/* ── R6: SoRR Indicator Table ──────────────────────────────────────────── */}
+      {(() => {
+        const sorrScenarios: Array<{ crash_label: string; crash_pct: number; pfire_ajustado: number }> =
+          (data as any)?.risk?.sorr_scenarios ?? [];
+        if (sorrScenarios.length === 0) return null;
+        return (
+          <CollapsibleSection
+            id="section-sorr-indicator"
+            title={secTitle('fire', 'sorr-indicator', 'SoRR Indicator — P(FIRE) em Cenários de Crash')}
+            defaultOpen={secOpen('fire', 'sorr-indicator', false)}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <div data-testid="sorr-indicator" style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--card2)' }}>
+                      <th style={{ textAlign: 'left', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>Cenário de Crash</th>
+                      <th style={{ textAlign: 'right', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>P(FIRE) Ajustado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sorrScenarios.map(s => {
+                      const isAlert = s.pfire_ajustado < 0.75;
+                      const pct = (s.pfire_ajustado * 100).toFixed(0);
+                      return (
+                        <tr key={s.crash_label} style={{ borderBottom: '1px solid var(--card2)', background: isAlert ? 'rgba(248,81,73,0.06)' : 'transparent' }}>
+                          <td style={{ padding: '8px 10px', fontWeight: 600 }}>
+                            {s.crash_label}
+                            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginLeft: 8 }}>
+                              ({(s.crash_pct * 100).toFixed(0)}%)
+                            </span>
+                          </td>
+                          <td style={{ padding: '8px 10px', textAlign: 'right', fontWeight: 700, color: isAlert ? 'var(--red)' : 'var(--green)' }}>
+                            {privacyMode ? '••%' : `${pct}%`}
+                            {isAlert && <span style={{ marginLeft: 6, fontSize: 10, color: 'var(--red)' }}>⚠ &lt;75%</span>}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div className="src">
+                P(FIRE) ajustado = impacto de queda imediata no portfolio sobre probabilidade de sucesso (Monte Carlo). Alerta se &lt;75%.
+              </div>
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
+
       {/* Stress Macroeconômico — Stagflation + Hyperinflation */}
       {(() => {
         const ext = (data as any)?.pfire_cenarios_estendidos as Record<string, { p_sucesso_pct: number; label: string; descricao: string }> | null | undefined;

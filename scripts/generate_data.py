@@ -41,6 +41,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 # Import PFireEngine for centralized P(FIRE) calculations
 from pfire_engine import PFireEngine, PFireRequest
 from pfire_transformer import canonicalize_pfire
+from risk_metrics import compute_risk_metrics
 
 from config import (
     PESOS_TARGET, BUCKET_MAP, EQUITY_WEIGHTS,
@@ -4402,6 +4403,10 @@ def main():
         # Fonte: IBKR flex query → processed by ibkr_sync.py
         "realized_pnl": json.loads(REALIZED_PNL_PATH.read_text()) if REALIZED_PNL_PATH.exists() else None,
     }
+
+    # ─── Risk Metrics — calculado após data dict completo (lê patrimônio) ────────────
+    data["risk"] = compute_risk_metrics(data)
+    assert data.get("risk") is not None, "risk metrics missing"
 
     # ─── Limpar NaN valores antes de escrever JSON ──────────────────────────────────
     # Python's NaN can't be serialized to JSON. Replace with None.

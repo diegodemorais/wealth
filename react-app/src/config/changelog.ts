@@ -15,6 +15,11 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-27 — HD-risco-portfolio ─────────────────────────────────────────
+  { datetime: '2026-04-27T00:00:00', type: 'gráfico', component: 'RiskDashboard', tab: 'now', anchor: '', de: 'sem visão de risco consolidada', para: 'Risk Score gauge + semáforos de alertas (R1+R2)' },
+  { datetime: '2026-04-27T00:00:00', type: 'gráfico', component: 'RiskDashboard', tab: 'portfolio', anchor: '', de: 'sem visão de risco', para: 'Risk Contribution chart + Duration Scenarios table (R3+R4)' },
+  { datetime: '2026-04-27T00:00:00', type: 'dado', component: 'RiskDashboard', tab: 'performance', anchor: '', de: 'sem monitor de drawdown', para: 'Drawdown Monitor com badge de guardrail (R5)' },
+  { datetime: '2026-04-27T00:00:00', type: 'dado', component: 'RiskDashboard', tab: 'fire', anchor: '', de: 'sem indicador SoRR', para: 'SoRR Indicator com cenários de crash (R6)' },
   // ── 2026-04-27 ──────────────────────────────────────────────────────────────
   {
     datetime: '2026-04-27T20:48',

@@ -495,6 +495,72 @@ test.describe('Simulators — semantic values', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Risk Dashboard — R1-R6 (HD-risco-portfolio)
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Risk Dashboard — R1+R2 (NOW tab)', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.now);
+  });
+
+  // R1: Risk Score Gauge — P3 visible only (gauge = canvas, no assertable text)
+  test('risk-score-gauge is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="risk-score-gauge"]');
+    await expect(el, 'risk-score-gauge not visible').toBeVisible({ timeout: 15_000 });
+  });
+
+  // R2: Risk Semáforos — P2 visible and not empty
+  test('risk-semaforos is visible and not empty', async ({ page }) => {
+    const el = page.locator('[data-testid="risk-semaforos"]');
+    await expect(el, 'risk-semaforos not visible').toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'risk-semaforos is empty').not.toBe('');
+  });
+});
+
+test.describe('Risk Dashboard — R3+R4 (Portfolio tab)', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.portfolio);
+  });
+
+  // R3: Risk Contribution Chart — P2 visible (inside collapsible, may be closed)
+  test('risk-contribution-chart element exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="risk-contribution-chart"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  // R4: Duration Scenarios Table — P2 exists in DOM
+  test('duration-scenarios-table element exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="duration-scenarios-table"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+});
+
+test.describe('Risk Dashboard — R5 (Performance tab)', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.performance);
+  });
+
+  // R5: Drawdown Monitor — P2 visible
+  test('drawdown-monitor is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="drawdown-monitor"]');
+    await expect(el, 'drawdown-monitor not visible').toBeVisible({ timeout: 15_000 });
+  });
+});
+
+test.describe('Risk Dashboard — R6 (FIRE tab)', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.fire);
+  });
+
+  // R6: SoRR Indicator — P2 exists (inside collapsible)
+  test('sorr-indicator element exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="sorr-indicator"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Footer — version and data timestamp (all critical tabs)
 // ─────────────────────────────────────────────────────────────────────────────
 

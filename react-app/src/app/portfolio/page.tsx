@@ -25,6 +25,8 @@ import { MetricCard } from '@/components/primitives/MetricCard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Globe, ClipboardList, Landmark, MapPin, BarChart3, Bitcoin } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { EChart } from '@/components/primitives/EChart';
+import { EC, EC_AXIS_LABEL } from '@/utils/echarts-theme';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -552,6 +554,131 @@ export default function PortfolioPage() {
         </CollapsibleSection>
       )}
 
+
+      {/* ── R3: Risk Contribution Chart ─────────────────────────────────────── */}
+      <SectionDivider label="Análise de Risco" />
+      {(() => {
+        const risk = (data as any)?.risk;
+        const contribs: Array<{ name: string; weight: number; risk_contribution_pct: number }> =
+          risk?.contribution_by_asset ?? [];
+        if (contribs.length === 0) return null;
+        const sortedContribs = [...contribs].sort((a, b) => b.risk_contribution_pct - a.risk_contribution_pct);
+        const chartColors = [EC.accent, EC.green, EC.orange, EC.purple, EC.cyan];
+        const barOption = {
+          backgroundColor: 'transparent',
+          grid: { left: 60, right: 20, top: 10, bottom: 20 },
+          xAxis: {
+            type: 'value' as const,
+            axisLabel: { ...EC_AXIS_LABEL, formatter: (v: number) => `${(v * 100).toFixed(0)}%` },
+            splitLine: { lineStyle: { color: '#21262d' } },
+          },
+          yAxis: {
+            type: 'category' as const,
+            data: sortedContribs.map(c => c.name),
+            axisLabel: EC_AXIS_LABEL,
+            axisLine: { show: false },
+          },
+          series: [{
+            type: 'bar' as const,
+            data: sortedContribs.map((c, i) => ({
+              value: c.risk_contribution_pct,
+              itemStyle: { color: chartColors[i % chartColors.length] },
+            })),
+            barMaxWidth: 28,
+            label: {
+              show: !privacyMode,
+              position: 'right' as const,
+              color: EC.muted,
+              fontSize: 10,
+              formatter: (p: { value: number }) => `${(p.value * 100).toFixed(0)}%`,
+            },
+          }],
+          tooltip: {
+            backgroundColor: EC.card,
+            borderColor: '#30363d',
+            textStyle: { color: EC.text, fontSize: 11 },
+            formatter: (p: { name: string; value: number }) =>
+              `${p.name}: ${(p.value * 100).toFixed(1)}% risco`,
+          },
+        };
+        return (
+          <CollapsibleSection
+            id="section-risk-contribution"
+            title={secTitle('portfolio', 'risk-contribution', 'Contribuição ao Risco — por Ativo')}
+            defaultOpen={secOpen('portfolio', 'risk-contribution', false)}
+            icon={<BarChart3 size={18} />}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <div data-testid="risk-contribution-chart">
+                <EChart option={barOption} style={{ height: 180 }} />
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">
+                {sortedContribs.map((c, i) => (
+                  <div key={c.name} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 6, padding: '8px 10px' }}>
+                    <div style={{ fontSize: 10, color: chartColors[i % chartColors.length], fontWeight: 700, textTransform: 'uppercase' }}>{c.name}</div>
+                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text)' }}>
+                      {privacyMode ? '••%' : `${(c.risk_contribution_pct * 100).toFixed(0)}% risco`}
+                    </div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)' }}>
+                      peso {privacyMode ? '••%' : `${(c.weight * 100).toFixed(1)}%`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="src">
+                Contribuição ao risco = volatilidade implícita × peso, normalizado. Volatilidades: SWRD 14%, AVGS 19%, AVEM 18%, HODL11 75%, RF 5%.
+              </div>
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
+
+      {/* ── R4: Duration Scenarios Table ─────────────────────────────────────── */}
+      {(() => {
+        const risk = (data as any)?.risk;
+        const scenarios: Array<{ shift_pp: number; renda_plus_mtm_pct: number; renda_plus_mtm_brl: number | null }> =
+          risk?.duration_scenarios ?? [];
+        if (scenarios.length === 0) return null;
+        return (
+          <CollapsibleSection
+            id="section-duration-scenarios"
+            title={secTitle('portfolio', 'duration-scenarios', 'Cenários de Duration — Renda+ 2065')}
+            defaultOpen={secOpen('portfolio', 'duration-scenarios', false)}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <div data-testid="duration-scenarios-table" style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--card2)' }}>
+                      <th style={{ textAlign: 'left', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>Shift de Juros</th>
+                      <th style={{ textAlign: 'right', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>MtM Renda+ (%)</th>
+                      <th style={{ textAlign: 'right', padding: '8px 10px', color: 'var(--muted)', fontWeight: 600 }}>MtM Renda+ (R$)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scenarios.map(s => (
+                      <tr key={s.shift_pp} style={{ borderBottom: '1px solid var(--card2)' }}>
+                        <td style={{ padding: '8px 10px', fontWeight: 700 }}>+{s.shift_pp}pp</td>
+                        <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--red)', fontWeight: 700 }}>
+                          {privacyMode ? '••%' : `${s.renda_plus_mtm_pct?.toFixed(2)}%`}
+                        </td>
+                        <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--muted)' }}>
+                          {privacyMode ? '••••' : (s.renda_plus_mtm_brl != null
+                            ? fmtBRL(s.renda_plus_mtm_brl)
+                            : '—')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="src">
+                MtM = Mark-to-Market. Modified Duration {43.25} × shift. Impacto sobre posição Renda+ 2065 (IPCA+).
+              </div>
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
