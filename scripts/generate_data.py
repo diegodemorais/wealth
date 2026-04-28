@@ -1356,7 +1356,9 @@ def get_factor_signal():
             auto_adjust=True, progress=False
         )[COLUMN_CLOSE]
 
-        ytd   = tickers[tickers.index >= ytd_start]
+        # dropna: yfinance inclui o dia atual com NaN quando mercado ainda não fechou
+        tickers = tickers.dropna()
+        ytd     = tickers[tickers.index >= ytd_start]
         swrd_ytd        = float((ytd[TICKER_SWRD_LSE].iloc[-1] / ytd[TICKER_SWRD_LSE].iloc[0] - 1) * 100)
         avgs_ytd        = float((ytd[TICKER_AVGS_LSE].iloc[-1] / ytd[TICKER_AVGS_LSE].iloc[0] - 1) * 100)
         swrd_launch     = float((tickers[TICKER_SWRD_LSE].iloc[-1] / tickers[TICKER_SWRD_LSE].iloc[0] - 1) * 100)
