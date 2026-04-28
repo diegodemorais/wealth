@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-dashboard-gaps-tier3 |
 | **Dono** | Head + Time |
-| **Status** | Backlog |
+| **Status** | Em andamento (T fechado; U/V/W pendentes) |
 | **Prioridade** | Baixa |
 | **Participantes** | Factor, RF, FIRE, Macro, Quant, Fact-Checker |
 | **Co-sponsor** | Dev (implementação após decisão) |
@@ -26,18 +26,23 @@ Critério Tier 3: metodologia controversa, dados externos não disponíveis, ou 
 
 ## Escopo
 
-### T: P(FIRE Quality) — Métrica Separada do Headline
+### T: P(FIRE Quality) — Métrica Separada do Headline ✗ FECHADO
 
-**Problema:** P(FIRE) headline = 86.4% inclui cenários onde Diego tecnicamente não depleta o portfolio mas gasta abaixo de R$220k/ano — "sucesso técnico, insucesso real".
+**Status:** Fechado sem implementação — bloqueio metodológico. Data: 2026-04-28.
 
-**Decisão pendente:**
-- [ ] Definir qual threshold de gasto define "FIRE quality" (R$220k? R$200k? 80% dos gastos-alvo?)
-- [ ] Definir se exibir junto ao headline P(FIRE) ou em seção separada
-- [ ] Decidir se inclui variabilidade temporal (pode cair abaixo do threshold temporariamente?)
+**Decisões tomadas:**
+- Piso: R$200k lifestyle (ex-saúde), dinâmico com spending smile
+- Tolerância: max 3 anos consecutivos abaixo do piso
+- Denominador: N total (10k trajetórias)
+- Gasto: lifestyle bruto proporcional (gasto_bruto × lifestyle_ratio)
 
-**Debate necessário:** FIRE agent + Quant. Após decisão, pipeline simples e React trivial.
+**Bloqueio identificado:** o modelo de guardrails corta saúde e lifestyle proporcionalmente no mesmo valor (`gasto_bruto`). Para calcular "gasto_lifestyle" corretamente, seria necessário que os guardrails protegessem saúde (categoria inelástica) e só cortassem lifestyle. Sem essa separação, a extração `gasto_lifestyle = gasto_bruto × lifestyle_ratio` resulta em P(quality) = 29.5% — implausível vs literatura (esperado 75-85% para SWR 2.4%).
 
-**Valor estimado pós-debate:** P(FIRE quality R$220k) ≈ 80-84% — diferença de 2-6pp vs headline.
+**Por que não implementar opção simplificada (B):** P(gasto_bruto >= R$220k) é métrica sem benchmark na literatura, arbitrária, e gera confusão vs headline P(FIRE) = 86.1%.
+
+**Pré-requisito para reabrir:** separar saúde de lifestyle nos guardrails (FR-guardrails-categoria-elasticidade). Após isso, recalcular P(quality) com modelo correto.
+
+**Referência:** debate completo em sessão 2026-04-28. Quant: 2 bugs corrigidos. FIRE + Head: 2-0 por C (fechar).
 
 ---
 
@@ -120,7 +125,7 @@ Critério Tier 3: metodologia controversa, dados externos não disponíveis, ou 
 
 ## Próximos Passos
 
-- [ ] Iniciar debate Gap T (P(FIRE quality)) — menor controvérsia, maior impacto imediato
-- [ ] Gap W (tracking error) pode ser discutido junto com Gap H (factor drought) do Tier 1
-- [ ] Gap V (imóvel) aguarda input de Diego sobre intenção futura
-- [ ] Gap U (valuation spreads) aguarda verificação de fonte pública via Fact-Checker
+- [x] Gap T — fechado sem implementação (bloqueio: guardrails não separam saúde de lifestyle)
+- [ ] Gap U (valuation spreads) — verificar fonte pública via Fact-Checker
+- [ ] Gap V (imóvel) — aguarda input de Diego sobre intenção futura com imóvel e terreno
+- [ ] Gap W (tracking error) — pode ser discutido junto com Gap H (factor drought) do Tier 1
