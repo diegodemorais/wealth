@@ -27,7 +27,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| HD-pipeline-observabilidade | Observabilidade, Automação e Cobertura do Pipeline | Head + Dev | 🔴 Alta |
 
 ### Blocked
 > Issues aguardando dependências externas
