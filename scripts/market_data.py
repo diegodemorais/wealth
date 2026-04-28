@@ -227,8 +227,11 @@ def factor_value_spread() -> dict:
         "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/"
         "The-Devil-in-HMLs-Details-Factors-Monthly.xlsx"
     )
-    r = requests.get(AQR_URL, timeout=60)
-    r.raise_for_status()
+    try:
+        r = requests.get(AQR_URL, timeout=60)
+        r.raise_for_status()
+    except requests.RequestException as e:
+        raise RuntimeError(f"AQR HML Devil download failed: {e}") from e
 
     # Row 18 (0-indexed) = column headers; row 19+ = data
     df_raw = pd.read_excel(io.BytesIO(r.content), sheet_name="HML Devil", header=None)

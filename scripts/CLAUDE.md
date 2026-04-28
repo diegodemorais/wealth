@@ -35,7 +35,7 @@ python3 scripts/market_data.py --all             # Tudo acima
 
 **Fontes de factor data:**
 - HML: **AQR HML Devil Monthly** (B/M contemporâneo, timely) — URL pública sem auth
-- SMB: **Ken French FF5** via `getfactormodels` (US + Developed) — fallback se AQR indisponível
+- SMB: **Ken French FF5** via `getfactormodels` (US + Developed) — componente permanente (AQR Devil não provê SMB; se AQR cair, função falha completamente)
 - Cache: `dados/factor_cache.json` → chave `factor_value_spread`
 
 ## Fluxo de dados

@@ -238,9 +238,9 @@ export default function PortfolioPage() {
             </div>
             <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
             <div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>SV Proxy Rolling 36m</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>SV Proxy (acum. 36m)</div>
               <div style={{ fontSize: '1rem', fontWeight: 700, color: svPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                {svPct >= 0 ? '+' : ''}{svPct.toFixed(2)}%/mês
+                {svPct >= 0 ? '+' : ''}{svPct.toFixed(2)}%
               </div>
             </div>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', width: '100%', marginTop: -4 }}>
