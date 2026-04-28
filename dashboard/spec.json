@@ -1146,8 +1146,9 @@
       "data_fields": [
         "macro.cds_brazil_5y_bps"
       ],
-      "optional": false,
-      "label": "Semáforo CDS Brasil"
+      "optional": true,
+      "label": "Semáforo CDS Brasil",
+      "_optional_reason": "Fonte Investing.com retorna 403 frequentemente — semáforo exibe '—' quando indisponível"
     },
     {
       "id": "balanco-holistico",
@@ -1361,6 +1362,25 @@
       ],
       "optional": false,
       "privacy": false
+    },
+    {
+      "id": "contribuicao-retorno-crossover",
+      "label": "Crossover Point — Rentabilidade vs Aportes",
+      "tab": "fire",
+      "type": "chart",
+      "purpose": "Mostra o ano em que rentabilidade anual R$ supera o aporte anual — Crossover Point. Histórico 2021-2026 + projeção 3 cenários (8%/9%/10% nominal). Toggle nominal/real.",
+      "data_fields": [
+        "contribuicao_retorno_crossover.historico",
+        "contribuicao_retorno_crossover.projecao",
+        "contribuicao_retorno_crossover.crossover_historico_nominal_ano",
+        "contribuicao_retorno_crossover.crossover_projecao_nominal_ano",
+        "contribuicao_retorno_crossover.crossover_projecao_real_ano",
+        "contribuicao_retorno_crossover.aporte_anual",
+        "contribuicao_retorno_crossover.ipca_projecao"
+      ],
+      "optional": true,
+      "privacy": true,
+      "_optional_reason": "Campo novo — renderiza apenas se contribuicao_retorno_crossover estiver no data.json"
     }
   ]
 }

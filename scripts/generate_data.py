@@ -2058,6 +2058,122 @@ def _compute_human_capital_crossover(fire_trilha, premissas):
     }
 
 
+# ─── 7b. CONTRIBUIÇÃO vs RENTABILIDADE CROSSOVER ──────────────────────────────
+def compute_contribuicao_retorno_crossover(
+    retornos_mensais: dict,
+    historico_csv_rows: list[dict],
+    premissas: dict,
+    fire_trilha: dict,
+) -> dict:
+    """
+    Calcula o crossover point: ano em que rentabilidade anual R$ supera o aporte anual R$.
+
+    Histórico (2021–2026): derivado do historico_carteira.csv via variação de patrimônio.
+    Projeção (2026–2036): 3 cenários (8%/9%/10% nominal BRL), aportes R$300k/ano fixo.
+    Perspectiva dual: nominal e real (deflacionando pelo IPCA 4%).
+    """
+    TAXA_BASE  = 0.09
+    TAXA_FAV   = 0.10
+    TAXA_STRESS = 0.08
+    APORTE_ANUAL = premissas.get("aporte_mensal", 25_000) * 12  # usa premissa do pipeline
+    IPCA_PROJ = premissas.get("ipca_anual", 0.04)
+    ANO_ATUAL = premissas.get("ano_atual", 2026)
+
+    # ── Histórico por ano via variação de patrimônio ──────────────────────────
+    from collections import defaultdict
+    year_aportes: dict[str, float] = defaultdict(float)
+    year_pat: dict[str, float] = {}
+    prev_pat = 0.0
+
+    for row in historico_csv_rows:
+        year = row["data"][:4]
+        aporte_val = float(row.get("aporte_brl") or 0)
+        pat_val = float(row.get("patrimonio_brl") or 0)
+        year_aportes[year] += aporte_val
+        year_pat[year] = pat_val
+
+    historico = []
+    pat_start_by_year: dict[str, float] = {}
+    sorted_years = sorted(year_pat.keys())
+    for i, year in enumerate(sorted_years):
+        if i == 0:
+            pat_s = 0.0  # portfólio nasceu em 2021
+        else:
+            pat_s = year_pat[sorted_years[i - 1]]
+        pat_start_by_year[year] = pat_s
+        pat_e = year_pat[year]
+        aportes = year_aportes[year]
+        # ganho = variação do patrimônio menos aportes do período
+        ganho = pat_e - pat_s - aportes
+        historico.append({
+            "ano": int(year),
+            "aporte_brl": round(aportes),
+            "ganho_mercado_brl": round(ganho),
+            "patrimonio_fim_brl": round(pat_e),
+            "tipo": "historico",
+        })
+
+    # ── Patrimônio inicial para projeção ──────────────────────────────────────
+    # Usar o patrimônio do último ponto histórico ou premissa
+    pat_inicial = year_pat.get(str(ANO_ATUAL), premissas.get("patrimonio_atual", 3_469_000))
+
+    # ── Projeção 2026–2036 ────────────────────────────────────────────────────
+    def build_projecao(taxa_nominal: float) -> list[dict]:
+        pts = []
+        pat = pat_inicial
+        for offset in range(11):  # 2026..2036
+            ano = ANO_ATUAL + offset
+            ganho = pat * taxa_nominal
+            aporte = APORTE_ANUAL
+            pat_fim = pat + ganho + aporte
+            pts.append({
+                "ano": ano,
+                "aporte_brl": round(aporte),
+                "ganho_mercado_brl": round(ganho),
+                "ganho_real_brl": round(ganho / ((1 + IPCA_PROJ) ** offset)),
+                "aporte_real_brl": round(aporte / ((1 + IPCA_PROJ) ** offset)),
+                "patrimonio_fim_brl": round(pat_fim),
+                "tipo": "projecao",
+            })
+            pat = pat_fim
+        return pts
+
+    proj_base   = build_projecao(TAXA_BASE)
+    proj_fav    = build_projecao(TAXA_FAV)
+    proj_stress = build_projecao(TAXA_STRESS)
+
+    # ── Crossover points ─────────────────────────────────────────────────────
+    def _crossover_ano(pts: list[dict], key_ganho: str, key_aporte: str) -> int | None:
+        for p in pts:
+            if p[key_ganho] > p[key_aporte]:
+                return p["ano"]
+        return None
+
+    # Nominal histórico (primeiro ano em que ganho_mercado > aporte)
+    cross_hist_nominal = next(
+        (h["ano"] for h in historico if h["ganho_mercado_brl"] > h["aporte_brl"]), None
+    )
+    cross_proj_nominal = _crossover_ano(proj_base, "ganho_mercado_brl", "aporte_brl")
+    cross_proj_real    = _crossover_ano(proj_base, "ganho_real_brl", "aporte_real_brl")
+
+    return {
+        "historico":              historico,
+        "projecao": {
+            "base":   proj_base,
+            "fav":    proj_fav,
+            "stress": proj_stress,
+        },
+        "taxa_nominal_base":    TAXA_BASE,
+        "taxa_nominal_fav":     TAXA_FAV,
+        "taxa_nominal_stress":  TAXA_STRESS,
+        "aporte_anual":         round(APORTE_ANUAL),
+        "ipca_projecao":        IPCA_PROJ,
+        "crossover_historico_nominal_ano": cross_hist_nominal,
+        "crossover_projecao_nominal_ano":  cross_proj_nominal,
+        "crossover_projecao_real_ano":     cross_proj_real,
+    }
+
+
 # ─── 8. DRIFT ─────────────────────────────────────────────────────────────────
 def compute_drift(posicoes, rf, hodl11_brl, cambio, coe_net_brl: float = 0.0):
     # Total — inclui COE net (DEV-coe-hodl11-classificacao 2026-04-24)
@@ -4664,6 +4780,21 @@ def main():
     human_capital_data = _compute_human_capital_crossover(fire_trilha_data, premissas_raw)
     vp_capital_humano_correto = human_capital_data.get("pontos", [{}])[0].get("vp_capital_humano", None)
 
+    # Contribuição vs Rentabilidade Crossover
+    # Mostra quando ganho de mercado anual supera o aporte anual
+    contribuicao_retorno_crossover = compute_contribuicao_retorno_crossover(
+        retornos_mensais=retornos_mensais,
+        historico_csv_rows=_csv_rows or [],
+        premissas=premissas_raw,
+        fire_trilha=fire_trilha_data,
+    )
+    print(
+        f"  ✓ contribuicao_retorno_crossover: "
+        f"cross_hist={contribuicao_retorno_crossover.get('crossover_historico_nominal_ano')} "
+        f"cross_proj_nominal={contribuicao_retorno_crossover.get('crossover_projecao_nominal_ano')} "
+        f"cross_proj_real={contribuicao_retorno_crossover.get('crossover_projecao_real_ano')}"
+    )
+
     # Agora que fire_trilha_data está definido, calcular patrimônio holístico com valor correto de HC
     patrimonio_holistico = compute_patrimonio_holistico(total_brl, state, vp_capital_humano_correto)
 
@@ -4959,6 +5090,10 @@ def main():
         # Human Capital Crossover — VP capital humano vs patrimônio financeiro
         # (já calculado acima para uso no patrimônio holístico)
         "human_capital": human_capital_data,
+
+        # Contribuição vs Rentabilidade Crossover
+        # Crossover point: primeiro ano em que ganho mercado anual > aporte anual
+        "contribuicao_retorno_crossover": contribuicao_retorno_crossover,
 
         # Realized P&L for DARF obligations (Lei 14.754/2023 compliance)
         # Fonte: IBKR flex query → processed by ibkr_sync.py

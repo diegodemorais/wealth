@@ -720,6 +720,20 @@ test.describe('Tier2 gaps — FIRE tab', () => {
     const el = page.locator('[data-testid="pfire-sensitivity-table"]');
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
+
+  // ContributionReturnsCrossover: Crossover Point component
+  test('contribuicao-retorno-crossover exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="contribuicao-retorno-crossover"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  test('crossover-historico-ano shows a year value', async ({ page }) => {
+    const el = page.locator('[data-testid="crossover-historico-ano"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+    const text = await el.textContent();
+    // should be a 4-digit year or '—'
+    expect(text?.trim()).toMatch(/^\d{4}$|^—$/);
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

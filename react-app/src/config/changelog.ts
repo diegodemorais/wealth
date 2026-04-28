@@ -15,6 +15,9 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — ContributionReturnsCrossover + P(FIRE) boxplot fix ─────────
+  { datetime: '2026-04-28T20:00:00', type: 'gráfico', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'não existia', para: 'Crossover Point — rentabilidade anual R$ vs aporte anual R$, histórico 2021-2026 + projeção 3 cenários, toggle nominal/real, marcador de crossover' },
+  { datetime: '2026-04-28T20:00:00', type: 'dado', component: 'PFireDistribution', tab: 'fire', anchor: '', de: 'percentis bootstrap range 0.87pp (source: mc)', para: 'percentis por sensitivity_scenarios range 8pp (p5=82.1% p95=90.1%, source: sensitivity_scenarios)' },
   // ── 2026-04-28 — HD-dashboard-gaps-tier2 ────────────────────────────────────
   { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'RendaPlusMtmPnl', tab: 'portfolio', anchor: 'section-renda-plus-mtm', de: 'sem MtM da Renda+', para: 'Gap S: card taxa entrada/atual + P&L MtM em R$ e % (data-testid="renda-plus-mtm-pnl")' },
   { datetime: '2026-04-28T18:00:00', type: 'visual', component: 'SpendingCeiling', tab: 'fire', anchor: 'section-spending-ceiling', de: 'valores em formato R$ 136.000', para: 'valores em formato compacto R$ 136k + valor mensal por card (R$ 11k/mês)' },

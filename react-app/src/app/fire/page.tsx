@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { EC } from '@/utils/echarts-theme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 
 import { pfireColor as pfireColorFn } from '@/utils/fire';
 import { FIRE_RULES } from '@/config/business-rules';
@@ -241,6 +242,261 @@ function FloorUpsideFire({
 
       <div className="src" style={{ marginTop: '8px' }}>
         Floor FIRE Day: gasto_piso (RF) · Floor pós-INSS: + INSS Diego + INSS Katia · Cobertura: patrimônio / (gap/SWR)
+      </div>
+    </div>
+  );
+}
+
+// ── ContributionReturnsCrossover ──────────────────────────────────────────────
+// Mostra histórico e projeção de rentabilidade anual R$ vs aporte anual R$.
+// Crossover = primeiro ano em que o portfólio ganha mais do que Diego aporta.
+interface CrossoverDataPoint {
+  ano: number;
+  aporte_brl: number;
+  ganho_mercado_brl: number;
+  ganho_real_brl?: number;
+  aporte_real_brl?: number;
+  tipo: 'historico' | 'projecao';
+}
+
+interface ContributionReturnsCrossoverData {
+  historico: CrossoverDataPoint[];
+  projecao: {
+    base: CrossoverDataPoint[];
+    fav: CrossoverDataPoint[];
+    stress: CrossoverDataPoint[];
+  };
+  taxa_nominal_base: number;
+  taxa_nominal_fav: number;
+  taxa_nominal_stress: number;
+  aporte_anual: number;
+  ipca_projecao: number;
+  crossover_historico_nominal_ano: number | null;
+  crossover_projecao_nominal_ano: number | null;
+  crossover_projecao_real_ano: number | null;
+}
+
+function ContributionReturnsCrossover({
+  data: crc,
+  privacyMode,
+}: {
+  data: ContributionReturnsCrossoverData;
+  privacyMode: boolean;
+}) {
+  const [view, setView] = React.useState<'nominal' | 'real'>('nominal');
+  const { pv, pvLabel } = useEChartsPrivacy();
+
+  // Merge historical + base projection into unified series
+  const allYears = useMemo(() => {
+    const hist = crc.historico ?? [];
+    const proj = crc.projecao?.base ?? [];
+    // Avoid double-counting the current year (2026 appears in both historical and projection)
+    const histYears = new Set(hist.map(h => h.ano));
+    const projFiltered = proj.filter(p => !histYears.has(p.ano));
+    return [...hist, ...projFiltered];
+  }, [crc]);
+
+  const favProj = useMemo(() => {
+    const fav = crc.projecao?.fav ?? [];
+    const histYears = new Set((crc.historico ?? []).map(h => h.ano));
+    return fav.filter(p => !histYears.has(p.ano));
+  }, [crc]);
+
+  const stressProj = useMemo(() => {
+    const stress = crc.projecao?.stress ?? [];
+    const histYears = new Set((crc.historico ?? []).map(h => h.ano));
+    return stress.filter(p => !histYears.has(p.ano));
+  }, [crc]);
+
+  const labels = allYears.map(d => String(d.ano));
+  const isHist = allYears.map(d => d.tipo === 'historico');
+
+  const aportesSeries = allYears.map(d =>
+    view === 'real' ? (d.aporte_real_brl ?? d.aporte_brl) : d.aporte_brl
+  );
+  const ganhosSeries = allYears.map(d =>
+    view === 'real' ? (d.ganho_real_brl ?? d.ganho_mercado_brl) : d.ganho_mercado_brl
+  );
+  const favSeries = allYears.map((d, i) => {
+    if (d.tipo === 'historico') return null;
+    const fp = favProj.find(p => p.ano === d.ano);
+    return fp ? (view === 'real' ? (fp.ganho_real_brl ?? fp.ganho_mercado_brl) : fp.ganho_mercado_brl) : null;
+  });
+  const stressSeries = allYears.map((d) => {
+    if (d.tipo === 'historico') return null;
+    const sp = stressProj.find(p => p.ano === d.ano);
+    return sp ? (view === 'real' ? (sp.ganho_real_brl ?? sp.ganho_mercado_brl) : sp.ganho_mercado_brl) : null;
+  });
+
+  // Crossover annotation year
+  const crossYear = view === 'nominal'
+    ? (crc.crossover_historico_nominal_ano ?? crc.crossover_projecao_nominal_ano)
+    : crc.crossover_projecao_real_ano;
+
+  const option = useMemo(() => {
+    const crossIdx = crossYear != null ? labels.indexOf(String(crossYear)) : -1;
+    return {
+      animation: false,
+      grid: { left: 60, right: 20, top: 40, bottom: 40 },
+      tooltip: {
+        trigger: 'axis' as const,
+        formatter: (params: any[]) => {
+          const year = params[0]?.axisValue ?? '';
+          const lines = params
+            .filter(p => p.value != null && p.seriesName !== 'Banda (fav-stress)')
+            .map(p => {
+              const v = typeof p.value === 'number' ? pvLabel(p.value / 1e6) : '—';
+              return `<div>${p.marker}${p.seriesName}: <b>R$ ${v}M</b></div>`;
+            })
+            .join('');
+          return `<div style="font-size:12px"><b>${year}</b><br/>${lines}</div>`;
+        },
+      },
+      xAxis: {
+        type: 'category' as const,
+        data: labels,
+        axisLabel: { fontSize: 11 },
+      },
+      yAxis: {
+        type: 'value' as const,
+        axisLabel: {
+          formatter: (v: number) => `R$ ${pvLabel(v / 1e6)}M`,
+          fontSize: 10,
+        },
+      },
+      markLine: crossIdx >= 0 ? {
+        silent: true,
+        data: [{ xAxis: crossIdx, label: { formatter: `Crossover ${crossYear}`, fontSize: 10 } }],
+        lineStyle: { type: 'dashed' as const, color: 'var(--yellow)', width: 1.5 },
+      } : undefined,
+      series: [
+        // Banda fav-stress (área sombreada) — apenas projeção
+        {
+          name: 'Banda (fav-stress)',
+          type: 'line' as const,
+          data: favSeries.map((v, i) => v != null && stressSeries[i] != null ? pv(v) : null),
+          lineStyle: { opacity: 0 },
+          areaStyle: { opacity: 0.08, color: EC.accent },
+          stack: 'banda_upper',
+          symbol: 'none',
+          showSymbol: false,
+          silent: true,
+        },
+        {
+          name: 'Banda (fav-stress)',
+          type: 'line' as const,
+          data: stressSeries.map(v => v != null ? pv(v) : null),
+          lineStyle: { opacity: 0 },
+          areaStyle: { opacity: 0, color: 'transparent' },
+          stack: 'banda_upper',
+          symbol: 'none',
+          showSymbol: false,
+          silent: true,
+        },
+        // Aportes anuais (linha flat ~R$300k)
+        {
+          name: `Aportes (${view === 'real' ? 'real' : 'nominal'})`,
+          type: 'line' as const,
+          data: aportesSeries.map((v, i) => ({
+            value: pv(v),
+            lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
+          })),
+          lineStyle: { color: 'var(--muted)', width: 2 },
+          itemStyle: { color: 'var(--muted)' },
+          symbol: 'circle',
+          symbolSize: 5,
+          smooth: false,
+        },
+        // Ganho nominal principal
+        {
+          name: `Rentabilidade (${view === 'real' ? 'real' : 'nominal'})`,
+          type: 'line' as const,
+          data: ganhosSeries.map((v, i) => ({
+            value: pv(v),
+            lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
+          })),
+          lineStyle: { color: EC.accent, width: 2.5 },
+          itemStyle: { color: EC.accent },
+          symbol: 'circle',
+          symbolSize: 5,
+          smooth: false,
+          markLine: crossIdx >= 0 ? {
+            silent: true,
+            data: [{ xAxis: crossIdx }],
+            label: { show: true, formatter: `Crossover ${crossYear}`, position: 'insideEndTop', fontSize: 11, color: 'var(--yellow)' },
+            lineStyle: { type: 'dashed' as const, color: 'var(--yellow)', width: 1.5 },
+          } : undefined,
+        },
+      ],
+    };
+  }, [allYears, aportesSeries, ganhosSeries, favSeries, stressSeries, crossYear, labels, view, pv, pvLabel]);
+
+  const fmtAnno = (v: number | null) => v != null ? String(v) : '—';
+
+  return (
+    <div style={{ padding: '0 16px 16px' }} data-testid="contribuicao-retorno-crossover">
+      {/* Header info strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" style={{ marginBottom: 12 }}>
+        <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '8px 12px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Cross. Histórico</div>
+          <div style={{ fontWeight: 700, color: EC.accent, fontSize: '1.1rem' }} data-testid="crossover-historico-ano">
+            {fmtAnno(crc.crossover_historico_nominal_ano)}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>primeiro ganho &gt; aporte</div>
+        </div>
+        <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '8px 12px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Cross. Projetado Nominal</div>
+          <div style={{ fontWeight: 700, color: EC.accent, fontSize: '1.1rem' }} data-testid="crossover-projecao-nominal-ano">
+            {fmtAnno(crc.crossover_projecao_nominal_ano)}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{(crc.taxa_nominal_base * 100).toFixed(0)}% nominal cenário base</div>
+        </div>
+        <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '8px 12px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Cross. Projetado Real</div>
+          <div style={{ fontWeight: 700, color: 'var(--green)', fontSize: '1.1rem' }} data-testid="crossover-projecao-real-ano">
+            {fmtAnno(crc.crossover_projecao_real_ano)}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>deflacionado IPCA {(crc.ipca_projecao * 100).toFixed(0)}%</div>
+        </div>
+        <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '8px 12px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Aporte Anual Modelo</div>
+          <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '1.1rem' }}>
+            {fmtPrivacy(crc.aporte_anual, privacyMode)}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>fixo nominal nas projeções</div>
+        </div>
+      </div>
+
+      {/* Toggle nominal/real */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+        {(['nominal', 'real'] as const).map(v => (
+          <button
+            key={v}
+            onClick={() => setView(v)}
+            style={{
+              padding: '3px 12px',
+              borderRadius: 6,
+              border: '1px solid var(--border)',
+              background: view === v ? EC.accent : 'var(--card2)',
+              color: view === v ? '#fff' : 'var(--text)',
+              fontSize: 'var(--text-xs)',
+              cursor: 'pointer',
+              fontWeight: view === v ? 700 : 400,
+            }}
+          >
+            {v === 'nominal' ? 'Nominal' : `Real (IPCA −${(crc.ipca_projecao * 100).toFixed(0)}%)`}
+          </button>
+        ))}
+      </div>
+
+      {/* Chart */}
+      <EChart option={option} style={{ height: 320 }} />
+
+      {/* Notes */}
+      <div style={{ marginTop: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+        Linha sólida = histórico real (2021-2026). Linha tracejada = projeção. Banda = intervalo cenários {(crc.taxa_nominal_stress * 100).toFixed(0)}%–{(crc.taxa_nominal_fav * 100).toFixed(0)}% nominal.
+        Histórico 2021-2022 reflete composição diferente (sem factor tilt estruturado).
+        Aportes históricos incluem aporte inicial de capital em 2021.
       </div>
     </div>
   );
@@ -759,6 +1015,20 @@ export default function FirePage() {
         </div>
       </section>
       </div>
+
+      {/* Contribution vs Returns Crossover */}
+      {(safeData as any)?.contribuicao_retorno_crossover && (
+        <CollapsibleSection
+          id="section-contribuicao-retorno-crossover"
+          title={secTitle('fire', 'contribuicao-retorno-crossover', 'Crossover Point — Rentabilidade vs Aportes')}
+          defaultOpen={secOpen('fire', 'contribuicao-retorno-crossover', true)}
+        >
+          <ContributionReturnsCrossover
+            data={(safeData as any).contribuicao_retorno_crossover}
+            privacyMode={privacyMode}
+          />
+        </CollapsibleSection>
+      )}
 
       {/* FIRE Matrix — P(Sucesso até 90a) */}
       {safeData.fire_matrix && (
