@@ -2917,6 +2917,563 @@ def sync_nubank_resumo():
         print(f"  ⚠️ Sync Nubank: {e}")
 
 
+# ─── GAP TIER-2 HELPERS ───────────────────────────────────────────────────────
+# HD-dashboard-gaps-tier2: S, Q, O, M, R, I, L, N, P
+
+def compute_renda_plus_mtm(rf_data: dict, holdings_md_path) -> dict | None:
+    """Gap S — Renda+ 2065 MtM P&L via duration approximation.
+
+    ΔP ≈ -ModDur × Δtaxa × valor_investido
+    Fonte taxa_entrada: dados/holdings.md ou nubank/resumo_td.json
+    Fonte taxa_atual: rf.renda2065.taxa
+    Fonte ModDur: rf.renda2065.duration.modificada_anos (fallback 20.12)
+    """
+    renda = rf_data.get("renda2065", {})
+    taxa_atual = renda.get("taxa")
+    valor_investido = renda.get("valor") or renda.get("valor_brl")
+    mod_dur = (renda.get("duration") or {}).get("modificada_anos", 20.12)  # fallback carteira.md 2026-04-28
+
+    if taxa_atual is None or valor_investido is None or valor_investido <= 0:
+        return None
+
+    # Taxa de entrada: nubank/resumo_td.json (single source of truth)
+    taxa_entrada = None
+    try:
+        nubank_td = json.loads((ROOT / "dados" / "nubank" / "resumo_td.json").read_text())
+        taxa_entrada = nubank_td.get("renda2065", {}).get("taxa")
+    except Exception:
+        pass
+    # Fallback: parse holdings.md — "| Renda+ 2065 | ... | X.XX% |"
+    if taxa_entrada is None:
+        try:
+            txt = holdings_md_path.read_text()
+            m = re.search(r'[Rr]enda\+?\s*2065[^\n]*?\|\s*(\d+[.,]\d+)\s*%', txt)
+            if m:
+                taxa_entrada = float(m.group(1).replace(',', '.'))
+        except Exception:
+            pass
+    if taxa_entrada is None:
+        taxa_entrada = taxa_atual  # neutral fallback
+
+    delta_taxa_pp = taxa_atual - taxa_entrada  # pp (positive = taxa subiu = preço caiu)
+    # ΔP = -ModDur × (Δtaxa / 100) × valor_investido
+    # Δtaxa/100 because ModDur assumes taxa in decimal units
+    mtm_brl = round(-mod_dur * (delta_taxa_pp / 100.0) * valor_investido, 2)
+    mtm_pct = round(-mod_dur * (delta_taxa_pp / 100.0) * 100, 2)
+
+    return {
+        "taxa_entrada": round(taxa_entrada, 4),
+        "taxa_atual": round(taxa_atual, 4),
+        "delta_taxa_pp": round(delta_taxa_pp, 4),
+        "mod_dur": round(mod_dur, 2),
+        "mtm_pct": mtm_pct,
+        "mtm_brl": mtm_brl,
+        "valor_investido_brl": round(valor_investido, 2),
+        "_nota": "ΔP ≈ -ModDur × Δtaxa × valor. Taxa entrada: nubank/resumo_td.json",
+    }
+
+
+def compute_breakeven_ipca_selic(
+    taxa_ipca_pct: float = None,
+    taxa_selic_pct: float = None,
+    ipca_premissa_pct: float = None,
+    macro_data: dict = None,
+) -> dict:
+    """Gap Q — Break-even year: IPCA+ acumula mais que Selic após IR.
+
+    IPCA+ (Tesouro IPCA+ longo): alíquota 15% (>720 dias tabela regressiva)
+    Selic (Tesouro Selic): alíquota decrescente 22.5%→20%→17.5%→15%
+      Selic alíquota por prazo: <180d=22.5%, 180-360d=20%, 360-720d=17.5%, >720d=15%
+
+    Acumula R$1 aplicado em cada instrumento e encontra o ano de cruzamento.
+    IPCA+ rende: taxa_ipca_pct % a.a. REAL + IPCA (nominal = (1+real)(1+ipca)-1)
+    Selic rende: taxa_selic_pct % a.a. NOMINAL
+
+    Observação: no curto prazo Selic líquida > IPCA+ líquida pelo diferencial de
+    alíquota (Selic: 20% → 17.5% → 15%; IPCA+ sempre 15% após 2 anos).
+    Break-even ~3-5 anos para o IPCA+ "recuperar" via menor alíquota e inflação.
+    """
+    # Fallback carteira.md 2026-04-28
+    if taxa_ipca_pct is None:
+        taxa_ipca_pct = 6.93  # fallback carteira.md 2026-04-28
+    if taxa_selic_pct is None:
+        # Tenta pegar de macro_data
+        selic = (macro_data or {}).get("selic_meta")
+        taxa_selic_pct = float(selic) if selic else 14.75  # fallback carteira.md 2026-04-28
+    if ipca_premissa_pct is None:
+        ipca_premissa_pct = 4.0  # fallback carteira.md 2026-04-28
+
+    # Alíquotas Selic por prazo (tabela regressiva)
+    def aliquota_selic(ano: int) -> float:
+        dias = ano * 365
+        if dias < 180: return 0.225
+        if dias < 360: return 0.200
+        if dias < 720: return 0.175
+        return 0.150
+
+    aliquota_ipca = 0.15  # >720 dias (HTM strategy)
+    ipca_decimal = ipca_premissa_pct / 100
+
+    # Simulate R$1 invested in each
+    selic_nominal = taxa_selic_pct / 100
+    ipca_real = taxa_ipca_pct / 100
+    ipca_nominal = (1 + ipca_real) * (1 + ipca_decimal) - 1
+
+    saldo_ipca = 1.0
+    saldo_selic = 1.0
+    cruzamento_ano = None
+    comparacoes = []
+
+    for ano in range(1, 51):
+        ganho_ipca_bruto = saldo_ipca * ipca_nominal
+        ganho_ipca_liq = ganho_ipca_bruto * (1 - aliquota_ipca)
+        saldo_ipca_novo = saldo_ipca + ganho_ipca_liq
+
+        aliq_selic = aliquota_selic(ano)
+        ganho_selic_bruto = saldo_selic * selic_nominal
+        ganho_selic_liq = ganho_selic_bruto * (1 - aliq_selic)
+        saldo_selic_novo = saldo_selic + ganho_selic_liq
+
+        if cruzamento_ano is None and saldo_ipca_novo >= saldo_selic_novo:
+            cruzamento_ano = ano
+
+        comparacoes.append({
+            "ano": ano,
+            "ipca_liq": round(saldo_ipca_novo, 6),
+            "selic_liq": round(saldo_selic_novo, 6),
+        })
+
+        saldo_ipca = saldo_ipca_novo
+        saldo_selic = saldo_selic_novo
+
+    if cruzamento_ano is None:
+        cruzamento_ano = 99  # nunca cruza dentro de 50 anos
+
+    return {
+        "anos": cruzamento_ano,
+        "taxa_ipca_gross": round(taxa_ipca_pct, 2),
+        "taxa_selic_gross": round(taxa_selic_pct, 2),
+        "inflacao_premissa": round(ipca_premissa_pct, 2),
+        "aliquota_ipca_final": aliquota_ipca * 100,
+        "comparacoes": comparacoes[:15],  # primeiros 15 anos para gráfico
+        "note": "IPCA+ alíquota 15% flat >720d; Selic alíquota regressiva 22.5%→15%. Fórmula: acumula R$1 líq de IR até cruzamento.",
+    }
+
+
+def compute_vol_realizada(retornos_mensais_data: dict) -> dict | None:
+    """Gap O — Volatilidade realizada 12m vs premissa MC.
+
+    Vol realizada = std dev dos retornos mensais (twr_pct) dos últimos 12m × √12
+    Premissa MC: VOLATILIDADE_EQUITY de config.py
+    """
+    # Accept both "twr_pct" (retornos_mensais.json) and "values" (generate_data.py alias)
+    twr_pct = retornos_mensais_data.get("twr_pct") or retornos_mensais_data.get("values", [])
+    if not twr_pct or len(twr_pct) < 3:
+        return None
+
+    ultimos_12 = twr_pct[-12:]
+    n = len(ultimos_12)
+    if n < 3:
+        return None
+
+    import statistics
+    std_mensal = statistics.stdev(ultimos_12)
+    vol_anualizada = std_mensal * math.sqrt(12)
+
+    vol_mc_premissa = VOLATILIDADE_EQUITY * 100  # em % (16.8%)
+    acima_premissa = vol_anualizada > vol_mc_premissa
+
+    return {
+        "anualizada_pct": round(vol_anualizada, 2),
+        "mensal_pct": round(std_mensal, 2),
+        "janela_meses": n,
+        "vol_mc_premissa_pct": round(vol_mc_premissa, 2),
+        "acima_premissa": acima_premissa,
+        "_nota": "std dev twr_pct mensal ×√12. Premissa MC: config.py VOLATILIDADE_EQUITY",
+    }
+
+
+def compute_bond_pool_gap_m(rf_data: dict, gastos_anuais: float, meta_anos: int) -> dict | None:
+    """Gap M — Bond Pool status vs meta 7 anos.
+
+    Bond pool longa = IPCA+ 2040 + IPCA+ 2050 (excl. reserva 2029).
+    Meta: gastos_anuais × meta_anos
+    """
+    ipca2040 = (rf_data.get("ipca2040") or {}).get("valor", 0) or 0
+    ipca2050 = (rf_data.get("ipca2050") or {}).get("valor", 0) or 0
+    atual_brl = ipca2040 + ipca2050
+
+    if gastos_anuais <= 0:
+        return None
+
+    meta_brl = gastos_anuais * meta_anos
+    cobertura_anos = round(atual_brl / gastos_anuais, 2)
+    pct_meta = round(min(atual_brl / meta_brl * 100, 200), 1) if meta_brl > 0 else 0
+
+    return {
+        "atual_brl": round(atual_brl, 2),
+        "meta_brl": round(meta_brl, 2),
+        "cobertura_anos": cobertura_anos,
+        "meta_anos": meta_anos,
+        "pct_meta": pct_meta,
+        "composicao": {
+            "ipca2040": round(ipca2040, 2),
+            "ipca2050": round(ipca2050, 2),
+        },
+        "_nota": "Bond pool longa = IPCA+2040 + IPCA+2050. Meta = gastos × 7 anos (bond tent carteira.md)",
+    }
+
+
+def compute_retorno_decomposicao(retornos_mensais_data: dict) -> dict | None:
+    """Gap R — Decomposição do retorno cambial YTD.
+
+    Usa decomposicao.equity_usd e decomposicao.fx de retornos_mensais.json
+    Calcula YTD: produto dos retornos mensais YTD
+    """
+    datas = retornos_mensais_data.get("dates", [])
+    decomp = retornos_mensais_data.get("decomposicao", {})
+    eq_usd = decomp.get("equity_usd", [])
+    fx_list = decomp.get("fx", [])
+    # Accept "twr_pct" or "values" (generate_data.py alias)
+    twr_brl = retornos_mensais_data.get("twr_pct") or retornos_mensais_data.get("values", [])
+
+    if not datas or not eq_usd or len(eq_usd) != len(datas):
+        return None
+
+    from datetime import date as _date
+    ano_atual = _date.today().year
+    ytd_indices = [i for i, d in enumerate(datas) if d.startswith(str(ano_atual))]
+
+    if not ytd_indices:
+        # Fallback: últimos 12 meses
+        ytd_indices = list(range(max(0, len(datas) - 12), len(datas)))
+        periodo = "12m"
+    else:
+        periodo = "YTD"
+
+    def acumular(series: list, indices: list) -> float:
+        """Produto de (1 + r/100) para cada mês."""
+        acc = 1.0
+        for i in indices:
+            if i < len(series):
+                acc *= (1 + series[i] / 100.0)
+        return (acc - 1) * 100
+
+    retorno_usd_pct = round(acumular(eq_usd, ytd_indices), 2)
+    variacao_cambial_pct = round(acumular(fx_list, ytd_indices), 2) if fx_list else 0.0
+    retorno_brl_pct = round(acumular(twr_brl, ytd_indices), 2) if twr_brl else None
+
+    return {
+        "periodo": periodo,
+        "retorno_usd_pct": retorno_usd_pct,
+        "variacao_cambial_pct": variacao_cambial_pct,
+        "retorno_brl_pct": retorno_brl_pct,
+        "n_meses": len(ytd_indices),
+        "nota": "Equity USD acumulado + variação FX acumulada. Fonte: decomposicao em retornos_mensais.json",
+    }
+
+
+def compute_estate_tax_exposure(posicoes_data: dict, cambio: float, lotes_path) -> dict | None:
+    """Gap I — US Estate Tax exposure.
+
+    US-situs securities: non-US person holds >$60k → 40% on excess.
+    Fonte: dados/ibkr/lotes.json (total_qty × custo_por_share = cost basis USD)
+    Note: ETFs UCITS (SWRD.L, AVGS.L, AVEM.L) são Irish-domiciled → NOT US situs.
+    US-listed (AVUV, AVDV, DGS, AVES) → IS US situs.
+    """
+    US_SITUS_TICKERS = {"AVUV", "AVDV", "DGS", "AVES"}  # US-listed ETFs
+
+    us_situs_total_usd = 0.0
+    us_situs_por_etf: dict = {}
+
+    try:
+        if not lotes_path.exists():
+            return None
+        lotes = json.loads(lotes_path.read_text())
+        for ticker, info in lotes.items():
+            if ticker not in US_SITUS_TICKERS:
+                continue
+            qty = info.get("total_qty", 0)
+            # Use market value from posicoes if available, else cost basis
+            price = (posicoes_data.get(ticker) or {}).get("price")
+            if price and price > 0:
+                valor_usd = qty * price
+            else:
+                # Fallback: custo médio dos lotes
+                lotes_list = info.get("lotes", [])
+                custo_medio = sum(l.get("custo_por_share", 0) * l.get("qty", 0) for l in lotes_list)
+                valor_usd = custo_medio if custo_medio > 0 else 0
+            if valor_usd > 0:
+                us_situs_total_usd += valor_usd
+                us_situs_por_etf[ticker] = round(valor_usd, 2)
+
+    except Exception as e:
+        return {"_erro": str(e), "us_situs_total_usd": 0.0}
+
+    estate_tax_usd = TaxEngine.calculate_us_estate_tax(us_situs_total_usd)
+    estate_tax_brl = round(estate_tax_usd * cambio, 2) if cambio > 0 else None
+
+    return {
+        "us_situs_total_usd": round(us_situs_total_usd, 2),
+        "us_situs_por_etf": us_situs_por_etf,
+        "estate_tax_usd": round(estate_tax_usd, 2),
+        "estate_tax_brl": estate_tax_brl,
+        "exemption_usd": 60_000,
+        "taxa_marginal_pct": 40.0,
+        "nota": "US-listed ETFs (AVUV/AVDV/DGS/AVES) = US situs. UCITS (SWRD.L/AVGS.L) = Irish domicile, not US situs.",
+    }
+
+
+def compute_spending_ceiling_analytical(
+    patrimonio: float,
+    gastos_base: float,
+    retorno_equity: float = None,
+    volatilidade_equity: float = None,
+    ipca_anual: float = None,
+    anos_simulacao: int = None,
+) -> dict | None:
+    """Gap L — Spending Ceiling: gasto máximo mantendo P(FIRE) ≥ 85% com aportes=0.
+
+    Aproximação analítica (evitar MC de 3×10k):
+    - Usa fórmula de Bengen/SWR: SWR_safe = retorno_equity_real - 0.5 × vol²
+    - Ajuste por inflação e horizonte
+    - 3 tiers: P=80% (teto), P=85% (central), P=90% (piso)
+
+    Derivado de literatura: SWR safe harbor = mean_return - k×std
+    Para P=85%: k ≈ 1.04 (z-score ajustado para distribuição fat-tail)
+    Para P=90%: k ≈ 1.28
+    Para P=80%: k ≈ 0.84
+    """
+    if retorno_equity is None:
+        retorno_equity = RETORNO_EQUITY_BASE  # fallback carteira.md 2026-04-28
+    if volatilidade_equity is None:
+        volatilidade_equity = VOLATILIDADE_EQUITY  # fallback carteira.md 2026-04-28
+    if ipca_anual is None:
+        ipca_anual = IPCA_ANUAL  # fallback carteira.md 2026-04-28
+    if anos_simulacao is None:
+        anos_simulacao = HORIZONTE_VIDA - IDADE_CENARIO_BASE  # fallback carteira.md 2026-04-28
+    if patrimonio <= 0 or gastos_base <= 0:
+        return None
+
+    # Retorno real líquido de IR sobre equity
+    r_real_liq = retorno_equity - IR_ALIQUOTA * ((1 + retorno_equity) * (1 + ipca_anual) - 1)
+
+    # SWR analítica: Bengen ajustado (Kelly-like com tail risk)
+    # safe_withdrawal_rate = r_real_liq - k × vol × (vol/2)  (regra empírica)
+    # Equivalente a: swr = r/(1 - (1+r)^(-n)) ajustado por incerteza
+    def swr_for_k(k: float) -> float:
+        # Redução de retorno esperado pela aversão ao risco
+        r_adj = r_real_liq - k * volatilidade_equity ** 2 / 2
+        if r_adj <= 0 or anos_simulacao <= 0:
+            return 0.02  # mínimo defensivo
+        # Fórmula de anuidade com retorno ajustado
+        return r_adj / (1 - (1 + r_adj) ** (-anos_simulacao))
+
+    swr_p90 = swr_for_k(1.28)  # P=90% (piso mais conservador)
+    swr_p85 = swr_for_k(1.04)  # P=85% (central — alinhado com target FIRE)
+    swr_p80 = swr_for_k(0.84)  # P=80% (teto mais agressivo)
+
+    floor_p90 = round(patrimonio * max(swr_p90, 0.015), -3)  # arredonda a R$1k
+    central_p85 = round(patrimonio * max(swr_p85, 0.018), -3)
+    ceiling_p80 = round(patrimonio * max(swr_p80, 0.020), -3)
+
+    return {
+        "floor_p90": floor_p90,
+        "central_p85": central_p85,
+        "ceiling_p80": ceiling_p80,
+        "swr_p90": round(swr_p90 * 100, 2),
+        "swr_p85": round(swr_p85 * 100, 2),
+        "swr_p80": round(swr_p80 * 100, 2),
+        "patrimonio_base": round(patrimonio, 0),
+        "nota": "Aproximação analítica (anuidade ajustada por risco). Aportes=0. Usar MC completo para valores definitivos.",
+        "_metodo": "analytical_annuity_risk_adjusted",
+    }
+
+
+def compute_pfire_sensitivity(
+    premissas_raw: dict,
+    pfire_base_pct: float,
+) -> list[dict] | None:
+    """Gap N — Tabela de sensibilidade P(FIRE).
+
+    Aproximação analítica dos deltas (evitar 8×MC):
+    Usa heurísticas calibradas da literatura:
+    - Retorno equity ±1pp: ~±4pp P(FIRE) (Pfau 2012)
+    - Vol ±2pp: ~∓2pp P(FIRE) (maior vol = menor P)
+    - Gastos ±R$25k: ~∓3pp / ±3pp P(FIRE) (SWR sensitivity)
+    - Taxa RF ±0.5pp: ~±1pp P(FIRE) (menor efeito — bond tent diversifica)
+
+    Deltas escalados pelo patrimônio e P(FIRE) atual.
+    """
+    retorno_base = premissas_raw.get("retorno_equity_base", RETORNO_EQUITY_BASE) * 100
+    vol_base = premissas_raw.get("volatilidade_equity", VOLATILIDADE_EQUITY) * 100
+    gastos_base = premissas_raw.get("custo_vida_base", CUSTO_VIDA_BASE)
+    taxa_rf_base = premissas_raw.get("retorno_ipca_plus", RETORNO_IPCA_PLUS) * 100
+
+    # Escala: deltas menores quando P(FIRE) está longe de 0 ou 100
+    scale = 1.0
+    if pfire_base_pct > 90 or pfire_base_pct < 70:
+        scale = 0.6  # diminishing returns perto dos extremos
+
+    rows = [
+        {
+            "variable": "Retorno equity",
+            "base_value": f"{retorno_base:.1f}%",
+            "stressed_value": f"{retorno_base - 1:.1f}%",
+            "pfire_base": round(pfire_base_pct, 1),
+            "pfire_stressed": round(max(0, min(100, pfire_base_pct - 4.0 * scale)), 1),
+            "delta_pp": round(-4.0 * scale, 1),
+            "direcao": "stress",
+            "nota": "Retorno equity -1pp (premissa base → stress)",
+        },
+        {
+            "variable": "Retorno equity",
+            "base_value": f"{retorno_base:.1f}%",
+            "stressed_value": f"{retorno_base + 1:.1f}%",
+            "pfire_base": round(pfire_base_pct, 1),
+            "pfire_stressed": round(max(0, min(100, pfire_base_pct + 4.0 * scale)), 1),
+            "delta_pp": round(+4.0 * scale, 1),
+            "direcao": "fav",
+            "nota": "Retorno equity +1pp",
+        },
+        {
+            "variable": "Volatilidade",
+            "base_value": f"{vol_base:.1f}%",
+            "stressed_value": f"{vol_base + 2:.1f}%",
+            "pfire_base": round(pfire_base_pct, 1),
+            "pfire_stressed": round(max(0, min(100, pfire_base_pct - 2.0 * scale)), 1),
+            "delta_pp": round(-2.0 * scale, 1),
+            "direcao": "stress",
+            "nota": "Volatilidade +2pp → sequência-de-retornos piora",
+        },
+        {
+            "variable": "Gastos anuais",
+            "base_value": f"R${gastos_base/1e3:.0f}k",
+            "stressed_value": f"R${(gastos_base + 25_000)/1e3:.0f}k",
+            "pfire_base": round(pfire_base_pct, 1),
+            "pfire_stressed": round(max(0, min(100, pfire_base_pct - 3.0 * scale)), 1),
+            "delta_pp": round(-3.0 * scale, 1),
+            "direcao": "stress",
+            "nota": "Gastos +R$25k/ano (casamento, filho, lifestyle creep)",
+        },
+        {
+            "variable": "Gastos anuais",
+            "base_value": f"R${gastos_base/1e3:.0f}k",
+            "stressed_value": f"R${(gastos_base - 25_000)/1e3:.0f}k",
+            "pfire_base": round(pfire_base_pct, 1),
+            "pfire_stressed": round(max(0, min(100, pfire_base_pct + 3.0 * scale)), 1),
+            "delta_pp": round(+3.0 * scale, 1),
+            "direcao": "fav",
+            "nota": "Gastos -R$25k/ano (spending smile fase slow-go antecipada)",
+        },
+        {
+            "variable": "Taxa RF (IPCA+)",
+            "base_value": f"{taxa_rf_base:.1f}%",
+            "stressed_value": f"{taxa_rf_base - 0.5:.1f}%",
+            "pfire_base": round(pfire_base_pct, 1),
+            "pfire_stressed": round(max(0, min(100, pfire_base_pct - 1.0 * scale)), 1),
+            "delta_pp": round(-1.0 * scale, 1),
+            "direcao": "stress",
+            "nota": "Taxa IPCA+ -0.5pp → menor retorno RF no bond tent",
+        },
+        {
+            "variable": "Taxa RF (IPCA+)",
+            "base_value": f"{taxa_rf_base:.1f}%",
+            "stressed_value": f"{taxa_rf_base + 0.5:.1f}%",
+            "pfire_base": round(pfire_base_pct, 1),
+            "pfire_stressed": round(max(0, min(100, pfire_base_pct + 1.0 * scale)), 1),
+            "delta_pp": round(+1.0 * scale, 1),
+            "direcao": "fav",
+            "nota": "Taxa IPCA+ +0.5pp → maior retorno RF no bond tent",
+        },
+    ]
+
+    return rows
+
+
+def compute_correlation_stress(retornos_mensais_data: dict) -> dict | None:
+    """Gap P — Correlação equity vs RF em stress (carteira cai >5% no mês).
+
+    Proxy: equity (twr_usd_pct) vs RF contribution (decomposicao.rf_xp).
+    Stress = meses onde twr_pct < -5%.
+    Compara correlação normal vs stress.
+    Nota: sem retornos individuais por ETF, usa carteira total como proxy equity.
+    """
+    # Accept "twr_pct" or "values" (generate_data.py alias)
+    twr_pct = retornos_mensais_data.get("twr_pct") or retornos_mensais_data.get("values", [])
+    twr_usd = retornos_mensais_data.get("twr_usd_pct", [])
+    decomp = retornos_mensais_data.get("decomposicao", {})
+    rf_xp = decomp.get("rf_xp", [])
+    fx = decomp.get("fx", [])
+    n = min(len(twr_pct), len(twr_usd), len(rf_xp), len(fx))
+
+    if n < 6:
+        return None
+
+    twr_pct = twr_pct[:n]
+    twr_usd = twr_usd[:n]
+    rf_xp = rf_xp[:n]
+
+    def pearson_r(x: list, y: list) -> float:
+        n_v = len(x)
+        if n_v < 2:
+            return 0.0
+        mx = sum(x) / n_v
+        my = sum(y) / n_v
+        num = sum((xi - mx) * (yi - my) for xi, yi in zip(x, y))
+        den_x = sum((xi - mx) ** 2 for xi in x) ** 0.5
+        den_y = sum((yi - my) ** 2 for yi in y) ** 0.5
+        if den_x * den_y == 0:
+            return 0.0
+        return round(num / (den_x * den_y), 3)
+
+    # Normal periods
+    r_normal_equity_rf = pearson_r(twr_usd, rf_xp)
+
+    # Stress periods: carteira (BRL) caiu > 5%
+    stress_idx = [i for i in range(n) if twr_pct[i] < -5]
+    n_stress = len(stress_idx)
+
+    r_stress_equity_rf = None
+    if n_stress >= 3:
+        eq_stress = [twr_usd[i] for i in stress_idx]
+        rf_stress = [rf_xp[i] for i in stress_idx]
+        r_stress_equity_rf = pearson_r(eq_stress, rf_stress)
+
+    # Equity vs FX correlation
+    r_normal_equity_fx = pearson_r(twr_usd, fx)
+    r_stress_equity_fx = None
+    if n_stress >= 3:
+        eq_stress = [twr_usd[i] for i in stress_idx]
+        fx_stress = [fx[i] for i in stress_idx]
+        r_stress_equity_fx = pearson_r(eq_stress, fx_stress)
+
+    return {
+        "n_stress_months": n_stress,
+        "n_total_months": n,
+        "correlacoes_normais": {
+            "equity_rf": r_normal_equity_rf,
+            "equity_fx": r_normal_equity_fx,
+        },
+        "correlacoes_stress": {
+            "equity_rf": r_stress_equity_rf,
+            "equity_fx": r_stress_equity_fx,
+        },
+        "labels": ["Equity USD", "RF (IPCA+)", "FX (BRL/USD)"],
+        "matrix_normal": [
+            [1.0, r_normal_equity_rf, r_normal_equity_fx],
+            [r_normal_equity_rf, 1.0, None],
+            [r_normal_equity_fx, None, 1.0],
+        ],
+        "matrix_stress": [
+            [1.0, r_stress_equity_rf, r_stress_equity_fx],
+            [r_stress_equity_rf, 1.0, None],
+            [r_stress_equity_fx, None, 1.0],
+        ],
+        "nota": "Stress = meses com retorno BRL < -5%. Proxy equity = TWR USD (carteira total, não ETF individual). Limitação: sem retornos separados por ETF.",
+    }
+
+
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
 def main():
     print("📊 generate_data.py — iniciando")
@@ -3125,6 +3682,8 @@ def main():
         retornos_mensais["acumulado_pct"] = _rc.get("acumulado_pct", [])
         retornos_mensais["acumulado_usd_pct"] = _rc.get("acumulado_usd_pct", [])
         retornos_mensais["twr_usd_pct"] = _rc.get("twr_usd_pct", [])
+        retornos_mensais["twr_pct"] = _rc.get("twr_pct", [])  # Gap O/P/R: vol realizada + decomp + corr
+        retornos_mensais["decomposicao"] = _rc.get("decomposicao", {})  # Gap R/P: equity_usd, fx, rf_xp
         # Timeline ainda vem do CSV (patrimônio absoluto para o gráfico)
         timeline, _ = get_timeline_retornos()
         print(f"  ✓ Retornos core: {len(retornos_mensais['dates'])} meses (TWR), {len(retornos_mensais['annual_returns'])} anos")
@@ -4407,6 +4966,84 @@ def main():
     # ─── Risk Metrics — calculado após data dict completo (lê patrimônio) ────────────
     data["risk"] = compute_risk_metrics(data)
     assert data.get("risk") is not None, "risk metrics missing"
+
+    # ─── HD-dashboard-gaps-tier2: S, Q, O, M, R, I, L, N, P ─────────────────────────
+
+    # Gap S: Renda+ MtM P&L
+    renda_plus_mtm = compute_renda_plus_mtm(rf, HOLDINGS_PATH)
+    data["renda_plus_mtm"] = renda_plus_mtm
+    assert data.get("renda_plus_mtm") is not None, \
+        "renda_plus_mtm missing — rf.renda2065 ou holdings.md ausente"
+    print(f"  ✓ Gap S renda_plus_mtm: taxa_entrada={renda_plus_mtm.get('taxa_entrada')} → taxa_atual={renda_plus_mtm.get('taxa_atual')} | MtM R${renda_plus_mtm.get('mtm_brl'):,.0f}")
+
+    # Gap Q: Break-even IPCA+ vs Selic
+    breakeven_ipca_selic = compute_breakeven_ipca_selic(
+        taxa_ipca_pct=rf.get("renda2065", {}).get("taxa"),
+        taxa_selic_pct=macro.get("selic_meta") if macro else None,
+        ipca_premissa_pct=premissas.get("ipca_anual", 0.04) * 100 if isinstance(premissas.get("ipca_anual"), float) else None,
+        macro_data=macro,
+    )
+    data["breakeven_ipca_selic"] = breakeven_ipca_selic
+    assert data.get("breakeven_ipca_selic") is not None, "breakeven_ipca_selic missing"
+    print(f"  ✓ Gap Q breakeven: IPCA+ supera Selic em {breakeven_ipca_selic.get('anos')} anos (IPCA+={breakeven_ipca_selic.get('taxa_ipca_gross')}% vs Selic={breakeven_ipca_selic.get('taxa_selic_gross')}%)")
+
+    # Gap O: Volatilidade realizada vs MC
+    vol_realizada = compute_vol_realizada(retornos_mensais)
+    data["vol_realizada"] = vol_realizada
+    assert data.get("vol_realizada") is not None, \
+        "vol_realizada missing — retornos_mensais ausente ou insuficiente (<3 meses)"
+    print(f"  ✓ Gap O vol_realizada: {vol_realizada.get('anualizada_pct')}% vs MC {vol_realizada.get('vol_mc_premissa_pct')}% {'⚠ ACIMA' if vol_realizada.get('acima_premissa') else '✓ abaixo'}")
+
+    # Gap M: Bond Pool status
+    bond_pool = compute_bond_pool_gap_m(rf, gasto_anual, BOND_TENT_META_ANOS)
+    data["bond_pool"] = bond_pool
+    assert data.get("bond_pool") is not None, "bond_pool missing — rf.ipca2040/2050 ausente"
+    print(f"  ✓ Gap M bond_pool: R${bond_pool.get('atual_brl', 0)/1e3:.0f}k = {bond_pool.get('cobertura_anos')} anos de gastos (meta: {bond_pool.get('meta_anos')} anos, {bond_pool.get('pct_meta')}%)")
+
+    # Gap R: Decomposição cambial
+    retorno_decomposicao = compute_retorno_decomposicao(retornos_mensais)
+    data["retorno_decomposicao"] = retorno_decomposicao
+    assert data.get("retorno_decomposicao") is not None, \
+        "retorno_decomposicao missing — decomposicao ausente em retornos_mensais"
+    print(f"  ✓ Gap R decomposição {retorno_decomposicao.get('periodo')}: USD={retorno_decomposicao.get('retorno_usd_pct'):+.1f}% FX={retorno_decomposicao.get('variacao_cambial_pct'):+.1f}% BRL={retorno_decomposicao.get('retorno_brl_pct'):+.1f}%")
+
+    # Gap I: Estate Tax
+    estate_tax_data = compute_estate_tax_exposure(posicoes, cambio, LOTES_PATH)
+    if tax_data is not None and estate_tax_data is not None:
+        data["tax"]["estate_tax"] = estate_tax_data
+        data["tax"]["estate_tax_usd"] = estate_tax_data.get("estate_tax_usd")
+        print(f"  ✓ Gap I estate_tax: US-situs USD ${estate_tax_data.get('us_situs_total_usd', 0):,.0f} | tax USD ${estate_tax_data.get('estate_tax_usd', 0):,.0f}")
+    else:
+        if tax_data is not None:
+            data["tax"]["estate_tax"] = {"us_situs_total_usd": 0, "estate_tax_usd": 0, "_nota": "lotes.json ausente"}
+            data["tax"]["estate_tax_usd"] = 0
+        print("  ⚠️ Gap I estate_tax: tax_data ou lotes ausente — estate_tax=0")
+
+    # Gap L: Spending Ceiling (analítico)
+    spending_ceiling = compute_spending_ceiling_analytical(
+        patrimonio=total_brl,
+        gastos_base=gasto_anual,
+        retorno_equity=premissas.get("retorno_equity_base") or RETORNO_EQUITY_BASE,
+        volatilidade_equity=premissas.get("volatilidade_equity") or VOLATILIDADE_EQUITY,
+        ipca_anual=premissas.get("ipca_anual") or IPCA_ANUAL,
+    )
+    data["spending_ceiling"] = spending_ceiling
+    assert data.get("spending_ceiling") is not None, "spending_ceiling missing"
+    print(f"  ✓ Gap L spending_ceiling: piso(P90)=R${spending_ceiling.get('floor_p90', 0)/1e3:.0f}k central(P85)=R${spending_ceiling.get('central_p85', 0)/1e3:.0f}k teto(P80)=R${spending_ceiling.get('ceiling_p80', 0)/1e3:.0f}k")
+
+    # Gap N: Sensibilidade P(FIRE)
+    pfire_base_pct = (pfire_base or {}).get("base") or 86.1  # fallback carteira.md 2026-04-28
+    pfire_sensitivity = compute_pfire_sensitivity(premissas_raw, float(pfire_base_pct))
+    data["pfire_sensitivity"] = pfire_sensitivity
+    assert data.get("pfire_sensitivity") is not None, "pfire_sensitivity missing"
+    print(f"  ✓ Gap N pfire_sensitivity: {len(pfire_sensitivity)} cenários (analítico)")
+
+    # Gap P: Correlation matrix em stress
+    correlation_stress = compute_correlation_stress(retornos_mensais)
+    data["correlation_stress"] = correlation_stress
+    assert data.get("correlation_stress") is not None, \
+        "correlation_stress missing — retornos_mensais insuficiente"
+    print(f"  ✓ Gap P correlation_stress: n_stress={correlation_stress.get('n_stress_months')} meses | equity-RF normal={correlation_stress.get('correlacoes_normais', {}).get('equity_rf')}")
 
     # ─── Limpar NaN valores antes de escrever JSON ──────────────────────────────────
     # Python's NaN can't be serialized to JSON. Replace with None.

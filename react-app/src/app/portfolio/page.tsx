@@ -811,6 +811,224 @@ export default function PortfolioPage() {
         );
       })()}
 
+      {/* ── Gap S: Renda+ MtM P&L ────────────────────────────────────────────── */}
+      {(() => {
+        const mtm = (data as any)?.renda_plus_mtm;
+        if (!mtm) return null;
+        const pnlBrl: number = mtm.mtm_brl ?? 0;
+        const pnlPct: number = mtm.mtm_pct ?? 0;
+        const taxaEntrada: number = mtm.taxa_entrada ?? 0;
+        const taxaAtual: number = mtm.taxa_atual ?? 0;
+        const deltaTaxa: number = mtm.delta_taxa_pp ?? 0;
+        const cor = pnlBrl >= 0 ? 'var(--green)' : 'var(--red)';
+        return (
+          <div data-testid="renda-plus-mtm-pnl">
+          <CollapsibleSection
+            id="section-renda-plus-mtm"
+            title={secTitle('portfolio', 'renda-plus-mtm', 'Renda+ MtM P&L — Mark-to-Market')}
+            defaultOpen={secOpen('portfolio', 'renda-plus-mtm', false)}
+          >
+            <div style={{ padding: '14px 16px' }}>
+              <div
+                className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+              >
+                <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>Taxa Entrada</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text)' }}>
+                    {taxaEntrada.toFixed(2)}%
+                  </div>
+                  <div style={{ fontSize: 10, color: 'var(--muted)' }}>IPCA+ a.a.</div>
+                </div>
+                <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>Taxa Atual</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 700, color: deltaTaxa > 0 ? 'var(--red)' : deltaTaxa < 0 ? 'var(--green)' : 'var(--text)' }}>
+                    {taxaAtual.toFixed(2)}%
+                  </div>
+                  <div style={{ fontSize: 10, color: 'var(--muted)' }}>
+                    {deltaTaxa !== 0 ? `Δ ${deltaTaxa > 0 ? '+' : ''}${deltaTaxa.toFixed(2)}pp` : 'sem variação'}
+                  </div>
+                </div>
+                <div style={{ background: 'var(--bg)', border: `1px solid ${cor}40`, borderRadius: 8, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>P&L MtM (R$)</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 700, color: cor }}>
+                    {privacyMode ? fmtPrivacy(pnlBrl, true) : fmtBRL(pnlBrl)}
+                  </div>
+                  <div style={{ fontSize: 10, color: 'var(--muted)' }}>mark-to-market</div>
+                </div>
+                <div style={{ background: 'var(--bg)', border: `1px solid ${cor}40`, borderRadius: 8, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>P&L MtM (%)</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 700, color: cor }}>
+                    {privacyMode ? '••%' : `${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(2)}%`}
+                  </div>
+                  <div style={{ fontSize: 10, color: 'var(--muted)' }}>sobre valor investido</div>
+                </div>
+              </div>
+              <div className="src">
+                ΔP ≈ −ModDur × Δtaxa × valor investido. ModDur = {mtm.mod_dur?.toFixed(2)} anos.
+                MtM = 0 quando taxa entrada = taxa atual (sem variação de mercado).
+              </div>
+            </div>
+          </CollapsibleSection>
+          </div>
+        );
+      })()}
+
+      {/* ── Gap Q: Break-Even IPCA+ vs Selic ─────────────────────────────────── */}
+      {(() => {
+        const be = (data as any)?.breakeven_ipca_selic;
+        if (!be) return null;
+        const anos: number = be.anos ?? 99;
+        const taxaIpca: number = be.taxa_ipca_gross ?? 0;
+        const taxaSelic: number = be.taxa_selic_gross ?? 0;
+        const comparacoes: Array<{ ano: number; ipca_liq: number; selic_liq: number }> = be.comparacoes ?? [];
+        const anosInfinito = anos >= 99;
+        const cor = anosInfinito ? 'var(--red)' : anos <= 5 ? 'var(--green)' : 'var(--yellow)';
+        return (
+          <div data-testid="breakeven-year-ipca-selic">
+          <CollapsibleSection
+            id="section-breakeven-ipca-selic"
+            title={secTitle('portfolio', 'breakeven-ipca-selic', 'Break-Even IPCA+ vs Selic')}
+            defaultOpen={secOpen('portfolio', 'breakeven-ipca-selic', false)}
+          >
+            <div style={{ padding: '14px 16px' }}>
+              <div
+                style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center', marginBottom: 16 }}
+              >
+                <div style={{ background: 'var(--bg)', border: `1px solid ${cor}40`, borderLeft: `3px solid ${cor}`, borderRadius: 8, padding: '12px 16px', minWidth: 160 }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>Break-Even em</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 900, color: cor, lineHeight: 1 }}>
+                    {anosInfinito ? '∞' : `${anos}a`}
+                  </div>
+                  <div style={{ fontSize: 10, color: cor, fontWeight: 600, marginTop: 4 }}>
+                    {anosInfinito ? 'IPCA+ não supera Selic atual' : 'IPCA+ supera Selic líquida'}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)' }}>IPCA+ gross</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{taxaIpca.toFixed(2)}%</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)' }}>Selic gross</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)' }}>{taxaSelic.toFixed(2)}%</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)' }}>Spread</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)' }}>
+                      {(taxaSelic - taxaIpca - (be.inflacao_premissa ?? 0)).toFixed(2)}pp
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {comparacoes.length > 0 && (
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)', minWidth: 300 }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                        <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Ano</th>
+                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>IPCA+ líq R$1</th>
+                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Selic líq R$1</th>
+                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Vantagem</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparacoes.slice(0, 10).map(c => {
+                        const vantagem = c.ipca_liq - c.selic_liq;
+                        return (
+                          <tr key={c.ano} style={{ borderBottom: '1px solid var(--card2)', background: vantagem > 0 ? 'rgba(63,185,80,.04)' : 'transparent' }}>
+                            <td style={{ padding: '5px 8px', fontWeight: 600 }}>{c.ano}a</td>
+                            <td style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--green)', fontFamily: 'monospace' }}>{c.ipca_liq.toFixed(4)}</td>
+                            <td style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--red)', fontFamily: 'monospace' }}>{c.selic_liq.toFixed(4)}</td>
+                            <td style={{ textAlign: 'right', padding: '5px 8px', fontWeight: 700, color: vantagem > 0 ? 'var(--green)' : 'var(--red)' }}>
+                              {vantagem > 0 ? '+' : ''}{(vantagem * 100).toFixed(2)}%
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <div className="src">
+                Acumula R$1 líquido de IR: IPCA+ alíquota {be.aliquota_ipca_final ?? 15}% flat (&gt;720d);
+                Selic alíquota regressiva 22.5%→15%. Inflação premissa: {be.inflacao_premissa ?? 4}%a.a.
+              </div>
+            </div>
+          </CollapsibleSection>
+          </div>
+        );
+      })()}
+
+      {/* ── Gap P: Correlação em Stress ───────────────────────────────────────── */}
+      {(() => {
+        const cs = (data as any)?.correlation_stress;
+        if (!cs) return null;
+        const labels: string[] = cs.labels ?? ['Equity USD', 'RF (IPCA+)', 'FX'];
+        const normais = cs.correlacoes_normais ?? {};
+        const stress = cs.correlacoes_stress ?? {};
+        const nStress: number = cs.n_stress_months ?? 0;
+        const nTotal: number = cs.n_total_months ?? 0;
+
+        const cellColor = (val: number | null) => {
+          if (val == null) return 'var(--muted)';
+          const abs = Math.abs(val);
+          if (abs >= 0.6) return val > 0 ? 'var(--red)' : 'var(--accent)';
+          if (abs >= 0.3) return val > 0 ? '#f97316' : '#60a5fa';
+          return 'var(--text)';
+        };
+
+        const fmtCorr = (v: number | null) => v == null ? '—' : v.toFixed(3);
+
+        return (
+          <div data-testid="correlation-matrix-stress">
+          <CollapsibleSection
+            id="section-correlation-stress"
+            title={secTitle('portfolio', 'correlation-stress', 'Correlação em Stress — Diversificação Real')}
+            defaultOpen={secOpen('portfolio', 'correlation-stress', false)}
+          >
+            <div style={{ padding: '14px 16px' }}>
+              <div>
+                <div style={{ marginBottom: 12, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                  Normal: {nTotal - nStress} meses &nbsp;|&nbsp; Stress: {nStress} meses (retorno BRL &lt; −5%)
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { label: 'Normal', pairs: [{ k: 'equity_rf', l: 'Equity vs RF' }, { k: 'equity_fx', l: 'Equity vs FX' }], src: normais },
+                    { label: 'Stress', pairs: [{ k: 'equity_rf', l: 'Equity vs RF' }, { k: 'equity_fx', l: 'Equity vs FX' }], src: stress },
+                  ].map(({ label, pairs, src }) => (
+                    <div key={label} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px' }}>
+                      <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 8, fontWeight: 700 }}>
+                        {label} {label === 'Stress' && <span style={{ color: 'var(--red)' }}>({nStress}m)</span>}
+                      </div>
+                      {pairs.map(({ k, l }) => {
+                        const val: number | null = (src as any)[k] ?? null;
+                        return (
+                          <div key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0', borderBottom: '1px solid var(--card2)' }}>
+                            <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>{l}</span>
+                            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: cellColor(val), fontFamily: 'monospace' }}>
+                              {fmtCorr(val)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 12, padding: 10, background: 'var(--bg)', borderRadius: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                  <strong>Interpretação:</strong> Correlação equity-FX negativa = hedge natural (BRL cai quando equity USD sobe).
+                  Em stress: correlações se intensificam. Correlação equity-RF positiva em stress = diversificação limitada.
+                </div>
+              </div>
+              <div className="src">
+                Pearson. Proxy equity = TWR USD total (sem ETF individual). RF = IPCA+ mensais. FX = variação BRL/USD.
+                {cs.nota ? ` ${cs.nota}` : ''}
+              </div>
+            </div>
+          </CollapsibleSection>
+          </div>
+        );
+      })()}
+
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
         <div data-testid="minilog">

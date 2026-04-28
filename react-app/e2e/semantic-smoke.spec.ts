@@ -651,6 +651,78 @@ test.describe('Tier1 gaps — Performance tab', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Tier2 gaps — Pipeline + React components
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Tier2 gaps — Portfolio tab', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.portfolio);
+  });
+
+  // Gap S: Renda+ MtM P&L
+  test('renda-plus-mtm-pnl exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="renda-plus-mtm-pnl"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  // Gap Q: Break-Even IPCA+ vs Selic
+  test('breakeven-year-ipca-selic exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="breakeven-year-ipca-selic"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  // Gap P: Correlação em Stress
+  test('correlation-matrix-stress exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="correlation-matrix-stress"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+});
+
+test.describe('Tier2 gaps — Performance tab', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.performance);
+  });
+
+  // Gap O: Vol Realizada vs MC
+  test('vol-realizada-vs-mc is visible with a percentage', async ({ page }) => {
+    const el = page.locator('[data-testid="vol-realizada-vs-mc"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    // Should contain a % value (not just "—")
+    await expect(el).not.toContainText('—');
+  });
+
+  // Gap R: Decomposição Retorno Cambial
+  test('retorno-cambial-decomposicao exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="retorno-cambial-decomposicao"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+});
+
+test.describe('Tier2 gaps — FIRE tab', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.fire);
+  });
+
+  // Gap M: Bond Pool Status
+  test('bond-pool-status is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="bond-pool-status"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  // Gap L: Spending Ceiling
+  test('spending-ceiling exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="spending-ceiling"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  // Gap N: Sensibilidade P(FIRE)
+  test('pfire-sensitivity-table exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="pfire-sensitivity-table"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Footer — version and data timestamp (all critical tabs)
 // ─────────────────────────────────────────────────────────────────────────────
 

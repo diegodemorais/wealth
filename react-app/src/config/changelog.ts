@@ -15,6 +15,15 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — HD-dashboard-gaps-tier2 ────────────────────────────────────
+  { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'RendaPlusMtmPnl', tab: 'portfolio', anchor: 'section-renda-plus-mtm', de: 'sem MtM da Renda+', para: 'Gap S: card taxa entrada/atual + P&L MtM em R$ e % (data-testid="renda-plus-mtm-pnl")' },
+  { datetime: '2026-04-28T16:00:00', type: 'cálculo', component: 'BreakevenIpcaSelic', tab: 'portfolio', anchor: 'section-breakeven-ipca-selic', de: 'sem break-even IPCA+ vs Selic', para: 'Gap Q: break-even líquido de IR + tabela acumulação 10 anos (data-testid="breakeven-year-ipca-selic")' },
+  { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'VolRealizadaVsMC', tab: 'performance', anchor: '', de: 'sem vol realizada', para: 'Gap O: volatilidade anualizada 12m vs premissa MC com badge ⚠/✓ (data-testid="vol-realizada-vs-mc")' },
+  { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'BondPoolStatus', tab: 'fire', anchor: '', de: 'sem status bond pool', para: 'Gap M: progress bar IPCA+2040+2050 vs meta 7 anos de gastos (data-testid="bond-pool-status")' },
+  { datetime: '2026-04-28T16:00:00', type: 'cálculo', component: 'RetornoCambialDecomposicao', tab: 'performance', anchor: '', de: 'sem decomposição cambial', para: 'Gap R: USD + FX = BRL com interpretação FX positivo/negativo (data-testid="retorno-cambial-decomposicao")' },
+  { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'SpendingCeiling', tab: 'fire', anchor: 'section-spending-ceiling', de: 'sem spending ceiling analítico', para: 'Gap L: 3 tiers P90/P85/P80 com SWR correspondente (data-testid="spending-ceiling")' },
+  { datetime: '2026-04-28T16:00:00', type: 'cálculo', component: 'PFireSensitivity', tab: 'fire', anchor: 'section-pfire-sensitivity', de: 'sem tabela de sensibilidade P(FIRE)', para: 'Gap N: tabela 7 linhas com variável/base/stress/delta (data-testid="pfire-sensitivity-table")' },
+  { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'CorrelacaoStress', tab: 'portfolio', anchor: 'section-correlation-stress', de: 'sem correlação em stress', para: 'Gap P: normal vs stress (meses retorno<-5%) para equity-RF e equity-FX (data-testid="correlation-matrix-stress")' },
   // ── 2026-04-28 — HD-dashboard-gaps-tier1 ────────────────────────────────────
   { datetime: '2026-04-28T12:00:00', type: 'dado', component: 'PatrimonioLiquidoIR', tab: 'now', anchor: 'section-patrimonio-liquido-ir', de: 'sem P(FIRE) líquido', para: 'Gap C: exibe P(FIRE) Líquido e Bruto de fire_montecarlo_liquido (data-testid="pfire-liquido")' },
   { datetime: '2026-04-28T12:00:00', type: 'dado', component: 'FIRENumberMeta', tab: 'fire', anchor: '', de: 'sem FIRE Number explícito', para: 'Gap G: FIRE Number com meta/atual/gap e barra de progresso (data-testid="fire-number-meta")' },

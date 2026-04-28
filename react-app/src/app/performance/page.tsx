@@ -742,6 +742,98 @@ export default function PerformancePage() {
         </div>
       </CollapsibleSection>
 
+      {/* ── Gap O: Vol Realizada vs MC ───────────────────────────────────────── */}
+      {(() => {
+        const vr = (safeData as any)?.vol_realizada;
+        if (!vr) return null;
+        const volReal: number = vr.anualizada_pct ?? 0;
+        const volMc: number = vr.vol_mc_premissa_pct ?? 0;
+        const acima: boolean = vr.acima_premissa ?? false;
+        const delta = volReal - volMc;
+        const cor = acima ? 'var(--red)' : 'var(--green)';
+        const janela: number = vr.janela_meses ?? 12;
+        return (
+          <>
+            <SectionDivider label="Risco Realizado" />
+            <div data-testid="vol-realizada-vs-mc" style={{ background: 'var(--card)', border: `1px solid ${cor}40`, borderLeft: `3px solid ${cor}`, borderRadius: 'var(--radius-lg)', padding: '14px 16px', marginBottom: 12 }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 8 }}>Vol Realizada vs Premissa MC</div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Vol realizada {janela}m</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: cor }}>
+                    {privacyMode ? '••%' : `${volReal.toFixed(2)}%`}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Premissa MC</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)' }}>
+                    {`${volMc.toFixed(1)}%`}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Desvio</div>
+                  <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, background: `${cor}22`, border: `1px solid ${cor}66`, color: cor, fontWeight: 700, fontSize: 'var(--text-sm)' }}>
+                    {acima ? '+' : ''}{delta.toFixed(2)}pp &nbsp;{acima ? '⚠ ACIMA' : '✓ abaixo'}
+                  </div>
+                </div>
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 10, borderTop: '1px solid var(--border)', paddingTop: 8 }}>
+                Vol anualizada = std dev TWR mensal × √12 (últimos {janela} meses). Premissa MC = config.py VOLATILIDADE_EQUITY.
+                Vol acima da premissa → sequência-de-retornos pior que projetado; revisar P(FIRE).
+              </div>
+            </div>
+          </>
+        );
+      })()}
+
+      {/* ── Gap R: Decomposição Retorno Cambial ──────────────────────────────── */}
+      {(() => {
+        const rd = (safeData as any)?.retorno_decomposicao;
+        if (!rd) return null;
+        const retUsd: number = rd.retorno_usd_pct ?? 0;
+        const retFx: number = rd.variacao_cambial_pct ?? 0;
+        const retBrl: number = rd.retorno_brl_pct ?? 0;
+        const periodo: string = rd.periodo ?? 'YTD';
+        const nMeses: number = rd.n_meses ?? 0;
+        const fxPositive = retFx >= 0;
+        return (
+          <div
+            data-testid="retorno-cambial-decomposicao"
+            style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '14px 16px', marginBottom: 12 }}
+          >
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 8 }}>
+              Decomposição Retorno Cambial — {periodo} ({nMeses} meses)
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>Equity USD</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: retUsd >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                  {privacyMode ? '••%' : `${retUsd >= 0 ? '+' : ''}${retUsd.toFixed(1)}%`}
+                </div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>FX (BRL/USD)</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: fxPositive ? 'var(--green)' : 'var(--red)' }}>
+                  {privacyMode ? '••%' : `${retFx >= 0 ? '+' : ''}${retFx.toFixed(1)}%`}
+                </div>
+                <div style={{ fontSize: 10, color: 'var(--muted)' }}>
+                  {fxPositive ? 'BRL apreciou (headwind USD)' : 'BRL depreciou (tailwind USD)'}
+                </div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>Retorno BRL</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: retBrl >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                  {privacyMode ? '••%' : `${retBrl >= 0 ? '+' : ''}${retBrl.toFixed(1)}%`}
+                </div>
+              </div>
+            </div>
+            <div style={{ marginTop: 10, fontSize: 'var(--text-xs)', color: 'var(--muted)', borderTop: '1px solid var(--border)', paddingTop: 8 }}>
+              Equity USD × FX ≈ BRL. FX negativo = BRL apreciou (retorno USD reduzido em BRL).
+            </div>
+          </div>
+        );
+      })()}
+
       {/* ── R5: Drawdown Monitor ─────────────────────────────────────────────── */}
       {(() => {
         const risk = (safeData as any)?.risk;

@@ -1,68 +1,68 @@
 {
-  "_generated": "2026-04-28T05:43:32",
-  "_generated_brt": "2026-04-28T05:43:32-03:00",
+  "_generated": "2026-04-28T06:44:00",
+  "_generated_brt": "2026-04-28T06:44:00-03:00",
   "_ibkr_sync_date": "2026-04-25T16:52:09",
   "_schema_version": "2.0",
-  "_pipeline_run": "20260428T054054",
+  "_pipeline_run": "20260428T064117",
   "_snapshots_metadata": {
     "backtest_r7": {
       "file": "backtest_r7.json",
       "mtime": "2026-04-27T20:59:01",
-      "age_h": 8.7,
+      "age_h": 9.7,
       "_generated": null
     },
     "fire_matrix": {
       "file": "fire_matrix.json",
-      "mtime": "2026-04-28T05:42:47",
+      "mtime": "2026-04-28T06:43:11",
       "age_h": 0.0,
-      "_generated": "2026-04-28T05:40:54"
+      "_generated": "2026-04-28T06:41:17"
     },
     "fire_swr_percentis": {
       "file": "fire_swr_percentis.json",
-      "mtime": "2026-04-28T05:40:54",
+      "mtime": "2026-04-28T06:41:17",
       "age_h": 0.0,
-      "_generated": "2026-04-28T05:40:54"
+      "_generated": "2026-04-28T06:41:17"
     },
     "fire_aporte_sensitivity": {
       "file": "fire_aporte_sensitivity.json",
-      "mtime": "2026-04-28T05:40:59",
+      "mtime": "2026-04-28T06:41:23",
       "age_h": 0.0,
-      "_generated": "2026-04-28T05:40:54"
+      "_generated": "2026-04-28T06:41:17"
     },
     "fire_trilha": {
       "file": "fire_trilha.json",
-      "mtime": "2026-04-28T05:40:54",
+      "mtime": "2026-04-28T06:41:17",
       "age_h": 0.0,
-      "_generated": "2026-04-28T05:40:54"
+      "_generated": "2026-04-28T06:41:17"
     },
     "drawdown_history": {
       "file": "drawdown_history.json",
-      "mtime": "2026-04-28T05:40:54",
+      "mtime": "2026-04-28T06:41:17",
       "age_h": 0.0,
-      "_generated": "2026-04-28T05:40:54"
+      "_generated": "2026-04-28T06:41:17"
     },
     "etf_composition": {
       "file": "etf_composition.json",
-      "mtime": "2026-04-28T05:40:54",
+      "mtime": "2026-04-28T06:41:17",
       "age_h": 0.0,
-      "_generated": "2026-04-28T05:40:54"
+      "_generated": "2026-04-28T06:41:17"
     },
     "bond_pool_runway": {
       "file": "bond_pool_runway.json",
-      "mtime": "2026-04-28T05:40:54",
+      "mtime": "2026-04-28T06:41:17",
       "age_h": 0.0,
-      "_generated": "2026-04-28T05:40:54"
+      "_generated": "2026-04-28T06:41:17"
     },
     "lumpy_events": {
       "file": "lumpy_events.json",
-      "mtime": "2026-04-28T05:41:02",
+      "mtime": "2026-04-28T06:41:26",
       "age_h": 0.0,
-      "_generated": "2026-04-28T05:40:54"
+      "_generated": "2026-04-28T06:41:17"
     },
     "fire_by_profile": {
       "file": "fire_by_profile.json",
       "mtime": "2026-04-27T12:18:28",
-      "age_h": 17.4,
+      "age_h": 18.4,
       "_generated": null
     }
   },
@@ -107,7 +107,7 @@
       "qty": 2020.2934,
       "avg_cost": 31.3341,
       "status": "transitório",
-      "price": 51.8517,
+      "price": 51.82,
       "bucket": "AVEM",
       "ter": null
     },
@@ -115,7 +115,7 @@
       "qty": 373.2498,
       "avg_cost": 60.0398,
       "status": "transitório",
-      "price": 87.8,
+      "price": 87.96,
       "bucket": "AVGS",
       "ter": null
     },
@@ -123,7 +123,7 @@
       "qty": 34.0,
       "avg_cost": 37.2259,
       "status": "transitório",
-      "price": 68.62,
+      "price": 68.65,
       "bucket": "JPGL",
       "ter": null
     },
@@ -236,7 +236,7 @@
     }
   },
   "premissas": {
-    "patrimonio_atual": 3729226,
+    "patrimonio_atual": 3729210,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1187,6 +1187,256 @@
       -7.67,
       9.2
     ],
+    "twr_pct": [
+      0.29,
+      -5.26,
+      4.58,
+      2.48,
+      0.18,
+      6.58,
+      -2.38,
+      2.38,
+      -10.98,
+      -4.48,
+      -5.93,
+      -5.37,
+      -4.47,
+      -0.56,
+      4.84,
+      -3.16,
+      -4.43,
+      2.98,
+      6.65,
+      -1.49,
+      3.83,
+      -0.72,
+      -1.96,
+      -1.16,
+      -2.59,
+      3.67,
+      2.82,
+      0.11,
+      -0.69,
+      -3.53,
+      5.17,
+      5.28,
+      1.32,
+      3.82,
+      5.09,
+      -0.26,
+      4.69,
+      8.96,
+      3.56,
+      0.64,
+      -0.39,
+      3.13,
+      7.23,
+      0.3,
+      -1.81,
+      -2.32,
+      -3.72,
+      24.81,
+      6.44,
+      1.26,
+      3.56,
+      0.96,
+      -15.01,
+      2.64,
+      0.49,
+      4.96,
+      -0.34,
+      2.65,
+      -5.3,
+      4.27
+    ],
+    "decomposicao": {
+      "equity_usd": [
+        2.18,
+        0.15,
+        0.05,
+        1.92,
+        -3.35,
+        2.83,
+        -3.7,
+        3.03,
+        -6.03,
+        -0.7,
+        -0.08,
+        -7.46,
+        -0.09,
+        -8.67,
+        5.06,
+        -2.68,
+        -9.12,
+        5.01,
+        8.08,
+        -1.76,
+        7.39,
+        -2.46,
+        0.05,
+        0.44,
+        -3.65,
+        6.22,
+        5.05,
+        -3.16,
+        -3.1,
+        -3.84,
+        8.22,
+        6.86,
+        -0.89,
+        2.7,
+        3.92,
+        -2.29,
+        3.11,
+        1.46,
+        3.02,
+        0.95,
+        2.75,
+        -2.6,
+        3.13,
+        -2.94,
+        3.11,
+        -1.76,
+        -1.83,
+        28.13,
+        5.67,
+        4.66,
+        1.53,
+        3.67,
+        -13.27,
+        1.58,
+        0.98,
+        2.22,
+        5.06,
+        3.68,
+        -7.61,
+        9.01
+      ],
+      "fx": [
+        -1.84,
+        -5.4,
+        4.99,
+        -0.34,
+        3.93,
+        3.6,
+        -0.53,
+        -0.48,
+        -3.34,
+        -3.54,
+        -7.05,
+        3.93,
+        -4.2,
+        8.75,
+        -0.19,
+        -0.92,
+        5.18,
+        -1.93,
+        -0.37,
+        0.27,
+        -3.11,
+        1.63,
+        -2.02,
+        -2.07,
+        0.97,
+        -3.49,
+        -2.64,
+        3.38,
+        2.83,
+        0.28,
+        -2.73,
+        -1.29,
+        2.24,
+        0.34,
+        0.9,
+        2.01,
+        1.61,
+        7.28,
+        0.33,
+        -0.04,
+        -3.05,
+        5.91,
+        3.57,
+        3.34,
+        -4.78,
+        -0.59,
+        -1.35,
+        -2.35,
+        0.79,
+        -3.25,
+        1.75,
+        -2.61,
+        -1.92,
+        1.11,
+        -0.49,
+        2.22,
+        -5.14,
+        -0.99,
+        2.43,
+        -4.34
+      ],
+      "rf_xp": [
+        -0.0,
+        0.0,
+        -0.47,
+        0.9,
+        -0.25,
+        0.03,
+        1.83,
+        -0.15,
+        -1.83,
+        -0.27,
+        1.19,
+        -1.53,
+        -0.18,
+        0.14,
+        -0.03,
+        0.41,
+        -0.0,
+        -0.0,
+        -1.03,
+        0.0,
+        -0.21,
+        0.15,
+        0.0,
+        0.48,
+        0.12,
+        1.16,
+        0.55,
+        0.0,
+        -0.33,
+        0.04,
+        -0.09,
+        -0.19,
+        -0.02,
+        0.77,
+        0.24,
+        0.07,
+        -0.09,
+        0.11,
+        0.2,
+        -0.27,
+        -0.0,
+        -0.02,
+        0.41,
+        0.0,
+        0.01,
+        0.02,
+        -0.57,
+        -0.29,
+        -0.06,
+        0.0,
+        0.26,
+        0.0,
+        -0.09,
+        -0.08,
+        -0.0,
+        0.47,
+        0.0,
+        -0.0,
+        0.06,
+        -0.0
+      ]
+    },
     "twr_usd_cagr": 10.73,
     "vwra_usd_cagr": 10.54,
     "cdi_cagr": 11.74
@@ -2632,7 +2882,7 @@
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -2753,17 +3003,17 @@
       4.86,
       13.32,
       13.34,
-      16.77
+      16.8
     ],
     "threshold": -5
   },
   "factor_signal": {
-    "swrd_ytd_pct": 4.81,
+    "swrd_ytd_pct": 4.79,
     "avgs_ytd_pct": 15.82,
-    "excess_ytd_pp": 11.01,
-    "swrd_since_launch_pct": 26.23,
+    "excess_ytd_pp": 11.03,
+    "swrd_since_launch_pct": 26.2,
     "avgs_since_launch_pct": 38.24,
-    "excess_since_launch_pp": 12.01,
+    "excess_since_launch_pp": 12.04,
     "avgs_launch_date": "2024-10-14",
     "meses_desde_launch": 18.4,
     "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
@@ -2989,23 +3239,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 76821.99,
+      "btc_atual_usd": 76675.58,
       "hodl11_brl_atual": 108102,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.04,
-          "valor_fire_brl": 112574
+          "valor_fire_brl": 112789
         },
         "base": {
           "btc_target_usd": 250000,
-          "upside_factor": 3.25,
-          "valor_fire_brl": 351794
+          "upside_factor": 3.26,
+          "valor_fire_brl": 352466
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.51,
-          "valor_fire_brl": 703588
+          "upside_factor": 6.52,
+          "valor_fire_brl": 704931
         }
       }
     }
@@ -3079,7 +3329,7 @@
       "unidade": "pp",
       "piso": -2.0,
       "gap": -2.1,
-      "posicao_r": 1320146,
+      "posicao_r": 1320140,
       "acao": "Rebalancear",
       "detalhe": "drift: -4.10pp (atual 35.4% vs alvo 39.5%) · posição R$1320k"
     },
@@ -3101,7 +3351,7 @@
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.656812968696453,
+      "valor": -11.656798624909833,
       "unidade": "pp",
       "piso": -2.0,
       "gap": -9.66,
@@ -3224,7 +3474,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.2934,
       "pm": 31.3341,
-      "price": 51.8517,
+      "price": 51.82,
       "ucits": "AVEM.L"
     },
     {
@@ -3232,7 +3482,7 @@
       "nome": "SPDR World SC",
       "qty": 373.2498,
       "pm": 60.0398,
-      "price": 87.8,
+      "price": 87.96,
       "ucits": "AVGS.L"
     },
     {
@@ -3240,7 +3490,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.2259,
-      "price": 68.62,
+      "price": 68.65,
       "ucits": "JPGL.L"
     },
     {
@@ -7874,11 +8124,11 @@
   },
   "attribution": {
     "aportes": 2070997,
-    "retornoUsd": 1693317,
+    "retornoUsd": 1693301,
     "cambio": -35088,
     "fx": -79514,
     "rf": 44426,
-    "crescReal": 3729226,
+    "crescReal": 3729210,
     "cagr_total": 12.479999999999999,
     "_estimativa": false,
     "_fonte": "retornos_mensais.json decomposicao (desde início)",
@@ -8226,8 +8476,8 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 647744,
-    "retorno_usd": 256700,
+    "patrimonio_equity_usd": 647741,
+    "retorno_usd": 256697,
     "pct_aportes": 60.4,
     "pct_retorno": 39.6,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
@@ -8246,8 +8496,8 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 86.5,
-    "cds_brazil_5y_bps": null,
-    "bitcoin_usd": 76821.99,
+    "cds_brazil_5y_bps": 123.6,
+    "bitcoin_usd": 76675.58,
     "plano_status": {
       "status": "PLANO_PERMANECE",
       "gatilho_ativo": "DCA IPCA+ ativo — 7.07% ≥ 6.0%",
@@ -8261,13 +8511,13 @@
       }
     },
     "cambio": 4.9778,
-    "equity_usd": 647743.91
+    "equity_usd": 647740.6
   },
   "mercado": {
     "cambio_brl_usd": 4.9778,
-    "btc_usd": 76821.99,
+    "btc_usd": 76675.58,
     "cambio_mtd_pct": 0.19,
-    "btc_mtd_pct": -1.29,
+    "btc_mtd_pct": -1.48,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": null,
     "ref_mes": "2026-04",
@@ -8697,7 +8947,7 @@
   "cryptoLegado": 3641.53,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 169100.67,
+    "ir_diferido_total_brl": 169098.21,
     "ir_por_etf": {
       "SWRD": {
         "ganho_usd": 91072.03,
@@ -8709,31 +8959,31 @@
         "ir_estimado": 68000.75
       },
       "EIMI": {
-        "ganho_usd": 41451.55,
+        "ganho_usd": 41387.51,
         "ptax_compra_medio": 4.9778,
         "ptax_atual": 4.9778,
         "custo_total_brl": 315115.13,
-        "valor_atual_brl": 521452.66,
-        "ganho_brl": 206337.53,
-        "ir_estimado": 30950.63
+        "valor_atual_brl": 521133.87,
+        "ganho_brl": 206018.74,
+        "ir_estimado": 30902.81
       },
       "USSC": {
-        "ganho_usd": 10361.47,
+        "ganho_usd": 10421.19,
         "ptax_compra_medio": 4.9778,
         "ptax_atual": 4.9778,
         "custo_total_brl": 111551.79,
-        "valor_atual_brl": 163129.14,
-        "ganho_brl": 51577.35,
-        "ir_estimado": 7736.6
+        "valor_atual_brl": 163426.41,
+        "ganho_brl": 51874.62,
+        "ir_estimado": 7781.19
       },
       "IWVL": {
-        "ganho_usd": 1067.4,
+        "ganho_usd": 1068.42,
         "ptax_compra_medio": 4.9778,
         "ptax_atual": 4.9778,
         "custo_total_brl": 6300.3,
-        "valor_atual_brl": 11613.61,
-        "ganho_brl": 5313.3,
-        "ir_estimado": 797.0
+        "valor_atual_brl": 11618.68,
+        "ganho_brl": 5318.38,
+        "ir_estimado": 797.76
       },
       "AVDV": {
         "ganho_usd": 40923.83,
@@ -8794,17 +9044,32 @@
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "fallback",
-    "ptax_atual": 4.9778
+    "ptax_atual": 4.9778,
+    "estate_tax": {
+      "us_situs_total_usd": 236373.54,
+      "us_situs_por_etf": {
+        "AVDV": 99080.88,
+        "AVUV": 65651.44,
+        "DGS": 11943.85,
+        "AVES": 59697.37
+      },
+      "estate_tax_usd": 70549.42,
+      "estate_tax_brl": 351180.9,
+      "exemption_usd": 60000,
+      "taxa_marginal_pct": 40.0,
+      "nota": "US-listed ETFs (AVUV/AVDV/DGS/AVES) = US situs. UCITS (SWRD.L/AVGS.L) = Irish domicile, not US situs."
+    },
+    "estate_tax_usd": 70549.42
   },
   "passivos": {
     "hipoteca_brl": 453417,
     "hipoteca_vencimento": "2051-02-15",
-    "ir_diferido_brl": 169100.67,
-    "total_brl": 622517.67,
+    "ir_diferido_brl": 169098.21,
+    "total_brl": 622515.21,
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3729226,
+    "financeiro_brl": 3729210,
     "imovel_equity_brl": 366583,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 453417,
@@ -8812,7 +9077,7 @@
     "capital_humano_vp": 3129022.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 7657831.0,
+    "total_brl": 7657815.0,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
@@ -8832,7 +9097,7 @@
     },
     "total_brasil_brl": 393143,
     "total_cripto_brl": 111744,
-    "total_portfolio_brl": 3729226,
+    "total_portfolio_brl": 3729210,
     "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
   },
   "premissas_vs_realizado": {
@@ -10173,13 +10438,13 @@
   },
   "fire_montecarlo_liquido": {
     "patrimonio_bruto": 3320426.84,
-    "ir_diferido": 169100.67,
-    "patrimonio_liquido": 3151326.17,
+    "ir_diferido": 169098.21,
+    "patrimonio_liquido": 3151328.63,
     "pfire_bruto": 86.1,
     "pfire_liquido": 85.3,
     "delta_pp": -0.8,
     "pat_mediana_fire_bruto": 11597034.0,
-    "pat_mediana_fire_liquido": 11285235.0,
+    "pat_mediana_fire_liquido": 11285240.0,
     "n_sim": 10000,
     "seed": 42,
     "cenario": "base",
@@ -10187,8 +10452,8 @@
     "_generated": "2026-04-28"
   },
   "fire_matrix": {
-    "_generated": "2026-04-28T05:40:54",
-    "_window_id": "20260428T054054",
+    "_generated": "2026-04-28T06:41:17",
+    "_window_id": "20260428T064117",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -10490,8 +10755,8 @@
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-04-28T05:40:54",
-    "_window_id": "20260428T054054",
+    "_generated": "2026-04-28T06:41:17",
+    "_window_id": "20260428T064117",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 7097769.0,
@@ -10506,8 +10771,8 @@
     "mc_date": "2026-04-28"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-04-28T05:40:54",
-    "_window_id": "20260428T054054",
+    "_generated": "2026-04-28T06:41:17",
+    "_window_id": "20260428T064117",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -10531,8 +10796,8 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-28T05:40:54",
-    "_window_id": "20260428T054054",
+    "_generated": "2026-04-28T06:41:17",
+    "_window_id": "20260428T064117",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -12138,8 +12403,8 @@
     "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
   },
   "drawdown_history": {
-    "_generated": "2026-04-28T05:40:54",
-    "_window_id": "20260428T054054",
+    "_generated": "2026-04-28T06:41:17",
+    "_window_id": "20260428T064117",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-05",
@@ -12294,8 +12559,8 @@
     "_fonte": "backtest.metrics.target.maxdd (fallback)"
   },
   "etf_composition": {
-    "_generated": "2026-04-28T05:40:54",
-    "_window_id": "20260428T054054",
+    "_generated": "2026-04-28T06:41:17",
+    "_window_id": "20260428T064117",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -12352,8 +12617,8 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-04-28T05:40:54",
-    "_window_id": "20260428T054054",
+    "_generated": "2026-04-28T06:41:17",
+    "_window_id": "20260428T064117",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -12487,8 +12752,8 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-04-28T05:40:54",
-    "_window_id": "20260428T054054",
+    "_generated": "2026-04-28T06:41:17",
+    "_window_id": "20260428T064117",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.8498,
@@ -13460,5 +13725,263 @@
       }
     ],
     "sorr_base_pfire": 86.1
+  },
+  "renda_plus_mtm": {
+    "taxa_entrada": 6.93,
+    "taxa_atual": 6.93,
+    "delta_taxa_pp": 0.0,
+    "mod_dur": 20.12,
+    "mtm_pct": -0.0,
+    "mtm_brl": -0.0,
+    "valor_investido_brl": 117832.62,
+    "_nota": "ΔP ≈ -ModDur × Δtaxa × valor. Taxa entrada: nubank/resumo_td.json"
+  },
+  "breakeven_ipca_selic": {
+    "anos": 99,
+    "taxa_ipca_gross": 6.93,
+    "taxa_selic_gross": 14.75,
+    "inflacao_premissa": 4.0,
+    "aliquota_ipca_final": 15.0,
+    "comparacoes": [
+      {
+        "ano": 1,
+        "ipca_liq": 1.095261,
+        "selic_liq": 1.121687
+      },
+      {
+        "ano": 2,
+        "ipca_liq": 1.199597,
+        "selic_liq": 1.262319
+      },
+      {
+        "ano": 3,
+        "ipca_liq": 1.313872,
+        "selic_liq": 1.420582
+      },
+      {
+        "ano": 4,
+        "ipca_liq": 1.439033,
+        "selic_liq": 1.598688
+      },
+      {
+        "ano": 5,
+        "ipca_liq": 1.576117,
+        "selic_liq": 1.799123
+      },
+      {
+        "ano": 6,
+        "ipca_liq": 1.72626,
+        "selic_liq": 2.024688
+      },
+      {
+        "ano": 7,
+        "ipca_liq": 1.890706,
+        "selic_liq": 2.278534
+      },
+      {
+        "ano": 8,
+        "ipca_liq": 2.070817,
+        "selic_liq": 2.564205
+      },
+      {
+        "ano": 9,
+        "ipca_liq": 2.268085,
+        "selic_liq": 2.885692
+      },
+      {
+        "ano": 10,
+        "ipca_liq": 2.484145,
+        "selic_liq": 3.247486
+      },
+      {
+        "ano": 11,
+        "ipca_liq": 2.720788,
+        "selic_liq": 3.654639
+      },
+      {
+        "ano": 12,
+        "ipca_liq": 2.979974,
+        "selic_liq": 4.11284
+      },
+      {
+        "ano": 13,
+        "ipca_liq": 3.26385,
+        "selic_liq": 4.628487
+      },
+      {
+        "ano": 14,
+        "ipca_liq": 3.574768,
+        "selic_liq": 5.208783
+      },
+      {
+        "ano": 15,
+        "ipca_liq": 3.915305,
+        "selic_liq": 5.861835
+      }
+    ],
+    "note": "IPCA+ alíquota 15% flat >720d; Selic alíquota regressiva 22.5%→15%. Fórmula: acumula R$1 líq de IR até cruzamento."
+  },
+  "vol_realizada": {
+    "anualizada_pct": 19.92,
+    "mensal_pct": 5.75,
+    "janela_meses": 12,
+    "vol_mc_premissa_pct": 16.8,
+    "acima_premissa": true,
+    "_nota": "std dev twr_pct mensal ×√12. Premissa MC: config.py VOLATILIDADE_EQUITY"
+  },
+  "bond_pool": {
+    "atual_brl": 124675.0,
+    "meta_brl": 1750000,
+    "cobertura_anos": 0.5,
+    "meta_anos": 7,
+    "pct_meta": 7.1,
+    "composicao": {
+      "ipca2040": 113015.0,
+      "ipca2050": 11660.0
+    },
+    "_nota": "Bond pool longa = IPCA+2040 + IPCA+2050. Meta = gastos × 7 anos (bond tent carteira.md)"
+  },
+  "retorno_decomposicao": {
+    "periodo": "YTD",
+    "retorno_usd_pct": 9.7,
+    "variacao_cambial_pct": -7.97,
+    "retorno_brl_pct": 1.02,
+    "n_meses": 4,
+    "nota": "Equity USD acumulado + variação FX acumulada. Fonte: decomposicao em retornos_mensais.json"
+  },
+  "spending_ceiling": {
+    "floor_p90": 136000.0,
+    "central_p85": 144000.0,
+    "ceiling_p80": 151000.0,
+    "swr_p90": 3.66,
+    "swr_p85": 3.87,
+    "swr_p80": 4.05,
+    "patrimonio_base": 3729210,
+    "nota": "Aproximação analítica (anuidade ajustada por risco). Aportes=0. Usar MC completo para valores definitivos.",
+    "_metodo": "analytical_annuity_risk_adjusted"
+  },
+  "pfire_sensitivity": [
+    {
+      "variable": "Retorno equity",
+      "base_value": "4.9%",
+      "stressed_value": "3.9%",
+      "pfire_base": 86.1,
+      "pfire_stressed": 82.1,
+      "delta_pp": -4.0,
+      "direcao": "stress",
+      "nota": "Retorno equity -1pp (premissa base → stress)"
+    },
+    {
+      "variable": "Retorno equity",
+      "base_value": "4.9%",
+      "stressed_value": "5.9%",
+      "pfire_base": 86.1,
+      "pfire_stressed": 90.1,
+      "delta_pp": 4.0,
+      "direcao": "fav",
+      "nota": "Retorno equity +1pp"
+    },
+    {
+      "variable": "Volatilidade",
+      "base_value": "16.8%",
+      "stressed_value": "18.8%",
+      "pfire_base": 86.1,
+      "pfire_stressed": 84.1,
+      "delta_pp": -2.0,
+      "direcao": "stress",
+      "nota": "Volatilidade +2pp → sequência-de-retornos piora"
+    },
+    {
+      "variable": "Gastos anuais",
+      "base_value": "R$250k",
+      "stressed_value": "R$275k",
+      "pfire_base": 86.1,
+      "pfire_stressed": 83.1,
+      "delta_pp": -3.0,
+      "direcao": "stress",
+      "nota": "Gastos +R$25k/ano (casamento, filho, lifestyle creep)"
+    },
+    {
+      "variable": "Gastos anuais",
+      "base_value": "R$250k",
+      "stressed_value": "R$225k",
+      "pfire_base": 86.1,
+      "pfire_stressed": 89.1,
+      "delta_pp": 3.0,
+      "direcao": "fav",
+      "nota": "Gastos -R$25k/ano (spending smile fase slow-go antecipada)"
+    },
+    {
+      "variable": "Taxa RF (IPCA+)",
+      "base_value": "6.0%",
+      "stressed_value": "5.5%",
+      "pfire_base": 86.1,
+      "pfire_stressed": 85.1,
+      "delta_pp": -1.0,
+      "direcao": "stress",
+      "nota": "Taxa IPCA+ -0.5pp → menor retorno RF no bond tent"
+    },
+    {
+      "variable": "Taxa RF (IPCA+)",
+      "base_value": "6.0%",
+      "stressed_value": "6.5%",
+      "pfire_base": 86.1,
+      "pfire_stressed": 87.1,
+      "delta_pp": 1.0,
+      "direcao": "fav",
+      "nota": "Taxa IPCA+ +0.5pp → maior retorno RF no bond tent"
+    }
+  ],
+  "correlation_stress": {
+    "n_stress_months": 6,
+    "n_total_months": 60,
+    "correlacoes_normais": {
+      "equity_rf": 0.058,
+      "equity_fx": -0.384
+    },
+    "correlacoes_stress": {
+      "equity_rf": 0.36,
+      "equity_fx": -0.607
+    },
+    "labels": [
+      "Equity USD",
+      "RF (IPCA+)",
+      "FX (BRL/USD)"
+    ],
+    "matrix_normal": [
+      [
+        1.0,
+        0.058,
+        -0.384
+      ],
+      [
+        0.058,
+        1.0,
+        null
+      ],
+      [
+        -0.384,
+        null,
+        1.0
+      ]
+    ],
+    "matrix_stress": [
+      [
+        1.0,
+        0.36,
+        -0.607
+      ],
+      [
+        0.36,
+        1.0,
+        null
+      ],
+      [
+        -0.607,
+        null,
+        1.0
+      ]
+    ],
+    "nota": "Stress = meses com retorno BRL < -5%. Proxy equity = TWR USD (carteira total, não ETF individual). Limitação: sem retornos separados por ETF."
   }
 }

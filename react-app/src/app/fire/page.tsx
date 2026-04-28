@@ -1050,6 +1050,154 @@ export default function FirePage() {
       </CollapsibleSection>
       </div>
 
+      <SectionDivider label="Bond Pool & Spending" />
+
+      {/* ── Gap M: Bond Pool Status ────────────────────────────────────────────── */}
+      {(() => {
+        const bp = (data as any)?.bond_pool;
+        if (!bp) return null;
+        const atualBrl: number = bp.atual_brl ?? 0;
+        const metaBrl: number = bp.meta_brl ?? 0;
+        const coberturaAnos: number = bp.cobertura_anos ?? 0;
+        const metaAnos: number = bp.meta_anos ?? 7;
+        const pctMeta: number = bp.pct_meta ?? 0;
+        const comp = bp.composicao ?? {};
+        const progressColor = pctMeta >= 50 ? 'var(--green)' : pctMeta >= 25 ? 'var(--yellow)' : 'var(--red)';
+        const fmtBRLfire = (v: number) => privacyMode ? fmtPrivacy(v, true) : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+        return (
+          <div data-testid="bond-pool-status" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '14px 16px', marginBottom: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, flexWrap: 'wrap', gap: 8 }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>Bond Pool — IPCA+2040 + 2050</div>
+              <span style={{ padding: '2px 10px', borderRadius: 20, background: `${progressColor}22`, border: `1px solid ${progressColor}66`, color: progressColor, fontWeight: 700, fontSize: 'var(--text-xs)' }}>
+                {coberturaAnos.toFixed(1)}a de {metaAnos}a meta
+              </span>
+            </div>
+            <div style={{ background: 'var(--card2)', borderRadius: 8, height: 10, marginBottom: 12, overflow: 'hidden' }}>
+              <div style={{ width: `${Math.min(pctMeta, 100)}%`, height: '100%', background: progressColor, borderRadius: 8, transition: 'width .3s' }} />
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div>
+                <div style={{ fontSize: 10, color: 'var(--muted)' }}>Atual</div>
+                <div style={{ fontWeight: 700, fontSize: '1rem' }}>{fmtBRLfire(atualBrl)}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: 'var(--muted)' }}>Meta ({metaAnos} anos)</div>
+                <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--muted)' }}>{fmtBRLfire(metaBrl)}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: 'var(--muted)' }}>IPCA+2040</div>
+                <div style={{ fontWeight: 700, fontSize: '1rem' }}>{fmtBRLfire(comp.ipca2040 ?? 0)}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: 'var(--muted)' }}>IPCA+2050</div>
+                <div style={{ fontWeight: 700, fontSize: '1rem' }}>{fmtBRLfire(comp.ipca2050 ?? 0)}</div>
+              </div>
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 10, borderTop: '1px solid var(--border)', paddingTop: 8 }}>
+              Meta: {metaAnos} anos × gastos anuais = {fmtBRLfire(metaBrl)}. Excl. IPCA+2029 (reserva emergência). {pctMeta.toFixed(1)}% atingido.
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── Gap L: Spending Ceiling ────────────────────────────────────────────── */}
+      {(() => {
+        const sc = (data as any)?.spending_ceiling;
+        if (!sc) return null;
+        const floorP90: number = sc.floor_p90 ?? 0;
+        const centralP85: number = sc.central_p85 ?? 0;
+        const ceilingP80: number = sc.ceiling_p80 ?? 0;
+        const swrP90: number = sc.swr_p90 ?? 0;
+        const swrP85: number = sc.swr_p85 ?? 0;
+        const swrP80: number = sc.swr_p80 ?? 0;
+        const patrimonioBase: number = sc.patrimonio_base ?? 0;
+        const fmtBRLfire = (v: number) => privacyMode ? fmtPrivacy(v, true) : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+        return (
+          <div data-testid="spending-ceiling">
+          <CollapsibleSection
+            id="section-spending-ceiling"
+            title={secTitle('fire', 'spending-ceiling', 'Spending Ceiling — Máximo Sustentável')}
+            defaultOpen={secOpen('fire', 'spending-ceiling', false)}
+          >
+            <div style={{ padding: '14px 16px' }}>
+              <div className="grid grid-cols-3 gap-3" style={{ marginBottom: 12 }}>
+                {[
+                  { label: 'Piso (P90)', val: floorP90, swr: swrP90, cor: 'var(--green)', note: '10% chance de superar' },
+                  { label: 'Central (P85)', val: centralP85, swr: swrP85, cor: 'var(--accent)', note: '15% chance de superar' },
+                  { label: 'Teto (P80)', val: ceilingP80, swr: swrP80, cor: 'var(--yellow)', note: '20% chance de superar' },
+                ].map(({ label, val, swr, cor, note }) => (
+                  <div key={label} style={{ background: 'var(--bg)', border: `1px solid ${cor}40`, borderRadius: 8, padding: '10px 12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>{label}</div>
+                    <div style={{ fontSize: '1.3rem', fontWeight: 800, color: cor, lineHeight: 1 }}>{fmtBRLfire(val)}</div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>SWR {swr.toFixed(2)}%</div>
+                    <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 2 }}>{note}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="src">
+                Aproximação analítica (anuidade ajustada por risco). Aportes=0 (conservador).
+                Patrimônio base: {fmtBRLfire(patrimonioBase)}. Usar MC completo para valores definitivos.
+                Nota: piso &lt; gasto atual (R$250k) pois aportes=0 nesta estimativa — com aportes projetados, ceiling é maior.
+              </div>
+            </div>
+          </CollapsibleSection>
+          </div>
+        );
+      })()}
+
+      {/* ── Gap N: Sensibilidade P(FIRE) ──────────────────────────────────────── */}
+      {(() => {
+        const sens = (data as any)?.pfire_sensitivity;
+        if (!Array.isArray(sens) || sens.length === 0) return null;
+        return (
+          <div data-testid="pfire-sensitivity-table">
+          <CollapsibleSection
+            id="section-pfire-sensitivity"
+            title={secTitle('fire', 'pfire-sensitivity', 'Sensibilidade P(FIRE) — Análise de Variáveis')}
+            defaultOpen={secOpen('fire', 'pfire-sensitivity', false)}
+          >
+            <div style={{ padding: '14px 16px' }}>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)', minWidth: 360 }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                      <th style={{ textAlign: 'left', padding: '7px 8px', color: 'var(--muted)', fontWeight: 600 }}>Variável</th>
+                      <th style={{ textAlign: 'right', padding: '7px 8px', color: 'var(--muted)', fontWeight: 600 }}>Base</th>
+                      <th style={{ textAlign: 'right', padding: '7px 8px', color: 'var(--muted)', fontWeight: 600 }}>Stress</th>
+                      <th style={{ textAlign: 'right', padding: '7px 8px', color: 'var(--muted)', fontWeight: 600 }}>P(FIRE) base</th>
+                      <th style={{ textAlign: 'right', padding: '7px 8px', color: 'var(--muted)', fontWeight: 600 }}>ΔP(FIRE)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sens.map((row: any, i: number) => {
+                      const delta: number = row.delta_pp ?? 0;
+                      const cor = delta >= 0 ? 'var(--green)' : 'var(--red)';
+                      return (
+                        <tr key={i} style={{ borderBottom: '1px solid var(--card2)' }}>
+                          <td style={{ padding: '6px 8px', fontWeight: 600 }}>{row.variable}</td>
+                          <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)' }}>{row.base_value}</td>
+                          <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.stressed_value}</td>
+                          <td style={{ textAlign: 'right', padding: '6px 8px' }}>
+                            {privacyMode ? '••%' : `${row.pfire_base?.toFixed(1) ?? '—'}%`}
+                          </td>
+                          <td style={{ textAlign: 'right', padding: '6px 8px', fontWeight: 700, color: cor }}>
+                            {privacyMode ? '±••pp' : `${delta >= 0 ? '+' : ''}${delta.toFixed(1)}pp`}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div className="src">
+                Deltas heurísticos (Pfau 2012). Sensibilidade analítica — para valores exatos usar fire_montecarlo.py completo.
+              </div>
+            </div>
+          </CollapsibleSection>
+          </div>
+        );
+      })()}
+
     </div>
   );
 }

@@ -6,49 +6,90 @@
       "id": "now",
       "label": "DASHBOARD",
       "job": "O que preciso saber agora?",
-      "groups": ["Indicadores", "Ação Imediata", "Monitoramento"]
+      "groups": [
+        "Indicadores",
+        "Ação Imediata",
+        "Monitoramento"
+      ]
     },
     {
       "id": "portfolio",
       "label": "PORTFOLIO",
       "job": "Como está minha carteira?",
-      "groups": ["Visão Geral", "Alocação & Drift", "Holdings", "Tax & Atividade", "Renda Fixa & Cripto"]
+      "groups": [
+        "Visão Geral",
+        "Alocação & Drift",
+        "Holdings",
+        "Tax & Atividade",
+        "Renda Fixa & Cripto"
+      ]
     },
     {
       "id": "performance",
       "label": "PERFORMANCE",
       "job": "Estou performando bem?",
-      "groups": ["Visão Geral", "Alpha & Benchmark", "Histórico", "Fatores", "Análise Técnica"]
+      "groups": [
+        "Visão Geral",
+        "Alpha & Benchmark",
+        "Histórico",
+        "Fatores",
+        "Análise Técnica"
+      ]
     },
     {
       "id": "fire",
       "label": "FIRE",
       "job": "Quando posso me aposentar?",
-      "groups": ["Readiness", "Projeções", "Contexto", "Cenários & Risco", "Eventos de Vida"]
+      "groups": [
+        "Readiness",
+        "Projeções",
+        "Contexto",
+        "Cenários & Risco",
+        "Eventos de Vida"
+      ]
     },
     {
       "id": "withdraw",
       "label": "RETIREMENT",
       "job": "Mecânicas da aposentadoria: bond pool, guardrails, renda, spending",
-      "groups": ["Posso me aposentar?", "Quanto gastar?", "Proteção"]
+      "groups": [
+        "Posso me aposentar?",
+        "Quanto gastar?",
+        "Proteção"
+      ]
     },
     {
       "id": "backtest",
       "label": "BACKTEST",
       "job": "Análise histórica contrafactual e validação de estratégia",
-      "groups": ["Backtest Principal", "Drawdown & Risco", "Deep Dive", "Bitcoin"]
+      "groups": [
+        "Backtest Principal",
+        "Drawdown & Risco",
+        "Deep Dive",
+        "Bitcoin"
+      ]
     },
     {
       "id": "simuladores",
       "label": "SIMULADORES",
       "job": "What-if, stress test, sensibilidade — explorar cenários alternativos",
-      "groups": ["Simulador FIRE", "What-If Cenários", "Decisão de Aporte", "Análise Avançada"]
+      "groups": [
+        "Simulador FIRE",
+        "What-If Cenários",
+        "Decisão de Aporte",
+        "Análise Avançada"
+      ]
     },
     {
       "id": "assumptions",
       "label": "CHECKLIST",
       "job": "Visão geral do plano e ações pendentes",
-      "groups": ["Decisões & Ações", "Onde Estou", "Alocação & Regras", "Modelo & Referência"]
+      "groups": [
+        "Decisões & Ações",
+        "Onde Estou",
+        "Alocação & Regras",
+        "Modelo & Referência"
+      ]
     }
   ],
   "blocks": [
@@ -297,7 +338,10 @@
       "constraints": {
         "brasil_cambial_sum": {
           "type": "sum_near_100",
-          "fields": ["concentracao_brasil.brasil_pct", "macro.exposicao_cambial_pct"],
+          "fields": [
+            "concentracao_brasil.brasil_pct",
+            "macro.exposicao_cambial_pct"
+          ],
           "tolerance": 2.0,
           "reason": "brasil_pct (BRL assets) + exposicao_cambial_pct (USD exposure) devem somar ~100% — são perspectivas complementares do portfólio"
         }
@@ -1009,7 +1053,10 @@
       "label": "Risk Score Gauge",
       "type": "chart",
       "purpose": "gauge de risco do portfolio 0-10",
-      "data_fields": ["risk.score", "risk.label"],
+      "data_fields": [
+        "risk.score",
+        "risk.label"
+      ],
       "optional": false
     },
     {
@@ -1018,7 +1065,9 @@
       "label": "Risk Semáforos",
       "type": "table",
       "purpose": "status dos principais indicadores de risco",
-      "data_fields": ["risk.semaforos"],
+      "data_fields": [
+        "risk.semaforos"
+      ],
       "optional": false
     },
     {
@@ -1027,7 +1076,9 @@
       "label": "Risk Contribution",
       "type": "chart",
       "purpose": "contribuição % de cada ativo ao risco total",
-      "data_fields": ["risk.contribution_by_asset"],
+      "data_fields": [
+        "risk.contribution_by_asset"
+      ],
       "optional": false
     },
     {
@@ -1036,7 +1087,9 @@
       "label": "Duration Scenarios",
       "type": "table",
       "purpose": "cenários de impacto de mudança de juros na Renda+",
-      "data_fields": ["risk.duration_scenarios"],
+      "data_fields": [
+        "risk.duration_scenarios"
+      ],
       "optional": false
     },
     {
@@ -1045,7 +1098,9 @@
       "label": "Drawdown Monitor",
       "type": "kpi",
       "purpose": "drawdown atual vs histórico com badge de guardrail",
-      "data_fields": ["risk.max_drawdown_real"],
+      "data_fields": [
+        "risk.max_drawdown_real"
+      ],
       "optional": false
     },
     {
@@ -1054,78 +1109,258 @@
       "label": "SoRR Indicator",
       "type": "table",
       "purpose": "P(FIRE) ajustado em diferentes cenários de crash",
-      "data_fields": ["risk.sorr_scenarios"],
+      "data_fields": [
+        "risk.sorr_scenarios"
+      ],
       "optional": false
     },
     {
       "id": "pfire-liquido",
       "description": "P(FIRE) líquido de IR — probabilidade calculada sobre patrimônio com IR diferido deduzido antes da simulação MC",
       "tab": "now",
-      "data_fields": ["fire_montecarlo_liquido.pfire_liquido", "fire_montecarlo_liquido.pfire_bruto", "fire_montecarlo_liquido.delta_pp"],
-      "optional": false
+      "data_fields": [
+        "fire_montecarlo_liquido.pfire_liquido",
+        "fire_montecarlo_liquido.pfire_bruto",
+        "fire_montecarlo_liquido.delta_pp"
+      ],
+      "optional": false,
+      "label": "P(FIRE) Líquido de IR"
     },
     {
       "id": "fire-number-meta",
       "description": "FIRE Number explícito: Meta (gastos/SWR) | Patrimônio atual | Gap | Barra de progresso",
       "tab": "fire",
-      "data_fields": ["premissas.patrimonio_gatilho", "premissas.patrimonio_atual", "premissas.swr_gatilho", "premissas.custo_vida_base"],
-      "optional": false
+      "data_fields": [
+        "premissas.patrimonio_gatilho",
+        "premissas.patrimonio_atual",
+        "premissas.swr_gatilho",
+        "premissas.custo_vida_base"
+      ],
+      "optional": false,
+      "label": "FIRE Number Meta"
     },
     {
       "id": "cds-brasil-semaforo",
       "description": "Semáforo CDS Brasil 5Y integrado no R2 — verde<250bps, amarelo 250-400bps, vermelho>400bps",
       "tab": "now",
-      "data_fields": ["macro.cds_brazil_5y_bps"],
-      "optional": false
+      "data_fields": [
+        "macro.cds_brazil_5y_bps"
+      ],
+      "optional": false,
+      "label": "Semáforo CDS Brasil"
     },
     {
       "id": "balanco-holistico",
       "description": "Balanço holístico: financeiro + imóvel equity + terreno + capital humano + INSS como seção colapsável no NOW",
       "tab": "now",
-      "data_fields": ["patrimonio_holistico.total_brl", "patrimonio_holistico.financeiro_brl", "patrimonio_holistico.capital_humano_vp", "patrimonio_holistico.imovel_equity_brl", "patrimonio_holistico.inss_pv_brl"],
-      "optional": false
+      "data_fields": [
+        "patrimonio_holistico.total_brl",
+        "patrimonio_holistico.financeiro_brl",
+        "patrimonio_holistico.capital_humano_vp",
+        "patrimonio_holistico.imovel_equity_brl",
+        "patrimonio_holistico.inss_pv_brl"
+      ],
+      "optional": false,
+      "label": "Balanço Holístico"
     },
     {
       "id": "renda-plus-gatilho",
       "description": "Widget gatilho Renda+ 2065: taxa atual vs gatilho DCA (≥6.5%), distância em bps, status DCA",
       "tab": "portfolio",
-      "data_fields": ["dca_status.renda_plus.taxa_atual", "dca_status.renda_plus.piso_compra", "dca_status.renda_plus.gap_pp", "dca_status.renda_plus.ativo"],
-      "optional": false
+      "data_fields": [
+        "dca_status.renda_plus.taxa_atual",
+        "dca_status.renda_plus.piso_compra",
+        "dca_status.renda_plus.gap_pp",
+        "dca_status.renda_plus.ativo"
+      ],
+      "optional": false,
+      "label": "Renda+ Gatilho DCA"
     },
     {
       "id": "renda-floor-katia",
       "description": "Renda floor implícita de Katia (INSS Katia + PGBL) com nota conservadora sobre modelo MC",
       "tab": "fire",
-      "data_fields": ["premissas.inss_katia_anual", "premissas.pgbl_katia_saldo_fire", "pfire_aspiracional.base"],
-      "optional": false
+      "data_fields": [
+        "premissas.inss_katia_anual",
+        "premissas.pgbl_katia_saldo_fire",
+        "pfire_aspiracional.base"
+      ],
+      "optional": false,
+      "label": "Renda Floor Katia"
     },
     {
       "id": "factor-drought-counter",
       "description": "Badge contador de drought fatorial AVGS vs SWRD — meses sem/com underperformance + excess YTD",
       "tab": "portfolio",
-      "data_fields": ["factor_signal.excess_ytd_pp", "factor_signal.excess_since_launch_pp", "factor_signal.meses_desde_launch", "backtest_r7.factor_drought.max_meses"],
-      "optional": false
+      "data_fields": [
+        "factor_signal.excess_ytd_pp",
+        "factor_signal.excess_since_launch_pp",
+        "factor_signal.meses_desde_launch",
+        "backtest_r7.factor_drought.max_meses"
+      ],
+      "optional": false,
+      "label": "Factor Drought Counter"
     },
     {
       "id": "exposicao-geografica",
       "description": "Exposição geográfica consolidada do portfolio equity por região (EUA, Europa, EM, outros)",
       "tab": "portfolio",
-      "data_fields": ["etf_composition.etfs"],
-      "optional": false
+      "data_fields": [
+        "etf_composition.etfs"
+      ],
+      "optional": false,
+      "label": "Exposição Geográfica"
     },
     {
       "id": "drawdown-context-banner",
       "description": "Banner contextual na aba Performance quando drawdown atual > 5% — mostra drawdown, guardrail e ação recomendada",
       "tab": "performance",
-      "data_fields": ["drawdown_history.drawdown_pct", "spending_guardrails.zona"],
-      "optional": false
+      "data_fields": [
+        "drawdown_history.drawdown_pct",
+        "spending_guardrails.zona"
+      ],
+      "optional": false,
+      "label": "Drawdown Context Banner"
     },
     {
       "id": "ips-summary",
       "description": "Card resumo das 30-second rules do IPS — equity alvo, SWR, pisos IPCA+/Renda+, guardrail piso, CDS threshold, drift threshold",
       "tab": "now",
-      "data_fields": ["premissas.swr_gatilho", "pisos.pisoTaxaIpcaLongo", "pisos.pisoTaxaRendaPlus", "pesosTarget", "guardrails", "gasto_piso"],
-      "optional": false
+      "data_fields": [
+        "premissas.swr_gatilho",
+        "pisos.pisoTaxaIpcaLongo",
+        "pisos.pisoTaxaRendaPlus",
+        "pesosTarget",
+        "guardrails",
+        "gasto_piso"
+      ],
+      "optional": false,
+      "label": "IPS Summary"
+    },
+    {
+      "id": "renda-plus-mtm-pnl",
+      "label": "Renda+ MtM P&L",
+      "tab": "portfolio",
+      "type": "kpi",
+      "purpose": "Gap S — MtM P&L da posição tática Renda+ 2065 via approximação de duration",
+      "data_fields": [
+        "renda_plus_mtm.taxa_entrada",
+        "renda_plus_mtm.taxa_atual",
+        "renda_plus_mtm.mtm_brl",
+        "renda_plus_mtm.mtm_pct"
+      ],
+      "optional": false,
+      "privacy": true
+    },
+    {
+      "id": "breakeven-year-ipca-selic",
+      "label": "Break-Even IPCA+ vs Selic",
+      "tab": "portfolio",
+      "type": "kpi",
+      "purpose": "Gap Q — ano em que IPCA+ acumula mais que Selic após IR diferencial",
+      "data_fields": [
+        "breakeven_ipca_selic.anos",
+        "breakeven_ipca_selic.taxa_ipca_gross",
+        "breakeven_ipca_selic.taxa_selic_gross"
+      ],
+      "optional": false,
+      "privacy": false
+    },
+    {
+      "id": "vol-realizada-vs-mc",
+      "label": "Vol Realizada vs MC",
+      "tab": "performance",
+      "type": "kpi",
+      "purpose": "Gap O — volatilidade realizada 12m vs premissa MC 16.8%",
+      "data_fields": [
+        "vol_realizada.anualizada_pct",
+        "vol_realizada.vol_mc_premissa_pct",
+        "vol_realizada.acima_premissa"
+      ],
+      "optional": false,
+      "privacy": false
+    },
+    {
+      "id": "bond-pool-status",
+      "label": "Bond Pool Status",
+      "tab": "fire",
+      "type": "progress",
+      "purpose": "Gap M — bond pool atual vs meta 7 anos de gastos com barra de progresso",
+      "data_fields": [
+        "bond_pool.atual_brl",
+        "bond_pool.meta_brl",
+        "bond_pool.cobertura_anos",
+        "bond_pool.pct_meta"
+      ],
+      "optional": false,
+      "privacy": true
+    },
+    {
+      "id": "retorno-cambial-decomposicao",
+      "label": "Decomposição Retorno Cambial",
+      "tab": "performance",
+      "type": "kpi",
+      "purpose": "Gap R — breakdown do retorno: USD equity + variação FX = retorno BRL",
+      "data_fields": [
+        "retorno_decomposicao.retorno_usd_pct",
+        "retorno_decomposicao.variacao_cambial_pct",
+        "retorno_decomposicao.retorno_brl_pct"
+      ],
+      "optional": false,
+      "privacy": false
+    },
+    {
+      "id": "estate-tax-exposure",
+      "label": "US Estate Tax Exposure",
+      "tab": "portfolio",
+      "type": "kpi",
+      "purpose": "Gap I — exposição estate tax EUA sobre ETFs US-situs (AVUV/AVDV/DGS/AVES)",
+      "data_fields": [
+        "tax.estate_tax.us_situs_total_usd",
+        "tax.estate_tax.estate_tax_usd"
+      ],
+      "optional": true,
+      "privacy": true
+    },
+    {
+      "id": "spending-ceiling",
+      "label": "Spending Ceiling",
+      "tab": "fire",
+      "type": "kpi",
+      "purpose": "Gap L — gasto máximo com P(FIRE)>=85% se aportes=0 (3 tiers: piso/central/teto)",
+      "data_fields": [
+        "spending_ceiling.floor_p90",
+        "spending_ceiling.central_p85",
+        "spending_ceiling.ceiling_p80"
+      ],
+      "optional": false,
+      "privacy": true
+    },
+    {
+      "id": "pfire-sensitivity-table",
+      "label": "Sensibilidade P(FIRE)",
+      "tab": "fire",
+      "type": "table",
+      "purpose": "Gap N — tabela de sensibilidade do P(FIRE) por variável (retorno, vol, gastos, taxa RF)",
+      "data_fields": [
+        "pfire_sensitivity"
+      ],
+      "optional": false,
+      "privacy": false
+    },
+    {
+      "id": "correlation-matrix-stress",
+      "label": "Correlação em Stress",
+      "tab": "portfolio",
+      "type": "table",
+      "purpose": "Gap P — correlação equity vs RF em stress (carteira cai>5%) vs normal",
+      "data_fields": [
+        "correlation_stress.correlacoes_normais",
+        "correlation_stress.correlacoes_stress",
+        "correlation_stress.n_stress_months"
+      ],
+      "optional": false,
+      "privacy": false
     }
   ]
 }
