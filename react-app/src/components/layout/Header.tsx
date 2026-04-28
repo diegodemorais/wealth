@@ -58,7 +58,7 @@ export function Header() {
       <div className="header-container">
         {/* Logo */}
         <div className="header-logo-section">
-          <h1 className="header-logo-title" style={styles.logo}>Dashboard Wealth DM</h1>
+          <h1 className="header-logo-title" style={styles.logo}>Dash Wealt [DM]</h1>
           <span style={styles.versionPill} title={`Build: ${buildLabel}`} suppressHydrationWarning>
             {DASHBOARD_VERSION} · {buildCompact}
           </span>
