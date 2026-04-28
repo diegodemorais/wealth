@@ -6,7 +6,7 @@ import { useUiStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 import { TABS } from '@/config/dashboard.config';
-import { RefreshCw, Eye, EyeOff, LogOut, ClipboardList, Hammer } from 'lucide-react';
+import { RefreshCw, Eye, EyeOff, LogOut, ClipboardList } from 'lucide-react';
 
 // Format ISO UTC timestamp → "DD/MM/AA HH:mm BRT"
 function formatBrt(iso: string): string {
@@ -59,8 +59,8 @@ export function Header() {
         {/* Logo */}
         <div className="header-logo-section">
           <h1 className="header-logo-title" style={styles.logo}>Dashboard Wealth DM</h1>
-          <span style={styles.versionPill} title={`Build: ${buildLabel}`}>
-            {DASHBOARD_VERSION}
+          <span style={styles.versionPill} title={`Build: ${buildLabel}`} suppressHydrationWarning>
+            {DASHBOARD_VERSION} · {buildCompact}
           </span>
         </div>
 
@@ -100,10 +100,6 @@ export function Header() {
             <LogOut size={15} />
           </button>
 
-          <span style={styles.buildTag} title={buildLabel} suppressHydrationWarning>
-            <Hammer size={9} style={{ flexShrink: 0 }} />
-            {buildCompact}
-          </span>
         </div>
 
         {/* Tabs — moves to full-width second row on mobile */}
@@ -184,19 +180,5 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     transition: 'background-color 0.2s',
     textDecoration: 'none',
-  },
-  buildTag: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontSize: '10px',
-    fontFamily: 'monospace',
-    color: 'var(--muted)',
-    background: 'var(--card2)',
-    border: '1px solid var(--border)',
-    borderRadius: '4px',
-    padding: '2px 6px',
-    whiteSpace: 'nowrap' as const,
-    cursor: 'default',
   },
 };
