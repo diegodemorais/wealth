@@ -2,10 +2,11 @@
 
 **Issue**: `agentes/issues/DATA_PIPELINE_CENTRALIZATION.md`  
 **Dono**: Head (with Dev + Quant)  
-**Status**: 🔄 Em progresso (Invariants 1+3+4+5 implementados, 2+6+7 pendentes)  
+**Status**: ✅ Concluída  
 **Prioridade**: 🟡 Média  
 **Criado em**: 2026-04-26  
 **Atualizado em**: 2026-04-27  
+**Concluída em**: 2026-04-27  
 **Dependências**: CENTRALIZATION_COMPLETE (shares invariant pattern)  
 **Paralelo com**: CENTRALIZATION_COMPLETE (Phase 5+)
 
@@ -37,11 +38,11 @@
 - ✅ **Invariant 5 (Output Validation)**: `_validate_ssot_basic()` ao final de `main()`
   - Checks: `pfire_base.source`, snapshot staleness, patrimônio holístico > 0, timestamps keys
 
-## Pendente (baixa prioridade)
+## Todos os Invariants Implementados (2026-04-27)
 
-- [ ] Invariant 2 (Dep ordering): PIPELINE_PHASES DAG — informativo, não enforcement
-- [ ] Invariant 6 (Prohibition tests): grep-based QA — complexo, muitas exceções a whitelist
-- [ ] Invariant 7 (Archive): 7-day rollback — nice-to-have
+- ✅ **Invariant 2 (Dep ordering)**: `PIPELINE_PHASES` DAG dict em `generate_data.py` — documenta fases, deps, scripts, durations
+- ✅ **Invariant 6 (Prohibition tests)**: `scripts/tests/test_data_pipeline_prohibitions.py` — 5/5 testes passando. Grep-based QA com exceções calibradas para orchestrator, archive, fire_montecarlo
+- ✅ **Invariant 7 (Archive)**: `scripts/pipeline_archive.py` — 13 snapshots gerenciados, retenção 7 dias, CLI `--archive`, `--rollback YYYY-MM-DD`, `--list`
 
 ---
 

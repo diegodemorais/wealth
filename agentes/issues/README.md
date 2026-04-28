@@ -27,9 +27,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
-| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | Head + Dev + Quant | 🔴 Alta |
+(vazio)
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -46,6 +44,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | 2026-04-27 | 7/7 invariants implementados. PIPELINE_PHASES DAG, 5 prohibition tests, pipeline_archive.py (7-day rollback). _window_id sync, SnapshotValidator, SSOT validation, CLAUDE.md cascade com scripts/CLAUDE.md. |
 | IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | 2026-04-27 | Blocker1: realized_pnl.json FIFO+Flex 53 trades USD 26k. Blocker2: corr 33% chart. Blocker3: stagflation 17.1%/hyperinflation 0.0% MC. DARF panel ✅. Score ~10.0/10. |
 | PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | 2026-04-27 | generate_data.py completo. pfire_base.source="mc", is_canonical=true. 563/563 testes. IR diferido R$169k, factor_signal populado. |
 | HD-ARCHITECT-P4 | Auto-Fix Suggestion Engine | 2026-04-27 | SuggestionEngine + --fix CLI. ast.Num bug fixed. Zero violations. 6 scripts refatorados, withdrawal_engine constants extraídas. |
