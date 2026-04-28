@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — Gap V: Projeção de Ativos Não-Financeiros (imóvel + terreno) ──
+  { datetime: '2026-04-28T23:30:00', type: 'dado', component: 'Ativos Não-Financeiros — Projeção de Venda', tab: 'assumptions', anchor: 'non-financial-assets', de: '—', para: 'seção Gap V: imóvel (venda 2027, equity ~R$367k, IR 15%, FV@FIRE) + terreno (venda 2031, equity ~R$127.5k), total FV consolidado — upside não incluído no P(FIRE) baseline' },
   // ── 2026-04-28 — Gap U: Factor Value Spread widget (AQR HML Devil, proxy 58/42) ──
   { datetime: '2026-04-28T23:00:00', type: 'dado', component: 'Factor Value Spread', tab: 'portfolio', anchor: '', de: '—', para: 'widget semáforo value spread AVGS — AQR HML Devil + KF SMB, proxy 58/42, status P42 neutro (wide >P75, compressed <P25)' },
   // ── 2026-04-28 — ContributionReturnsCrossover: EC colors + axis theme padrão ──

@@ -382,6 +382,11 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | inss_anual | 18000 | HD-mc-audit 2026-04-06 — R$18k/ano real conservador |
 | inss_inicio_ano_pos_fire | 12 | ano 12 pós-FIRE = age 65 |
 | terreno_brl | 150000 | avaliação terreno (ativo ilíquido) |
+| imovel_custo_aquisicao | 702922 | compra R$567k + impostos R$16.5k + reforma R$119.4k (Gap V 2026-04-28) |
+| imovel_venda_ano | 2027 | venda ao casar/mudar (Gap V 2026-04-28) |
+| imovel_ir_aliquota | 0.15 | GC conservador sem isenção (Gap V 2026-04-28) |
+| terreno_venda_ano | 2031 | midpoint 2026-2037 (Gap V 2026-04-28) |
+| terreno_ir_aliquota | 0.15 | GC estimado custo desconhecido (Gap V 2026-04-28) |
 | tem_conjuge | false | Diego solteiro por ora |
 | nome_conjuge | Katia | parceira — usar em surviving spouse |
 | inss_katia_anual | 93600 | R$7.800/mês × 12 |

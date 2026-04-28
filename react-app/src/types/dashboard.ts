@@ -64,6 +64,33 @@ export interface KPI {
   label: string;
 }
 
+export interface NonFinancialAssetImovel {
+  venda_ano: number;
+  valor_mercado: number;
+  saldo_sac_venda: number;
+  equity_bruto: number;
+  custo_aquisicao: number;
+  ganho_capital: number;
+  ir_estimado: number;
+  equity_liquido: number;
+  fv_fire: number;
+}
+
+export interface NonFinancialAssetTerreno {
+  venda_ano: number;
+  valor_atual: number;
+  ir_estimado: number;
+  equity_liquido: number;
+  fv_fire: number;
+}
+
+export interface NonFinancialAssets {
+  imovel: NonFinancialAssetImovel;
+  terreno: NonFinancialAssetTerreno;
+  total_fv_fire: number;
+  _nota: string;
+}
+
 export interface DashboardData {
   _generated: string;
   _generated_brt: string;
@@ -83,6 +110,7 @@ export interface DashboardData {
   rf?: any;
   hodl11?: any;
   realized_pnl?: any; // ibkr/realized_pnl.json — DARF obligations data
+  non_financial_assets?: NonFinancialAssets; // Gap V — projeção de venda imóvel + terreno
   [key: string]: any; // Allow for additional fields from Python generation
 }
 

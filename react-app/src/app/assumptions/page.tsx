@@ -408,6 +408,7 @@ export default function AssumptionsPage() {
   const sc = d?.scenario_comparison ?? {};
   const sg = d?.spending_guardrails ?? {};
   const bondPool = fire?.bond_pool_readiness ?? {};
+  const nfa = d?.non_financial_assets ?? {};
   const bpr = d?.bond_pool_runway ?? {};
   const guardrailsRetirada = d?.guardrails_retirada ?? [];
   const le = d?.lumpy_events ?? {};
@@ -1001,6 +1002,47 @@ export default function AssumptionsPage() {
           </div>
         </div>
       </CollapsibleSection>
+
+      {/* Gap V — Projeção de Ativos Não-Financeiros */}
+      {nfa?.imovel && (
+        <CollapsibleSection
+          id="non-financial-assets"
+          title={secTitle('assumptions', 'non-financial-assets', '🏠 Ativos Não-Financeiros — Projeção de Venda')}
+          defaultOpen={secOpen('assumptions', 'non-financial-assets')}
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, padding: '0 0 4px' }}>
+            <Block title={`Imóvel Pinheiros — Venda ${nfa.imovel.venda_ano}`}>
+              <Table rows={[
+                { label: 'Valor de Mercado (2026)', value: mask(nfa.imovel.valor_mercado ?? 0, privacyMode) },
+                { label: `Saldo SAC em ${nfa.imovel.venda_ano}`, value: mask(nfa.imovel.saldo_sac_venda ?? 0, privacyMode), muted: true },
+                { label: 'Equity Bruto', value: mask(nfa.imovel.equity_bruto ?? 0, privacyMode) },
+                { label: 'Custo de Aquisição (RFB)', value: mask(nfa.imovel.custo_aquisicao ?? 0, privacyMode), muted: true },
+                { label: 'Ganho de Capital', value: mask(nfa.imovel.ganho_capital ?? 0, privacyMode), muted: true },
+                { label: 'IR Estimado (15%)', value: mask(nfa.imovel.ir_estimado ?? 0, privacyMode), warn: true },
+                { label: 'Equity Líquido após IR', value: mask(nfa.imovel.equity_liquido ?? 0, privacyMode), accent: true },
+                { label: 'FV no FIRE (4.85% real)', value: mask(nfa.imovel.fv_fire ?? 0, privacyMode), accent: true },
+              ]} />
+            </Block>
+
+            <Block title={`Terreno Nova Odessa — Venda ${nfa.terreno?.venda_ano}`}>
+              <Table rows={[
+                { label: 'Valor Atual', value: mask(nfa.terreno?.valor_atual ?? 0, privacyMode) },
+                { label: 'IR Estimado (15%)', value: mask(nfa.terreno?.ir_estimado ?? 0, privacyMode), warn: true },
+                { label: 'Equity Líquido após IR', value: mask(nfa.terreno?.equity_liquido ?? 0, privacyMode), accent: true },
+                { label: 'FV no FIRE (4.85% real)', value: mask(nfa.terreno?.fv_fire ?? 0, privacyMode), accent: true },
+              ]} />
+            </Block>
+
+            <Block title="Consolidado — Upside no FIRE" note="Não incluídos no P(FIRE) baseline. Representam potencial de antecipação ou aumento de gastos.">
+              <Table rows={[
+                { label: `FV Imóvel @FIRE`, value: mask(nfa.imovel?.fv_fire ?? 0, privacyMode) },
+                { label: `FV Terreno @FIRE`, value: mask(nfa.terreno?.fv_fire ?? 0, privacyMode) },
+                { label: 'Total FV @FIRE', value: mask(nfa.total_fv_fire ?? 0, privacyMode), accent: true },
+              ]} />
+            </Block>
+          </div>
+        </CollapsibleSection>
+      )}
 
       {/* Changelog de Componentes — rastreamento de alterações visíveis */}
       <CollapsibleSection

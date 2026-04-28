@@ -163,6 +163,12 @@ BOND_TENT_META_ANOS = _P.get("bond_tent_anos",      7)
 
 # Patrimônio holístico
 TERRENO_BRL              = _P.get("terreno_brl",              150_000)
+# Ativos não-financeiros — projeção de venda (Gap V 2026-04-28)
+IMOVEL_CUSTO_AQUISICAO  = _P.get("imovel_custo_aquisicao",   702_922)
+IMOVEL_VENDA_ANO        = _P.get("imovel_venda_ano",         2027)
+IMOVEL_IR_ALIQUOTA      = _P.get("imovel_ir_aliquota",       0.15)
+TERRENO_VENDA_ANO       = _P.get("terreno_venda_ano",        2031)
+TERRENO_IR_ALIQUOTA     = _P.get("terreno_ir_aliquota",      0.15)
 TEM_CONJUGE              = _P.get("tem_conjuge",              False)
 NOME_CONJUGE             = _P.get("nome_conjuge",             "Katia")
 INSS_KATIA_ANUAL         = _P.get("inss_katia_anual",         93_600)

@@ -58,6 +58,8 @@ from config import (
     CAMBIO_FALLBACK, SELIC_META_SNAPSHOT, FED_FUNDS_SNAPSHOT, DEPRECIACAO_BRL_BASE,
     IPCA_CAGR_FALLBACK,
     TERRENO_BRL, TEM_CONJUGE, NOME_CONJUGE,
+    IMOVEL_CUSTO_AQUISICAO, IMOVEL_VENDA_ANO, IMOVEL_IR_ALIQUOTA,
+    TERRENO_VENDA_ANO, TERRENO_IR_ALIQUOTA,
     INSS_KATIA_ANUAL, PGBL_KATIA_SALDO_FIRE, GASTO_KATIA_SOLO,
     INSS_KATIA_INICIO_ANO, RETORNO_RF_REAL_BOND_POOL,
     RETORNO_SWRD_USD_REAL, RETORNO_AVGS_USD_REAL, RETORNO_AVEM_USD_REAL,
@@ -288,6 +290,61 @@ def compute_patrimonio_holistico(total_financeiro_brl: float, state: dict, vp_ca
         "inss_pv_brl":          round(inss_pv_brl, 2),
         "total_brl":            round(total_holistico, 2),
         "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)",
+    }
+
+
+def compute_non_financial_assets_projection(
+    imovel_valor_mercado: float, saldo_devedor_brl: float
+) -> dict:
+    """Projeta equity líquido de imóvel e terreno nas datas de venda planejadas.
+
+    Gap V HD-dashboard-gaps-tier3 (2026-04-28). Parâmetros vêm de config.py/carteira_params.json.
+    Não incluídos no P(FIRE) baseline — mostrados como upside em Assumptions.
+    """
+    import datetime
+    ano_atual = datetime.date.today().year
+    fire_ano = ANO_NASCIMENTO + 50  # FIRE target age 50
+
+    # Imóvel — SAC linear, venda em IMOVEL_VENDA_ANO
+    anos_restantes_hipoteca = max(1, 2051 - ano_atual)
+    amort_anual = saldo_devedor_brl / anos_restantes_hipoteca
+    anos_ate_venda_imovel = max(0, IMOVEL_VENDA_ANO - ano_atual)
+    saldo_sac_venda = max(0.0, saldo_devedor_brl - amort_anual * anos_ate_venda_imovel)
+    equity_bruto_imovel = max(0.0, imovel_valor_mercado - saldo_sac_venda)
+    ganho_imovel = max(0.0, imovel_valor_mercado - IMOVEL_CUSTO_AQUISICAO)
+    ir_imovel = round(ganho_imovel * IMOVEL_IR_ALIQUOTA, 2)
+    equity_liquido_imovel = max(0.0, equity_bruto_imovel - ir_imovel)
+    anos_compostos_imovel = max(0, fire_ano - IMOVEL_VENDA_ANO)
+    fv_imovel = equity_liquido_imovel * ((1 + RETORNO_EQUITY_BASE) ** anos_compostos_imovel)
+
+    # Terreno — 0% real, IR sobre valor total (custo de aquisição desconhecido)
+    terreno_valor = float(TERRENO_BRL)
+    ir_terreno = round(terreno_valor * TERRENO_IR_ALIQUOTA, 2)
+    equity_liquido_terreno = max(0.0, terreno_valor - ir_terreno)
+    anos_compostos_terreno = max(0, fire_ano - TERRENO_VENDA_ANO)
+    fv_terreno = equity_liquido_terreno * ((1 + RETORNO_EQUITY_BASE) ** anos_compostos_terreno)
+
+    return {
+        "imovel": {
+            "venda_ano": IMOVEL_VENDA_ANO,
+            "valor_mercado": round(imovel_valor_mercado),
+            "saldo_sac_venda": round(saldo_sac_venda),
+            "equity_bruto": round(equity_bruto_imovel),
+            "custo_aquisicao": IMOVEL_CUSTO_AQUISICAO,
+            "ganho_capital": round(ganho_imovel),
+            "ir_estimado": ir_imovel,
+            "equity_liquido": round(equity_liquido_imovel),
+            "fv_fire": round(fv_imovel),
+        },
+        "terreno": {
+            "venda_ano": TERRENO_VENDA_ANO,
+            "valor_atual": round(terreno_valor),
+            "ir_estimado": ir_terreno,
+            "equity_liquido": round(equity_liquido_terreno),
+            "fv_fire": round(fv_terreno),
+        },
+        "total_fv_fire": round(fv_imovel + fv_terreno),
+        "_nota": "Não incluídos no P(FIRE) baseline — upside em Assumptions",
     }
 
 
@@ -4937,6 +4994,10 @@ def main():
 
     # Agora que fire_trilha_data está definido, calcular patrimônio holístico com valor correto de HC
     patrimonio_holistico = compute_patrimonio_holistico(total_brl, state, vp_capital_humano_correto)
+    non_financial_assets = compute_non_financial_assets_projection(
+        imovel_valor_mercado=patrimonio_holistico.get("imovel_valor_mercado", 820_000),
+        saldo_devedor_brl=patrimonio_holistico.get("saldo_devedor_brl", 453_417),
+    )
 
     drawdown_hist_data  = _load_json_safe(DRAWDOWN_HIST_PATH,    "drawdown_history")
     drawdown_evts_data  = _load_json_safe(DRAWDOWN_EVENTS_PATH,  "drawdown_events")
@@ -5158,6 +5219,7 @@ def main():
         "tax":          tax_data,     # IR diferido Lei 14.754/2023 (ETFs UCITS ACC)
         "passivos":     passivos_data,  # Hipoteca + IR diferido
         "patrimonio_holistico": patrimonio_holistico,  # F1 DEV-boldin-dashboard
+        "non_financial_assets": non_financial_assets,  # Gap V HD-dashboard-gaps-tier3 2026-04-28
 
         # Advocate datasets — concentração Brasil + premissas vs realizado
         "concentracao_brasil": concentracao_brasil,
@@ -5438,6 +5500,15 @@ def main():
     _assert_critical(
         (data.get("attribution") or {}).get("retornoUsd") not in (None, 0),
         "attribution.retornoUsd é nulo/zero — Performance mostraria 'R$ 0'"
+    )
+    _nfa = data.get("non_financial_assets") or {}
+    _assert_critical(
+        _nfa.get("imovel") is not None and _nfa.get("terreno") is not None,
+        "non_financial_assets.imovel/terreno ausente — Gap V não gerado"
+    )
+    _assert_critical(
+        (_nfa.get("imovel") or {}).get("equity_liquido", -1) >= 0,
+        f"non_financial_assets.imovel.equity_liquido={(_nfa.get('imovel') or {}).get('equity_liquido')} — incoerente"
     )
 
     # ─── DATA_PIPELINE_CENTRALIZATION: Invariant 5 — Output Validation (SSOT) ──
