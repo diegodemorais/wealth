@@ -78,6 +78,17 @@ fi
 echo "✅ Playwright semantic OK"
 echo ""
 
+# 1d. Pipeline E2E spec contract validation
+echo "1d. Pipeline E2E — valida data.json contra spec contract..."
+~/claude/finance-tools/.venv/bin/python -m pytest scripts/tests/test_pipeline_e2e.py -q 2>&1
+E2E_RESULT=$?
+if [ $E2E_RESULT -ne 0 ]; then
+  echo "❌ Pipeline E2E FAILED — data.json tem campos obrigatórios nulos"
+  exit 1
+fi
+echo "✅ Pipeline E2E OK"
+echo ""
+
 # 2. Run master test suite
 echo "2️⃣  Running complete test suite (5 níveis)..."
 python3 scripts/run_all_dashboard_tests.py "$@"

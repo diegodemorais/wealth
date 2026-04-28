@@ -20,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 DADOS_DIR = ROOT / "dados"
 ARCHIVE_DIR = DADOS_DIR / "archive"
+DATA_JSON_PATH = ROOT / "react-app" / "public" / "data.json"
 RETENTION_DAYS = 7
 
 # Snapshots gerenciados pelo pipeline (não incluir dashboard_state.json — fonte primária)
@@ -47,6 +48,36 @@ def _read_generated(path: Path) -> datetime | None:
         return datetime.fromisoformat(raw.replace("Z", "")) if raw else None
     except Exception:
         return None
+
+
+def archive_data_json(dry_run: bool = False) -> str | None:
+    """Copia data.json para archive/{date}/data.json usando _generated como data."""
+    if not DATA_JSON_PATH.exists():
+        print("  ⚠ data.json não encontrado, ignorado")
+        return None
+
+    generated = _read_generated(DATA_JSON_PATH)
+    if generated is None:
+        print("  ⚠ data.json: sem _generated, ignorado")
+        return None
+
+    cutoff = datetime.now() - timedelta(days=RETENTION_DAYS)
+    if generated >= cutoff:
+        age_days = (datetime.now() - generated).days
+        print(f"  ✓ data.json: {age_days}d (dentro da janela, mantendo cópia)")
+        return None
+
+    dest_dir = ARCHIVE_DIR / generated.strftime("%Y-%m-%d")
+    dest = dest_dir / "data.json"
+    age_days = (datetime.now() - generated).days
+
+    if dry_run:
+        print(f"  [dry-run] arquivaria: data.json ({age_days}d) → archive/{generated.strftime('%Y-%m-%d')}/")
+    else:
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(str(DATA_JSON_PATH), str(dest))
+        print(f"  → arquivado: data.json ({age_days}d)")
+    return str(dest)
 
 
 def archive_old_snapshots(dry_run: bool = False) -> list[str]:
@@ -131,8 +162,10 @@ def main() -> None:
 
     if args.archive:
         print(f"Arquivando snapshots com >{RETENTION_DAYS} dias...")
+        data_json_result = archive_data_json(dry_run=args.dry_run)
         moved = archive_old_snapshots(dry_run=args.dry_run)
-        print(f"  Total: {len(moved)} arquivo(s) {'(dry-run)' if args.dry_run else 'movidos'}")
+        total = len(moved) + (1 if data_json_result else 0)
+        print(f"  Total: {total} arquivo(s) {'(dry-run)' if args.dry_run else 'movidos'}")
     elif args.rollback:
         print(f"Restaurando snapshots de {args.rollback}...")
         restored = rollback_to_date(args.rollback)

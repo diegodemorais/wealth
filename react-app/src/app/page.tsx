@@ -185,6 +185,7 @@ export default function HomePage() {
           accent
           accentLeftBorder
           label="Drift Máximo"
+          data-testid="drift-maximo-kpi"
           value={`${maxDrift.toFixed(2)}pp`}
           valueColor="text-text"
           sub="vs alvo IPS"

@@ -98,6 +98,12 @@ test.describe('NOW — semantic values', () => {
     expect(val, 'P(FIRE) aspiracional too low').toBeGreaterThan(50);
     expect(val, 'P(FIRE) aspiracional > 100%').toBeLessThanOrEqual(100);
   });
+
+  test('drift-maximo-kpi shows a pp value (not "—")', async ({ page }) => {
+    const text = await waitAndGetText(page, '[data-testid="drift-maximo-kpi"]');
+    expect(text.trim()).not.toBe('—');
+    expect(text, 'drift-maximo-kpi must contain "pp"').toContain('pp');
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -126,6 +132,21 @@ test.describe('FIRE — semantic values', () => {
     expect(year, `fire-year "${text}" is not a valid year`).not.toBeNaN();
     expect(year, 'fire-year too early — possibly wrong data').toBeGreaterThan(2025);
     expect(year, 'fire-year too far out — possibly wrong data').toBeLessThan(2065);
+  });
+
+  test('earliest-fire card shows a year (2026–2060)', async ({ page }) => {
+    const el = page.locator('[data-testid="earliest-fire"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text, 'earliest-fire card must show a 4-digit year').toMatch(/20\d{2}/);
+  });
+
+  test('fire-matrix renders table content', async ({ page }) => {
+    const el = page.locator('[data-testid="fire-matrix"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'fire-matrix is empty').not.toBe('');
+    expect(text, 'fire-matrix must contain percentage values').toMatch(/\d+%/);
   });
 });
 

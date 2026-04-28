@@ -559,7 +559,7 @@ export default function FirePage() {
                   : `/simulators?cond=${cond}&mkt=${mkt}`;
 
                 return (
-                  <div key={label} style={{
+                  <div key={label} data-testid={isAspir ? 'earliest-fire' : undefined} style={{
                     background: isAspir
                       ? 'linear-gradient(135deg, color-mix(in srgb, var(--yellow) 8%, transparent), color-mix(in srgb, var(--accent) 5%, transparent))'
                       : 'linear-gradient(135deg, color-mix(in srgb, var(--accent) 6%, transparent), color-mix(in srgb, var(--green) 5%, transparent))',
@@ -651,7 +651,7 @@ export default function FirePage() {
       {/* FIRE Matrix — P(Sucesso até 90a) */}
       {safeData.fire_matrix && (
         <CollapsibleSection id="section-fire-matrix" title={secTitle('fire', 'fire-matrix')} defaultOpen={secOpen('fire', 'fire-matrix')}>
-          <div style={{ padding: '0 16px 16px' }}>
+          <div data-testid="fire-matrix" style={{ padding: '0 16px 16px' }}>
             {(() => {
               const profiles = (safeData as any)?.fire_matrix?.by_profile ?? [];
               const atual = profiles.find((p: any) => p.profile === 'atual');

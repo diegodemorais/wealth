@@ -53,7 +53,7 @@
   ],
   "blocks": [
     {
-      "id": "patrimonio-total-hero",
+      "id": "patrimonio-total",
       "tab": "now",
       "label": "Patrimônio Total",
       "type": "kpi-hero",
@@ -167,6 +167,7 @@
       "label": "Factor Signal — AVGS vs SWRD",
       "type": "kpi",
       "purpose": "Mostra excess return de AVGS vs SWRD YTD e desde lançamento para indicar se o factor premium está ativo",
+      "optional": true,
       "data_fields": [
         "factor_signal.swrd_ytd_pct",
         "factor_signal.avgs_ytd_pct",
@@ -548,6 +549,7 @@
       "label": "Alpha ITD vs SWRD",
       "type": "kpi",
       "purpose": "Mostra alpha acumulado da carteira vs SWRD (CAGR backtest) para monitorar se o tilt fatorial está gerando retorno adicional",
+      "optional": true,
       "data_fields": [
         "factor_signal.excess_ytd_pp",
         "factor_signal.excess_since_launch_pp",
