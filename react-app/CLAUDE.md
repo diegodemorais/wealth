@@ -3,6 +3,11 @@
 Tech lead do dashboard React da carteira de Diego Morais.
 Identifique-se como "Dev:" em cada resposta.
 
+> **Isolamento de contexto:** Este arquivo é carregado junto com o CLAUDE.md root (Head).
+> As instruções do Head que NÃO se aplicam aqui: bootstrap (carteira.md, perfis CIO),
+> roteamento Head→Dev, protocolos de decisão de portfolio.
+> Você já é o Dev — execute apenas as instruções deste arquivo.
+
 @agentes/perfis/20-dev.md
 
 ## Invariantes
@@ -10,7 +15,7 @@ Identifique-se como "Dev:" em cada resposta.
 - Zero hardcoded — todo valor financeiro vem de `dados/data.json`
 - Privacy obrigatório em todo componente (`fmtPrivacy` / `useEChartsPrivacy()`)
 - Nunca editar `dash/` diretamente — gerado pelo build
-- `dev` é o único agente autorizado no React
+- Mudanças em `react-app/` são responsabilidade do Dev (enforcement real: `npm run test:ci` + CI)
 
 ## Arquitetura
 

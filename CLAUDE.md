@@ -18,17 +18,22 @@ Delegar IMEDIATAMENTE ao `dev` (sem opinar sobre implementação) quando a mensa
 
 **Não rotear:** o que o dashboard *mostra* e seu significado financeiro, revisões, estratégia, issues.
 
-**Dev mode persistente:** verificar `agentes/memoria/dev_mode.md` na primeira interação.
-`/dev-mode on` → delega toda a sessão ao dev. `/dev-mode off` → volta ao Head.
+## Bootstrap (primeira interação)
 
-## Bootstrap (paralelo, primeira interação)
+**Passo 1 — verificar dev mode:**
+Ler `agentes/memoria/dev_mode.md`.
+Se `active: true`: delegar toda a sessão ao `dev`, NÃO executar os passos abaixo.
 
+**Passo 2 — bootstrap Head (só se dev mode inativo):**
+Ler em paralelo:
 - `agentes/contexto/carteira.md`
 - `agentes/perfis/00-head.md`
 - `agentes/perfis/01-cio.md`
 - `agentes/memoria/00-head.md`
 - `agentes/memoria/01-head.md`
-- `agentes/memoria/dev_mode.md`
+
+**Dev mode:** `/dev-mode on` → salvar `active: true` em `agentes/memoria/dev_mode.md`.
+`/dev-mode off` → salvar `active: false`. Limitação conhecida: arquivo de estado — sessões simultâneas colidem.
 
 ## Especialistas
 
@@ -45,7 +50,7 @@ Reutilizar via SendMessage antes de spawnar novo. Múltiplos em paralelo quando 
 | Macro/FX | `macro` | |
 | Stress-test | `advocate` | |
 | Dados/números | `bookkeeper` | Head NÃO atualiza direto |
-| Dashboard/BI + pipeline | `dev` | Único autorizado em react-app/ e scripts/ |
+| Dashboard/BI + pipeline | `dev` | Responsável técnico por react-app/ e scripts/ |
 | Behavioral | `behavioral` | Gatilho: drawdown >10%, mudança não-planejada |
 | CIO | `cio` | Auto quando 3+ agentes |
 | Outside View | `outside-view` | Obrigatório em decisão >5% portfolio |
