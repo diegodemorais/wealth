@@ -6,7 +6,7 @@ import { useUiStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 import { TABS } from '@/config/dashboard.config';
-import { RefreshCw, Eye, EyeOff, LogOut } from 'lucide-react';
+import { RefreshCw, Eye, EyeOff, LogOut, ClipboardList } from 'lucide-react';
 
 // Format ISO UTC timestamp → "DD/MM/AA HH:mm BRT"
 function formatBrt(iso: string): string {
@@ -25,6 +25,17 @@ function formatBrt(iso: string): string {
   }
 }
 
+// Format ISO UTC timestamp → "28/4 10:07" (compact)
+function formatBuildCompact(iso: string): string {
+  try {
+    const d = new Date(iso);
+    const brt = new Date(d.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    return `${brt.getDate()}/${brt.getMonth() + 1} ${String(brt.getHours()).padStart(2, '0')}:${String(brt.getMinutes()).padStart(2, '0')}`;
+  } catch {
+    return '';
+  }
+}
+
 export function Header() {
   const pathname = usePathname();
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -32,6 +43,7 @@ export function Header() {
   const logout = useAuthStore(s => s.logout);
 
   const buildLabel = formatBrt(BUILD_DATE);
+  const buildCompact = formatBuildCompact(BUILD_DATE);
 
   const handleReload = () => {
     window.location.reload();
@@ -69,6 +81,15 @@ export function Header() {
             {privacyMode ? <EyeOff size={15} /> : <Eye size={15} />}
           </button>
 
+          <Link
+            href="/assumptions#dashboard-updates"
+            title="Changelog"
+            style={styles.iconButton}
+            aria-label="Changelog"
+          >
+            <ClipboardList size={15} />
+          </Link>
+
           <button
             onClick={handleLogout}
             title="Logout"
@@ -78,6 +99,10 @@ export function Header() {
           >
             <LogOut size={15} />
           </button>
+
+          <span style={styles.buildTag} title={buildLabel} suppressHydrationWarning>
+            {buildCompact}
+          </span>
         </div>
 
         {/* Tabs — moves to full-width second row on mobile */}
@@ -157,5 +182,14 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '6px',
     cursor: 'pointer',
     transition: 'background-color 0.2s',
+    textDecoration: 'none',
+  },
+  buildTag: {
+    fontSize: '10px',
+    fontFamily: 'monospace',
+    color: 'var(--muted)',
+    whiteSpace: 'nowrap' as const,
+    cursor: 'default',
+    letterSpacing: '0.02em',
   },
 };
