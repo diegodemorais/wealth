@@ -17,6 +17,7 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   // ── 2026-04-28 — HD-dashboard-gaps-tier2 ────────────────────────────────────
   { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'RendaPlusMtmPnl', tab: 'portfolio', anchor: 'section-renda-plus-mtm', de: 'sem MtM da Renda+', para: 'Gap S: card taxa entrada/atual + P&L MtM em R$ e % (data-testid="renda-plus-mtm-pnl")' },
+  { datetime: '2026-04-28T18:00:00', type: 'visual', component: 'SpendingCeiling', tab: 'fire', anchor: 'section-spending-ceiling', de: 'valores em formato R$ 136.000', para: 'valores em formato compacto R$ 136k + valor mensal por card (R$ 11k/mês)' },
   { datetime: '2026-04-28T16:00:00', type: 'cálculo', component: 'BreakevenIpcaSelic', tab: 'portfolio', anchor: 'section-breakeven-ipca-selic', de: 'sem break-even IPCA+ vs Selic', para: 'Gap Q: break-even líquido de IR + tabela acumulação 10 anos (data-testid="breakeven-year-ipca-selic")' },
   { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'VolRealizadaVsMC', tab: 'performance', anchor: '', de: 'sem vol realizada', para: 'Gap O: volatilidade anualizada 12m vs premissa MC com badge ⚠/✓ (data-testid="vol-realizada-vs-mc")' },
   { datetime: '2026-04-28T16:00:00', type: 'dado', component: 'BondPoolStatus', tab: 'fire', anchor: '', de: 'sem status bond pool', para: 'Gap M: progress bar IPCA+2040+2050 vs meta 7 anos de gastos (data-testid="bond-pool-status")' },

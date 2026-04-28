@@ -25,7 +25,6 @@ export function PFireDistribution({
 }: PFireDistributionProps) {
   if (!base) return null;
 
-  // Fallback: se não houver percentis, usar range conservador
   const p5 = percentiles?.p5 ?? (base - 12);
   const p10 = percentiles?.p10 ?? (base - 10);
   const p25 = percentiles?.p25 ?? (base - 8);
@@ -33,6 +32,12 @@ export function PFireDistribution({
   const p75 = percentiles?.p75 ?? (base + 5);
   const p90 = percentiles?.p90 ?? (base + 8);
   const p95 = percentiles?.p95 ?? (base + 10);
+
+  // Escala dinâmica para o boxplot — padding de 5pp ao redor do range real
+  const chartMin = Math.floor(p5 - 5);
+  const chartMax = Math.ceil(p95 + 5);
+  const chartSpan = chartMax - chartMin;
+  const toPos = (v: number) => Math.max(0, Math.min(100, ((v - chartMin) / chartSpan) * 100));
 
   const range = [
     { label: 'p5', value: p5, desc: '5º percentil (pior 5%)' },
@@ -65,8 +70,8 @@ export function PFireDistribution({
           style={{
             position: 'absolute',
             top: '50%',
-            left: `${Math.max(0, (p5 - 50) / 0.5)}%`,
-            right: `${Math.max(0, (100 - p95) / 0.5)}%`,
+            left: `${toPos(p5)}%`,
+            right: `${100 - toPos(p95)}%`,
             height: '2px',
             background: 'rgba(255,255,255,0.2)',
             transform: 'translateY(-50%)',
@@ -77,8 +82,8 @@ export function PFireDistribution({
           style={{
             position: 'absolute',
             top: '50%',
-            left: `${Math.max(0, (p25 - 50) / 0.5)}%`,
-            right: `${Math.max(0, (100 - p75) / 0.5)}%`,
+            left: `${toPos(p25)}%`,
+            right: `${100 - toPos(p75)}%`,
             height: '24px',
             background: `color-mix(in srgb, ${pfireColor(base)} 25%, transparent)`,
             border: `2px solid ${pfireColor(base)}`,
@@ -91,7 +96,7 @@ export function PFireDistribution({
           style={{
             position: 'absolute',
             top: '50%',
-            left: `${Math.max(0, (p50 - 50) / 0.5)}%`,
+            left: `${toPos(p50)}%`,
             width: '3px',
             height: '28px',
             background: 'var(--text)',
@@ -103,13 +108,13 @@ export function PFireDistribution({
 
       {/* Labels */}
       <div style={{ position: 'relative', height: '20px', marginBottom: '16px', fontSize: '10px', color: 'var(--muted)' }}>
-        <span style={{ position: 'absolute', left: `${Math.max(2, (p5 - 50) / 0.5)}%`, transform: 'translateX(-50%)' }}>
+        <span style={{ position: 'absolute', left: `${toPos(p5)}%`, transform: 'translateX(-50%)' }}>
           {p5.toFixed(0)}%
         </span>
-        <span style={{ position: 'absolute', left: `${Math.max(2, (p50 - 50) / 0.5)}%`, transform: 'translateX(-50%)', fontWeight: 600, color: 'var(--text)' }}>
+        <span style={{ position: 'absolute', left: `${toPos(p50)}%`, transform: 'translateX(-50%)', fontWeight: 600, color: 'var(--text)' }}>
           {p50.toFixed(0)}%
         </span>
-        <span style={{ position: 'absolute', right: `${Math.max(2, (100 - p95) / 0.5)}%`, transform: 'translateX(50%)' }}>
+        <span style={{ position: 'absolute', left: `${toPos(p95)}%`, transform: 'translateX(-50%)' }}>
           {p95.toFixed(0)}%
         </span>
       </div>

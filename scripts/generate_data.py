@@ -5040,6 +5040,31 @@ def main():
     assert data.get("pfire_sensitivity") is not None, "pfire_sensitivity missing"
     print(f"  ✓ Gap N pfire_sensitivity: {len(pfire_sensitivity)} cenários (analítico)")
 
+    # Percentis de P(FIRE) derivados da análise de sensibilidade (não bootstrap).
+    # Bootstrap com n=10k dá spread de ~0.9pp — precisão estatística, não incerteza real.
+    # Sensibilidade dá o range de 8pp (82%–90%) que é o que importa para o usuário.
+    if pfire_sensitivity:
+        stress_vals = sorted(
+            [s["pfire_stressed"] for s in pfire_sensitivity if s.get("direcao") == "stress"]
+        )
+        fav_vals = sorted(
+            [s["pfire_stressed"] for s in pfire_sensitivity if s.get("direcao") == "fav"]
+        )
+        p5_v  = stress_vals[0]  if stress_vals else pfire_base_pct - 10
+        p25_v = stress_vals[len(stress_vals) // 2] if len(stress_vals) > 1 else pfire_base_pct - 5
+        p75_v = fav_vals[len(fav_vals) // 2] if len(fav_vals) > 1 else pfire_base_pct + 3
+        p95_v = fav_vals[-1] if fav_vals else pfire_base_pct + 8
+        if isinstance(pfire_base, dict):
+            pfire_base["percentiles"] = {
+                "p5": round(p5_v, 1), "p10": round((p5_v + p25_v) / 2, 1),
+                "p25": round(p25_v, 1), "p50": round(float(pfire_base_pct), 1),
+                "p75": round(p75_v, 1), "p90": round((p75_v + p95_v) / 2, 1),
+                "p95": round(p95_v, 1),
+                "source": "sensitivity_scenarios",
+                "note": "Range derivado de análise de sensibilidade — representa incerteza real de premissas, não erro bootstrap"
+            }
+            print(f"  ✓ pfire_base.percentiles via sensitivity: p5={p5_v:.1f}% p50={pfire_base_pct:.1f}% p95={p95_v:.1f}%")
+
     # Gap P: Correlation matrix em stress
     correlation_stress = compute_correlation_stress(retornos_mensais)
     data["correlation_stress"] = correlation_stress

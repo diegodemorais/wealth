@@ -1,6 +1,10 @@
 {
   "name": "react-app",
+<<<<<<< HEAD
   "version": "1.96.0",
+=======
+  "version": "1.94.3",
+>>>>>>> bf99e230 (fix: spending ceiling formato k + mensal; P(FIRE) boxplot escala dinâmica)
   "private": true,
   "scripts": {
     "dev": "next dev",

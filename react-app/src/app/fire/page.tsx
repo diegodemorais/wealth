@@ -1112,6 +1112,7 @@ export default function FirePage() {
         const swrP80: number = sc.swr_p80 ?? 0;
         const patrimonioBase: number = sc.patrimonio_base ?? 0;
         const fmtBRLfire = (v: number) => privacyMode ? fmtPrivacy(v, true) : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+        const fmtK = (v: number) => privacyMode ? fmtPrivacy(v, true) : `R$ ${Math.round(v / 1000)}k`;
         return (
           <div data-testid="spending-ceiling">
           <CollapsibleSection
@@ -1128,7 +1129,8 @@ export default function FirePage() {
                 ].map(({ label, val, swr, cor, note }) => (
                   <div key={label} style={{ background: 'var(--bg)', border: `1px solid ${cor}40`, borderRadius: 8, padding: '10px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>{label}</div>
-                    <div style={{ fontSize: '1.3rem', fontWeight: 800, color: cor, lineHeight: 1 }}>{fmtBRLfire(val)}</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: cor, lineHeight: 1 }}>{fmtK(val)}</div>
+                    <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>{fmtK(val / 12)}/mês</div>
                     <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>SWR {swr.toFixed(2)}%</div>
                     <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 2 }}>{note}</div>
                   </div>
