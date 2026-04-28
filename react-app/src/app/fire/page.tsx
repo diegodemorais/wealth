@@ -265,8 +265,6 @@ interface CrossoverDataPoint {
   ganho_real_brl?: number;
   aporte_real_brl?: number;
   patrimonio_inicio_brl?: number;
-  aporte_rate?: number | null;
-  ganho_rate?: number | null;
   tipo: 'historico' | 'estimado' | 'projecao';
   parcial?: boolean;
   // Capital inicial (2021 XP, 2022 FIIs) — distingue de DCA recorrente
@@ -472,114 +470,6 @@ function ContributionReturnsCrossover({
     };
   }, [allYears, aportesSeries, ganhosSeries, favSeries, stressSeries, crossYear, labels, isParcial, isHist, hasCapitalInicial, pv, pvLabel]);
 
-  // ── Chart 2: Como % do Patrimônio (flywheel) ─────────────────────────────
-  // aporte_rate e ganho_rate vêm do pipeline; se ausente no ponto 2021 (pat_inicio=0),
-  // o pipeline usa patrimonio_fim como denominador — resultado interpretado com cautela.
-  const aporteRateSeries = allYears.map(d => d.aporte_rate ?? null);
-  const ganhoRateSeries  = allYears.map(d => d.ganho_rate ?? null);
-
-  // Crossover % — primeiro ano em que ganho_rate > aporte_rate
-  const crossYearRate = useMemo(() => {
-    for (const d of allYears) {
-      if (d.aporte_rate != null && d.ganho_rate != null && d.ganho_rate > d.aporte_rate) {
-        return d.ano;
-      }
-    }
-    return null;
-  }, [allYears]);
-
-  const optionRate = useMemo(() => {
-    const crossIdx = crossYearRate != null ? labels.indexOf(String(crossYearRate)) : -1;
-    return {
-      animation: false,
-      // Fix 1: legenda explícita para o chart de %
-      legend: {
-        data: ['Rentabilidade / Patrimônio', 'Aportes / Patrimônio'],
-        top: 8,
-        right: 16,
-        textStyle: { fontSize: 11 },
-      },
-      grid: { left: 60, right: 20, top: 48, bottom: 40 },
-      tooltip: {
-        trigger: 'axis' as const,
-        formatter: (params: CrossoverTooltipParam[]) => {
-          const year = params[0]?.axisValue ?? '';
-          const yearNum = parseInt(year);
-          const pt = allYears.find(d => d.ano === yearNum);
-          const lines = params
-            .filter(p => p.value != null)
-            .map(p => {
-              const v = typeof p.value === 'number' ? p.value.toFixed(1) : '—';
-              return `<div>${p.marker}${p.seriesName}: <b>${v}%</b></div>`;
-            })
-            .join('');
-          // Nota para 2022 (aporte_rate > 100% por FIIs) e estimado 2026
-          let extraNote = '';
-          if (pt?.tipo === 'estimado') {
-            extraNote = `<div style="color:var(--yellow);margin-top:4px;font-size:11px">&#9888; ${pt.nota ?? 'Estimado'}</div>`;
-          } else if (pt?.capital_inicial_brl && pt?.aporte_rate != null && pt.aporte_rate > 100) {
-            extraNote = `<div style="color:var(--muted);margin-top:4px;font-size:11px">Aporte > patrimônio inicial: inclui capital não-DCA de R$${pt.capital_inicial_brl.toLocaleString('pt-BR')}</div>`;
-          }
-          return `<div style="font-size:12px"><b>${year}</b><br/>${lines}${extraNote}</div>`;
-        },
-      },
-      xAxis: {
-        type: 'category' as const,
-        data: labels,
-        axisLabel: { fontSize: 11 },
-      },
-      yAxis: {
-        type: 'value' as const,
-        axisLabel: {
-          formatter: (v: number) => `${v.toFixed(0)}%`,
-          fontSize: 10,
-        },
-        // Keep negative values visible (2022 drawdown year)
-        scale: true,
-      },
-      series: [
-        {
-          name: 'Aportes / Patrimônio',
-          type: 'line' as const,
-          // ganho_rate null em 2021 — ECharts pula ponto null automaticamente (linha começa em 2022)
-          data: aporteRateSeries.map((v, i) => ({
-            value: v,
-            lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
-            // Estimado: opacidade reduzida
-            itemStyle: isParcial[i] ? { color: 'var(--muted)', opacity: 0.8 } : { color: 'var(--muted)' },
-          })),
-          lineStyle: { color: 'var(--muted)', width: 2 },
-          itemStyle: { color: 'var(--muted)' },
-          symbol: 'circle',
-          symbolSize: 5,
-          smooth: false,
-        },
-        {
-          name: 'Rentabilidade / Patrimônio',
-          type: 'line' as const,
-          // ganho_rate null em 2021 — ECharts pula ponto null automaticamente (linha começa em 2022)
-          data: ganhoRateSeries.map((v, i) => ({
-            value: v,
-            lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
-            // Estimado: opacidade 80%
-            itemStyle: isParcial[i] ? { color: EC.accent, opacity: 0.8 } : { color: EC.accent },
-          })),
-          lineStyle: { color: EC.accent, width: 2.5 },
-          itemStyle: { color: EC.accent },
-          symbol: 'circle',
-          symbolSize: 5,
-          smooth: false,
-          markLine: crossIdx >= 0 ? {
-            silent: true,
-            data: [{ xAxis: crossIdx }],
-            label: { show: true, formatter: `Flywheel ${crossYearRate}`, position: 'insideEndTop', fontSize: 11, color: 'var(--yellow)' },
-            lineStyle: { type: 'dashed' as const, color: 'var(--yellow)', width: 1.5 },
-          } : undefined,
-        },
-      ],
-    };
-  }, [allYears, aporteRateSeries, ganhoRateSeries, crossYearRate, labels, isParcial, isHist]);
-
   const fmtAnno = (v: number | null) => v != null ? String(v) : '—';
 
   return (
@@ -622,16 +512,9 @@ function ContributionReturnsCrossover({
       </div>
       <EChart option={optionAbsoluto} style={{ height: 300 }} />
 
-      {/* Chart 2: Como % do Patrimônio */}
-      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, marginTop: 20, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-        Como % do Patrimônio — Flywheel
-      </div>
-      <EChart option={optionRate} style={{ height: 280 }} />
-
       {/* Notes */}
       <div style={{ marginTop: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
         Linha sólida = histórico real. Linha tracejada = projeção. Banda = cenários {(crc.taxa_nominal_stress * 100).toFixed(0)}%–{(crc.taxa_nominal_fav * 100).toFixed(0)}% nominal.
-        Gráfico % (flywheel) usa patrimônio início do ano como denominador — 2021 omitido (portfólio nasceu no ano, denominador zero).
         Diamante amarelo = aporte inclui capital inicial não-DCA (2021: conversão XP R$252k; 2022: FIIs Jan R$72k).
         {'\u2020'} 2026 = Jan–Abr realizado + Mai–Dez estimado @ R$25.000/mês e 9% nominal.
       </div>

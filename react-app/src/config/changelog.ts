@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — ContributionReturnsCrossover: remove flywheel (%) sub-chart ──
+  { datetime: '2026-04-28T22:10:00', type: 'gráfico', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: '2 gráficos: Valor Absoluto R$ + Flywheel % do Patrimônio', para: '1 gráfico apenas: Valor Absoluto R$ — flywheel removido por decisão do FIRE agent (tendências díspares causavam confusão sem valor de decisão)' },
   // ── 2026-04-28 — ContributionReturnsCrossover: contexto histórico + estimativa 2026 ──
   { datetime: '2026-04-28T09:10:00', type: 'dado', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: '2026 como "parcial" sem distinção de tipo; 2021/2022 sem distinção de capital inicial; projeção sobrepunha 2026', para: '2026 como "estimado" (†) com nota Jan–Abr realizado + Mai–Dez @ R$25k/mês 9% nominal; 2021 capital_inicial=R$252k (XP), 2022 capital_inicial=R$72k (FIIs); projeção começa 2027; diamante amarelo nos anos com capital não-DCA; tooltip enriquecido' },
   // ── 2026-04-28 — ContributionReturnsCrossover: 4 fixes (legenda, toggle, 2026 parcial, ganho_rate 2021) ─
