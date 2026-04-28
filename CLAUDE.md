@@ -101,77 +101,7 @@ Ao alterar premissa: editar `carteira.md` (narrativa + tabela `Parâmetros para 
 ## Dashboard (React)
 
 `dev` é o único agente autorizado. Quant valida mudanças com dados/cálculos.
-
-Pipeline: Scripts Python → `dados/` (JSON) → React (`react-app/`) → `dash/` → GitHub Pages (Actions)
-
-- Zero hardcoded — fonte: `agentes/`, `dados/`
-- Privacy obrigatório em todo componente (valores → `••••`)
-- Secrets: GitHub Secrets + `.env.local` (git-ignored)
-- Nunca editar `dash/` diretamente (gerado pelo build)
-
-### Arquitetura: flat by default, abstract by pain
-- Inline primeiro, extrair no 2º uso real. Não criar helper "pra quando precisar"
-- Vertical slice: feature em 1-3 arquivos. Se >5, questionar
-- Abstrair por dor: "resolveu bug real ou evitou duplicação real?"
-
-### Code style
-
-**Tamanho:**
-- Funções: 4-20 linhas. Dividir se maior
-- Utils/hooks/stores: max 500 linhas (lógica reutilizável deve ser enxuta)
-- Pages (vertical slices): sem limite rígido. 1 arquivo de 800 linhas > 5 de 160
-- Early returns sobre ifs aninhados. Máximo 2 níveis de indentação
-
-**Nomes e tipos:**
-- Nomes específicos. Evitar `data`, `handler`, `Manager` genéricos
-- `any` proibido em código novo. Existente migra gradualmente
-- Interface explícita só em componentes compartilhados (>1 consumidor). Componente usado por 1 página = tipos inline
-
-**Dead code:**
-- NUNCA criar componente sem wiring na página. Componente órfão = dead code
-- Antes de criar: verificar se equivalente já existe nas abas ativas
-- Ao deletar: `grep -rl "Nome" src/` para confirmar 0 refs antes de remover
-- Ao remover dependência npm: `grep -rl "pacote" src/` para limpar imports residuais
-
-**Charts (100% ECharts):**
-- Única lib: ECharts via `echarts-for-react`. Chart.js foi removido — não reintroduzir
-- Wrapper: `<EChart>` de `@/components/primitives/EChart.tsx`
-- Cores: `EC.*` de `@/utils/echarts-theme` — hex literal APENAS dentro de echarts-theme.ts. Todo o resto importa EC
-- Privacy: todo tooltip/label respeita `privacyMode` (`useEChartsPrivacy()`)
-- Chart options: inline no componente. Extrair para `chartSetup.ts` só a partir do 2º consumidor real
-
-**Estilos:**
-- CSS vars para cores/spacing (`var(--card)`, `var(--accent)`). Não hex direto em JSX
-- Grids responsivos: SEMPRE `grid-cols-2 sm:grid-cols-4` (Tailwind). NUNCA inline `gridTemplateColumns`
-- Tailwind v4: custom colors em `@theme` no `globals.css`. `tailwind.config.ts` é ignorado
-
-**Testes:**
-- Build validation: `npm run build` valida todas páginas
-- `npm run test` (Vitest) para unit/component tests
-- Bug fix → regression test
-
-**Changelog de Componentes (obrigatório):**
-- Antes de qualquer `git commit` com arquivos em `react-app/src/`, adicionar entrada no INÍCIO de `react-app/src/config/changelog.ts`
-- Formato: `{ datetime: 'ISO', type, component, tab, anchor, de, para }`
-- `tab`: rota sem barra ('now' | 'performance' | 'fire' | 'backtest' | 'portfolio' | 'withdraw' | 'assumptions')
-- `anchor`: id do `<CollapsibleSection>` mais próximo, sem '#' (vazio = só a aba)
-- Apenas alterações visíveis no dashboard (não pipeline internals, não chore/docs)
-
-### Comentários
-- POR QUÊ, não O QUÊ. Skip `// increment counter`
-- Manter comentários existentes ao refatorar — carregam contexto
-- Referenciar issue ID quando linha existe por causa de bug específico
-
-### Antes de commitar novo componente (DEV-semantic-test-coverage)
-
-- Tem `data-testid` nos campos que exibem dados financeiros?
-- Tem assertion em `e2e/semantic-smoke.spec.ts` que valida o *valor* renderizado (não só estrutura)?
-- Se depende de campo do pipeline: tem assertion em `generate_data.py` que bloqueia geração se nulo?
-
-### Higiene
-- Arquivos temporários vão em `/tmp` ou `.gitignore` — nunca no root do repo
-- Docs de auditoria/investigação são efêmeros — não commitar
-- git-filter-repo é nuclear — destrói histórico. Preferir `.gitignore` + secrets rotation
+Regras completas de desenvolvimento: ver `react-app/CLAUDE.md`.
 
 ## Referências
 
