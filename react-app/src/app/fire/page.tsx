@@ -496,6 +496,7 @@ export default function FirePage() {
       </CollapsibleSection>
 
       {/* Tracking FIRE — Realizado vs Projeção */}
+      <div data-testid="fire-trilha">
       <section className="section" id="trackingFireSection">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
           <h2 style={{ margin: 0 }}>Tracking FIRE — Realizado vs Projeção</h2>
@@ -506,6 +507,7 @@ export default function FirePage() {
           Patrimônio realizado vs projeção FIRE · Meta FIRE
         </div>
       </section>
+      </div>
 
       {/* Cenários FIRE — 3 cenários base + Aspiracional */}
       {(data as any)?.fire_matrix?.by_profile?.length > 0 && (() => {
@@ -528,7 +530,7 @@ export default function FirePage() {
         return (
           <section className="section" id="fireAspirationalSection">
             <h2>Cenários FIRE <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>— MC · cenário por perfil</span></h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: '12px' }}>
+            <div data-testid="pfire-familia" className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: '12px' }}>
               {CARDS.map(({ profile, emoji, label, cond, mkt, isAspir }) => {
                 const p = (data as any)?.fire_matrix?.by_profile?.find((x: any) => x.profile === profile);
                 if (!p) return null;
@@ -633,6 +635,7 @@ export default function FirePage() {
       <SectionDivider label="Projeções" />
 
       {/* Projeção de Patrimônio — P10 / P50 / P90 */}
+      <div data-testid="net-worth-projection">
       <section className="section" id="netWorthProjectionSection">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
           <h2 style={{ margin: 0 }}>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
@@ -647,6 +650,7 @@ export default function FirePage() {
           Base: Monte Carlo 10k simulações · R$ reais constante 2026
         </div>
       </section>
+      </div>
 
       {/* FIRE Matrix — P(Sucesso até 90a) */}
       {safeData.fire_matrix && (
@@ -841,6 +845,7 @@ export default function FirePage() {
 
       <SectionDivider label="Eventos de Vida" />
       {/* Eventos de Vida — collapsed (detalhe de sensibilidade) */}
+      <div data-testid="eventos-vida">
       <CollapsibleSection id="section-eventos-vida" title={secTitle('fire', 'eventos-vida')} defaultOpen={secOpen('fire', 'eventos-vida')}>
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8 }}>
@@ -856,8 +861,10 @@ export default function FirePage() {
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* Glide Path — collapsed (mecanismo de execução) */}
+      <div data-testid="glide-path">
       <CollapsibleSection id="section-glide-path" title={secTitle('fire', 'glide-path')} defaultOpen={secOpen('fire', 'glide-path')}>
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
@@ -870,6 +877,7 @@ export default function FirePage() {
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
     </div>
   );

@@ -102,7 +102,7 @@ export default function PortfolioPage() {
       </div>
 
       {/* 1. Alocação — Por Classe de Ativo (moved first: visão geral antes do detalhe) */}
-      <div className="section">
+      <div data-testid="stacked-alloc" className="section">
         <h2>Alocação — Por Classe de Ativo</h2>
         {(() => {
           const conc = (data as any)?.concentracao_brasil ?? {};
@@ -138,6 +138,7 @@ export default function PortfolioPage() {
         const totalAtual = eqData.reduce((s, d) => s + d.atual, 0);
         const totalAlvo = eqData.reduce((s, d) => s + d.alvo, 0);
         return (
+          <div data-testid="drift-semaforo-etf">
           <CollapsibleSection id="section-drift-intra-equity" title="Drift Intra-Equity — SWRD / AVGS / AVEM" defaultOpen={secOpen('portfolio', 'drift-intra-equity', true)}>
             <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 20 }}>
               {eqData.map((etf) => {
@@ -231,11 +232,13 @@ export default function PortfolioPage() {
             </div>
             <div className="src">Drift = % intra-equity (sobre total equity). Alvo IPS: SWRD 50% / AVGS 30% / AVEM 20%.</div>
           </CollapsibleSection>
+          </div>
         );
       })()}
 
       {/* 3. Exposição Geográfica — via ETFRegionComposition (mais detalhado; DonutCharts removido por redundância) */}
       {/* 4. Composição por Região — ETFs da Carteira (collapsible) */}
+      <div data-testid="geo-donut">
       <CollapsibleSection
         id="section-etf-region"
         title={secTitle('portfolio', 'etf-region')}
@@ -247,12 +250,14 @@ export default function PortfolioPage() {
           <div className="src">Fonte: etf_composition.json · SWRD=MSCI World, AVGS=Global Small Cap Value, AVEM=Emerging Markets</div>
         </div>
       </CollapsibleSection>
+      </div>
 
       <SectionDivider label="Holdings" />
       {/* 5. Posições — ETFs Internacionais (IBKR) — com EtfsPositionsTable como sub-seção */}
       <HoldingsTable />
 
       {data?.posicoes && (
+        <div data-testid="posicoes-etfs-ibkr">
         <CollapsibleSection
           id="section-etf-positions"
           title="Ver detalhe por lote IBKR"
@@ -263,10 +268,13 @@ export default function PortfolioPage() {
             <EtfsPositionsTable data={data.posicoes} />
           </div>
         </CollapsibleSection>
+        </div>
       )}
 
       {/* 6. Base de Custo e Alocação — Equity por Bucket (collapsible) */}
+      <div data-testid="custo-base-bucket">
       <CustoBaseTable defaultOpen={secOpen('portfolio', 'custo-base')} />
+      </div>
 
       <SectionDivider label="Tax & Atividade" />
 
@@ -285,6 +293,7 @@ export default function PortfolioPage() {
       )}
 
       {/* 7. IR Diferido — Alvo & Transitório + IR Shield (collapsible) */}
+      <div data-testid="ir-diferido">
       <CollapsibleSection
         id="section-tax-ir"
         title={secTitle('portfolio', 'tax-ir')}
@@ -317,6 +326,7 @@ export default function PortfolioPage() {
           })()}
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* Lotes IBKR — FIFO individuais com P&L e TLH eligibility */}
       {(() => {
@@ -334,6 +344,7 @@ export default function PortfolioPage() {
         }
         const cambio = (data as any)?.mercado?.cambio_brl_usd ?? 5.0;
         return (
+          <div data-testid="tlh-monitor">
           <CollapsibleSection
             id="section-lotes-ibkr"
             title="Lotes IBKR — FIFO Individual (213 lotes)"
@@ -348,6 +359,7 @@ export default function PortfolioPage() {
               />
             </div>
           </CollapsibleSection>
+          </div>
         );
       })()}
 
@@ -451,6 +463,7 @@ export default function PortfolioPage() {
           { id: 'renda2065', label: 'Renda+ 2065', taxaAtual: rf.renda2065?.distancia_gatilho?.taxa_atual ?? rf.renda2065?.taxa, piso: rf.renda2065?.distancia_gatilho?.piso_venda, gap: rf.renda2065?.distancia_gatilho?.gap_pp, pctAtual: pct(renda2065V), pctAlvo: dcaStatus.renda_plus?.alvo_pct ?? 5, valor: renda2065V, dcaAtivo: dcaStatus.renda_plus?.ativo, duration: 43.6 },
         ];
         return (
+          <div data-testid="rf-posicoes">
           <CollapsibleSection
             id="section-rf-status"
             title={secTitle('portfolio', 'rf-status', 'RF Status — IPCA+ & Renda+ por Instrumento')}
@@ -461,6 +474,7 @@ export default function PortfolioPage() {
               <RFStatusPanel rows={rfRows} />
             </div>
           </CollapsibleSection>
+          </div>
         );
       })()}
 
@@ -514,7 +528,9 @@ export default function PortfolioPage() {
 
       {/* 9a. HODL11 Position Panel — recebido de BACKTEST */}
       {data?.hodl11 && (
+        <div data-testid="hodl11-pnl">
         <HODL11PositionPanel hodl11={(data as any).hodl11} />
+        </div>
       )}
 
       {/* 9b. Crypto Band Chart */}
@@ -539,6 +555,7 @@ export default function PortfolioPage() {
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
+        <div data-testid="minilog">
         <CollapsibleSection id="section-ultimas-operacoes" title={secTitle('portfolio', 'operacoes', 'Últimas Operações')} defaultOpen={secOpen('portfolio', 'operacoes', false)}>
           <div style={{ padding: '0 16px 16px' }}>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
@@ -573,6 +590,7 @@ export default function PortfolioPage() {
             <div className="src">Fonte: IBKR · Nubank · Binance</div>
           </div>
         </CollapsibleSection>
+        </div>
       )}
 
     </div>

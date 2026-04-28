@@ -189,7 +189,7 @@ export default function DecisaoDoMes({
           </h2>
           <div className="flex items-center gap-2">
             {savingsRate != null && (
-              <span className="text-xs font-bold font-mono" style={{ color: srColor }}>
+              <span data-testid="savings-rate" className="text-xs font-bold font-mono" style={{ color: srColor }}>
                 {privacyMode ? '••%' : `${savingsRate.toFixed(0)}% SR`}
               </span>
             )}
@@ -283,7 +283,7 @@ export default function DecisaoDoMes({
         <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
           Gatilhos RF &amp; Crypto
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+        <div data-testid="semaforo-triggers" style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
           {sortedDca.map(item => {
             const style = getStatusStyle(item.status);
             const catLabel = CATEGORIA_LABEL[item.categoria] ?? item.categoria;
@@ -334,7 +334,7 @@ export default function DecisaoDoMes({
         <div style={{ borderTop: '1px solid rgba(100,116,139,0.2)', margin: '12px 0' }} />
 
         {/* Strip Macro — 6 tiles compactos */}
-        <div style={{ opacity: 0.85 }}>
+        <div data-testid="macro-strip" style={{ opacity: 0.85 }}>
           <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-3">
             <div className="bg-slate-700/40 rounded p-2.5 text-center">
               <div className="text-lg font-bold text-text">{selic != null ? `${selic.toFixed(2)}%` : '—'}</div>
@@ -354,7 +354,7 @@ export default function DecisaoDoMes({
               </div>
               <div className="text-xs text-muted mt-1">Spread Selic–FF</div>
             </div>
-            <div className="bg-slate-700/40 rounded p-2.5 text-center">
+            <div data-testid="cambio-mercado" className="bg-slate-700/40 rounded p-2.5 text-center">
               <div className="text-lg font-bold text-text">
                 {cambio != null ? `R$${cambio.toFixed(2)}` : '—'}
               </div>
@@ -399,7 +399,7 @@ export default function DecisaoDoMes({
             <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
               Exposição Brasil{brazilAlerta && <span style={{ color: 'var(--yellow)' }}> ⚠ fora de faixa</span>}
             </div>
-            <div className="bg-slate-700/40 rounded p-3">
+            <div data-testid="exposicao-cambial" className="bg-slate-700/40 rounded p-3">
               <div className="flex justify-between items-start flex-wrap gap-2">
                 <div>
                   <div className="text-xs text-muted">Total Brasil</div>
@@ -420,7 +420,7 @@ export default function DecisaoDoMes({
       </div>
 
       {/* ── Strip de Execução (fora do card) ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3.5">
+      <div data-testid="kpi-grid-mercado" className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3.5">
         <div className="bg-card border border-border/50 rounded px-3 py-2.5">
           <div className="text-xs text-muted mb-1">{isPremissa ? 'Meta mensal' : 'Último aporte'}</div>
           <div className="text-base font-bold" style={{ color: 'var(--green)' }}>

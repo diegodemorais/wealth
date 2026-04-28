@@ -179,6 +179,7 @@ function BacktestHistoricoSection() {
   const notaProxy = backtest?.nota_proxy ?? null;
 
   return (
+    <div data-testid="backtest-metricas">
     <CollapsibleSection id="backtest-historico" title={secTitle('backtest', 'backtest-historico', 'Backtest Histórico — Target vs VWRA')} defaultOpen={secOpen('backtest', 'backtest-historico')}>
       {/* Period buttons */}
       <div className="period-btns" style={{ marginBottom: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -277,7 +278,7 @@ function BacktestHistoricoSection() {
       )}
 
       {/* CAGR vs TWR cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: '14px' }}>
+      <div data-testid="cagr-patrimonial-twr" className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: '14px' }}>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--border)' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px' }}>CAGR Patrimonial (incl. aportes)</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '6px' }} className="pv">
@@ -305,6 +306,7 @@ function BacktestHistoricoSection() {
         </div>
       )}
     </CollapsibleSection>
+    </div>
   );
 }
 
@@ -345,6 +347,7 @@ function ShadowPortfoliosSection() {
   ] : [];
 
   return (
+    <div data-testid="shadow-portfolios">
     <CollapsibleSection id="backtest-shadows" title={secTitle('backtest', 'shadow', 'Shadow Portfolios — Target vs VWRA')} defaultOpen={secOpen('backtest', 'shadow', false)}>
       {/* Shadow label */}
       <div style={{ padding: '4px 16px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
@@ -447,6 +450,7 @@ function ShadowPortfoliosSection() {
         Target: SWRD 50% / AVGS 30% / AVEM 20% (UCITS proxies) · Benchmark: VWRA.L (Vanguard FTSE All-World) · Rebase = 100 no início do período
       </div>
     </CollapsibleSection>
+    </div>
   );
 }
 
@@ -459,12 +463,14 @@ function BacktestLongoSection() {
 
   if (!r7) {
     return (
+      <div data-testid="backtest-regime-longo">
       <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
         <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)', fontSize: '14px' }}>
           <p>Dados de backtest R7 não carregados. Aguardando sincronização com IBKR.</p>
           <p style={{ fontSize: '12px', marginTop: '8px', fontStyle: 'italic' }}>Os dados históricos (1995-2026) serão preenchidos após a próxima execução de generate_data.py.</p>
         </div>
       </CollapsibleSection>
+      </div>
     );
   }
 
@@ -491,6 +497,7 @@ function BacktestLongoSection() {
     r7?.cagr_por_decada ?? null;
 
   return (
+    <div data-testid="backtest-regime-longo">
     <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
       {/* Metrics grid */}
       {metricCards.length > 0 && (
@@ -573,6 +580,7 @@ function BacktestLongoSection() {
         Dados: MSCI World NR USD (yfinance ^990100-USD-STRD) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro). RF variável Ken French.
       </div>
     </CollapsibleSection>
+    </div>
   );
 }
 
@@ -600,6 +608,7 @@ export default function BacktestPage() {
 
       <SectionDivider label="Drawdown & Risco" />
       {/* 2. DrawdownAnalysis — MERGE: ECharts moderno + crises + recovery */}
+      <div data-testid="drawdown-historico">
       <CollapsibleSection
         id="section-drawdown-analysis"
         title={secTitle('backtest', 'drawdown-analysis', 'Drawdown Analysis — Histórico, Crises & Recovery')}
@@ -683,6 +692,7 @@ export default function BacktestPage() {
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* Extended Drawdown — multi-period with VWRA benchmark */}
       {(() => {

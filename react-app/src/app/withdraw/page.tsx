@@ -377,6 +377,7 @@ export default function WithdrawPage() {
       <SectionDivider label="Posso me aposentar?" />
 
       {/* 0. SWR Dashboard — tabs: Acumulação vs FIRE Day (P10/P50/P90) */}
+      <div data-testid="swr-percentis">
       <CollapsibleSection id="section-swr-dashboard" title={secTitle('withdraw', 'swr-dashboard', 'SWR Dashboard — Acumulação & FIRE Day')} defaultOpen={secOpen('withdraw', 'swr-dashboard', true)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
@@ -401,6 +402,7 @@ export default function WithdrawPage() {
           })()}
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* Floor vs Upside — Cobertura por Camadas */}
       <CollapsibleSection id="section-floor-upside" title={secTitle('withdraw', 'floor-upside', 'Cobertura por Camadas — Floor vs Upside')} defaultOpen={secOpen('withdraw', 'floor-upside', true)}>
@@ -435,6 +437,7 @@ export default function WithdrawPage() {
 
       {/* 3. Guardrails de Retirada — FIRE Day (collapsible) */}
       {safeData.guardrails_retirada && (
+        <div data-testid="guardrails-retirada">
         <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Regras de Ajuste de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
           <div style={{ padding: '0 16px 16px' }}>
             <GuardrailsRetirada guardrails={safeData.guardrails_retirada} />
@@ -446,6 +449,7 @@ export default function WithdrawPage() {
             </div>
           </div>
         </CollapsibleSection>
+        </div>
       )}
 
       <SectionDivider label="Quanto gastar?" />
@@ -507,6 +511,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* Spending Breakdown — componente dedicado */}
+      <div data-testid="spending-breakdown">
       <CollapsibleSection id="section-spending-breakdown-v2" title={secTitle('withdraw', 'spending-breakdown-v2', 'Spending Breakdown — Detalhamento por Categoria')} defaultOpen={secOpen('withdraw', 'spending-breakdown-v2', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ marginBottom: 8 }}>
@@ -535,11 +540,13 @@ export default function WithdrawPage() {
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
       <SectionDivider label="Proteção" />
 
       {/* 4. Bond Strategy — SoRR + Pool Readiness */}
       {bondPoolReadiness && (
+        <div data-testid="bond-pool-readiness">
         <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={secOpen('withdraw', 'bond-pool', false)} icon={<Building2 size={18} />}>
           <div style={{ padding: '0 16px 16px' }}>
             <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
@@ -560,6 +567,7 @@ export default function WithdrawPage() {
             />
           </div>
         </CollapsibleSection>
+        </div>
       )}
 
       {/* 5a. Sequence of Returns Heatmap — movido de FIRE */}
@@ -589,14 +597,17 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* 5. Fluxo de Caixa Atual — Receitas vs Gastos Hoje */}
+      <div data-testid="sankey-cashflow">
       <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={secOpen('withdraw', 'sankey', false)} icon={<ArrowRightLeft size={18} />}>
         <div style={{ padding: '0 16px 16px' }}>
           <CashFlowSankey />
         </div>
       </CollapsibleSection>
+      </div>
 
 
       {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
+      <div data-testid="income-fases">
       <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={secOpen('withdraw', 'fases', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {incomeTable && Array.isArray(incomeTable) ? (
@@ -627,13 +638,16 @@ export default function WithdrawPage() {
               </table>
             </div>
           ) : (
+            <div data-testid="income-lifecycle">
             <IncomeProjectionChart data={safeData} />
+            </div>
           )}
           <div className="src">
             Fases: Go-Go (50–65, alta mobilidade), Slow-Go (65–75, moderado), No-Go (75+, baixa mobilidade). Spending smile aplicado às projeções MC.
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* F7 — LTC Sensitivity Test (DEV-boldin-dashboard) */}
       <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={secOpen('withdraw', 'section-ltc-sensitivity', false)} icon={<Hospital size={18} />}>

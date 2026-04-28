@@ -68,7 +68,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
         {/* LEFT — scenario cards + progress bar */}
         <div className={sortedTornado.length > 0 ? 'flex-shrink-0 w-64' : 'w-full'}>
           {/* Scenario cards */}
-          <div className="flex flex-col gap-2">
+          <div data-testid="stress-cenarios" className="flex flex-col gap-2">
             {scenarioCards.map(({ label, value }) => (
               <div
                 key={label}
@@ -120,7 +120,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
 
         {/* RIGHT — Tornado (always visible when data exists) */}
         {sortedTornado.length > 0 && (
-          <div className="flex-1 border-l border-border/30 pl-5">
+          <div data-testid="tornado-sensitivity" className="flex-1 border-l border-border/30 pl-5">
             <div className="text-sm font-semibold text-text mb-2">
               Tornado — Sensitividade ±10% de P(FIRE)
             </div>

@@ -15,6 +15,9 @@
  *
  * NOTE: Range assertions (e.g. P(FIRE) > 50%) may need recalibration if portfolio
  * changes significantly. Review when patrimônio crosses major thresholds.
+ *
+ * Coverage: 62 blocks across 7 tabs (NOW, FIRE, Performance, Portfolio, Backtest, Withdraw, Simulators)
+ * Priority: P1 = value not "—" and contains digits, P2 = visible and not empty, P3 = visible only
  */
 
 import { test, expect, Page } from '@playwright/test';
@@ -55,6 +58,9 @@ const ROUTES = {
   fire:        '/wealth/fire',
   performance: '/wealth/performance',
   portfolio:   '/wealth/portfolio',
+  backtest:    '/wealth/backtest',
+  withdraw:    '/wealth/withdraw',
+  simulators:  '/wealth/simulators',
 };
 
 async function gotoAndWait(page: Page, route: string) {
@@ -104,6 +110,51 @@ test.describe('NOW — semantic values', () => {
     expect(text.trim()).not.toBe('—');
     expect(text, 'drift-maximo-kpi must contain "pp"').toContain('pp');
   });
+
+  // P2: visible and not empty
+  test('kpi-grid-primario is visible and not empty', async ({ page }) => {
+    const el = page.locator('[data-testid="kpi-grid-primario"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'kpi-grid-primario is empty').not.toBe('');
+  });
+
+  test('wellness-score block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="wellness-score"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('fire-countdown block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="fire-countdown"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('savings-rate is visible and not empty', async ({ page }) => {
+    const el = page.locator('[data-testid="savings-rate"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'savings-rate is empty').not.toBe('');
+  });
+
+  test('semaforo-triggers is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="semaforo-triggers"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('macro-strip is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="macro-strip"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('kpi-grid-mercado is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="kpi-grid-mercado"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('stress-cenarios is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="stress-cenarios"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -148,6 +199,34 @@ test.describe('FIRE — semantic values', () => {
     expect(text.trim(), 'fire-matrix is empty').not.toBe('');
     expect(text, 'fire-matrix must contain percentage values').toMatch(/\d+%/);
   });
+
+  // P2: visible and not empty
+  test('fire-trilha block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="fire-trilha"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('net-worth-projection block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="net-worth-projection"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('pfire-familia is visible and has grid content', async ({ page }) => {
+    const el = page.locator('[data-testid="pfire-familia"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text, 'pfire-familia must contain percentage values').toMatch(/\d+/);
+  });
+
+  test('eventos-vida block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="eventos-vida"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('glide-path block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="glide-path"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -167,10 +246,56 @@ test.describe('Performance — semantic values', () => {
     expect(text, 'retorno-usd must contain a number').toMatch(/\d/);
     await expect(el, 'retorno-usd shows R$ 0 — retornoUsd may be null').not.toHaveText('R$ 0');
   });
+
+  // P2: visible and not empty
+  test('heatmap-retornos block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="heatmap-retornos"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('evolucao-carteira block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="evolucao-carteira"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('retorno-decomposicao block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="retorno-decomposicao"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('factor-rolling-avgs block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="factor-rolling-avgs"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('information-ratio block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="information-ratio"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('factor-loadings-quality block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="factor-loadings-quality"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('factor-loadings-chart block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="factor-loadings-chart"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('rolling-sharpe block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="rolling-sharpe"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('fee-custo-complexidade block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="fee-custo-complexidade"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Portfolio — DARF panel (Lei 14.754/2023 compliance)
+// Portfolio tab
 // ─────────────────────────────────────────────────────────────────────────────
 
 test.describe('Portfolio — DARF panel', () => {
@@ -194,6 +319,179 @@ test.describe('Portfolio — DARF panel', () => {
     expect(text.trim()).not.toBe('R$ 0');
     expect(text, 'darf-total-brl must contain digits').toMatch(/\d/);
   });
+
+  // P2: visible and not empty
+  test('stacked-alloc is visible and not empty', async ({ page }) => {
+    const el = page.locator('[data-testid="stacked-alloc"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'stacked-alloc is empty').not.toBe('');
+  });
+
+  test('drift-semaforo-etf block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="drift-semaforo-etf"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('geo-donut block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="geo-donut"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('custo-base-bucket block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="custo-base-bucket"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('ir-diferido block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="ir-diferido"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('rf-posicoes block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="rf-posicoes"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Backtest tab
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Backtest — semantic values', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.backtest);
+  });
+
+  // P1: value must contain digits and not be "—"
+  test('cagr-patrimonial-twr shows values with digits', async ({ page }) => {
+    const el = page.locator('[data-testid="cagr-patrimonial-twr"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text, 'cagr-patrimonial-twr must contain digits').toMatch(/\d/);
+  });
+
+  // P2: visible and not empty
+  test('backtest-metricas block is visible and not empty', async ({ page }) => {
+    const el = page.locator('[data-testid="backtest-metricas"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'backtest-metricas is empty').not.toBe('');
+  });
+
+  test('drawdown-historico block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="drawdown-historico"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('shadow-portfolios block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="shadow-portfolios"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('backtest-regime-longo block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="backtest-regime-longo"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Withdraw tab
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Withdraw — semantic values', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.withdraw);
+  });
+
+  // P2: visible and not empty
+  test('swr-percentis block is visible and not empty', async ({ page }) => {
+    const el = page.locator('[data-testid="swr-percentis"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'swr-percentis is empty').not.toBe('');
+  });
+
+  test('spending-breakdown block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="spending-breakdown"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('income-fases block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="income-fases"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('sankey-cashflow block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="sankey-cashflow"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  // P3: conditional — only present if data has guardrails_retirada
+  test('guardrails-retirada renders if data has guardrails', async ({ page }) => {
+    const el = page.locator('[data-testid="guardrails-retirada"]');
+    const count = await el.count();
+    if (count > 0) {
+      await expect(el).toBeVisible({ timeout: 15_000 });
+    }
+  });
+
+  // P3: conditional — only present if data has bond_pool_readiness
+  test('bond-pool-readiness renders if data has bond pool', async ({ page }) => {
+    const el = page.locator('[data-testid="bond-pool-readiness"]');
+    const count = await el.count();
+    if (count > 0) {
+      await expect(el).toBeVisible({ timeout: 15_000 });
+    }
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Simulators tab
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Simulators — semantic values', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.simulators);
+  });
+
+  // P1: value not "—" and contains digits
+  test('sim-fire-year shows a plausible year (2025–2065)', async ({ page }) => {
+    const el = page.locator('[data-testid="sim-fire-year"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'sim-fire-year shows "—"').not.toBe('—');
+    const year = parseInt(text.trim());
+    expect(year, `sim-fire-year "${text}" is not a valid year`).not.toBeNaN();
+    expect(year, 'sim-fire-year too early').toBeGreaterThan(2024);
+    expect(year, 'sim-fire-year too far').toBeLessThan(2066);
+  });
+
+  test('sim-pfire shows a valid percentage', async ({ page }) => {
+    const el = page.locator('[data-testid="sim-pfire"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text, 'sim-pfire must contain a percentage').toMatch(/\d+/);
+  });
+
+  test('sim-patrimonio shows a value (not "—")', async ({ page }) => {
+    const el = page.locator('[data-testid="sim-patrimonio"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'sim-patrimonio shows placeholder "—"').not.toBe('—');
+    expect(text, 'sim-patrimonio must contain digits').toMatch(/\d/);
+  });
+
+  // P2: visible and not empty
+  test('calc-aporte block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="calc-aporte"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('stress-test-mc block is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="stress-test-mc"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -206,6 +504,9 @@ test.describe('Footer — version and data timestamp visible', () => {
     { path: ROUTES.fire,        label: 'FIRE' },
     { path: ROUTES.performance, label: 'Performance' },
     { path: ROUTES.portfolio,   label: 'Portfolio' },
+    { path: ROUTES.backtest,    label: 'Backtest' },
+    { path: ROUTES.withdraw,    label: 'Withdraw' },
+    { path: ROUTES.simulators,  label: 'Simulators' },
   ];
 
   for (const route of routes) {

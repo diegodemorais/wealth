@@ -61,6 +61,7 @@ export default function PerformancePage() {
       </section>
 
       {/* 8. Retornos Mensais — Heatmap (logo após tabela anual para contexto temporal) */}
+      <div data-testid="heatmap-retornos">
       <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <MonthlyReturnsHeatmap data={(() => {
@@ -80,9 +81,11 @@ export default function PerformancePage() {
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
       <SectionDivider label="Visão Geral" />
       {/* 1. Patrimônio — Evolução Histórica (moved first: contexto geral antes de análise) */}
+      <div data-testid="evolucao-carteira">
       <section className="section" id="timelineSection">
         <h2>{secTitle('performance', 'patrimonio', 'Patrimônio — Evolução Histórica')}</h2>
         <div className="period-btns" id="timelinePeriodBtns" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
@@ -102,8 +105,10 @@ export default function PerformancePage() {
           Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.
         </div>
       </section>
+      </div>
 
       {/* 2. Performance Attribution — Decomposição do Patrimônio (moved second: explica de onde veio o retorno) */}
+      <div data-testid="retorno-decomposicao">
       <section className="section" id="attrSection">
         <h2>
           {secTitle('performance', 'attribution', 'Performance Attribution — Decomposição do Patrimônio')}{' '}
@@ -153,6 +158,7 @@ export default function PerformancePage() {
           Decomposição do patrimônio acumulado: aportes + retorno USD por ETF + RF doméstica + variação cambial. Desde o início da carteira.
         </div>
       </section>
+      </div>
 
       <SectionDivider label="Alpha & Benchmark" />
       {/* 3. Alpha vs Benchmark — tabs vs VWRA / vs SWRD */}
@@ -301,6 +307,7 @@ export default function PerformancePage() {
       </section>
 
       {/* 6. Rolling 12m — AVGS vs SWRD (collapsible, collapsed) */}
+      <div data-testid="factor-rolling-avgs">
       <CollapsibleSection id="section-factor-rolling" title={secTitle('performance', 'rolling-12m', 'Rolling 12m — AVGS vs SWRD (retorno relativo)')} defaultOpen={secOpen('performance', 'rolling-12m', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <DeltaBarChart data={safeData} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" chartType="factor-rolling" />
@@ -309,8 +316,10 @@ export default function PerformancePage() {
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* 6. Information Ratio vs VWRA (collapsible, collapsed) */}
+      <div data-testid="information-ratio">
       <CollapsibleSection id="section-ir" title={secTitle('performance', 'ir', 'Information Ratio vs VWRA — Desde o Início + Rolling 36m')} defaultOpen={secOpen('performance', 'ir', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <InformationRatioChart data={safeData} />
@@ -321,6 +330,7 @@ export default function PerformancePage() {
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
       <SectionDivider label="Fatores" />
       {/* Expected Return Waterfall — movido para primeiro em Fatores */}
@@ -329,6 +339,7 @@ export default function PerformancePage() {
       </CollapsibleSection>
 
       {/* ETF Factor Composition — recebido de PORTFOLIO */}
+      <div data-testid="factor-loadings-quality">
       <CollapsibleSection
         id="section-etf-factor"
         title={secTitle('performance', 'factor-regression', 'Exposição Fatorial — ETFs da Carteira')}
@@ -340,8 +351,10 @@ export default function PerformancePage() {
           <div className="src">Fonte: etf_composition.json · Fatores: Market, Value, Size, Quality (escala 0–100%)</div>
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* 7. Factor Loadings — Regressão Fama-French SF + Momentum (collapsible, collapsed) */}
+      <div data-testid="factor-loadings-chart">
       <CollapsibleSection id="section-factor-loadings" title={secTitle('performance', 'factor-loadings', 'Factor Loadings — Regressão Fama-French SF + Momentum')} defaultOpen={secOpen('performance', 'factor-loadings', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
@@ -518,6 +531,7 @@ export default function PerformancePage() {
           </div>
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* Factor Regression FF5 — movido de BACKTEST */}
       <CollapsibleSection
@@ -572,6 +586,7 @@ export default function PerformancePage() {
       <SectionDivider label="Análise Técnica" />
       {/* NOTE: Rolling Metrics, Fee Analysis all defaultOpen=false (collapsed) */}
       {/* 9. Rolling Metrics Chart — superset (substitui RollingSharp) */}
+      <div data-testid="rolling-sharpe">
       <CollapsibleSection id="section-rolling-metrics" title={secTitle('performance', 'rolling-metrics', 'Rolling Metrics — Sharpe / Sortino / Volatilidade')} defaultOpen={secOpen('performance', 'rolling-metrics', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
@@ -589,8 +604,10 @@ export default function PerformancePage() {
           <div className="src">Rolling 12m. Sharpe BRL vs CDI, USD vs T-Bill. Sortino e volatilidade anualizada.</div>
         </div>
       </CollapsibleSection>
+      </div>
 
       {/* 10. Fee Analysis — Custo de Complexidade (collapsible, collapsed) */}
+      <div data-testid="fee-custo-complexidade">
       <CollapsibleSection id="section-fee-analysis" title={secTitle('performance', 'fee-analysis', 'Fee Analysis — Custo de Complexidade (14 anos até FIRE)')} defaultOpen={secOpen('performance', 'fee-analysis', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ overflowX: 'auto' }}>
@@ -685,6 +702,7 @@ export default function PerformancePage() {
           </div>
         </div>
       </CollapsibleSection>
+    </div>
     </div>
   );
 }

@@ -316,7 +316,7 @@ function FireSimuladorSection() {
     : 0;
 
   return (
-    <div className="section section-critical" style={{ marginBottom: '16px' }}>
+    <div data-testid="calc-aporte" className="section section-critical" style={{ marginBottom: '16px' }}>
       <h2>Simulador FIRE — Aposentadoria Antecipada</h2>
 
       {/* Resultado principal */}
@@ -1500,6 +1500,7 @@ function StressTestSection() {
   const postShock = patrimonio != null ? patrimonio * (1 + shock / 100) : undefined;
 
   return (
+    <div data-testid="stress-test-mc">
     <CollapsibleSection id="sim-stress" title={secTitle('simuladores', 'stress', 'Stress Test Monte Carlo — Bear Market Interativo')} defaultOpen={secOpen('simuladores', 'stress', false)}>
       {/* Slider + Age selector */}
       <div style={{ background: 'var(--card2)', borderRadius: '10px', padding: '16px', border: '1px solid var(--border)', marginBottom: '14px' }}>
@@ -1582,6 +1583,7 @@ function StressTestSection() {
         ⚡ = pré-calculado · ✅ = simulado ao vivo
       </div>
     </CollapsibleSection>
+    </div>
   );
 }
 

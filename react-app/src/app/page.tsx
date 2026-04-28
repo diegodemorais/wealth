@@ -168,7 +168,7 @@ export default function HomePage() {
 
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Retorno Real, Aporte Mês */}
       <SectionLabel>Indicadores Primários</SectionLabel>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5">
+      <div data-testid="kpi-grid-primario" className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5">
         <MetricCard
           accent
           accentLeftBorder
@@ -248,13 +248,15 @@ export default function HomePage() {
       {/* ── CAMADA 3: Evolução e Contexto ── */}
       <SectionDivider label="Evolução" />
 
-      <TimeToFireProgressBar
-        fireProgress={d.firePercentage}
-        yearsToFire={d.fireMonthsAway / 12}
-        patrimonioAtual={d.firePatrimonioAtual}
-        patrimonioGatilho={d.firePatrimonioGatilho}
-        swrFireDay={d.swrFireDay}
-      />
+      <div data-testid="fire-countdown">
+        <TimeToFireProgressBar
+          fireProgress={d.firePercentage}
+          yearsToFire={d.fireMonthsAway / 12}
+          patrimonioAtual={d.firePatrimonioAtual}
+          patrimonioGatilho={d.firePatrimonioGatilho}
+          swrFireDay={d.swrFireDay}
+        />
+      </div>
 
       {d && (
         <PFireMonteCarloTornado
@@ -269,6 +271,7 @@ export default function HomePage() {
 
       {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, CLOSED] */}
       {data?.wellness_config?.metrics && (
+        <div data-testid="wellness-score">
         <CollapsibleSection
           id="section-wellness"
           title={secTitle('now', 'wellness', 'Financial Wellness Score (indicador secundário)')}
@@ -472,6 +475,7 @@ export default function HomePage() {
             );
           })()}
         </CollapsibleSection>
+        </div>
       )}
 
 
