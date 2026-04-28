@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — ContributionReturnsCrossover: contexto histórico + estimativa 2026 ──
+  { datetime: '2026-04-28T09:10:00', type: 'dado', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: '2026 como "parcial" sem distinção de tipo; 2021/2022 sem distinção de capital inicial; projeção sobrepunha 2026', para: '2026 como "estimado" (†) com nota Jan–Abr realizado + Mai–Dez @ R$25k/mês 9% nominal; 2021 capital_inicial=R$252k (XP), 2022 capital_inicial=R$72k (FIIs); projeção começa 2027; diamante amarelo nos anos com capital não-DCA; tooltip enriquecido' },
   // ── 2026-04-28 — ContributionReturnsCrossover: 4 fixes (legenda, toggle, 2026 parcial, ganho_rate 2021) ─
   { datetime: '2026-04-28T08:55:00', type: 'gráfico', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'legenda ausente, toggle residual, 2026 sem visual distinto, ganho_rate 2021 com denominador errado', para: 'legenda explícita (Rentabilidade Anual / Aportes Anuais), toggle removido do build, 2026* com opacidade 50% e aviso no tooltip, ganho_rate 2021=null no pipeline (linha % começa em 2022)' },
   // ── 2026-04-28 — ContributionReturnsCrossover: remove toggle + add flywheel chart ─

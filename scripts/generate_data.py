@@ -2071,19 +2071,34 @@ def compute_contribuicao_retorno_crossover(
     Histórico (2021–2026): derivado do historico_carteira.csv via variação de patrimônio.
     Projeção (2026–2036): 3 cenários (8%/9%/10% nominal BRL), aportes R$300k/ano fixo.
     Perspectiva dual: nominal e real (deflacionando pelo IPCA 4%).
+
+    Contexto histórico:
+    - 2021: capital inicial R$251.938 (conversão XP Mar-Abr/2021) + DCA recorrente
+    - 2022: inclui ~R$80k FIIs liquidados em Jan/2022 (não DCA recorrente)
+    - 2026 (ano corrente): Jan-Abr realizados + Mai-Dez estimados
     """
     TAXA_BASE  = 0.09
     TAXA_FAV   = 0.10
     TAXA_STRESS = 0.08
-    APORTE_ANUAL = premissas.get("aporte_mensal", 25_000) * 12  # usa premissa do pipeline
+    APORTE_MENSAL_DCA = premissas.get("aporte_mensal", 25_000)  # DCA recorrente mensal
+    APORTE_ANUAL = APORTE_MENSAL_DCA * 12  # usa premissa do pipeline
     IPCA_PROJ = premissas.get("ipca_anual", 0.04)
     ANO_ATUAL = premissas.get("ano_atual", 2026)
+
+    # Capital inicial 2021: transferência de fundos XP (não DCA) — valor do CSV Abr/2021
+    CAPITAL_INICIAL_2021 = 251_938  # R$251.937,53 arredondado
+
+    # Capital inicial 2022: FIIs liquidados em Jan/2022 (aproximação conservadora per documentação)
+    # Jan/2022 aporte = R$96.956; excesso sobre DCA = ~R$72k; documentado ~R$80k
+    # Usando R$71.956 (excesso real = R$96.956 - R$25.000) para aderência ao CSV
+    CAPITAL_INICIAL_2022 = 71_956  # excesso sobre DCA recorrente em Jan/2022
 
     # ── Histórico por ano via variação de patrimônio ──────────────────────────
     from collections import defaultdict
     year_aportes: dict[str, float] = defaultdict(float)
     year_pat: dict[str, float] = {}
-    prev_pat = 0.0
+    # Mapear último registro de cada ano (para data_referencia)
+    year_last_data: dict[str, str] = {}
 
     for row in historico_csv_rows:
         year = row["data"][:4]
@@ -2091,28 +2106,46 @@ def compute_contribuicao_retorno_crossover(
         pat_val = float(row.get("patrimonio_brl") or 0)
         year_aportes[year] += aporte_val
         year_pat[year] = pat_val
+        year_last_data[year] = row["data"]
+
+    # ── Fix 1: Estimar ano corrente (2026) com meses realizados + projeção ────
+    # Contar meses realizados no ANO_ATUAL para distinguir dado realizado de estimado
+    rows_ano_atual = [r for r in historico_csv_rows if r["data"][:4] == str(ANO_ATUAL)]
+    meses_realizados = len(rows_ano_atual)
+    meses_restantes = 12 - meses_realizados
+
+    # Patrimônio fim do mês mais recente do ano atual (base para projeção)
+    pat_abr_ano_atual = float(rows_ano_atual[-1]["patrimonio_brl"]) if rows_ano_atual else 0.0
+    aporte_realizado_ano_atual = year_aportes.get(str(ANO_ATUAL), 0.0)
+    pat_inicio_ano_atual = year_pat.get(str(ANO_ATUAL - 1), 0.0)
+    ganho_realizado_ano_atual = pat_abr_ano_atual - pat_inicio_ano_atual - aporte_realizado_ano_atual
+
+    # Nomes dos meses para a nota
+    _MESES_NOMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+    mes_atual_nome = _MESES_NOMES[meses_realizados - 1] if meses_realizados > 0 else "?"
 
     historico = []
-    pat_start_by_year: dict[str, float] = {}
     sorted_years = sorted(year_pat.keys())
     for i, year in enumerate(sorted_years):
         if i == 0:
             pat_s = 0.0  # portfólio nasceu em 2021
         else:
             pat_s = year_pat[sorted_years[i - 1]]
-        pat_start_by_year[year] = pat_s
         pat_e = year_pat[year]
         aportes = year_aportes[year]
         # ganho = variação do patrimônio menos aportes do período
         ganho = pat_e - pat_s - aportes
-        # rates: % do patrimônio no início do ano (flywheel perspective)
-        # Fix: 2021 tem pat_s=0 (portfólio nasceu no ano) → ganho_rate é N/A metodologicamente.
-        # Usar pat_s como denominador apenas se > 0; se não, rates ficam null (não plotar).
+
+        # Fix 4: rates como % do patrimônio início do ano (flywheel perspective)
+        # 2021: pat_s=0 → rates null (não plotar — portfólio nasceu neste ano)
+        # 2022: aporte_rate pode ultrapassar 100% (FIIs + DCA > pat_inicio) — é dado real, manter
         aporte_rate = round(aportes / pat_s * 100, 1) if pat_s > 0 else None
         ganho_rate = round(ganho / pat_s * 100, 1) if pat_s > 0 else None
-        # Ano parcial: ANO_ATUAL tem dados apenas até o mês corrente
-        is_parcial = int(year) == ANO_ATUAL
-        historico.append({
+
+        is_ano_atual = int(year) == ANO_ATUAL
+
+        # Fix 2: capital inicial 2021
+        entry: dict = {
             "ano": int(year),
             "aporte_brl": round(aportes),
             "ganho_mercado_brl": round(ganho),
@@ -2120,19 +2153,61 @@ def compute_contribuicao_retorno_crossover(
             "patrimonio_inicio_brl": round(pat_s),
             "aporte_rate": aporte_rate,
             "ganho_rate": ganho_rate,
-            "tipo": "historico",
-            "parcial": is_parcial,
-        })
+            "tipo": "estimado" if is_ano_atual else "historico",
+            "parcial": is_ano_atual,
+        }
+
+        if year == "2021":
+            # Capital inicial = conversão de fundos XP (não DCA recorrente)
+            dca_puro_2021 = round(aportes - CAPITAL_INICIAL_2021)
+            entry["capital_inicial_brl"] = CAPITAL_INICIAL_2021
+            entry["aporte_dca_brl"] = dca_puro_2021
+            entry["nota"] = (
+                f"Inclui capital inicial de R${CAPITAL_INICIAL_2021:,} transferido de fundos geridos XP "
+                f"(Mar-Abr/2021, não DCA recorrente). DCA puro: R${dca_puro_2021:,}"
+            )
+
+        elif year == "2022":
+            # Capital inicial 2022: excesso sobre DCA em Jan/2022 (FIIs liquidados)
+            dca_puro_2022 = round(aportes - CAPITAL_INICIAL_2022)
+            entry["capital_inicial_brl"] = CAPITAL_INICIAL_2022
+            entry["aporte_dca_brl"] = dca_puro_2022
+            entry["nota"] = (
+                f"Inclui R${CAPITAL_INICIAL_2022:,} de FIIs liquidados em Jan/2022 "
+                f"(não DCA recorrente). DCA puro: R${dca_puro_2022:,}"
+            )
+
+        elif is_ano_atual:
+            # Fix 1: ANO_ATUAL = meses realizados + estimativa dos restantes
+            aporte_est = round(aporte_realizado_ano_atual + APORTE_MENSAL_DCA * meses_restantes)
+            ganho_est = round(ganho_realizado_ano_atual + pat_abr_ano_atual * TAXA_BASE * meses_restantes / 12)
+            pat_fim_est = round(pat_abr_ano_atual + APORTE_MENSAL_DCA * meses_restantes + pat_abr_ano_atual * TAXA_BASE * meses_restantes / 12)
+            entry["aporte_brl"] = aporte_est
+            entry["ganho_mercado_brl"] = ganho_est
+            entry["patrimonio_fim_brl"] = pat_fim_est
+            entry["meses_realizados"] = meses_realizados
+            entry["nota"] = (
+                f"Jan–{mes_atual_nome}/{ANO_ATUAL} realizado + {meses_restantes} meses estimados "
+                f"@ R${APORTE_MENSAL_DCA:,}/mês e {int(TAXA_BASE*100)}% nominal"
+            )
+            # Recalcular aporte_rate e ganho_rate com valores estimados completos
+            if pat_s > 0:
+                entry["aporte_rate"] = round(aporte_est / pat_s * 100, 1)
+                entry["ganho_rate"] = round(ganho_est / pat_s * 100, 1)
+
+        historico.append(entry)
 
     # ── Patrimônio inicial para projeção ──────────────────────────────────────
-    # Usar o patrimônio do último ponto histórico ou premissa
-    pat_inicial = year_pat.get(str(ANO_ATUAL), premissas.get("patrimonio_atual", 3_469_000))
+    # Usar o patrimônio estimado do ANO_ATUAL (fim do ano, com Mai-Dez projetados)
+    ano_atual_entry = next((h for h in historico if h["ano"] == ANO_ATUAL), None)
+    pat_inicial = ano_atual_entry["patrimonio_fim_brl"] if ano_atual_entry else premissas.get("patrimonio_atual", 3_469_000)
 
-    # ── Projeção 2026–2036 ────────────────────────────────────────────────────
+    # ── Projeção (ANO_ATUAL+1)–2036 ──────────────────────────────────────────
     def build_projecao(taxa_nominal: float) -> list[dict]:
         pts = []
         pat = pat_inicial
-        for offset in range(11):  # 2026..2036
+        # Projeção começa no ANO_SEGUINTE (2027 se ANO_ATUAL=2026)
+        for offset in range(1, 12):  # ANO_ATUAL+1..ANO_ATUAL+11
             ano = ANO_ATUAL + offset
             ganho = pat * taxa_nominal
             aporte = APORTE_ANUAL
@@ -2140,6 +2215,7 @@ def compute_contribuicao_retorno_crossover(
             # rates: % do patrimônio no início do ano (flywheel perspective)
             aporte_rate = round(aporte / pat * 100, 1) if pat > 0 else None
             ganho_rate = round(ganho / pat * 100, 1) if pat > 0 else None
+            # offset para deflação real: 0=ANO_ATUAL, então para ANO_ATUAL+1 offset=1
             pts.append({
                 "ano": ano,
                 "aporte_brl": round(aporte),
@@ -2167,9 +2243,10 @@ def compute_contribuicao_retorno_crossover(
                 return p["ano"]
         return None
 
-    # Nominal histórico (primeiro ano em que ganho_mercado > aporte)
+    # Nominal histórico: excluir "estimado" do crossover histórico (dado incompleto)
     cross_hist_nominal = next(
-        (h["ano"] for h in historico if h["ganho_mercado_brl"] > h["aporte_brl"]), None
+        (h["ano"] for h in historico if h["tipo"] == "historico" and h["ganho_mercado_brl"] > h["aporte_brl"]),
+        None,
     )
     cross_proj_nominal = _crossover_ano(proj_base, "ganho_mercado_brl", "aporte_brl")
     cross_proj_real    = _crossover_ano(proj_base, "ganho_real_brl", "aporte_real_brl")

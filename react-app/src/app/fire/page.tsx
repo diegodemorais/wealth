@@ -267,8 +267,13 @@ interface CrossoverDataPoint {
   patrimonio_inicio_brl?: number;
   aporte_rate?: number | null;
   ganho_rate?: number | null;
-  tipo: 'historico' | 'projecao';
+  tipo: 'historico' | 'estimado' | 'projecao';
   parcial?: boolean;
+  // Capital inicial (2021 XP, 2022 FIIs) — distingue de DCA recorrente
+  capital_inicial_brl?: number;
+  aporte_dca_brl?: number;
+  nota?: string;
+  meses_realizados?: number;
 }
 
 interface ContributionReturnsCrossoverData {
@@ -297,11 +302,11 @@ function ContributionReturnsCrossover({
 }) {
   const { pv, pvLabel } = useEChartsPrivacy();
 
-  // Merge historical + base projection into unified series
+  // Merge historical (incl. 'estimado') + base projection into unified series
   const allYears = useMemo(() => {
     const hist = crc.historico ?? [];
     const proj = crc.projecao?.base ?? [];
-    // Avoid double-counting the current year (2026 appears in both historical and projection)
+    // Pipeline já exclui ANO_ATUAL da projeção (começa ANO_ATUAL+1)
     const histYears = new Set(hist.map(h => h.ano));
     const projFiltered = proj.filter(p => !histYears.has(p.ano));
     return [...hist, ...projFiltered];
@@ -319,10 +324,12 @@ function ContributionReturnsCrossover({
     return stress.filter(p => !histYears.has(p.ano));
   }, [crc]);
 
-  // "2026*" para ano parcial — asterisco sinaliza dado incompleto sem anualizar
-  const labels = allYears.map(d => d.parcial ? `${d.ano}*` : String(d.ano));
+  // "2026†" para estimado (dagger), string pura para outros
+  const labels = allYears.map(d => d.tipo === 'estimado' ? `${d.ano}\u2020` : String(d.ano));
   const isHist = allYears.map(d => d.tipo === 'historico');
-  const isParcial = allYears.map(d => !!d.parcial);
+  const isParcial = allYears.map(d => d.tipo === 'estimado');
+  // Anos com capital inicial não-DCA (2021 XP, 2022 FIIs)
+  const hasCapitalInicial = allYears.map(d => (d.capital_inicial_brl ?? 0) > 0);
 
   // ── Chart 1: Valor Absoluto (R$) ─────────────────────────────────────────
   const aportesSeries = allYears.map(d => d.aporte_brl);
@@ -357,8 +364,8 @@ function ContributionReturnsCrossover({
         trigger: 'axis' as const,
         formatter: (params: CrossoverTooltipParam[]) => {
           const year = params[0]?.axisValue ?? '';
-          // Fix 3: aviso de ano parcial no tooltip
-          const yearIsParcial = year.endsWith('*');
+          const yearNum = parseInt(year);
+          const pt = allYears.find(d => d.ano === yearNum);
           const lines = params
             .filter(p => p.value != null && p.seriesName !== 'Banda (fav-stress)')
             .map(p => {
@@ -366,8 +373,16 @@ function ContributionReturnsCrossover({
               return `<div>${p.marker}${p.seriesName}: <b>R$ ${v}M</b></div>`;
             })
             .join('');
-          const parcialNote = yearIsParcial ? `<div style="color:var(--yellow);margin-top:4px;font-size:11px">&#9888; Ano parcial (Jan–Abr 2026)</div>` : '';
-          return `<div style="font-size:12px"><b>${year}</b><br/>${lines}${parcialNote}</div>`;
+          // Nota especial para anos com capital inicial não-DCA
+          let extraNote = '';
+          if (pt?.tipo === 'estimado') {
+            extraNote = `<div style="color:var(--yellow);margin-top:4px;font-size:11px">&#9888; ${pt.nota ?? 'Estimado'}</div>`;
+          } else if (pt?.capital_inicial_brl) {
+            const cap = pt.capital_inicial_brl.toLocaleString('pt-BR');
+            const dca = (pt.aporte_dca_brl ?? 0).toLocaleString('pt-BR');
+            extraNote = `<div style="color:var(--muted);margin-top:4px;font-size:11px">Capital inicial: R$${cap} | DCA: R$${dca}</div>`;
+          }
+          return `<div style="font-size:12px"><b>${year}</b><br/>${lines}${extraNote}</div>`;
         },
       },
       xAxis: {
@@ -409,15 +424,21 @@ function ContributionReturnsCrossover({
           silent: true,
           legendHoverLink: false,
         },
-        // Aportes Anuais — Fix 3: opacidade 50% no ponto parcial
+        // Aportes Anuais — estimado com opacidade 80%, capital inicial com símbolo triangular
         {
           name: 'Aportes Anuais',
           type: 'line' as const,
           data: aportesSeries.map((v, i) => ({
             value: pv(v),
             lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
-            // Fix 3: ponto parcial com opacidade reduzida
-            itemStyle: isParcial[i] ? { color: 'var(--muted)', opacity: 0.5 } : { color: 'var(--muted)' },
+            // Estimado: opacidade reduzida. Capital inicial: destaque com diamante
+            symbol: hasCapitalInicial[i] ? 'diamond' : undefined,
+            symbolSize: hasCapitalInicial[i] ? 10 : undefined,
+            itemStyle: isParcial[i]
+              ? { color: 'var(--muted)', opacity: 0.8 }
+              : hasCapitalInicial[i]
+                ? { color: 'var(--yellow)', opacity: 0.9 }
+                : { color: 'var(--muted)' },
           })),
           lineStyle: { color: 'var(--muted)', width: 2 },
           itemStyle: { color: 'var(--muted)' },
@@ -425,15 +446,15 @@ function ContributionReturnsCrossover({
           symbolSize: 5,
           smooth: false,
         },
-        // Rentabilidade Anual — Fix 3: opacidade 50% no ponto parcial
+        // Rentabilidade Anual — estimado com opacidade 80%
         {
           name: 'Rentabilidade Anual',
           type: 'line' as const,
           data: ganhosSeries.map((v, i) => ({
             value: pv(v),
             lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
-            // Fix 3: ponto parcial com opacidade reduzida
-            itemStyle: isParcial[i] ? { color: EC.accent, opacity: 0.5 } : { color: EC.accent },
+            // Estimado: opacidade 80%. Capital inicial não altera ganho visual.
+            itemStyle: isParcial[i] ? { color: EC.accent, opacity: 0.8 } : { color: EC.accent },
           })),
           lineStyle: { color: EC.accent, width: 2.5 },
           itemStyle: { color: EC.accent },
@@ -449,7 +470,7 @@ function ContributionReturnsCrossover({
         },
       ],
     };
-  }, [allYears, aportesSeries, ganhosSeries, favSeries, stressSeries, crossYear, labels, isParcial, isHist, pv, pvLabel]);
+  }, [allYears, aportesSeries, ganhosSeries, favSeries, stressSeries, crossYear, labels, isParcial, isHist, hasCapitalInicial, pv, pvLabel]);
 
   // ── Chart 2: Como % do Patrimônio (flywheel) ─────────────────────────────
   // aporte_rate e ganho_rate vêm do pipeline; se ausente no ponto 2021 (pat_inicio=0),
@@ -483,8 +504,8 @@ function ContributionReturnsCrossover({
         trigger: 'axis' as const,
         formatter: (params: CrossoverTooltipParam[]) => {
           const year = params[0]?.axisValue ?? '';
-          // Fix 3: aviso de ano parcial no tooltip
-          const yearIsParcial = year.endsWith('*');
+          const yearNum = parseInt(year);
+          const pt = allYears.find(d => d.ano === yearNum);
           const lines = params
             .filter(p => p.value != null)
             .map(p => {
@@ -492,8 +513,14 @@ function ContributionReturnsCrossover({
               return `<div>${p.marker}${p.seriesName}: <b>${v}%</b></div>`;
             })
             .join('');
-          const parcialNote = yearIsParcial ? `<div style="color:var(--yellow);margin-top:4px;font-size:11px">&#9888; Ano parcial (Jan–Abr 2026)</div>` : '';
-          return `<div style="font-size:12px"><b>${year}</b><br/>${lines}${parcialNote}</div>`;
+          // Nota para 2022 (aporte_rate > 100% por FIIs) e estimado 2026
+          let extraNote = '';
+          if (pt?.tipo === 'estimado') {
+            extraNote = `<div style="color:var(--yellow);margin-top:4px;font-size:11px">&#9888; ${pt.nota ?? 'Estimado'}</div>`;
+          } else if (pt?.capital_inicial_brl && pt?.aporte_rate != null && pt.aporte_rate > 100) {
+            extraNote = `<div style="color:var(--muted);margin-top:4px;font-size:11px">Aporte > patrimônio inicial: inclui capital não-DCA de R$${pt.capital_inicial_brl.toLocaleString('pt-BR')}</div>`;
+          }
+          return `<div style="font-size:12px"><b>${year}</b><br/>${lines}${extraNote}</div>`;
         },
       },
       xAxis: {
@@ -514,12 +541,12 @@ function ContributionReturnsCrossover({
         {
           name: 'Aportes / Patrimônio',
           type: 'line' as const,
-          // Fix 4: ganho_rate null em 2021 — ECharts pula ponto null automaticamente (linha começa em 2022)
+          // ganho_rate null em 2021 — ECharts pula ponto null automaticamente (linha começa em 2022)
           data: aporteRateSeries.map((v, i) => ({
             value: v,
             lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
-            // Fix 3: ponto parcial com opacidade reduzida
-            itemStyle: isParcial[i] ? { color: 'var(--muted)', opacity: 0.5 } : { color: 'var(--muted)' },
+            // Estimado: opacidade reduzida
+            itemStyle: isParcial[i] ? { color: 'var(--muted)', opacity: 0.8 } : { color: 'var(--muted)' },
           })),
           lineStyle: { color: 'var(--muted)', width: 2 },
           itemStyle: { color: 'var(--muted)' },
@@ -530,12 +557,12 @@ function ContributionReturnsCrossover({
         {
           name: 'Rentabilidade / Patrimônio',
           type: 'line' as const,
-          // Fix 4: ganho_rate null em 2021 — ECharts pula ponto null automaticamente (linha começa em 2022)
+          // ganho_rate null em 2021 — ECharts pula ponto null automaticamente (linha começa em 2022)
           data: ganhoRateSeries.map((v, i) => ({
             value: v,
             lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
-            // Fix 3: ponto parcial com opacidade reduzida
-            itemStyle: isParcial[i] ? { color: EC.accent, opacity: 0.5 } : { color: EC.accent },
+            // Estimado: opacidade 80%
+            itemStyle: isParcial[i] ? { color: EC.accent, opacity: 0.8 } : { color: EC.accent },
           })),
           lineStyle: { color: EC.accent, width: 2.5 },
           itemStyle: { color: EC.accent },
@@ -603,9 +630,10 @@ function ContributionReturnsCrossover({
 
       {/* Notes */}
       <div style={{ marginTop: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-        Linha sólida = histórico real (2021-2026). Linha tracejada = projeção. Banda = intervalo cenários {(crc.taxa_nominal_stress * 100).toFixed(0)}%–{(crc.taxa_nominal_fav * 100).toFixed(0)}% nominal.
-        Histórico 2021-2022 reflete composição diferente (sem factor tilt estruturado).
-        Aportes históricos incluem aporte inicial de capital em 2021. Gráfico % (flywheel) usa patrimônio início do ano como denominador — 2021 omitido (portfólio nasceu no ano, denominador zero). 2026* = dado parcial (Jan–Abr).
+        Linha sólida = histórico real. Linha tracejada = projeção. Banda = cenários {(crc.taxa_nominal_stress * 100).toFixed(0)}%–{(crc.taxa_nominal_fav * 100).toFixed(0)}% nominal.
+        Gráfico % (flywheel) usa patrimônio início do ano como denominador — 2021 omitido (portfólio nasceu no ano, denominador zero).
+        Diamante amarelo = aporte inclui capital inicial não-DCA (2021: conversão XP R$252k; 2022: FIIs Jan R$72k).
+        {'\u2020'} 2026 = Jan–Abr realizado + Mai–Dez estimado @ R$25.000/mês e 9% nominal.
       </div>
     </div>
   );

@@ -1,68 +1,68 @@
 {
-  "_generated": "2026-04-28T08:52:13",
-  "_generated_brt": "2026-04-28T08:52:13-03:00",
+  "_generated": "2026-04-28T09:06:43",
+  "_generated_brt": "2026-04-28T09:06:43-03:00",
   "_ibkr_sync_date": "2026-04-25T16:52:09",
   "_schema_version": "2.0",
-  "_pipeline_run": "20260428T084922",
+  "_pipeline_run": "20260428T090349",
   "_snapshots_metadata": {
     "backtest_r7": {
       "file": "backtest_r7.json",
       "mtime": "2026-04-27T20:59:01",
-      "age_h": 11.9,
+      "age_h": 12.1,
       "_generated": null
     },
     "fire_matrix": {
       "file": "fire_matrix.json",
-      "mtime": "2026-04-28T08:51:13",
+      "mtime": "2026-04-28T09:05:47",
       "age_h": 0.0,
-      "_generated": "2026-04-28T08:49:22"
+      "_generated": "2026-04-28T09:03:50"
     },
     "fire_swr_percentis": {
       "file": "fire_swr_percentis.json",
-      "mtime": "2026-04-28T08:49:22",
+      "mtime": "2026-04-28T09:03:50",
       "age_h": 0.0,
-      "_generated": "2026-04-28T08:49:22"
+      "_generated": "2026-04-28T09:03:50"
     },
     "fire_aporte_sensitivity": {
       "file": "fire_aporte_sensitivity.json",
-      "mtime": "2026-04-28T08:49:28",
+      "mtime": "2026-04-28T09:03:56",
       "age_h": 0.0,
-      "_generated": "2026-04-28T08:49:22"
+      "_generated": "2026-04-28T09:03:50"
     },
     "fire_trilha": {
       "file": "fire_trilha.json",
-      "mtime": "2026-04-28T08:49:22",
+      "mtime": "2026-04-28T09:03:50",
       "age_h": 0.0,
-      "_generated": "2026-04-28T08:49:22"
+      "_generated": "2026-04-28T09:03:50"
     },
     "drawdown_history": {
       "file": "drawdown_history.json",
-      "mtime": "2026-04-28T08:49:22",
+      "mtime": "2026-04-28T09:03:50",
       "age_h": 0.0,
-      "_generated": "2026-04-28T08:49:22"
+      "_generated": "2026-04-28T09:03:50"
     },
     "etf_composition": {
       "file": "etf_composition.json",
-      "mtime": "2026-04-28T08:49:22",
+      "mtime": "2026-04-28T09:03:50",
       "age_h": 0.0,
-      "_generated": "2026-04-28T08:49:22"
+      "_generated": "2026-04-28T09:03:50"
     },
     "bond_pool_runway": {
       "file": "bond_pool_runway.json",
-      "mtime": "2026-04-28T08:49:22",
+      "mtime": "2026-04-28T09:03:50",
       "age_h": 0.0,
-      "_generated": "2026-04-28T08:49:22"
+      "_generated": "2026-04-28T09:03:50"
     },
     "lumpy_events": {
       "file": "lumpy_events.json",
-      "mtime": "2026-04-28T08:49:30",
+      "mtime": "2026-04-28T09:03:58",
       "age_h": 0.0,
-      "_generated": "2026-04-28T08:49:22"
+      "_generated": "2026-04-28T09:03:50"
     },
     "fire_by_profile": {
       "file": "fire_by_profile.json",
       "mtime": "2026-04-27T12:18:28",
-      "age_h": 20.6,
+      "age_h": 20.8,
       "_generated": null
     }
   },
@@ -93,13 +93,13 @@
     "rf_updated": "2026-04-25",
     "hodl11_updated": "2026-04-28"
   },
-  "cambio": 4.9826,
+  "cambio": 5.0,
   "posicoes": {
     "SWRD": {
       "qty": 5291.6415,
       "avg_cost": 32.8795,
       "status": "alvo",
-      "price": 49.855,
+      "price": 49.78,
       "bucket": "SWRD",
       "ter": 0.12
     },
@@ -107,7 +107,7 @@
       "qty": 2020.2934,
       "avg_cost": 31.3341,
       "status": "transitório",
-      "price": 51.43,
+      "price": 51.2918,
       "bucket": "AVEM",
       "ter": null
     },
@@ -115,7 +115,7 @@
       "qty": 373.2498,
       "avg_cost": 60.0398,
       "status": "transitório",
-      "price": 87.78,
+      "price": 87.71,
       "bucket": "AVGS",
       "ter": null
     },
@@ -123,7 +123,7 @@
       "qty": 34.0,
       "avg_cost": 37.2259,
       "status": "transitório",
-      "price": 68.29,
+      "price": 68.15,
       "bucket": "JPGL",
       "ter": null
     },
@@ -163,7 +163,7 @@
       "qty": 233.4292,
       "avg_cost": 24.9326,
       "status": "alvo",
-      "price": 27.58,
+      "price": 27.555,
       "bucket": "AVGS",
       "ter": 0.39
     }
@@ -234,7 +234,7 @@
     }
   },
   "premissas": {
-    "patrimonio_atual": 3721731,
+    "patrimonio_atual": 3729401,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2627,7 +2627,7 @@
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -2880,7 +2880,7 @@
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -3001,17 +3001,17 @@
       4.86,
       13.32,
       13.34,
-      17.06
+      17.12
     ],
     "threshold": -5
   },
   "factor_signal": {
-    "swrd_ytd_pct": 4.32,
-    "avgs_ytd_pct": 15.57,
-    "excess_ytd_pp": 11.25,
-    "swrd_since_launch_pct": 25.63,
-    "avgs_since_launch_pct": 37.94,
-    "excess_since_launch_pp": 12.3,
+    "swrd_ytd_pct": 4.16,
+    "avgs_ytd_pct": 15.46,
+    "excess_ytd_pp": 11.3,
+    "swrd_since_launch_pct": 25.45,
+    "avgs_since_launch_pct": 37.81,
+    "excess_since_launch_pp": 12.37,
     "avgs_launch_date": "2024-10-14",
     "meses_desde_launch": 18.4,
     "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
@@ -3099,7 +3099,7 @@
       }
     },
     "DGS": {
-      "alpha": -0.00127,
+      "alpha": -0.00126,
       "mkt_rf": 0.8246,
       "smb": 0.6262,
       "hml": 0.1524,
@@ -3237,23 +3237,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 76162.31,
+      "btc_atual_usd": 76259.03,
       "hodl11_brl_atual": 108102,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.05,
-          "valor_fire_brl": 113549
+          "valor_fire_brl": 113405
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.28,
-          "valor_fire_brl": 354841
+          "valor_fire_brl": 354391
         },
         "bull": {
           "btc_target_usd": 500000,
           "upside_factor": 6.56,
-          "valor_fire_brl": 709682
+          "valor_fire_brl": 708782
         }
       }
     }
@@ -3327,9 +3327,9 @@
       "unidade": "pp",
       "piso": -2.0,
       "gap": -2.2,
-      "posicao_r": 1313771,
+      "posicao_r": 1316479,
       "acao": "Rebalancear",
-      "detalhe": "drift: -4.20pp (atual 35.3% vs alvo 39.5%) · posição R$1314k"
+      "detalhe": "drift: -4.20pp (atual 35.3% vs alvo 39.5%) · posição R$1316k"
     },
     {
       "id": "hodl11_banda",
@@ -3349,13 +3349,13 @@
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.650080298656727,
+      "valor": -11.656969845827788,
       "unidade": "pp",
       "piso": -2.0,
-      "gap": -9.65,
+      "gap": -9.66,
       "posicao_r": 124675.0,
       "acao": "Aportar urgente",
-      "detalhe": "drift: -11.65pp vs alvo 15% · posição R$125k"
+      "detalhe": "drift: -11.66pp vs alvo 15% · posição R$125k"
     }
   ],
   "guardrails_retirada": [
@@ -3472,7 +3472,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.2934,
       "pm": 31.3341,
-      "price": 51.43,
+      "price": 51.2918,
       "ucits": "AVEM.L"
     },
     {
@@ -3480,7 +3480,7 @@
       "nome": "SPDR World SC",
       "qty": 373.2498,
       "pm": 60.0398,
-      "price": 87.78,
+      "price": 87.71,
       "ucits": "AVGS.L"
     },
     {
@@ -3488,7 +3488,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.2259,
-      "price": 68.29,
+      "price": 68.15,
       "ucits": "JPGL.L"
     },
     {
@@ -8122,12 +8122,12 @@
   },
   "attribution": {
     "aportes": 2070997,
-    "retornoUsd": 1685664,
-    "cambio": -34930,
-    "fx": -79156,
-    "rf": 44226,
-    "crescReal": 3721731,
-    "cagr_total": 12.44,
+    "retornoUsd": 1693496,
+    "cambio": -35092,
+    "fx": -79523,
+    "rf": 44431,
+    "crescReal": 3729401,
+    "cagr_total": 12.479999999999999,
     "_estimativa": false,
     "_fonte": "retornos_mensais.json decomposicao (desde início)",
     "_inicio": "2021-04",
@@ -8135,11 +8135,11 @@
     "breakdown_chart": [
       {
         "label": "Aportes",
-        "value_pct": 55.6
+        "value_pct": 55.5
       },
       {
         "label": "Retorno USD",
-        "value_pct": 45.3
+        "value_pct": 45.4
       },
       {
         "label": "RF Doméstica",
@@ -8474,8 +8474,8 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 645616,
-    "retorno_usd": 254572,
+    "patrimonio_equity_usd": 644903,
+    "retorno_usd": 253860,
     "pct_aportes": 60.6,
     "pct_retorno": 39.4,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
@@ -8493,9 +8493,9 @@
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 86.4,
+    "exposicao_cambial_pct": 86.5,
     "cds_brazil_5y_bps": null,
-    "bitcoin_usd": 76162.31,
+    "bitcoin_usd": 76259.03,
     "plano_status": {
       "status": "PLANO_PERMANECE",
       "gatilho_ativo": "DCA IPCA+ ativo — 7.07% ≥ 6.0%",
@@ -8508,14 +8508,14 @@
         "ipca_taxa_pct": 7.07
       }
     },
-    "cambio": 4.9826,
-    "equity_usd": 645615.72
+    "cambio": 5.0,
+    "equity_usd": 644902.92
   },
   "mercado": {
-    "cambio_brl_usd": 4.9826,
-    "btc_usd": 76162.31,
-    "cambio_mtd_pct": 0.29,
-    "btc_mtd_pct": -2.14,
+    "cambio_brl_usd": 5.0,
+    "btc_usd": 76259.03,
+    "cambio_mtd_pct": 0.64,
+    "btc_mtd_pct": -2.01,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": null,
     "ref_mes": "2026-04",
@@ -8945,88 +8945,88 @@
   "cryptoLegado": 3641.53,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 167673.15,
+    "ir_diferido_total_brl": 167724.09,
     "ir_por_etf": {
       "SWRD": {
-        "ganho_usd": 89828.49,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 866904.11,
-        "valor_atual_brl": 1314483.56,
-        "ganho_brl": 447579.45,
-        "ir_estimado": 67136.92
+        "ganho_usd": 89431.62,
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 869931.47,
+        "valor_atual_brl": 1317089.57,
+        "ganho_brl": 447158.1,
+        "ir_estimado": 67073.71
       },
       "EIMI": {
-        "ganho_usd": 40599.59,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 315418.99,
-        "valor_atual_brl": 517710.52,
-        "ganho_brl": 202291.53,
-        "ir_estimado": 30343.73
+        "ganho_usd": 40320.39,
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 316520.48,
+        "valor_atual_brl": 518122.43,
+        "ganho_brl": 201601.94,
+        "ir_estimado": 30240.29
       },
       "USSC": {
-        "ganho_usd": 10354.01,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 111659.36,
-        "valor_atual_brl": 163249.25,
-        "ganho_brl": 51589.89,
-        "ir_estimado": 7738.48
+        "ganho_usd": 10327.88,
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 112049.29,
+        "valor_atual_brl": 163688.7,
+        "ganho_brl": 51639.41,
+        "ir_estimado": 7745.91
       },
       "IWVL": {
-        "ganho_usd": 1056.18,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 6306.38,
-        "valor_atual_brl": 11568.9,
-        "ganho_brl": 5262.52,
-        "ir_estimado": 789.38
+        "ganho_usd": 1051.42,
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 6328.4,
+        "valor_atual_brl": 11585.5,
+        "ganho_brl": 5257.1,
+        "ir_estimado": 788.57
       },
       "AVDV": {
         "ganho_usd": 40923.83,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 289773.32,
-        "valor_atual_brl": 493680.38,
-        "ganho_brl": 203907.06,
-        "ir_estimado": 30586.06
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 290785.25,
+        "valor_atual_brl": 495404.39,
+        "ganho_brl": 204619.14,
+        "ir_estimado": 30692.87
       },
       "AVUV": {
         "ganho_usd": 20881.86,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 223068.91,
-        "valor_atual_brl": 327114.87,
-        "ganho_brl": 104045.96,
-        "ir_estimado": 15606.89
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 223847.9,
+        "valor_atual_brl": 328257.21,
+        "ganho_brl": 104409.31,
+        "ir_estimado": 15661.4
       },
       "DGS": {
         "ganho_usd": 2511.74,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 46996.46,
-        "valor_atual_brl": 59511.43,
-        "ganho_brl": 12514.97,
-        "ir_estimado": 1877.25
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 47160.58,
+        "valor_atual_brl": 59719.26,
+        "ganho_brl": 12558.68,
+        "ir_estimado": 1883.8
       },
       "AVES": {
         "ganho_usd": 17571.24,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 209897.67,
-        "valor_atual_brl": 297448.12,
-        "ganho_brl": 87550.46,
-        "ir_estimado": 13132.57
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 210630.66,
+        "valor_atual_brl": 298486.86,
+        "ganho_brl": 87856.2,
+        "ir_estimado": 13178.43
       },
       "AVGS": {
-        "ganho_usd": 617.98,
-        "ptax_compra_medio": 4.9826,
-        "ptax_atual": 4.9826,
-        "custo_total_brl": 28998.72,
-        "valor_atual_brl": 32077.87,
-        "ganho_brl": 3079.14,
-        "ir_estimado": 461.87
+        "ganho_usd": 612.14,
+        "ptax_compra_medio": 5.0,
+        "ptax_atual": 5.0,
+        "custo_total_brl": 29099.99,
+        "valor_atual_brl": 32160.71,
+        "ganho_brl": 3060.72,
+        "ir_estimado": 459.11
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -9042,7 +9042,7 @@
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "fallback",
-    "ptax_atual": 4.9826,
+    "ptax_atual": 5.0,
     "estate_tax": {
       "us_situs_total_usd": 236373.54,
       "us_situs_por_etf": {
@@ -9052,7 +9052,7 @@
         "AVES": 59697.37
       },
       "estate_tax_usd": 70549.42,
-      "estate_tax_brl": 351519.54,
+      "estate_tax_brl": 352747.1,
       "exemption_usd": 60000,
       "taxa_marginal_pct": 40.0,
       "nota": "US-listed ETFs (AVUV/AVDV/DGS/AVES) = US situs. UCITS (SWRD.L/AVGS.L) = Irish domicile, not US situs."
@@ -9062,12 +9062,12 @@
   "passivos": {
     "hipoteca_brl": 453417,
     "hipoteca_vencimento": "2051-02-15",
-    "ir_diferido_brl": 167673.15,
-    "total_brl": 621090.15,
+    "ir_diferido_brl": 167724.09,
+    "total_brl": 621141.09,
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3721731,
+    "financeiro_brl": 3729401,
     "imovel_equity_brl": 366583,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 453417,
@@ -9075,11 +9075,11 @@
     "capital_humano_vp": 3129022.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 7650336.0,
+    "total_brl": 7658006.0,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
-    "brasil_pct": 10.6,
+    "brasil_pct": 10.5,
     "cripto_pct": 3.0,
     "composicao": {
       "hodl11_brl": 108102,
@@ -9095,7 +9095,7 @@
     },
     "total_brasil_brl": 393143,
     "total_cripto_brl": 111744,
-    "total_portfolio_brl": 3721731,
+    "total_portfolio_brl": 3729401,
     "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
   },
   "premissas_vs_realizado": {
@@ -10436,13 +10436,13 @@
   },
   "fire_montecarlo_liquido": {
     "patrimonio_bruto": 3320426.84,
-    "ir_diferido": 167673.15,
-    "patrimonio_liquido": 3152753.69,
+    "ir_diferido": 167724.09,
+    "patrimonio_liquido": 3152702.75,
     "pfire_bruto": 86.1,
     "pfire_liquido": 85.3,
     "delta_pp": -0.8,
     "pat_mediana_fire_bruto": 11597034.0,
-    "pat_mediana_fire_liquido": 11287829.0,
+    "pat_mediana_fire_liquido": 11287736.0,
     "n_sim": 10000,
     "seed": 42,
     "cenario": "base",
@@ -10450,8 +10450,8 @@
     "_generated": "2026-04-28"
   },
   "fire_matrix": {
-    "_generated": "2026-04-28T08:49:22",
-    "_window_id": "20260428T084922",
+    "_generated": "2026-04-28T09:03:50",
+    "_window_id": "20260428T090349",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -10753,8 +10753,8 @@
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-04-28T08:49:22",
-    "_window_id": "20260428T084922",
+    "_generated": "2026-04-28T09:03:50",
+    "_window_id": "20260428T090349",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 7097769.0,
@@ -10769,8 +10769,8 @@
     "mc_date": "2026-04-28"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-04-28T08:49:22",
-    "_window_id": "20260428T084922",
+    "_generated": "2026-04-28T09:03:50",
+    "_window_id": "20260428T090349",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -10794,8 +10794,8 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-28T08:49:22",
-    "_window_id": "20260428T084922",
+    "_generated": "2026-04-28T09:03:50",
+    "_window_id": "20260428T090349",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -12401,8 +12401,8 @@
     "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
   },
   "drawdown_history": {
-    "_generated": "2026-04-28T08:49:22",
-    "_window_id": "20260428T084922",
+    "_generated": "2026-04-28T09:03:50",
+    "_window_id": "20260428T090349",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-05",
@@ -12557,8 +12557,8 @@
     "_fonte": "backtest.metrics.target.maxdd (fallback)"
   },
   "etf_composition": {
-    "_generated": "2026-04-28T08:49:22",
-    "_window_id": "20260428T084922",
+    "_generated": "2026-04-28T09:03:50",
+    "_window_id": "20260428T090349",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -12615,8 +12615,8 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-04-28T08:49:22",
-    "_window_id": "20260428T084922",
+    "_generated": "2026-04-28T09:03:50",
+    "_window_id": "20260428T090349",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -12750,8 +12750,8 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-04-28T08:49:22",
-    "_window_id": "20260428T084922",
+    "_generated": "2026-04-28T09:03:50",
+    "_window_id": "20260428T090349",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.8498,
@@ -13088,7 +13088,10 @@
         "aporte_rate": null,
         "ganho_rate": null,
         "tipo": "historico",
-        "parcial": false
+        "parcial": false,
+        "capital_inicial_brl": 251938,
+        "aporte_dca_brl": 138520,
+        "nota": "Inclui capital inicial de R$251,938 transferido de fundos geridos XP (Mar-Abr/2021, não DCA recorrente). DCA puro: R$138,520"
       },
       {
         "ano": 2022,
@@ -13099,7 +13102,10 @@
         "aporte_rate": 111.7,
         "ganho_rate": -30.1,
         "tipo": "historico",
-        "parcial": false
+        "parcial": false,
+        "capital_inicial_brl": 71956,
+        "aporte_dca_brl": 404666,
+        "nota": "Inclui R$71,956 de FIIs liquidados em Jan/2022 (não DCA recorrente). DCA puro: R$404,666"
       },
       {
         "ano": 2023,
@@ -13136,40 +13142,29 @@
       },
       {
         "ano": 2026,
-        "aporte_brl": 99388,
-        "ganho_mercado_brl": 33295,
-        "patrimonio_fim_brl": 3320427,
+        "aporte_brl": 299388,
+        "ganho_mercado_brl": 232520,
+        "patrimonio_fim_brl": 3719652,
         "patrimonio_inicio_brl": 3187745,
-        "aporte_rate": 3.1,
-        "ganho_rate": 1.0,
-        "tipo": "historico",
-        "parcial": true
+        "aporte_rate": 9.4,
+        "ganho_rate": 7.3,
+        "tipo": "estimado",
+        "parcial": true,
+        "meses_realizados": 4,
+        "nota": "Jan–Abr/2026 realizado + 8 meses estimados @ R$25,000/mês e 9% nominal"
       }
     ],
     "projecao": {
       "base": [
         {
-          "ano": 2026,
-          "aporte_brl": 300000,
-          "ganho_mercado_brl": 298838,
-          "ganho_real_brl": 298838,
-          "aporte_real_brl": 300000,
-          "patrimonio_fim_brl": 3919265,
-          "patrimonio_inicio_brl": 3320427,
-          "aporte_rate": 9.0,
-          "ganho_rate": 9.0,
-          "tipo": "projecao",
-          "parcial": false
-        },
-        {
           "ano": 2027,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 352734,
-          "ganho_real_brl": 339167,
+          "ganho_mercado_brl": 334769,
+          "ganho_real_brl": 321893,
           "aporte_real_brl": 288462,
-          "patrimonio_fim_brl": 4571999,
-          "patrimonio_inicio_brl": 3919265,
-          "aporte_rate": 7.7,
+          "patrimonio_fim_brl": 4354421,
+          "patrimonio_inicio_brl": 3719652,
+          "aporte_rate": 8.1,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13177,12 +13172,12 @@
         {
           "ano": 2028,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 411480,
-          "ganho_real_brl": 380436,
+          "ganho_mercado_brl": 391898,
+          "ganho_real_brl": 362332,
           "aporte_real_brl": 277367,
-          "patrimonio_fim_brl": 5283479,
-          "patrimonio_inicio_brl": 4571999,
-          "aporte_rate": 6.6,
+          "patrimonio_fim_brl": 5046319,
+          "patrimonio_inicio_brl": 4354421,
+          "aporte_rate": 6.9,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13190,12 +13185,12 @@
         {
           "ano": 2029,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 475513,
-          "ganho_real_brl": 422729,
+          "ganho_mercado_brl": 454169,
+          "ganho_real_brl": 403754,
           "aporte_real_brl": 266699,
-          "patrimonio_fim_brl": 6058992,
-          "patrimonio_inicio_brl": 5283479,
-          "aporte_rate": 5.7,
+          "patrimonio_fim_brl": 5800487,
+          "patrimonio_inicio_brl": 5046319,
+          "aporte_rate": 5.9,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13203,12 +13198,12 @@
         {
           "ano": 2030,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 545309,
-          "ganho_real_brl": 466133,
+          "ganho_mercado_brl": 522044,
+          "ganho_real_brl": 446245,
           "aporte_real_brl": 256441,
-          "patrimonio_fim_brl": 6904301,
-          "patrimonio_inicio_brl": 6058992,
-          "aporte_rate": 5.0,
+          "patrimonio_fim_brl": 6622531,
+          "patrimonio_inicio_brl": 5800487,
+          "aporte_rate": 5.2,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13216,12 +13211,12 @@
         {
           "ano": 2031,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 621387,
-          "ganho_real_brl": 510735,
+          "ganho_mercado_brl": 596028,
+          "ganho_real_brl": 489891,
           "aporte_real_brl": 246578,
-          "patrimonio_fim_brl": 7825689,
-          "patrimonio_inicio_brl": 6904301,
-          "aporte_rate": 4.3,
+          "patrimonio_fim_brl": 7518559,
+          "patrimonio_inicio_brl": 6622531,
+          "aporte_rate": 4.5,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13229,12 +13224,12 @@
         {
           "ano": 2032,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 704312,
-          "ganho_real_brl": 556628,
+          "ganho_mercado_brl": 676670,
+          "ganho_real_brl": 534782,
           "aporte_real_brl": 237094,
-          "patrimonio_fim_brl": 8830001,
-          "patrimonio_inicio_brl": 7825689,
-          "aporte_rate": 3.8,
+          "patrimonio_fim_brl": 8495229,
+          "patrimonio_inicio_brl": 7518559,
+          "aporte_rate": 4.0,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13242,12 +13237,12 @@
         {
           "ano": 2033,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 794700,
-          "ganho_real_brl": 603907,
+          "ganho_mercado_brl": 764571,
+          "ganho_real_brl": 581011,
           "aporte_real_brl": 227975,
-          "patrimonio_fim_brl": 9924701,
-          "patrimonio_inicio_brl": 8830001,
-          "aporte_rate": 3.4,
+          "patrimonio_fim_brl": 9559800,
+          "patrimonio_inicio_brl": 8495229,
+          "aporte_rate": 3.5,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13255,12 +13250,12 @@
         {
           "ano": 2034,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 893223,
-          "ganho_real_brl": 652669,
+          "ganho_mercado_brl": 860382,
+          "ganho_real_brl": 628673,
           "aporte_real_brl": 219207,
-          "patrimonio_fim_brl": 11117924,
-          "patrimonio_inicio_brl": 9924701,
-          "aporte_rate": 3.0,
+          "patrimonio_fim_brl": 10720182,
+          "patrimonio_inicio_brl": 9559800,
+          "aporte_rate": 3.1,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13268,12 +13263,12 @@
         {
           "ano": 2035,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 1000613,
-          "ganho_real_brl": 703018,
+          "ganho_mercado_brl": 964816,
+          "ganho_real_brl": 677867,
           "aporte_real_brl": 210776,
-          "patrimonio_fim_brl": 12418537,
-          "patrimonio_inicio_brl": 11117924,
-          "aporte_rate": 2.7,
+          "patrimonio_fim_brl": 11984998,
+          "patrimonio_inicio_brl": 10720182,
+          "aporte_rate": 2.8,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13281,12 +13276,25 @@
         {
           "ano": 2036,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 1117668,
-          "ganho_real_brl": 755057,
+          "ganho_mercado_brl": 1078650,
+          "ganho_real_brl": 728697,
           "aporte_real_brl": 202669,
-          "patrimonio_fim_brl": 13836205,
-          "patrimonio_inicio_brl": 12418537,
-          "aporte_rate": 2.4,
+          "patrimonio_fim_brl": 13363648,
+          "patrimonio_inicio_brl": 11984998,
+          "aporte_rate": 2.5,
+          "ganho_rate": 9.0,
+          "tipo": "projecao",
+          "parcial": false
+        },
+        {
+          "ano": 2037,
+          "aporte_brl": 300000,
+          "ganho_mercado_brl": 1202728,
+          "ganho_real_brl": 781269,
+          "aporte_real_brl": 194874,
+          "patrimonio_fim_brl": 14866376,
+          "patrimonio_inicio_brl": 13363648,
+          "aporte_rate": 2.2,
           "ganho_rate": 9.0,
           "tipo": "projecao",
           "parcial": false
@@ -13294,27 +13302,14 @@
       ],
       "fav": [
         {
-          "ano": 2026,
-          "aporte_brl": 300000,
-          "ganho_mercado_brl": 332043,
-          "ganho_real_brl": 332043,
-          "aporte_real_brl": 300000,
-          "patrimonio_fim_brl": 3952470,
-          "patrimonio_inicio_brl": 3320427,
-          "aporte_rate": 9.0,
-          "ganho_rate": 10.0,
-          "tipo": "projecao",
-          "parcial": false
-        },
-        {
           "ano": 2027,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 395247,
-          "ganho_real_brl": 380045,
+          "ganho_mercado_brl": 371965,
+          "ganho_real_brl": 357659,
           "aporte_real_brl": 288462,
-          "patrimonio_fim_brl": 4647716,
-          "patrimonio_inicio_brl": 3952470,
-          "aporte_rate": 7.6,
+          "patrimonio_fim_brl": 4391617,
+          "patrimonio_inicio_brl": 3719652,
+          "aporte_rate": 8.1,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13322,12 +13317,12 @@
         {
           "ano": 2028,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 464772,
-          "ganho_real_brl": 429708,
+          "ganho_mercado_brl": 439162,
+          "ganho_real_brl": 406030,
           "aporte_real_brl": 277367,
-          "patrimonio_fim_brl": 5412488,
-          "patrimonio_inicio_brl": 4647716,
-          "aporte_rate": 6.5,
+          "patrimonio_fim_brl": 5130779,
+          "patrimonio_inicio_brl": 4391617,
+          "aporte_rate": 6.8,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13335,12 +13330,12 @@
         {
           "ano": 2029,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 541249,
-          "ganho_real_brl": 481168,
+          "ganho_mercado_brl": 513078,
+          "ganho_real_brl": 456124,
           "aporte_real_brl": 266699,
-          "patrimonio_fim_brl": 6253737,
-          "patrimonio_inicio_brl": 5412488,
-          "aporte_rate": 5.5,
+          "patrimonio_fim_brl": 5943857,
+          "patrimonio_inicio_brl": 5130779,
+          "aporte_rate": 5.8,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13348,12 +13343,12 @@
         {
           "ano": 2030,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 625374,
-          "ganho_real_brl": 534572,
+          "ganho_mercado_brl": 594386,
+          "ganho_real_brl": 508083,
           "aporte_real_brl": 256441,
-          "patrimonio_fim_brl": 7179111,
-          "patrimonio_inicio_brl": 6253737,
-          "aporte_rate": 4.8,
+          "patrimonio_fim_brl": 6838242,
+          "patrimonio_inicio_brl": 5943857,
+          "aporte_rate": 5.0,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13361,12 +13356,12 @@
         {
           "ano": 2031,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 717911,
-          "ganho_real_brl": 590071,
+          "ganho_mercado_brl": 683824,
+          "ganho_real_brl": 562054,
           "aporte_real_brl": 246578,
-          "patrimonio_fim_brl": 8197022,
-          "patrimonio_inicio_brl": 7179111,
-          "aporte_rate": 4.2,
+          "patrimonio_fim_brl": 7822067,
+          "patrimonio_inicio_brl": 6838242,
+          "aporte_rate": 4.4,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13374,12 +13369,12 @@
         {
           "ano": 2032,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 819702,
-          "ganho_real_brl": 647823,
+          "ganho_mercado_brl": 782207,
+          "ganho_real_brl": 618189,
           "aporte_real_brl": 237094,
-          "patrimonio_fim_brl": 9316724,
-          "patrimonio_inicio_brl": 8197022,
-          "aporte_rate": 3.7,
+          "patrimonio_fim_brl": 8904273,
+          "patrimonio_inicio_brl": 7822067,
+          "aporte_rate": 3.8,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13387,12 +13382,12 @@
         {
           "ano": 2033,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 931672,
-          "ganho_real_brl": 707994,
+          "ganho_mercado_brl": 890427,
+          "ganho_real_brl": 676652,
           "aporte_real_brl": 227975,
-          "patrimonio_fim_brl": 10548396,
-          "patrimonio_inicio_brl": 9316724,
-          "aporte_rate": 3.2,
+          "patrimonio_fim_brl": 10094701,
+          "patrimonio_inicio_brl": 8904273,
+          "aporte_rate": 3.4,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13400,12 +13395,12 @@
         {
           "ano": 2034,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 1054840,
-          "ganho_real_brl": 770761,
+          "ganho_mercado_brl": 1009470,
+          "ganho_real_brl": 737610,
           "aporte_real_brl": 219207,
-          "patrimonio_fim_brl": 11903236,
-          "patrimonio_inicio_brl": 10548396,
-          "aporte_rate": 2.8,
+          "patrimonio_fim_brl": 11404171,
+          "patrimonio_inicio_brl": 10094701,
+          "aporte_rate": 3.0,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13413,12 +13408,12 @@
         {
           "ano": 2035,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 1190324,
-          "ganho_real_brl": 836306,
+          "ganho_mercado_brl": 1140417,
+          "ganho_real_brl": 801242,
           "aporte_real_brl": 210776,
-          "patrimonio_fim_brl": 13393559,
-          "patrimonio_inicio_brl": 11903236,
-          "aporte_rate": 2.5,
+          "patrimonio_fim_brl": 12844588,
+          "patrimonio_inicio_brl": 11404171,
+          "aporte_rate": 2.6,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13426,12 +13421,25 @@
         {
           "ano": 2036,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 1339356,
-          "ganho_real_brl": 904821,
+          "ganho_mercado_brl": 1284459,
+          "ganho_real_brl": 867734,
           "aporte_real_brl": 202669,
-          "patrimonio_fim_brl": 15032915,
-          "patrimonio_inicio_brl": 13393559,
-          "aporte_rate": 2.2,
+          "patrimonio_fim_brl": 14429047,
+          "patrimonio_inicio_brl": 12844588,
+          "aporte_rate": 2.3,
+          "ganho_rate": 10.0,
+          "tipo": "projecao",
+          "parcial": false
+        },
+        {
+          "ano": 2037,
+          "aporte_brl": 300000,
+          "ganho_mercado_brl": 1442905,
+          "ganho_real_brl": 937283,
+          "aporte_real_brl": 194874,
+          "patrimonio_fim_brl": 16171951,
+          "patrimonio_inicio_brl": 14429047,
+          "aporte_rate": 2.1,
           "ganho_rate": 10.0,
           "tipo": "projecao",
           "parcial": false
@@ -13439,27 +13447,14 @@
       ],
       "stress": [
         {
-          "ano": 2026,
-          "aporte_brl": 300000,
-          "ganho_mercado_brl": 265634,
-          "ganho_real_brl": 265634,
-          "aporte_real_brl": 300000,
-          "patrimonio_fim_brl": 3886061,
-          "patrimonio_inicio_brl": 3320427,
-          "aporte_rate": 9.0,
-          "ganho_rate": 8.0,
-          "tipo": "projecao",
-          "parcial": false
-        },
-        {
           "ano": 2027,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 310885,
-          "ganho_real_brl": 298928,
+          "ganho_mercado_brl": 297572,
+          "ganho_real_brl": 286127,
           "aporte_real_brl": 288462,
-          "patrimonio_fim_brl": 4496946,
-          "patrimonio_inicio_brl": 3886061,
-          "aporte_rate": 7.7,
+          "patrimonio_fim_brl": 4317224,
+          "patrimonio_inicio_brl": 3719652,
+          "aporte_rate": 8.1,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13467,12 +13462,12 @@
         {
           "ano": 2028,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 359756,
-          "ganho_real_brl": 332614,
+          "ganho_mercado_brl": 345378,
+          "ganho_real_brl": 319321,
           "aporte_real_brl": 277367,
-          "patrimonio_fim_brl": 5156702,
-          "patrimonio_inicio_brl": 4496946,
-          "aporte_rate": 6.7,
+          "patrimonio_fim_brl": 4962602,
+          "patrimonio_inicio_brl": 4317224,
+          "aporte_rate": 6.9,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13480,12 +13475,12 @@
         {
           "ano": 2029,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 412536,
-          "ganho_real_brl": 366743,
+          "ganho_mercado_brl": 397008,
+          "ganho_real_brl": 352939,
           "aporte_real_brl": 266699,
-          "patrimonio_fim_brl": 5869238,
-          "patrimonio_inicio_brl": 5156702,
-          "aporte_rate": 5.8,
+          "patrimonio_fim_brl": 5659610,
+          "patrimonio_inicio_brl": 4962602,
+          "aporte_rate": 6.0,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13493,12 +13488,12 @@
         {
           "ano": 2030,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 469539,
-          "ganho_real_brl": 401364,
+          "ganho_mercado_brl": 452769,
+          "ganho_real_brl": 387029,
           "aporte_real_brl": 256441,
-          "patrimonio_fim_brl": 6638777,
-          "patrimonio_inicio_brl": 5869238,
-          "aporte_rate": 5.1,
+          "patrimonio_fim_brl": 6412379,
+          "patrimonio_inicio_brl": 5659610,
+          "aporte_rate": 5.3,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13506,12 +13501,12 @@
         {
           "ano": 2031,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 531102,
-          "ganho_real_brl": 436527,
+          "ganho_mercado_brl": 512990,
+          "ganho_real_brl": 421641,
           "aporte_real_brl": 246578,
-          "patrimonio_fim_brl": 7469879,
-          "patrimonio_inicio_brl": 6638777,
-          "aporte_rate": 4.5,
+          "patrimonio_fim_brl": 7225369,
+          "patrimonio_inicio_brl": 6412379,
+          "aporte_rate": 4.7,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13519,12 +13514,12 @@
         {
           "ano": 2032,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 597590,
-          "ganho_real_brl": 472284,
+          "ganho_mercado_brl": 578030,
+          "ganho_real_brl": 456825,
           "aporte_real_brl": 237094,
-          "patrimonio_fim_brl": 8367469,
-          "patrimonio_inicio_brl": 7469879,
-          "aporte_rate": 4.0,
+          "patrimonio_fim_brl": 8103399,
+          "patrimonio_inicio_brl": 7225369,
+          "aporte_rate": 4.2,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13532,12 +13527,12 @@
         {
           "ano": 2033,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 669398,
-          "ganho_real_brl": 508687,
+          "ganho_mercado_brl": 648272,
+          "ganho_real_brl": 492633,
           "aporte_real_brl": 227975,
-          "patrimonio_fim_brl": 9336867,
-          "patrimonio_inicio_brl": 8367469,
-          "aporte_rate": 3.6,
+          "patrimonio_fim_brl": 9051671,
+          "patrimonio_inicio_brl": 8103399,
+          "aporte_rate": 3.7,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13545,12 +13540,12 @@
         {
           "ano": 2034,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 746949,
-          "ganho_real_brl": 545789,
+          "ganho_mercado_brl": 724134,
+          "ganho_real_brl": 529117,
           "aporte_real_brl": 219207,
-          "patrimonio_fim_brl": 10383816,
-          "patrimonio_inicio_brl": 9336867,
-          "aporte_rate": 3.2,
+          "patrimonio_fim_brl": 10075805,
+          "patrimonio_inicio_brl": 9051671,
+          "aporte_rate": 3.3,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13558,12 +13553,12 @@
         {
           "ano": 2035,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 830705,
-          "ganho_real_brl": 583643,
+          "ganho_mercado_brl": 806064,
+          "ganho_real_brl": 566330,
           "aporte_real_brl": 210776,
-          "patrimonio_fim_brl": 11514521,
-          "patrimonio_inicio_brl": 10383816,
-          "aporte_rate": 2.9,
+          "patrimonio_fim_brl": 11181869,
+          "patrimonio_inicio_brl": 10075805,
+          "aporte_rate": 3.0,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -13571,12 +13566,25 @@
         {
           "ano": 2036,
           "aporte_brl": 300000,
-          "ganho_mercado_brl": 921162,
-          "ganho_real_brl": 622304,
+          "ganho_mercado_brl": 894550,
+          "ganho_real_brl": 604326,
           "aporte_real_brl": 202669,
-          "patrimonio_fim_brl": 12735683,
-          "patrimonio_inicio_brl": 11514521,
-          "aporte_rate": 2.6,
+          "patrimonio_fim_brl": 12376418,
+          "patrimonio_inicio_brl": 11181869,
+          "aporte_rate": 2.7,
+          "ganho_rate": 8.0,
+          "tipo": "projecao",
+          "parcial": false
+        },
+        {
+          "ano": 2037,
+          "aporte_brl": 300000,
+          "ganho_mercado_brl": 990113,
+          "ganho_real_brl": 643159,
+          "aporte_real_brl": 194874,
+          "patrimonio_fim_brl": 13666532,
+          "patrimonio_inicio_brl": 12376418,
+          "aporte_rate": 2.4,
           "ganho_rate": 8.0,
           "tipo": "projecao",
           "parcial": false
@@ -14206,14 +14214,14 @@
         "shift_pp": 1,
         "renda_plus_mtm_pct": -0.2012,
         "renda_plus_mtm_brl": -23707.92,
-        "renda_plus_mtm_portfolio_pct": -0.00637,
+        "renda_plus_mtm_portfolio_pct": -0.006357,
         "with_convexity_note": true
       },
       {
         "shift_pp": 2,
         "renda_plus_mtm_pct": -0.4024,
         "renda_plus_mtm_brl": -47415.85,
-        "renda_plus_mtm_portfolio_pct": -0.01274,
+        "renda_plus_mtm_portfolio_pct": -0.012714,
         "with_convexity_note": true
       }
     ],
@@ -14369,7 +14377,7 @@
     "swr_p90": 3.66,
     "swr_p85": 3.87,
     "swr_p80": 4.05,
-    "patrimonio_base": 3721731,
+    "patrimonio_base": 3729401,
     "nota": "Aproximação analítica (anuidade ajustada por risco). Aportes=0. Usar MC completo para valores definitivos.",
     "_metodo": "analytical_annuity_risk_adjusted"
   },
