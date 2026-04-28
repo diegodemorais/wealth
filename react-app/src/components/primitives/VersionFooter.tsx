@@ -24,12 +24,22 @@ export function VersionFooter() {
     loadDataOnce().catch(() => {});
   }, [loadDataOnce]);
 
-  const { dataDate, daysOld, isStale } = useMemo(() => {
+  const { dataDate, hoursOld, stalenessLevel, ibkrDate } = useMemo(() => {
     const raw = (data as any)?._generated_brt ?? (data as any)?._generated ?? data?.date;
-    if (!raw) return { dataDate: '—', daysOld: 0, isStale: false };
-    const daysOld = Math.floor((Date.now() - new Date(raw).getTime()) / 86400000);
-    return { dataDate: fmtBrt(raw), daysOld, isStale: daysOld > 7 };
+    if (!raw) return { dataDate: '—', hoursOld: 0, stalenessLevel: null as null | 'warn' | 'critical', ibkrDate: null as string | null };
+    const hoursOld = (Date.now() - new Date(raw).getTime()) / 3600000;
+    const stalenessLevel: null | 'warn' | 'critical' =
+      hoursOld > 168 ? 'critical' : hoursOld > 48 ? 'warn' : null;
+    const ibkrRaw = (data as any)?._ibkr_sync_date ?? null;
+    return {
+      dataDate: fmtBrt(raw),
+      hoursOld,
+      stalenessLevel,
+      ibkrDate: ibkrRaw ? fmtBrt(ibkrRaw) : null,
+    };
   }, [data]);
+
+  const daysOld = Math.floor(hoursOld / 24);
 
   return (
     <footer style={styles.footer} data-testid="version-footer">
@@ -49,9 +59,23 @@ export function VersionFooter() {
           <span style={styles.value}>{dataDate}</span>
           {daysOld > 0 && <span style={styles.age}>{daysOld}d atrás</span>}
         </div>
-        {isStale && (
-          <span style={styles.stale} data-test="staleness-banner">
-            <AlertTriangle size={13} className="inline mr-1" /> Dados com {daysOld} dias — considere atualizar
+        {ibkrDate && (
+          <>
+            <span style={styles.sep}>·</span>
+            <div style={styles.group}>
+              <span style={styles.label}>IBKR sync</span>
+              <span style={styles.value}>{ibkrDate}</span>
+            </div>
+          </>
+        )}
+        {stalenessLevel === 'warn' && (
+          <span style={styles.staleWarn} data-testid="staleness-banner">
+            <AlertTriangle size={13} className="inline mr-1" /> Dados {daysOld}d — rode o pipeline
+          </span>
+        )}
+        {stalenessLevel === 'critical' && (
+          <span style={styles.staleCritical} data-testid="staleness-banner">
+            <AlertTriangle size={13} className="inline mr-1" /> Dados muito antigos ({daysOld}d) — atualize agora
           </span>
         )}
       </div>
@@ -98,9 +122,14 @@ const styles: Record<string, React.CSSProperties> = {
   sep: {
     color: 'var(--border)',
   },
-  stale: {
+  staleWarn: {
     color: 'var(--orange)',
     fontWeight: 600,
+    marginLeft: '8px',
+  },
+  staleCritical: {
+    color: 'var(--red, #ef4444)',
+    fontWeight: 700,
     marginLeft: '8px',
   },
 };

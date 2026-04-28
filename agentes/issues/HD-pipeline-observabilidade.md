@@ -31,24 +31,30 @@ O projeto tem pipeline funcional e spec contract implementado, mas carece de obs
 
 ## Escopo — Fase 1 (Alta Prioridade)
 
-### F1-A: Staleness visível no dashboard
+### F1-A: Staleness visível no dashboard ✅
 
-- [ ] Calcular idade dos dados em horas a partir de `_generated` em `data.json`
-- [ ] Exibir badge no footer quando dados > 48h: `⚠ Dados desatualizados (Xd)`
-- [ ] Exibir badge crítico quando > 7 dias: `🔴 Dados muito antigos`
-- [ ] Badge some automaticamente quando dados frescos
+- [x] Calcular idade dos dados em horas a partir de `_generated` em `data.json`
+- [x] Exibir badge no footer quando dados > 48h: `⚠ Xd — rode o pipeline` (laranja)
+- [x] Exibir badge crítico quando > 7 dias: `🔴 Xd — atualize agora` (vermelho)
+- [x] Badge some automaticamente quando dados frescos
 
-### F1-B: Sincronização de posições IBKR
+### F1-B: Sincronização de posições IBKR ✅ (mapeamento)
 
-- [ ] Mapear quais campos de `dashboard_state.json` vêm de `ibkr_lotes.py --flex` vs entrada manual
-- [ ] Documentar o fluxo atual e identificar o que pode ser automatizado
-- [ ] Integrar `ibkr_lotes.py` no fluxo padrão de execução do pipeline (ou documentar quando rodar)
-- [ ] Adicionar timestamp de última sincronização IBKR no dashboard
+Mapeamento concluído — fontes por campo:
+- Posições ETF (qty, preço médio): `dados/ibkr/lotes.json` ← `ibkr_lotes.py --flex` (manual, rodar após trade)
+- TLH lotes individuais: `dados/tlh_lotes.json` ← `ibkr_lotes.py` (mesmo fluxo)
+- RF (IPCA+, Renda+) e HODL11 qty/avg_cost: `dashboard_state.json.rf` ← **entrada manual** (Diego edita direto)
+- Câmbio, BTC: `generate_data.py` via yfinance ← automático
+- P(FIRE): `fire_montecarlo.py` ← automático
 
-### F1-C: spec.json como fonte de verdade viva
+- [x] `_ibkr_sync_date` adicionado a `data.json` (mtime de `dados/ibkr/lotes.json`)
+- [x] Footer exibe "IBKR sync: DD/MM/AA HH:MM BRT" quando disponível
+- [ ] Documentar no CLAUDE.md ou flight-rules quando rodar `ibkr_lotes.py --flex`
 
-- [ ] Criar `scripts/sync_spec.py`: escaneia componentes React com `data-testid` e cruza com spec.json
-- [ ] Script avisa se componente novo não tem entrada no spec.json
+### F1-C: spec.json como fonte de verdade viva ✅
+
+- [x] Criar `scripts/sync_spec.py`: escaneia `data-testid` no React, cruza com spec.json
+- [x] Reporta blocos sem data-testid (67/68) e testids órfãos (10 — entrar no spec)
 - [ ] Adicionar ao checklist de novo componente em `react-app/CLAUDE.md`
 
 ---

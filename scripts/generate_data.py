@@ -4243,6 +4243,7 @@ def main():
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "_generated_brt": (datetime.utcnow() + timedelta(hours=-3)).strftime("%Y-%m-%dT%H:%M:%S") + "-03:00",
+        "_ibkr_sync_date": datetime.fromtimestamp(LOTES_PATH.stat().st_mtime).strftime("%Y-%m-%dT%H:%M:%S") if LOTES_PATH.exists() else None,
         "_schema_version": "2.0",  # Architect: schema versioning (V5 fix)
         "_pipeline_run": _pipeline_run_id,  # DATA_PIPELINE_CENTRALIZATION: run ID para rastreabilidade
         "_snapshots_metadata": _snapshot_ages,  # DATA_PIPELINE_CENTRALIZATION: age/mtime de cada snapshot usado

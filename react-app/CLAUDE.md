@@ -76,6 +76,8 @@ Bug fix → escrever regression test.
 - [ ] `data-testid` nos campos que exibem dados financeiros
 - [ ] Assertion em `e2e/semantic-smoke.spec.ts` valida o *valor* renderizado (não só estrutura)
 - [ ] Se depende de campo do pipeline: assertion em `generate_data.py` bloqueia se nulo
+- [ ] Adicionar bloco em `dashboard/spec.json` com `id` = valor do `data-testid` e `data_fields` consumidos
+- [ ] Rodar `python scripts/sync_spec.py --missing` para confirmar cobertura
 
 ## Comentários
 
