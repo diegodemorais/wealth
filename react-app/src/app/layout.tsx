@@ -4,7 +4,7 @@ import '../styles/dashboard.css';
 import { LayoutClient } from './layout-client';
 
 export const metadata: Metadata = {
-  title: 'Dash Wealt [DM]',
+  title: 'Dash Wealth [DM]',
   description: 'Financial dashboard powered by Next.js',
 };
 
