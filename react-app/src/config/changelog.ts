@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — ContributionReturnsCrossover: 4 fixes (legenda, toggle, 2026 parcial, ganho_rate 2021) ─
+  { datetime: '2026-04-28T08:55:00', type: 'gráfico', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'legenda ausente, toggle residual, 2026 sem visual distinto, ganho_rate 2021 com denominador errado', para: 'legenda explícita (Rentabilidade Anual / Aportes Anuais), toggle removido do build, 2026* com opacidade 50% e aviso no tooltip, ganho_rate 2021=null no pipeline (linha % começa em 2022)' },
   // ── 2026-04-28 — ContributionReturnsCrossover: remove toggle + add flywheel chart ─
   { datetime: '2026-04-28T21:30:00', type: 'gráfico', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'toggle nominal/real + 1 chart R$ absoluto', para: 'sem toggle (nominal fixo), 2 charts: Valor Absoluto (R$) + Flywheel % do Patrimônio; pipeline adiciona aporte_rate e ganho_rate' },
   // ── 2026-04-28 — ContributionReturnsCrossover + P(FIRE) boxplot fix ─────────

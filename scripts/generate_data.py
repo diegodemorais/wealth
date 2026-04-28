@@ -2106,11 +2106,12 @@ def compute_contribuicao_retorno_crossover(
         # ganho = variação do patrimônio menos aportes do período
         ganho = pat_e - pat_s - aportes
         # rates: % do patrimônio no início do ano (flywheel perspective)
-        # 2021: pat_s=0 → usar patrimonio_fim - aporte - ganho estimado via ganho/pat_e ratio
-        # Para 2021 com pat_s=0 usamos pat_e como denominador (todo patrimônio foi criado neste ano)
-        pat_denom = pat_s if pat_s > 0 else pat_e
-        aporte_rate = round(aportes / pat_denom * 100, 1) if pat_denom > 0 else None
-        ganho_rate = round(ganho / pat_denom * 100, 1) if pat_denom > 0 else None
+        # Fix: 2021 tem pat_s=0 (portfólio nasceu no ano) → ganho_rate é N/A metodologicamente.
+        # Usar pat_s como denominador apenas se > 0; se não, rates ficam null (não plotar).
+        aporte_rate = round(aportes / pat_s * 100, 1) if pat_s > 0 else None
+        ganho_rate = round(ganho / pat_s * 100, 1) if pat_s > 0 else None
+        # Ano parcial: ANO_ATUAL tem dados apenas até o mês corrente
+        is_parcial = int(year) == ANO_ATUAL
         historico.append({
             "ano": int(year),
             "aporte_brl": round(aportes),
@@ -2120,6 +2121,7 @@ def compute_contribuicao_retorno_crossover(
             "aporte_rate": aporte_rate,
             "ganho_rate": ganho_rate,
             "tipo": "historico",
+            "parcial": is_parcial,
         })
 
     # ── Patrimônio inicial para projeção ──────────────────────────────────────
@@ -2149,6 +2151,7 @@ def compute_contribuicao_retorno_crossover(
                 "aporte_rate": aporte_rate,
                 "ganho_rate": ganho_rate,
                 "tipo": "projecao",
+                "parcial": False,
             })
             pat = pat_fim
         return pts
