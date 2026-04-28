@@ -53,18 +53,20 @@ export default function PerformancePage() {
   if (stateEl) return stateEl;
   const safeData = data!;
 
-  // Gap J: Drawdown Context Banner data
+  // Gap J: Drawdown Context Banner — só relevante na fase de desacumulação (pós-FIRE)
   const ddHistory = (safeData as any)?.drawdown_history ?? {};
   const ddPctList: number[] = ddHistory.drawdown_pct ?? [];
   const ddAtual: number = ddPctList.length > 0 ? ddPctList[ddPctList.length - 1] : 0;
   const ddAtualAbs = Math.abs(ddAtual);
-  const showDrawdownBanner = ddAtualAbs > 5;
-  const ddGuardrailAtivo = (safeData as any)?.spending_guardrails?.zona !== 'normal';
-  const ddGuardrailZona: string = (safeData as any)?.spending_guardrails?.zona ?? 'normal';
+  const idadeAtual: number = (safeData as any)?.premissas?.idade_atual ?? 39;
+  const idadeFireAlvo: number = (safeData as any)?.premissas?.idade_fire_alvo ?? 53;
+  const isFaseAcumulacao = idadeAtual < idadeFireAlvo;
+  // Guardrails de spending são regras pós-FIRE — não exibir na acumulação
+  const showDrawdownBanner = ddAtualAbs > 5 && !isFaseAcumulacao;
 
   return (
     <div>
-      {/* Gap J: Drawdown Context Banner — aparece quando drawdown atual > 5% */}
+      {/* Gap J: Drawdown Context Banner — só pós-FIRE (guardrails = regras de desacumulação) */}
       {showDrawdownBanner && (
         <div
           data-testid="drawdown-context-banner"
@@ -86,8 +88,7 @@ export default function PerformancePage() {
               Drawdown Ativo: {privacyMode ? '••%' : `${ddAtual.toFixed(1)}%`}
             </div>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-              {ddGuardrailAtivo ? `Guardrail ativo — zona: ${ddGuardrailZona}` : 'Guardrail: zona normal'} ·
-              Ação: {ddAtualAbs >= 35 ? 'corte de 28% (piso)' : ddAtualAbs >= 25 ? 'corte 20%' : ddAtualAbs >= 15 ? 'corte 10%' : 'monitorar · hold'}
+              Ação: {ddAtualAbs >= 35 ? 'corte de 28% (piso R$180k)' : ddAtualAbs >= 25 ? 'corte 20%' : ddAtualAbs >= 15 ? 'corte 10%' : 'monitorar · hold'}
             </div>
           </div>
         </div>

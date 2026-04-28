@@ -2327,7 +2327,9 @@ def get_macro_data(state: dict, total_brl_override: float = None, equity_usd_ove
         except Exception as e:
             print(f"  ⚠️ bitcoin yfinance: {e}")
 
-    # -- CDS Brazil 5Y via investiny ---------------------------------
+    # -- CDS Brazil 5Y — fonte instável (Investing.com retorna 403 frequentemente)
+    # Quando null, semáforo exibe "—". Não usar fallback hardcoded.
+    # Alternativa futura: FRED (série DBRACRNAAA156N) via fredapi.
     cds_brazil_5y = None
     try:
         from investiny import historical_data as inv_hist
@@ -2338,7 +2340,7 @@ def get_macro_data(state: dict, total_brl_override: float = None, equity_usd_ove
         if cds_data and "close" in cds_data and cds_data["close"]:
             cds_brazil_5y = round(cds_data["close"][-1], 1)
     except Exception as e:
-        print(f"  ⚠️ CDS Brazil 5Y: {e}")
+        print(f"  ⚠️ CDS Brazil 5Y (Investing.com instável): {e}")
 
     # -- Plano Status (fallback quando não há snapshot) -----
     plano_status = None

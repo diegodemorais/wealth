@@ -8496,7 +8496,7 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 86.5,
-    "cds_brazil_5y_bps": 123.6,
+    "cds_brazil_5y_bps": null,
     "bitcoin_usd": 76675.58,
     "plano_status": {
       "status": "PLANO_PERMANECE",
