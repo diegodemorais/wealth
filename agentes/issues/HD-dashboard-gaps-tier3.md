@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-dashboard-gaps-tier3 |
 | **Dono** | Head + Time |
-| **Status** | Em andamento (T e U fechados; V/W pendentes) |
+| **Status** | CONCLUÍDA — todos os 4 gaps encerrados (2026-04-28) |
 | **Prioridade** | Baixa |
 | **Participantes** | Factor, RF, FIRE, Macro, Quant, Fact-Checker |
 | **Co-sponsor** | Dev (implementação após decisão) |
@@ -61,35 +61,28 @@ Critério Tier 3: metodologia controversa, dados externos não disponíveis, ou 
 
 ---
 
-### V: Projeção de Ativos Não-Financeiros
+### V: Projeção de Ativos Não-Financeiros ✓ RESOLVIDO 2026-04-28
 
-**Problema:** Imóvel (equity R$298k) e terreno (R$150k) somam R$448k mas são tratados como estáticos. Eles devem crescer, depreciar ou manter valor em termos reais?
+**Decisões tomadas:**
+- Apreciação: 0% real (Shiller, FIPE-ZAP deflacionado IPCA)
+- Imóvel Pinheiros: vender em 2027 (mudança/casamento); equity líquido ~R$367k (IR 15% sobre ganho R$117k, custo RFB R$702.922)
+- Terreno Nova Odessa: vender em 2031 (midpoint 2026-2037); equity líquido ~R$127.5k (IR 15%)
+- FV@FIRE (4.85% real): imóvel ~R$590k + terreno ~R$169k = **~R$759k upside**
+- Exibição: Assumptions tab — NOT incluído no P(FIRE) baseline
 
-**Decisão pendente:**
-- [ ] Definir premissa de apreciação imobiliária real (IGPM? 0% real? -1% real?)
-- [ ] Imóvel tem hipoteca SAC até 2051 — como modelar o equity crescente?
-- [ ] Terreno: intenção é vender ou manter? Quando?
-- [ ] Deve aparecer na projeção FIRE como ativo ou separado?
-
-**Debate necessário:** FIRE agent + Patrimonial agent + Diego (intenção com o imóvel e terreno).
-
-**Valor:** R$448k em imóveis = 13% do patrimônio financeiro atual — materialmente relevante para FIRE number.
+**Implementado:** seção "Ativos Não-Financeiros — Projeção de Venda" em Assumptions tab. Custo de aquisição RFB salvo em `reference_imovel_pinheiros.md`.
 
 ---
 
-### W: Tracking Error Rolling AVGS vs SWRD
+### W: Tracking Error Rolling AVGS vs SWRD ✓ RESOLVIDO 2026-04-28
 
-**Problema:** Tracking error de AVGS (SCV tilt) vs SWRD (market cap) é a métrica de "pain index" de factor investing. Quando tracking error está alto por muito tempo, investidores abandonam a estratégia — exatamente quando não deveriam.
+**Decisões tomadas (Factor + Behavioral, 2026-04-28):**
+- Janela: 12m (Factor — dados AVGS têm só 18m; 24m seria truncado)
+- Threshold amarelo: -5pp/12m; vermelho: -10pp/12m
+- Exibição: Portfolio tab (dado operacional vivo)
+- Drought counter: integrado como label sobreposto no gráfico (não contador independente)
 
-**Decisão pendente:**
-- [ ] Definir janela: 12 meses, 24 meses ou rolling ambos?
-- [ ] Threshold de atenção: ex. -3pp acumulado em 24m = amarelo; -5pp = vermelho
-- [ ] Onde exibir (Portfolio tab? Assumptions?)
-- [ ] Integrar com factor drought counter (Gap H do Tier 1)?
-
-**Debate necessário:** Factor agent + Behavioral agent (risco comportamental de abandono).
-
-**Valor:** Alerta precoce de risco de abandono de estratégia no pior momento.
+**Implementado:** gráfico ECharts linha rolling 12m com zonas de cor + drought counter. Estado atual: +16.18pp verde, drought = 0m. Novos params em carteira.md: `factor_underperf_threshold_red_pp = -10`.
 
 ---
 
@@ -113,19 +106,24 @@ Critério Tier 3: metodologia controversa, dados externos não disponíveis, ou 
 
 ## Conclusão
 
-> A preencher ao finalizar (cada gap pode ter conclusão independente).
+Todos os 4 gaps do Tier 3 encerrados em 2026-04-28:
+
+- **T:** Fechado sem implementação — bloqueio técnico (guardrails não separam saúde de lifestyle). Pré-requisito: FR-guardrails-categoria-elasticidade.
+- **U:** Resolvido — AQR HML Devil + KF SMB (58/42). Widget semáforo implementado em Portfolio tab.
+- **V:** Resolvido — projeção de venda imóvel (2027) e terreno (2031) com IR 15%, FV@FIRE ~R$759k. Exibido em Assumptions tab como upside.
+- **W:** Resolvido — gráfico rolling 12m TE AVGS vs SWRD com zonas de cor e drought counter integrado em Portfolio tab.
 
 ---
 
 ## Resultado
 
-> A preencher ao finalizar.
+Issue completa. Tier 3 encerrado.
 
 ---
 
 ## Próximos Passos
 
 - [x] Gap T — fechado sem implementação (bloqueio: guardrails não separam saúde de lifestyle)
-- [x] Gap U (valuation spreads) — **RESOLVIDO 2026-04-28**: AQR HML Devil Monthly (URL pública sem auth). Proxy AVGS = HML 58/42 + KF SMB. Widget semáforo implementado em Portfolio tab. Status atual: P42 neutro.
-- [ ] Gap V (imóvel) — aguarda input de Diego sobre intenção futura com imóvel e terreno
-- [ ] Gap W (tracking error) — pode ser discutido junto com Gap H (factor drought) do Tier 1
+- [x] Gap U — **RESOLVIDO 2026-04-28**: widget semáforo value spread em Portfolio tab
+- [x] Gap V — **RESOLVIDO 2026-04-28**: projeção venda imóvel + terreno em Assumptions tab
+- [x] Gap W — **RESOLVIDO 2026-04-28**: gráfico rolling TE + drought counter em Portfolio tab
