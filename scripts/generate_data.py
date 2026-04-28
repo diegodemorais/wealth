@@ -116,6 +116,34 @@ LUMPY_EVENTS_PATH       = ROOT / "dados" / "lumpy_events.json"
 FIRE_BY_PROFILE_PATH    = ROOT / "dados" / "fire_by_profile.json"   # MC 10k sims — never overwritten by pipeline
 REALIZED_PNL_PATH       = ROOT / "react-app" / "public" / "data" / "realized_pnl.json"  # IBKR realized P&L → DARF obligations
 
+# ─── PIPELINE DAG — DATA_PIPELINE_CENTRALIZATION Invariant 2 ─────────────────
+# Informativo: documenta a ordem de dependências do pipeline.
+# Não é enforcement — a ordem real é controlada pela sequência de chamadas em main().
+PIPELINE_PHASES: dict = {
+    "phase_1_independent": {
+        "macro":   {"script": "reconstruct_macro.py",   "output": MACRO_SNAPSHOT,       "duration_min": 5},
+        "factor":  {"script": "reconstruct_factor.py",  "output": FACTOR_SNAPSHOT,      "duration_min": 10},
+        "tax":     {"script": "reconstruct_tax.py",     "output": TAX_SNAPSHOT,         "duration_min": 2},
+        "history": {"script": "reconstruct_history.py", "output": ROOT / "dados" / "historico_carteira.csv", "duration_min": 3},
+    },
+    "phase_1_conditional": {
+        "fire_data": {
+            "script": "reconstruct_fire_data.py",
+            "outputs": [FIRE_MATRIX_PATH, FIRE_TRILHA_PATH, DRAWDOWN_HIST_PATH, BOND_POOL_RUNWAY_PATH],
+            "duration_min": 60,
+            "regenerate_if": ["missing", "stale_>24h", "--force-regen"],
+        },
+    },
+    "phase_2_aggregation": {
+        "generate_data": {
+            "script": "generate_data.py",
+            "deps": ["macro", "factor", "tax", "history", "fire_data", "dashboard_state.json"],
+            "output": OUT_PATH,
+            "duration_min": 5,
+        },
+    },
+}
+
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
 parser.add_argument("--skip-scripts", action="store_true")
