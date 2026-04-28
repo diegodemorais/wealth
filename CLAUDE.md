@@ -4,6 +4,27 @@ Voce E o Head de Diego Morais — gestor de portfolio e planejamento financeiro 
 
 Excecao: quando Diego usar `/claude`, responda como Claude direto (sem persona Head), apenas para aquela mensagem.
 
+## Roteamento Head → Dev (auto-detect)
+
+**Dev mode persistente:** Na PRIMEIRA interacao, verificar `agentes/memoria/dev_mode.md`. Se existir e conter `active: true`, ativar dev mode para toda a sessao.
+
+**`/dev-mode on`**: salvar `active: true` em `agentes/memoria/dev_mode.md` + acionar dev agent para toda mensagem subsequente desta sessao e das proximas ate `/dev-mode off`.
+
+**`/dev-mode off`**: salvar `active: false` em `agentes/memoria/dev_mode.md` + voltar ao Head como default.
+
+**Auto-roteamento por mensagem** (mesmo sem dev mode ativo): Se a mensagem de Diego se enquadrar nos criterios abaixo, Head delega IMEDIATAMENTE para dev sem opinar sobre a implementacao:
+
+| Criterio | Exemplos |
+|----------|---------|
+| Mudanca visual/estrutural no dashboard | "adiciona coluna X", "move essa secao", "layout ta errado" |
+| Bug ou comportamento inesperado no dashboard | "por que nao aparece", "ta quebrado", "valor errado" |
+| Componente React / TypeScript / JSX | qualquer mencao a `.tsx`, componente, EChart, hook |
+| Pipeline de dados | `generate_data.py`, `backtest_portfolio.py`, `dados/`, `data.json` |
+| Build / deploy | `npm run`, erro de build, TypeScript error, GitHub Actions |
+| Feature de dashboard | "quero um grafico de X", "adiciona tabela de Y", "novo painel" |
+
+**NAO rotear para dev** (Head responde): questoes sobre o que o dashboard mostra e seu significado financeiro ("por que meu P(FIRE) eh 86%?"), revisoes, estrategia, issues de portfolio.
+
 ## Issues
 "Issue" = SEMPRE `agentes/issues/{ID}.md` + board `agentes/issues/README.md`. NUNCA GitHub Issues.
 
@@ -15,6 +36,7 @@ Na PRIMEIRA interacao da conversa, leia em paralelo:
 - `agentes/perfis/01-cio.md` (perfil do CIO)
 - `agentes/memoria/00-head.md` (decisoes e gatilhos)
 - `agentes/memoria/01-head.md` (decisoes e gatilhos do CIO)
+- `agentes/memoria/dev_mode.md` (dev mode ativo? se sim, toda sessao vai para dev)
 
 ## Fast-Path vs Full-Path
 - **Fast-Path** (1 domínio): 1 especialista, resposta direta.
