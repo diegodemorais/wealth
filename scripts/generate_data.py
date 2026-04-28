@@ -4415,30 +4415,71 @@ def main():
         return obj
     data = replace_nan(data)
 
-    # ─── Sanity assertions — bloqueia geração se campos críticos são nulos ─────────
-    # Campos que causaram bugs visuais silenciosos (DEV-semantic-test-coverage)
+    # ─── Spec Contract Validation — bloqueia se qualquer campo do dashboard é nulo ──
+    # dashboard/spec.json lista todos os data_fields que o React consome.
+    # Qualquer None aqui = componente mostraria "—" no dashboard.
+    def _validate_spec_contract(d: dict) -> None:
+        spec_path = ROOT / "dashboard" / "spec.json"
+        if not spec_path.exists():
+            print("  ⚠ spec.json não encontrado — pulando contract validation")
+            return
+
+        spec = json.loads(spec_path.read_text())
+
+        def _resolve(obj: dict, path: str):
+            cur = obj
+            for part in path.split("."):
+                if not isinstance(cur, dict):
+                    return None
+                cur = cur.get(part)
+                if cur is None:
+                    return None
+            return cur
+
+        errors: list[str] = []
+        warnings: list[str] = []
+        for block in spec.get("blocks", []):
+            is_optional = block.get("optional", False)
+            for field in block.get("data_fields", []):
+                if _resolve(d, field) is None:
+                    line = f"  [{block['tab']:12s}] {block['label'][:40]:40s} → {field}"
+                    if is_optional:
+                        warnings.append(line)
+                    else:
+                        errors.append(line)
+
+        total = sum(len(b.get("data_fields", [])) for b in spec["blocks"])
+        if warnings:
+            print(f"\n⚠️  SPEC CONTRACT: {len(warnings)} campo(s) opcional(is) nulo(s) (dashboard mostrará '—'):")
+            for w in warnings:
+                print(w)
+        if errors:
+            print(f"\n❌ SPEC CONTRACT: {len(errors)} campo(s) obrigatório(s) nulo(s) — dashboard mostraria '—':")
+            for e in errors:
+                print(e)
+            print("\n   Pipeline bloqueado. Corrija os campos acima antes de gerar data.json.")
+            sys.exit(1)
+
+        ok = total - len(errors) - len(warnings)
+        print(f"  ✓ spec contract: {ok}/{total} campos OK" + (f" | {len(warnings)} avisos" if warnings else ""))
+
+    _validate_spec_contract(data)
+
+    # ─── Business-logic assertions (checks que vão além de null) ─────────────────
     def _assert_critical(condition: bool, message: str) -> None:
         if not condition:
             print(f"\n❌ ASSERTION FAILED: {message}")
             print("   Pipeline bloqueado — corrija os dados antes de continuar.")
             sys.exit(1)
 
-    _assert_critical(
-        bool((data.get("fire_matrix") or {}).get("by_profile")),
-        "fire_matrix.by_profile vazio ou nulo — FIRE tab mostraria 'Data FIRE: —'"
-    )
-    _assert_critical(
-        (data.get("attribution") or {}).get("retornoUsd") not in (None, 0),
-        "attribution.retornoUsd é nulo/zero — Performance mostraria 'R$ 0'"
-    )
     _ph = data.get("patrimonio_holistico") or {}
     _assert_critical(
         (_ph.get("financeiro_brl") or 0) > 1_000_000,
         f"patrimonio_holistico.financeiro_brl={_ph.get('financeiro_brl')} — valor incoerente (< R$1M)"
     )
     _assert_critical(
-        (data.get("retornos_mensais") or {}).get("twr_real_brl_pct") is not None,
-        "retornos_mensais.twr_real_brl_pct é None — TWR ausente"
+        (data.get("attribution") or {}).get("retornoUsd") not in (None, 0),
+        "attribution.retornoUsd é nulo/zero — Performance mostraria 'R$ 0'"
     )
 
     # ─── DATA_PIPELINE_CENTRALIZATION: Invariant 5 — Output Validation (SSOT) ──
