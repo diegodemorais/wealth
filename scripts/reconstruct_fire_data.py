@@ -233,11 +233,19 @@ def gen_drawdown_history():
     retornos_path = DADOS / "retornos_mensais.json"
     historico_path = DADOS / "historico_carteira.csv"
 
-    # Preferir patrimônio real para drawdown (mais preciso)
+    # Usar TWR (acumulado_pct) para drawdown — patrimônio bruto é distorcido por aportes
+    # historico_carteira.csv cria picos artificiais com novos aportes, mascarando drawdown real
     dates = []
     pat_series = []
 
-    if historico_path.exists():
+    if retornos_path.exists():
+        rm = _load_json(retornos_path)
+        dates = rm.get("dates", [])
+        acum = rm.get("acumulado_pct", [])
+        pat_series = [100 * (1 + a / 100) for a in acum]
+
+    # Fallback: patrimônio bruto (apenas se não houver retornos TWR)
+    if not pat_series and historico_path.exists():
         import csv as _csv
         with open(historico_path, newline="", encoding="utf-8") as f:
             reader = _csv.DictReader(f)
@@ -247,14 +255,6 @@ def gen_drawdown_history():
                     pat_series.append(float(row["patrimonio_brl"]))
                 except (KeyError, ValueError):
                     continue
-
-    # Fallback: usar acumulado_pct de retornos_mensais.json
-    if not pat_series and retornos_path.exists():
-        rm = _load_json(retornos_path)
-        dates = rm.get("dates", [])
-        acum = rm.get("acumulado_pct", [])
-        # Converter acumulado % em série de "patrimônio normalizado" (base 100)
-        pat_series = [100 * (1 + a / 100) for a in acum]
 
     if not pat_series:
         print("  ⚠️  Sem dados para drawdown_history")
