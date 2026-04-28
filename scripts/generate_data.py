@@ -1790,6 +1790,13 @@ def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float, c
     }
 
 
+# Capital inicial não-DCA — eventos únicos de migração patrimonial
+# Compartilhado entre compute_premissas_vs_realizado e compute_contribuicao_retorno_crossover
+_CAPITAL_INICIAL_2021 = 251_938  # Conversão fundos XP Mar-Abr/2021
+_CAPITAL_INICIAL_2022 = 71_956   # FIIs liquidados Jan/2022 (excesso sobre DCA R$25k)
+_CAPITAL_INICIAL_TOTAL = _CAPITAL_INICIAL_2021 + _CAPITAL_INICIAL_2022
+
+
 # ─── 7d. PREMISSAS VS REALIZADO ────────────────────────────────────────────
 def compute_premissas_vs_realizado(
     premissas: dict,
@@ -1898,8 +1905,10 @@ def compute_premissas_vs_realizado(
                     except (ValueError, KeyError, TypeError):
                         pass
 
-            # Denominator = meses com aporte real (não período calendário)
-            media_mensal_brl = round(total_aporte_brl / meses_com_aporte) if meses_com_aporte > 0 else 0
+            # Média DCA recorrente: excluir capital inicial não-DCA (2021 XP + 2022 FIIs)
+            # O denominador (meses) não muda — esses meses tiveram DCA, só o valor é maior
+            total_dca_brl = max(0, total_aporte_brl - _CAPITAL_INICIAL_TOTAL)
+            media_mensal_brl = round(total_dca_brl / meses_com_aporte) if meses_com_aporte > 0 else 0
 
             # Período via CSV; fallback para IBKR se CSV vazio
             datas_ref = []
@@ -2085,13 +2094,8 @@ def compute_contribuicao_retorno_crossover(
     IPCA_PROJ = premissas.get("ipca_anual", 0.04)
     ANO_ATUAL = premissas.get("ano_atual", 2026)
 
-    # Capital inicial 2021: transferência de fundos XP (não DCA) — valor do CSV Abr/2021
-    CAPITAL_INICIAL_2021 = 251_938  # R$251.937,53 arredondado
-
-    # Capital inicial 2022: FIIs liquidados em Jan/2022 (aproximação conservadora per documentação)
-    # Jan/2022 aporte = R$96.956; excesso sobre DCA = ~R$72k; documentado ~R$80k
-    # Usando R$71.956 (excesso real = R$96.956 - R$25.000) para aderência ao CSV
-    CAPITAL_INICIAL_2022 = 71_956  # excesso sobre DCA recorrente em Jan/2022
+    CAPITAL_INICIAL_2021 = _CAPITAL_INICIAL_2021
+    CAPITAL_INICIAL_2022 = _CAPITAL_INICIAL_2022
 
     # ── Histórico por ano via variação de patrimônio ──────────────────────────
     from collections import defaultdict

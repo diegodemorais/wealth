@@ -6,7 +6,7 @@ import { useUiStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 import { TABS } from '@/config/dashboard.config';
-import { RefreshCw, Eye, EyeOff, LogOut, ClipboardList } from 'lucide-react';
+import { RefreshCw, Eye, EyeOff, LogOut, ClipboardList, Hammer } from 'lucide-react';
 
 // Format ISO UTC timestamp → "DD/MM/AA HH:mm BRT"
 function formatBrt(iso: string): string {
@@ -101,6 +101,7 @@ export function Header() {
           </button>
 
           <span style={styles.buildTag} title={buildLabel} suppressHydrationWarning>
+            <Hammer size={9} style={{ flexShrink: 0 }} />
             {buildCompact}
           </span>
         </div>
@@ -185,11 +186,17 @@ const styles: Record<string, React.CSSProperties> = {
     textDecoration: 'none',
   },
   buildTag: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
     fontSize: '10px',
     fontFamily: 'monospace',
     color: 'var(--muted)',
+    background: 'var(--card2)',
+    border: '1px solid var(--border)',
+    borderRadius: '4px',
+    padding: '2px 6px',
     whiteSpace: 'nowrap' as const,
     cursor: 'default',
-    letterSpacing: '0.02em',
   },
 };
