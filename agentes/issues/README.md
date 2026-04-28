@@ -39,7 +39,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
-| HD-dashboard-gaps-tier3 | Dashboard Gaps Tier 3 — Decisões Metodológicas Pendentes | Head + Time | 🟢 Baixa | Após Tier 2 |
+| FR-guardrails-categoria-elasticidade | Separar Saúde de Lifestyle nos Guardrails MC | FIRE | 🟡 Média | — (pré-requisito do Gap T) |
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
 
 ### Done — Últimas Issues Concluídas
