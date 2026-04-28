@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — ContributionReturnsCrossover: remove toggle + add flywheel chart ─
+  { datetime: '2026-04-28T21:30:00', type: 'gráfico', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'toggle nominal/real + 1 chart R$ absoluto', para: 'sem toggle (nominal fixo), 2 charts: Valor Absoluto (R$) + Flywheel % do Patrimônio; pipeline adiciona aporte_rate e ganho_rate' },
   // ── 2026-04-28 — ContributionReturnsCrossover + P(FIRE) boxplot fix ─────────
   { datetime: '2026-04-28T20:00:00', type: 'gráfico', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'não existia', para: 'Crossover Point — rentabilidade anual R$ vs aporte anual R$, histórico 2021-2026 + projeção 3 cenários, toggle nominal/real, marcador de crossover' },
   { datetime: '2026-04-28T20:00:00', type: 'dado', component: 'PFireDistribution', tab: 'fire', anchor: '', de: 'percentis bootstrap range 0.87pp (source: mc)', para: 'percentis por sensitivity_scenarios range 8pp (p5=82.1% p95=90.1%, source: sensitivity_scenarios)' },

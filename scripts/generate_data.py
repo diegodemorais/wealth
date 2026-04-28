@@ -2105,11 +2105,20 @@ def compute_contribuicao_retorno_crossover(
         aportes = year_aportes[year]
         # ganho = variação do patrimônio menos aportes do período
         ganho = pat_e - pat_s - aportes
+        # rates: % do patrimônio no início do ano (flywheel perspective)
+        # 2021: pat_s=0 → usar patrimonio_fim - aporte - ganho estimado via ganho/pat_e ratio
+        # Para 2021 com pat_s=0 usamos pat_e como denominador (todo patrimônio foi criado neste ano)
+        pat_denom = pat_s if pat_s > 0 else pat_e
+        aporte_rate = round(aportes / pat_denom * 100, 1) if pat_denom > 0 else None
+        ganho_rate = round(ganho / pat_denom * 100, 1) if pat_denom > 0 else None
         historico.append({
             "ano": int(year),
             "aporte_brl": round(aportes),
             "ganho_mercado_brl": round(ganho),
             "patrimonio_fim_brl": round(pat_e),
+            "patrimonio_inicio_brl": round(pat_s),
+            "aporte_rate": aporte_rate,
+            "ganho_rate": ganho_rate,
             "tipo": "historico",
         })
 
@@ -2126,6 +2135,9 @@ def compute_contribuicao_retorno_crossover(
             ganho = pat * taxa_nominal
             aporte = APORTE_ANUAL
             pat_fim = pat + ganho + aporte
+            # rates: % do patrimônio no início do ano (flywheel perspective)
+            aporte_rate = round(aporte / pat * 100, 1) if pat > 0 else None
+            ganho_rate = round(ganho / pat * 100, 1) if pat > 0 else None
             pts.append({
                 "ano": ano,
                 "aporte_brl": round(aporte),
@@ -2133,6 +2145,9 @@ def compute_contribuicao_retorno_crossover(
                 "ganho_real_brl": round(ganho / ((1 + IPCA_PROJ) ** offset)),
                 "aporte_real_brl": round(aporte / ((1 + IPCA_PROJ) ** offset)),
                 "patrimonio_fim_brl": round(pat_fim),
+                "patrimonio_inicio_brl": round(pat),
+                "aporte_rate": aporte_rate,
+                "ganho_rate": ganho_rate,
                 "tipo": "projecao",
             })
             pat = pat_fim

@@ -250,12 +250,23 @@ function FloorUpsideFire({
 // ── ContributionReturnsCrossover ──────────────────────────────────────────────
 // Mostra histórico e projeção de rentabilidade anual R$ vs aporte anual R$.
 // Crossover = primeiro ano em que o portfólio ganha mais do que Diego aporta.
+// Toggle nominal/real removido: com aportes fixos nominais, deflacionar pelos dois
+// lados não altera o crossover — a leitura é matematicamente idêntica.
+interface CrossoverTooltipParam {
+  axisValue?: string;
+  value?: number | null;
+  seriesName?: string;
+  marker?: string;
+}
 interface CrossoverDataPoint {
   ano: number;
   aporte_brl: number;
   ganho_mercado_brl: number;
   ganho_real_brl?: number;
   aporte_real_brl?: number;
+  patrimonio_inicio_brl?: number;
+  aporte_rate?: number | null;
+  ganho_rate?: number | null;
   tipo: 'historico' | 'projecao';
 }
 
@@ -283,7 +294,6 @@ function ContributionReturnsCrossover({
   data: ContributionReturnsCrossoverData;
   privacyMode: boolean;
 }) {
-  const [view, setView] = React.useState<'nominal' | 'real'>('nominal');
   const { pv, pvLabel } = useEChartsPrivacy();
 
   // Merge historical + base projection into unified series
@@ -311,36 +321,31 @@ function ContributionReturnsCrossover({
   const labels = allYears.map(d => String(d.ano));
   const isHist = allYears.map(d => d.tipo === 'historico');
 
-  const aportesSeries = allYears.map(d =>
-    view === 'real' ? (d.aporte_real_brl ?? d.aporte_brl) : d.aporte_brl
-  );
-  const ganhosSeries = allYears.map(d =>
-    view === 'real' ? (d.ganho_real_brl ?? d.ganho_mercado_brl) : d.ganho_mercado_brl
-  );
-  const favSeries = allYears.map((d, i) => {
+  // ── Chart 1: Valor Absoluto (R$) ─────────────────────────────────────────
+  const aportesSeries = allYears.map(d => d.aporte_brl);
+  const ganhosSeries = allYears.map(d => d.ganho_mercado_brl);
+  const favSeries = allYears.map((d) => {
     if (d.tipo === 'historico') return null;
     const fp = favProj.find(p => p.ano === d.ano);
-    return fp ? (view === 'real' ? (fp.ganho_real_brl ?? fp.ganho_mercado_brl) : fp.ganho_mercado_brl) : null;
+    return fp ? fp.ganho_mercado_brl : null;
   });
   const stressSeries = allYears.map((d) => {
     if (d.tipo === 'historico') return null;
     const sp = stressProj.find(p => p.ano === d.ano);
-    return sp ? (view === 'real' ? (sp.ganho_real_brl ?? sp.ganho_mercado_brl) : sp.ganho_mercado_brl) : null;
+    return sp ? sp.ganho_mercado_brl : null;
   });
 
-  // Crossover annotation year
-  const crossYear = view === 'nominal'
-    ? (crc.crossover_historico_nominal_ano ?? crc.crossover_projecao_nominal_ano)
-    : crc.crossover_projecao_real_ano;
+  // Crossover annotation year (nominal only — toggle removido)
+  const crossYear = crc.crossover_historico_nominal_ano ?? crc.crossover_projecao_nominal_ano;
 
-  const option = useMemo(() => {
+  const optionAbsoluto = useMemo(() => {
     const crossIdx = crossYear != null ? labels.indexOf(String(crossYear)) : -1;
     return {
       animation: false,
       grid: { left: 60, right: 20, top: 40, bottom: 40 },
       tooltip: {
         trigger: 'axis' as const,
-        formatter: (params: any[]) => {
+        formatter: (params: CrossoverTooltipParam[]) => {
           const year = params[0]?.axisValue ?? '';
           const lines = params
             .filter(p => p.value != null && p.seriesName !== 'Banda (fav-stress)')
@@ -364,11 +369,6 @@ function ContributionReturnsCrossover({
           fontSize: 10,
         },
       },
-      markLine: crossIdx >= 0 ? {
-        silent: true,
-        data: [{ xAxis: crossIdx, label: { formatter: `Crossover ${crossYear}`, fontSize: 10 } }],
-        lineStyle: { type: 'dashed' as const, color: 'var(--yellow)', width: 1.5 },
-      } : undefined,
       series: [
         // Banda fav-stress (área sombreada) — apenas projeção
         {
@@ -395,7 +395,7 @@ function ContributionReturnsCrossover({
         },
         // Aportes anuais (linha flat ~R$300k)
         {
-          name: `Aportes (${view === 'real' ? 'real' : 'nominal'})`,
+          name: 'Aportes',
           type: 'line' as const,
           data: aportesSeries.map((v, i) => ({
             value: pv(v),
@@ -407,9 +407,9 @@ function ContributionReturnsCrossover({
           symbolSize: 5,
           smooth: false,
         },
-        // Ganho nominal principal
+        // Ganho nominal
         {
-          name: `Rentabilidade (${view === 'real' ? 'real' : 'nominal'})`,
+          name: 'Rentabilidade',
           type: 'line' as const,
           data: ganhosSeries.map((v, i) => ({
             value: pv(v),
@@ -429,7 +429,93 @@ function ContributionReturnsCrossover({
         },
       ],
     };
-  }, [allYears, aportesSeries, ganhosSeries, favSeries, stressSeries, crossYear, labels, view, pv, pvLabel]);
+  }, [allYears, aportesSeries, ganhosSeries, favSeries, stressSeries, crossYear, labels, pv, pvLabel]);
+
+  // ── Chart 2: Como % do Patrimônio (flywheel) ─────────────────────────────
+  // aporte_rate e ganho_rate vêm do pipeline; se ausente no ponto 2021 (pat_inicio=0),
+  // o pipeline usa patrimonio_fim como denominador — resultado interpretado com cautela.
+  const aporteRateSeries = allYears.map(d => d.aporte_rate ?? null);
+  const ganhoRateSeries  = allYears.map(d => d.ganho_rate ?? null);
+
+  // Crossover % — primeiro ano em que ganho_rate > aporte_rate
+  const crossYearRate = useMemo(() => {
+    for (const d of allYears) {
+      if (d.aporte_rate != null && d.ganho_rate != null && d.ganho_rate > d.aporte_rate) {
+        return d.ano;
+      }
+    }
+    return null;
+  }, [allYears]);
+
+  const optionRate = useMemo(() => {
+    const crossIdx = crossYearRate != null ? labels.indexOf(String(crossYearRate)) : -1;
+    return {
+      animation: false,
+      grid: { left: 60, right: 20, top: 40, bottom: 40 },
+      tooltip: {
+        trigger: 'axis' as const,
+        formatter: (params: CrossoverTooltipParam[]) => {
+          const year = params[0]?.axisValue ?? '';
+          const lines = params
+            .filter(p => p.value != null)
+            .map(p => {
+              const v = typeof p.value === 'number' ? p.value.toFixed(1) : '—';
+              return `<div>${p.marker}${p.seriesName}: <b>${v}%</b></div>`;
+            })
+            .join('');
+          return `<div style="font-size:12px"><b>${year}</b><br/>${lines}</div>`;
+        },
+      },
+      xAxis: {
+        type: 'category' as const,
+        data: labels,
+        axisLabel: { fontSize: 11 },
+      },
+      yAxis: {
+        type: 'value' as const,
+        axisLabel: {
+          formatter: (v: number) => `${v.toFixed(0)}%`,
+          fontSize: 10,
+        },
+        // Keep negative values visible (2022 drawdown year)
+        scale: true,
+      },
+      series: [
+        {
+          name: 'Aporte / Patrimônio',
+          type: 'line' as const,
+          data: aporteRateSeries.map((v, i) => ({
+            value: v,
+            lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
+          })),
+          lineStyle: { color: 'var(--muted)', width: 2 },
+          itemStyle: { color: 'var(--muted)' },
+          symbol: 'circle',
+          symbolSize: 5,
+          smooth: false,
+        },
+        {
+          name: 'Ganho / Patrimônio',
+          type: 'line' as const,
+          data: ganhoRateSeries.map((v, i) => ({
+            value: v,
+            lineStyle: { type: isHist[i] ? 'solid' : 'dashed' },
+          })),
+          lineStyle: { color: EC.accent, width: 2.5 },
+          itemStyle: { color: EC.accent },
+          symbol: 'circle',
+          symbolSize: 5,
+          smooth: false,
+          markLine: crossIdx >= 0 ? {
+            silent: true,
+            data: [{ xAxis: crossIdx }],
+            label: { show: true, formatter: `Flywheel ${crossYearRate}`, position: 'insideEndTop', fontSize: 11, color: 'var(--yellow)' },
+            lineStyle: { type: 'dashed' as const, color: 'var(--yellow)', width: 1.5 },
+          } : undefined,
+        },
+      ],
+    };
+  }, [allYears, aporteRateSeries, ganhoRateSeries, crossYearRate, labels, isHist]);
 
   const fmtAnno = (v: number | null) => v != null ? String(v) : '—';
 
@@ -467,36 +553,23 @@ function ContributionReturnsCrossover({
         </div>
       </div>
 
-      {/* Toggle nominal/real */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-        {(['nominal', 'real'] as const).map(v => (
-          <button
-            key={v}
-            onClick={() => setView(v)}
-            style={{
-              padding: '3px 12px',
-              borderRadius: 6,
-              border: '1px solid var(--border)',
-              background: view === v ? EC.accent : 'var(--card2)',
-              color: view === v ? '#fff' : 'var(--text)',
-              fontSize: 'var(--text-xs)',
-              cursor: 'pointer',
-              fontWeight: view === v ? 700 : 400,
-            }}
-          >
-            {v === 'nominal' ? 'Nominal' : `Real (IPCA −${(crc.ipca_projecao * 100).toFixed(0)}%)`}
-          </button>
-        ))}
+      {/* Chart 1: Valor Absoluto (R$) */}
+      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        Valor Absoluto (R$)
       </div>
+      <EChart option={optionAbsoluto} style={{ height: 300 }} />
 
-      {/* Chart */}
-      <EChart option={option} style={{ height: 320 }} />
+      {/* Chart 2: Como % do Patrimônio */}
+      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, marginTop: 20, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        Como % do Patrimônio — Flywheel
+      </div>
+      <EChart option={optionRate} style={{ height: 280 }} />
 
       {/* Notes */}
       <div style={{ marginTop: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
         Linha sólida = histórico real (2021-2026). Linha tracejada = projeção. Banda = intervalo cenários {(crc.taxa_nominal_stress * 100).toFixed(0)}%–{(crc.taxa_nominal_fav * 100).toFixed(0)}% nominal.
         Histórico 2021-2022 reflete composição diferente (sem factor tilt estruturado).
-        Aportes históricos incluem aporte inicial de capital em 2021.
+        Aportes históricos incluem aporte inicial de capital em 2021. Gráfico % usa patrimônio início do ano como denominador; 2021 usa patrimônio fim (portfólio nasceu no ano).
       </div>
     </div>
   );
