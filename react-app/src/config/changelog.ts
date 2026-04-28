@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — ContributionReturnsCrossover: UI fixes (tooltip K, legenda bottom, banda, label) ──
+  { datetime: '2026-04-28T22:30:00', type: 'visual', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: 'tooltip em M ("R$ R$0M"), legenda top, banda opacity 8%, sub-label "VALOR ABSOLUTO" desnecessário, card "Aporte Anual Modelo"', para: 'tooltip pvLabel() nativo (R$392k), legenda bottom, banda 15%, sub-label removido, card renomeado para "Aporte Anual"' },
   // ── 2026-04-28 — ContributionReturnsCrossover: remove flywheel (%) sub-chart ──
   { datetime: '2026-04-28T22:10:00', type: 'gráfico', component: 'ContributionReturnsCrossover', tab: 'fire', anchor: 'section-contribuicao-retorno-crossover', de: '2 gráficos: Valor Absoluto R$ + Flywheel % do Patrimônio', para: '1 gráfico apenas: Valor Absoluto R$ — flywheel removido por decisão do FIRE agent (tendências díspares causavam confusão sem valor de decisão)' },
   // ── 2026-04-28 — ContributionReturnsCrossover: contexto histórico + estimativa 2026 ──

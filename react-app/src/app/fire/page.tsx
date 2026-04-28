@@ -353,11 +353,11 @@ function ContributionReturnsCrossover({
       // Fix 1: legenda explícita — ECharts não deriva legenda automaticamente quando há series silent/unnamed
       legend: {
         data: ['Rentabilidade Anual', 'Aportes Anuais'],
-        top: 8,
+        bottom: 4,
         right: 16,
         textStyle: { fontSize: 11 },
       },
-      grid: { left: 60, right: 20, top: 48, bottom: 40 },
+      grid: { left: 60, right: 20, top: 20, bottom: 52 },
       tooltip: {
         trigger: 'axis' as const,
         formatter: (params: CrossoverTooltipParam[]) => {
@@ -367,8 +367,8 @@ function ContributionReturnsCrossover({
           const lines = params
             .filter(p => p.value != null && p.seriesName !== 'Banda (fav-stress)')
             .map(p => {
-              const v = typeof p.value === 'number' ? pvLabel(p.value / 1e6) : '—';
-              return `<div>${p.marker}${p.seriesName}: <b>R$ ${v}M</b></div>`;
+              const v = typeof p.value === 'number' ? pvLabel(p.value) : '—';
+              return `<div>${p.marker}${p.seriesName}: <b>${v}</b></div>`;
             })
             .join('');
           // Nota especial para anos com capital inicial não-DCA
@@ -391,7 +391,7 @@ function ContributionReturnsCrossover({
       yAxis: {
         type: 'value' as const,
         axisLabel: {
-          formatter: (v: number) => `R$ ${pvLabel(v / 1e6)}M`,
+          formatter: (v: number) => pvLabel(v),
           fontSize: 10,
         },
       },
@@ -402,7 +402,7 @@ function ContributionReturnsCrossover({
           type: 'line' as const,
           data: favSeries.map((v, i) => v != null && stressSeries[i] != null ? pv(v) : null),
           lineStyle: { opacity: 0 },
-          areaStyle: { opacity: 0.08, color: EC.accent },
+          areaStyle: { opacity: 0.15, color: EC.accent },
           stack: 'banda_upper',
           symbol: 'none',
           showSymbol: false,
@@ -498,25 +498,21 @@ function ContributionReturnsCrossover({
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>deflacionado IPCA {(crc.ipca_projecao * 100).toFixed(0)}%</div>
         </div>
         <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '8px 12px' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Aporte Anual Modelo</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 2 }}>Aporte Anual</div>
           <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: '1.1rem' }}>
             {fmtPrivacy(crc.aporte_anual, privacyMode)}
           </div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>fixo nominal nas projeções</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>nominal fixo na projeção</div>
         </div>
       </div>
 
-      {/* Chart 1: Valor Absoluto (R$) */}
-      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-        Valor Absoluto (R$)
-      </div>
-      <EChart option={optionAbsoluto} style={{ height: 300 }} />
+      <EChart option={optionAbsoluto} style={{ height: 320 }} />
 
       {/* Notes */}
       <div style={{ marginTop: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
         Linha sólida = histórico real. Linha tracejada = projeção. Banda = cenários {(crc.taxa_nominal_stress * 100).toFixed(0)}%–{(crc.taxa_nominal_fav * 100).toFixed(0)}% nominal.
         Diamante amarelo = aporte inclui capital inicial não-DCA (2021: conversão XP R$252k; 2022: FIIs Jan R$72k).
-        {'\u2020'} 2026 = Jan–Abr realizado + Mai–Dez estimado @ R$25.000/mês e 9% nominal.
+        † 2026 = Jan–Abr realizado + Mai–Dez estimado @ R$25.000/mês e 9% nominal.
       </div>
     </div>
   );
