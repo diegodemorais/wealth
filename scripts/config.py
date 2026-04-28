@@ -123,8 +123,9 @@ HODL11_PISO_PCT = _P.get("hodl11_piso_pct", 1.5)
 HODL11_ALVO_PCT = _P.get("hodl11_alvo_pct", 3.0)
 HODL11_TETO_PCT = _P.get("hodl11_teto_pct", 5.0)
 
-FACTOR_UNDERPERF_THRESHOLD = _P.get("factor_underperf_threshold_pp", -5)
-TLH_GATILHO               = _P.get("tlh_gatilho",                    0.05)
+FACTOR_UNDERPERF_THRESHOLD     = _P.get("factor_underperf_threshold_pp",     -5)
+FACTOR_UNDERPERF_THRESHOLD_RED = _P.get("factor_underperf_threshold_red_pp", -10)
+TLH_GATILHO                    = _P.get("tlh_gatilho",                        0.05)
 
 
 # ─── ESTATE TAX (US-listed ETFs) ──────────────────────────────────────────────

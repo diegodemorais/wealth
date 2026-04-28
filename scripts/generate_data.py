@@ -52,7 +52,7 @@ from config import (
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, CRIPTO_PCT, RENDA_PLUS_PCT,
     TICKERS_YF, GLIDE_PATH, IR_ALIQUOTA, ETF_TER,
     HODL11_PISO_PCT, HODL11_ALVO_PCT, HODL11_TETO_PCT,
-    FACTOR_UNDERPERF_THRESHOLD, TLH_GATILHO, CRYPTO_LEGADO_BRL,
+    FACTOR_UNDERPERF_THRESHOLD, FACTOR_UNDERPERF_THRESHOLD_RED, TLH_GATILHO, CRYPTO_LEGADO_BRL,
     BOND_TENT_META_ANOS,
     TICKER_SWRD_LSE, TICKER_AVGS_LSE, TICKER_AVEM_LSE, COLUMN_CLOSE, DATE_FORMAT_YM, DATE_FORMAT_YMD,
     CAMBIO_FALLBACK, SELIC_META_SNAPSHOT, FED_FUNDS_SNAPSHOT, DEPRECIACAO_BRL_BASE,
@@ -1304,11 +1304,38 @@ def _try_populate_factor_cache():
 
 
 # ─── 5b. FACTOR: ROLLING 12m AVGS vs SWRD ───────────────────────────────────
+def _enrich_factor_rolling(result: dict) -> dict:
+    """Add drought_months and status fields to a factor_rolling result dict."""
+    diffs = result.get("avgs_vs_swrd_12m", [])
+    threshold_yellow = result.get("threshold", FACTOR_UNDERPERF_THRESHOLD)
+    threshold_red = FACTOR_UNDERPERF_THRESHOLD_RED
+    # Count consecutive trailing months below 0 (any underperformance = drought)
+    drought = 0
+    for v in reversed(diffs):
+        if v < 0:
+            drought += 1
+        else:
+            break
+    latest = diffs[-1] if diffs else None
+    if latest is None:
+        status = "neutral"
+    elif latest <= threshold_red:
+        status = "red"
+    elif latest <= threshold_yellow:
+        status = "yellow"
+    else:
+        status = "green"
+    result["drought_months"] = drought
+    result["status"] = status
+    result["threshold_red"] = threshold_red
+    return result
+
+
 def get_factor_rolling():
     """Rolling 12-month return difference AVGS.L minus SWRD.L (percentage points).
 
-    Returns dict: {dates: [YYYY-MM, ...], avgs_vs_swrd_12m: [float, ...], threshold: -5}
-    Threshold at -5pp flags periods where AVGS significantly underperforms SWRD.
+    Returns dict: {dates, avgs_vs_swrd_12m, threshold, threshold_red, drought_months, status}
+    threshold (yellow) = -5pp, threshold_red = -10pp (Gap W 2026-04-28)
     """
     THRESHOLD = FACTOR_UNDERPERF_THRESHOLD
 
@@ -1317,10 +1344,10 @@ def get_factor_rolling():
             cache = json.loads(FACTOR_CACHE.read_text())
             if "factor_rolling" in cache:
                 print("  ✓ factor_rolling (cache)")
-                return cache["factor_rolling"]
+                return _enrich_factor_rolling(cache["factor_rolling"])
         except Exception:
             pass
-        return {"dates": [], "avgs_vs_swrd_12m": [], "threshold": THRESHOLD}
+        return _enrich_factor_rolling({"dates": [], "avgs_vs_swrd_12m": [], "threshold": THRESHOLD})
 
     print("  ▶ factor rolling 12m AVGS vs SWRD ...")
     try:
@@ -1367,12 +1394,13 @@ def get_factor_rolling():
             diffs.append(diff_pp)
 
         result = {"dates": dates, "avgs_vs_swrd_12m": diffs, "threshold": THRESHOLD}
-        print(f"    → {len(dates)} data points, latest diff: {diffs[-1] if diffs else 'N/A'}pp")
-        return result
+        enriched = _enrich_factor_rolling(result)
+        print(f"    → {len(dates)} pts, latest {diffs[-1] if diffs else 'N/A'}pp, drought={enriched['drought_months']}m, status={enriched['status']}")
+        return enriched
 
     except Exception as e:
         print(f"  ⚠️ factor rolling: {e}")
-        return {"dates": [], "avgs_vs_swrd_12m": [], "threshold": THRESHOLD}
+        return _enrich_factor_rolling({"dates": [], "avgs_vs_swrd_12m": [], "threshold": THRESHOLD})
 
 
 # ─── FACTOR SIGNAL: YTD + since-launch excess return AVGS vs SWRD ────────────

@@ -369,7 +369,8 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | hodl11_piso_pct | 1.5 | carteira.md §Crypto — banda piso |
 | hodl11_alvo_pct | 3.0 | carteira.md §Crypto — banda alvo |
 | hodl11_teto_pct | 5.0 | carteira.md §Crypto — banda teto |
-| factor_underperf_threshold_pp | -5 | carteira.md §Gatilhos — revisão AVGS 24m |
+| factor_underperf_threshold_pp | -5 | carteira.md §Gatilhos — amarelo 12m rolling TE (Gap W 2026-04-28) |
+| factor_underperf_threshold_red_pp | -10 | carteira.md §Gatilhos — vermelho 12m rolling TE (Gap W 2026-04-28) |
 | tlh_gatilho | 0.05 | carteira.md §Gatilhos TLH |
 | piso_taxa_ipca_longo | 6.0 | HD-006 final — breakeven all-in |
 | piso_taxa_renda_plus | 6.5 | carteira.md §Renda+ tático |

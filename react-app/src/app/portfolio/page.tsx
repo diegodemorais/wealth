@@ -188,6 +188,106 @@ export default function PortfolioPage() {
         );
       })()}
 
+      {/* Gap W: Factor Tracking Error Rolling 12m — AVGS vs SWRD */}
+      {(() => {
+        const fr = (data as any)?.factor_rolling;
+        if (!fr?.dates?.length) return null;
+        const dates: string[] = fr.dates;
+        const diffs: number[] = fr.avgs_vs_swrd_12m;
+        const thresholdYellow: number = fr.threshold ?? -5;
+        const thresholdRed: number = fr.threshold_red ?? -10;
+        const droughtMonths: number = fr.drought_months ?? 0;
+        const status: string = fr.status ?? 'green';
+        const latestDiff: number = diffs[diffs.length - 1] ?? 0;
+        const statusColor = status === 'red' ? 'var(--red)' : status === 'yellow' ? 'var(--yellow)' : 'var(--green)';
+        const droughtLabel = droughtMonths === 0
+          ? 'Sem drought ativo'
+          : `${droughtMonths}m consecutivos abaixo de 0`;
+
+        const chartOption = {
+          animation: false,
+          grid: { top: 28, right: 16, bottom: 28, left: 40 },
+          xAxis: {
+            type: 'category',
+            data: dates,
+            axisLabel: { color: 'var(--muted)', fontSize: 10, rotate: 45 },
+            axisLine: { lineStyle: { color: 'var(--border)' } },
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel: { color: 'var(--muted)', fontSize: 10, formatter: (v: number) => `${v}pp` },
+            splitLine: { lineStyle: { color: 'var(--border)', opacity: 0.4 } },
+          },
+          visualMap: {
+            show: false,
+            pieces: [
+              { lte: thresholdRed,    color: 'var(--red)'    },
+              { gt: thresholdRed, lte: thresholdYellow, color: 'var(--yellow)' },
+              { gt: thresholdYellow,  color: 'var(--green)'  },
+            ],
+          },
+          series: [
+            {
+              type: 'line',
+              data: diffs,
+              smooth: true,
+              symbol: 'circle',
+              symbolSize: 5,
+              lineStyle: { width: 2 },
+              markLine: {
+                silent: true,
+                data: [
+                  { yAxis: 0,              lineStyle: { color: 'var(--border)',  type: 'dashed', width: 1 } },
+                  { yAxis: thresholdYellow, lineStyle: { color: 'var(--yellow)', type: 'dashed', width: 1 } },
+                  { yAxis: thresholdRed,    lineStyle: { color: 'var(--red)',    type: 'dashed', width: 1 } },
+                ],
+                label: { show: false },
+              },
+            },
+          ],
+          tooltip: {
+            trigger: 'axis',
+            formatter: (params: any[]) => {
+              const p = params[0];
+              return `${p.name}<br/>Excess: <b>${p.value >= 0 ? '+' : ''}${p.value}pp</b>`;
+            },
+          },
+        };
+
+        return (
+          <div
+            data-testid="factor-tracking-error"
+            style={{
+              background: 'var(--card)',
+              border: `1px solid ${statusColor}40`,
+              borderLeft: `3px solid ${statusColor}`,
+              borderRadius: 'var(--radius-sm)',
+              padding: '10px 16px',
+              marginBottom: 12,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>
+                  Tracking Error Rolling 12m — AVGS vs SWRD
+                </div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: statusColor }}>
+                  {latestDiff >= 0 ? '+' : ''}{latestDiff.toFixed(2)}pp
+                  <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--muted)', marginLeft: 8 }}>
+                    {droughtLabel}
+                  </span>
+                </div>
+              </div>
+              <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'right', lineHeight: 1.5 }}>
+                Amarelo ≤{thresholdYellow}pp · Vermelho ≤{thresholdRed}pp<br />
+                {dates.length} pontos · janela 12m
+              </div>
+            </div>
+            <EChart option={chartOption} style={{ height: 160 }} />
+          </div>
+        );
+      })()}
+
       {/* Gap U: Factor Value Spread — AQR HML Devil + KF SMB */}
       {(() => {
         const fvs = (data as any)?.factor?.value_spread;

@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — Gap W: Tracking Error Rolling 12m AVGS vs SWRD ──
+  { datetime: '2026-04-28T23:45:00', type: 'gráfico', component: 'Factor Tracking Error Rolling 12m', tab: 'portfolio', anchor: '', de: '—', para: 'gráfico linha rolling 12m excess return AVGS vs SWRD (verde/amarelo -5pp/vermelho -10pp) + drought counter integrado como label — Gap W 2026-04-28' },
   // ── 2026-04-28 — Header: restaurar ícone Hammer na version pill ──
   { datetime: '2026-04-28T23:25:00', type: 'visual', component: 'Header — Version Pill', tab: 'now', anchor: '', de: 'sem ícone', para: 'ícone Hammer (9px) restaurado na tag de versão/build — perdido no merge da version pill' },
   // ── 2026-04-28 — Gap V: Projeção de Ativos Não-Financeiros (imóvel + terreno) ──

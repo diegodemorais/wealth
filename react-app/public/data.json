@@ -1,68 +1,68 @@
 {
-  "_generated": "2026-04-28T20:19:42",
-  "_generated_brt": "2026-04-28T20:19:42-03:00",
+  "_generated": "2026-04-28T20:36:01",
+  "_generated_brt": "2026-04-28T20:36:01-03:00",
   "_ibkr_sync_date": "2026-04-25T16:52:09",
   "_schema_version": "2.0",
-  "_pipeline_run": "20260428T201654",
+  "_pipeline_run": "20260428T203322",
   "_snapshots_metadata": {
     "backtest_r7": {
       "file": "backtest_r7.json",
       "mtime": "2026-04-27T20:59:01",
-      "age_h": 23.3,
+      "age_h": 23.6,
       "_generated": null
     },
     "fire_matrix": {
       "file": "fire_matrix.json",
-      "mtime": "2026-04-28T20:18:50",
+      "mtime": "2026-04-28T20:35:12",
       "age_h": 0.0,
-      "_generated": "2026-04-28T20:16:54"
+      "_generated": "2026-04-28T20:33:22"
     },
     "fire_swr_percentis": {
       "file": "fire_swr_percentis.json",
-      "mtime": "2026-04-28T20:16:54",
+      "mtime": "2026-04-28T20:33:22",
       "age_h": 0.0,
-      "_generated": "2026-04-28T20:16:54"
+      "_generated": "2026-04-28T20:33:22"
     },
     "fire_aporte_sensitivity": {
       "file": "fire_aporte_sensitivity.json",
-      "mtime": "2026-04-28T20:17:00",
+      "mtime": "2026-04-28T20:33:27",
       "age_h": 0.0,
-      "_generated": "2026-04-28T20:16:54"
+      "_generated": "2026-04-28T20:33:22"
     },
     "fire_trilha": {
       "file": "fire_trilha.json",
-      "mtime": "2026-04-28T20:16:54",
+      "mtime": "2026-04-28T20:33:22",
       "age_h": 0.0,
-      "_generated": "2026-04-28T20:16:54"
+      "_generated": "2026-04-28T20:33:22"
     },
     "drawdown_history": {
       "file": "drawdown_history.json",
-      "mtime": "2026-04-28T20:16:54",
+      "mtime": "2026-04-28T20:33:22",
       "age_h": 0.0,
-      "_generated": "2026-04-28T20:16:54"
+      "_generated": "2026-04-28T20:33:22"
     },
     "etf_composition": {
       "file": "etf_composition.json",
-      "mtime": "2026-04-28T20:16:54",
+      "mtime": "2026-04-28T20:33:22",
       "age_h": 0.0,
-      "_generated": "2026-04-28T20:16:54"
+      "_generated": "2026-04-28T20:33:22"
     },
     "bond_pool_runway": {
       "file": "bond_pool_runway.json",
-      "mtime": "2026-04-28T20:16:54",
+      "mtime": "2026-04-28T20:33:22",
       "age_h": 0.0,
-      "_generated": "2026-04-28T20:16:54"
+      "_generated": "2026-04-28T20:33:22"
     },
     "lumpy_events": {
       "file": "lumpy_events.json",
-      "mtime": "2026-04-28T20:17:03",
+      "mtime": "2026-04-28T20:33:30",
       "age_h": 0.0,
-      "_generated": "2026-04-28T20:16:54"
+      "_generated": "2026-04-28T20:33:22"
     },
     "fire_by_profile": {
       "file": "fire_by_profile.json",
       "mtime": "2026-04-27T12:18:28",
-      "age_h": 32.0,
+      "age_h": 32.3,
       "_generated": null
     }
   },
@@ -2453,7 +2453,7 @@
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -2667,7 +2667,7 @@
       390.1,
       419.59,
       398.21,
-      428.82,
+      428.81,
       413.99,
       417.32,
       418.77,
@@ -2880,7 +2880,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -2942,7 +2942,7 @@
       472.11,
       455.75,
       477.39,
-      487.54,
+      487.53,
       494.63,
       506.95,
       518.02,
@@ -3003,7 +3003,10 @@
       13.34,
       16.18
     ],
-    "threshold": -5
+    "threshold": -5,
+    "drought_months": 0,
+    "status": "green",
+    "threshold_red": -10
   },
   "factor_signal": {
     "swrd_ytd_pct": 4.62,
@@ -3237,23 +3240,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 76275.11,
+      "btc_atual_usd": 76259.95,
       "hodl11_brl_atual": 107348,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.05,
-          "valor_fire_brl": 112590
+          "valor_fire_brl": 112613
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.28,
-          "valor_fire_brl": 351844
+          "valor_fire_brl": 351914
         },
         "bull": {
           "btc_target_usd": 500000,
           "upside_factor": 6.56,
-          "valor_fire_brl": 703688
+          "valor_fire_brl": 703828
         }
       }
     }
@@ -8494,8 +8497,8 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 86.5,
-    "cds_brazil_5y_bps": 123.6,
-    "bitcoin_usd": 76275.11,
+    "cds_brazil_5y_bps": 123.4,
+    "bitcoin_usd": 76259.95,
     "plano_status": {
       "status": "PLANO_PERMANECE",
       "gatilho_ativo": "DCA IPCA+ ativo — 7.07% ≥ 6.0%",
@@ -8513,9 +8516,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.9996,
-    "btc_usd": 76275.11,
+    "btc_usd": 76259.95,
     "cambio_mtd_pct": 0.63,
-    "btc_mtd_pct": -1.99,
+    "btc_mtd_pct": -2.01,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": null,
     "ref_mes": "2026-04",
@@ -10472,8 +10475,8 @@
     "_generated": "2026-04-28"
   },
   "fire_matrix": {
-    "_generated": "2026-04-28T20:16:54",
-    "_window_id": "20260428T201654",
+    "_generated": "2026-04-28T20:33:22",
+    "_window_id": "20260428T203322",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -10775,8 +10778,8 @@
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-04-28T20:16:54",
-    "_window_id": "20260428T201654",
+    "_generated": "2026-04-28T20:33:22",
+    "_window_id": "20260428T203322",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 7097769.0,
@@ -10791,8 +10794,8 @@
     "mc_date": "2026-04-28"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-04-28T20:16:54",
-    "_window_id": "20260428T201654",
+    "_generated": "2026-04-28T20:33:22",
+    "_window_id": "20260428T203322",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -10816,8 +10819,8 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-28T20:16:54",
-    "_window_id": "20260428T201654",
+    "_generated": "2026-04-28T20:33:22",
+    "_window_id": "20260428T203322",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -12423,8 +12426,8 @@
     "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
   },
   "drawdown_history": {
-    "_generated": "2026-04-28T20:16:54",
-    "_window_id": "20260428T201654",
+    "_generated": "2026-04-28T20:33:22",
+    "_window_id": "20260428T203322",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-05",
@@ -12579,8 +12582,8 @@
     "_fonte": "backtest.metrics.target.maxdd (fallback)"
   },
   "etf_composition": {
-    "_generated": "2026-04-28T20:16:54",
-    "_window_id": "20260428T201654",
+    "_generated": "2026-04-28T20:33:22",
+    "_window_id": "20260428T203322",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -12637,8 +12640,8 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-04-28T20:16:54",
-    "_window_id": "20260428T201654",
+    "_generated": "2026-04-28T20:33:22",
+    "_window_id": "20260428T203322",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -12772,8 +12775,8 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-04-28T20:16:54",
-    "_window_id": "20260428T201654",
+    "_generated": "2026-04-28T20:33:22",
+    "_window_id": "20260428T203322",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.8498,
