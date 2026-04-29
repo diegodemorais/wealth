@@ -42,6 +42,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
+| FR-saude-decay-nogo-phase | SAUDE_DECAY na Fase No-Go — Revisão de Premissa | FIRE | 🟡 Média | — |
 
 ### Done — Últimas Issues Concluídas
 

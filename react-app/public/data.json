@@ -1,68 +1,68 @@
 {
-  "_generated": "2026-04-28T21:34:03",
-  "_generated_brt": "2026-04-28T21:34:03-03:00",
+  "_generated": "2026-04-28T22:08:49",
+  "_generated_brt": "2026-04-28T22:08:49-03:00",
   "_ibkr_sync_date": "2026-04-25T16:52:09",
   "_schema_version": "2.0",
-  "_pipeline_run": "20260428T213119",
+  "_pipeline_run": "20260428T220606",
   "_snapshots_metadata": {
     "backtest_r7": {
       "file": "backtest_r7.json",
       "mtime": "2026-04-27T20:59:01",
-      "age_h": 24.6,
+      "age_h": 25.2,
       "_generated": null
     },
     "fire_matrix": {
       "file": "fire_matrix.json",
-      "mtime": "2026-04-28T21:33:13",
+      "mtime": "2026-04-28T22:07:58",
       "age_h": 0.0,
-      "_generated": "2026-04-28T21:31:20"
+      "_generated": "2026-04-28T22:06:06"
     },
     "fire_swr_percentis": {
       "file": "fire_swr_percentis.json",
-      "mtime": "2026-04-28T21:31:20",
+      "mtime": "2026-04-28T22:06:06",
       "age_h": 0.0,
-      "_generated": "2026-04-28T21:31:20"
+      "_generated": "2026-04-28T22:06:06"
     },
     "fire_aporte_sensitivity": {
       "file": "fire_aporte_sensitivity.json",
-      "mtime": "2026-04-28T21:31:25",
+      "mtime": "2026-04-28T22:06:11",
       "age_h": 0.0,
-      "_generated": "2026-04-28T21:31:20"
+      "_generated": "2026-04-28T22:06:06"
     },
     "fire_trilha": {
       "file": "fire_trilha.json",
-      "mtime": "2026-04-28T21:31:20",
+      "mtime": "2026-04-28T22:06:06",
       "age_h": 0.0,
-      "_generated": "2026-04-28T21:31:20"
+      "_generated": "2026-04-28T22:06:06"
     },
     "drawdown_history": {
       "file": "drawdown_history.json",
-      "mtime": "2026-04-28T21:31:20",
+      "mtime": "2026-04-28T22:06:06",
       "age_h": 0.0,
-      "_generated": "2026-04-28T21:31:20"
+      "_generated": "2026-04-28T22:06:06"
     },
     "etf_composition": {
       "file": "etf_composition.json",
-      "mtime": "2026-04-28T21:31:20",
+      "mtime": "2026-04-28T22:06:06",
       "age_h": 0.0,
-      "_generated": "2026-04-28T21:31:20"
+      "_generated": "2026-04-28T22:06:06"
     },
     "bond_pool_runway": {
       "file": "bond_pool_runway.json",
-      "mtime": "2026-04-28T21:31:20",
+      "mtime": "2026-04-28T22:06:06",
       "age_h": 0.0,
-      "_generated": "2026-04-28T21:31:20"
+      "_generated": "2026-04-28T22:06:06"
     },
     "lumpy_events": {
       "file": "lumpy_events.json",
-      "mtime": "2026-04-28T21:31:28",
+      "mtime": "2026-04-28T22:06:14",
       "age_h": 0.0,
-      "_generated": "2026-04-28T21:31:20"
+      "_generated": "2026-04-28T22:06:06"
     },
     "fire_by_profile": {
       "file": "fire_by_profile.json",
-      "mtime": "2026-04-27T12:18:28",
-      "age_h": 33.3,
+      "mtime": "2026-04-28T22:05:55",
+      "age_h": 0.0,
       "_generated": null
     }
   },
@@ -394,66 +394,66 @@
         "label": "Atual (Solteiro)",
         "gasto_anual": 250000,
         "fire_age_50": "2037",
-        "p_fire_50": 76.2,
+        "p_fire_50": 66.1,
         "pat_mediano_50": 9373205.0,
-        "p_fire_50_fav": 85.8,
-        "p_fire_50_stress": 69.8,
+        "p_fire_50_fav": 78.9,
+        "p_fire_50_stress": 58.9,
         "fire_age_53": "2040",
-        "p_fire_53": 86.1,
+        "p_fire_53": 79.0,
         "pat_mediano_53": 11597034.0,
-        "p_fire_53_fav": 91.9,
-        "p_fire_53_stress": 81.4,
-        "fire_age_threshold": 53,
-        "fire_year_threshold": "2040",
-        "p_at_threshold": 86.1,
-        "p_at_threshold_fav": 91.9,
-        "p_at_threshold_stress": 81.4,
-        "swr_at_fire": 0.0216,
-        "pat_mediano_threshold": 11597034.0
+        "p_fire_53_fav": 87.9,
+        "p_fire_53_stress": 73.3,
+        "fire_age_threshold": 56,
+        "fire_year_threshold": "2043",
+        "p_at_threshold": 86.9,
+        "p_at_threshold_fav": 92.9,
+        "p_at_threshold_stress": 83.2,
+        "swr_at_fire": 0.0179,
+        "pat_mediano_threshold": 13982085.0
       },
       {
         "profile": "casado",
         "label": "Casado",
         "gasto_anual": 270000,
         "fire_age_50": "2037",
-        "p_fire_50": 73.2,
+        "p_fire_50": 64.8,
         "pat_mediano_50": 9373205.0,
-        "p_fire_50_fav": 83.3,
-        "p_fire_50_stress": 66.6,
+        "p_fire_50_fav": 77.5,
+        "p_fire_50_stress": 57.2,
         "fire_age_53": "2040",
-        "p_fire_53": 84.0,
+        "p_fire_53": 78.1,
         "pat_mediano_53": 11597034.0,
-        "p_fire_53_fav": 90.9,
-        "p_fire_53_stress": 79.5,
-        "fire_age_threshold": 54,
-        "fire_year_threshold": "2041",
-        "p_at_threshold": 86.3,
-        "p_at_threshold_fav": 92.4,
-        "p_at_threshold_stress": 82.6,
-        "swr_at_fire": 0.0219,
-        "pat_mediano_threshold": 12350682.0
+        "p_fire_53_fav": 87.5,
+        "p_fire_53_stress": 72.7,
+        "fire_age_threshold": 56,
+        "fire_year_threshold": "2043",
+        "p_at_threshold": 86.4,
+        "p_at_threshold_fav": 92.3,
+        "p_at_threshold_stress": 82.5,
+        "swr_at_fire": 0.0193,
+        "pat_mediano_threshold": 13982085.0
       },
       {
         "profile": "filho",
         "label": "Casado + Filho",
         "gasto_anual": 300000,
         "fire_age_50": "2037",
-        "p_fire_50": 69.1,
+        "p_fire_50": 62.4,
         "pat_mediano_50": 9373205.0,
-        "p_fire_50_fav": 81.0,
-        "p_fire_50_stress": 62.1,
+        "p_fire_50_fav": 75.3,
+        "p_fire_50_stress": 54.9,
         "fire_age_53": "2040",
-        "p_fire_53": 80.8,
+        "p_fire_53": 76.1,
         "pat_mediano_53": 11597034.0,
-        "p_fire_53_fav": 89.1,
-        "p_fire_53_stress": 76.0,
-        "fire_age_threshold": 55,
-        "fire_year_threshold": "2042",
-        "p_at_threshold": 86.4,
-        "p_at_threshold_fav": 92.0,
-        "p_at_threshold_stress": 82.7,
-        "swr_at_fire": 0.0229,
-        "pat_mediano_threshold": 13111399.0
+        "p_fire_53_fav": 86.2,
+        "p_fire_53_stress": 70.5,
+        "fire_age_threshold": 56,
+        "fire_year_threshold": "2043",
+        "p_at_threshold": 85.5,
+        "p_at_threshold_fav": 92.1,
+        "p_at_threshold_stress": 81.3,
+        "swr_at_fire": 0.0215,
+        "pat_mediano_threshold": 13982085.0
       }
     ]
   },
@@ -2455,7 +2455,7 @@
     "target": [
       97.68,
       101.29,
-      98.11,
+      98.12,
       95.51,
       99.7,
       101.62,
@@ -2629,7 +2629,7 @@
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -2893,7 +2893,7 @@
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -3242,23 +3242,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 76305.85,
+      "btc_atual_usd": 76348.77,
       "hodl11_brl_atual": 107348,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.05,
-          "valor_fire_brl": 112545
+          "valor_fire_brl": 112481
         },
         "base": {
           "btc_target_usd": 250000,
-          "upside_factor": 3.28,
-          "valor_fire_brl": 351702
+          "upside_factor": 3.27,
+          "valor_fire_brl": 351505
         },
         "bull": {
           "btc_target_usd": 500000,
           "upside_factor": 6.55,
-          "valor_fire_brl": 703405
+          "valor_fire_brl": 703009
         }
       }
     }
@@ -8500,7 +8500,7 @@
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 86.5,
     "cds_brazil_5y_bps": 123.4,
-    "bitcoin_usd": 76305.85,
+    "bitcoin_usd": 76348.77,
     "plano_status": {
       "status": "REVISAR",
       "gatilho_ativo": "P(FIRE) 79.0% < 80% — REVISAR",
@@ -8519,9 +8519,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.9733,
-    "btc_usd": 76305.85,
+    "btc_usd": 76348.77,
     "cambio_mtd_pct": 0.1,
-    "btc_mtd_pct": -1.95,
+    "btc_mtd_pct": -1.9,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": null,
     "ref_mes": "2026-04",
@@ -10478,8 +10478,8 @@
     "_generated": "2026-04-28"
   },
   "fire_matrix": {
-    "_generated": "2026-04-28T21:31:20",
-    "_window_id": "20260428T213119",
+    "_generated": "2026-04-28T22:06:06",
+    "_window_id": "20260428T220606",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -10698,66 +10698,66 @@
         "label": "Atual (Solteiro)",
         "gasto_anual": 250000,
         "fire_age_50": "2037",
-        "p_fire_50": 76.2,
+        "p_fire_50": 66.1,
         "pat_mediano_50": 9373205.0,
-        "p_fire_50_fav": 85.8,
-        "p_fire_50_stress": 69.8,
+        "p_fire_50_fav": 78.9,
+        "p_fire_50_stress": 58.9,
         "fire_age_53": "2040",
-        "p_fire_53": 86.1,
+        "p_fire_53": 79.0,
         "pat_mediano_53": 11597034.0,
-        "p_fire_53_fav": 91.9,
-        "p_fire_53_stress": 81.4,
-        "fire_age_threshold": 53,
-        "fire_year_threshold": "2040",
-        "p_at_threshold": 86.1,
-        "p_at_threshold_fav": 91.9,
-        "p_at_threshold_stress": 81.4,
-        "swr_at_fire": 0.0216,
-        "pat_mediano_threshold": 11597034.0
+        "p_fire_53_fav": 87.9,
+        "p_fire_53_stress": 73.3,
+        "fire_age_threshold": 56,
+        "fire_year_threshold": "2043",
+        "p_at_threshold": 86.9,
+        "p_at_threshold_fav": 92.9,
+        "p_at_threshold_stress": 83.2,
+        "swr_at_fire": 0.0179,
+        "pat_mediano_threshold": 13982085.0
       },
       {
         "profile": "casado",
         "label": "Casado",
         "gasto_anual": 270000,
         "fire_age_50": "2037",
-        "p_fire_50": 73.2,
+        "p_fire_50": 64.8,
         "pat_mediano_50": 9373205.0,
-        "p_fire_50_fav": 83.3,
-        "p_fire_50_stress": 66.6,
+        "p_fire_50_fav": 77.5,
+        "p_fire_50_stress": 57.2,
         "fire_age_53": "2040",
-        "p_fire_53": 84.0,
+        "p_fire_53": 78.1,
         "pat_mediano_53": 11597034.0,
-        "p_fire_53_fav": 90.9,
-        "p_fire_53_stress": 79.5,
-        "fire_age_threshold": 54,
-        "fire_year_threshold": "2041",
-        "p_at_threshold": 86.3,
-        "p_at_threshold_fav": 92.4,
-        "p_at_threshold_stress": 82.6,
-        "swr_at_fire": 0.0219,
-        "pat_mediano_threshold": 12350682.0
+        "p_fire_53_fav": 87.5,
+        "p_fire_53_stress": 72.7,
+        "fire_age_threshold": 56,
+        "fire_year_threshold": "2043",
+        "p_at_threshold": 86.4,
+        "p_at_threshold_fav": 92.3,
+        "p_at_threshold_stress": 82.5,
+        "swr_at_fire": 0.0193,
+        "pat_mediano_threshold": 13982085.0
       },
       {
         "profile": "filho",
         "label": "Casado + Filho",
         "gasto_anual": 300000,
         "fire_age_50": "2037",
-        "p_fire_50": 69.1,
+        "p_fire_50": 62.4,
         "pat_mediano_50": 9373205.0,
-        "p_fire_50_fav": 81.0,
-        "p_fire_50_stress": 62.1,
+        "p_fire_50_fav": 75.3,
+        "p_fire_50_stress": 54.9,
         "fire_age_53": "2040",
-        "p_fire_53": 80.8,
+        "p_fire_53": 76.1,
         "pat_mediano_53": 11597034.0,
-        "p_fire_53_fav": 89.1,
-        "p_fire_53_stress": 76.0,
-        "fire_age_threshold": 55,
-        "fire_year_threshold": "2042",
-        "p_at_threshold": 86.4,
-        "p_at_threshold_fav": 92.0,
-        "p_at_threshold_stress": 82.7,
-        "swr_at_fire": 0.0229,
-        "pat_mediano_threshold": 13111399.0
+        "p_fire_53_fav": 86.2,
+        "p_fire_53_stress": 70.5,
+        "fire_age_threshold": 56,
+        "fire_year_threshold": "2043",
+        "p_at_threshold": 85.5,
+        "p_at_threshold_fav": 92.1,
+        "p_at_threshold_stress": 81.3,
+        "swr_at_fire": 0.0215,
+        "pat_mediano_threshold": 13982085.0
       }
     ],
     "perfis": {
@@ -10777,12 +10777,12 @@
         "descricao": "Diego + parceira + criança(s), educação e saúde expandidas"
       }
     },
-    "_by_profile_generated": "2026-04-27",
+    "_by_profile_generated": "2026-04-28",
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-04-28T21:31:20",
-    "_window_id": "20260428T213119",
+    "_generated": "2026-04-28T22:06:06",
+    "_window_id": "20260428T220606",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 7097769.0,
@@ -10797,8 +10797,8 @@
     "mc_date": "2026-04-28"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-04-28T21:31:20",
-    "_window_id": "20260428T213119",
+    "_generated": "2026-04-28T22:06:06",
+    "_window_id": "20260428T220606",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -10822,8 +10822,8 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-28T21:31:20",
-    "_window_id": "20260428T213119",
+    "_generated": "2026-04-28T22:06:06",
+    "_window_id": "20260428T220606",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -12429,8 +12429,8 @@
     "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
   },
   "drawdown_history": {
-    "_generated": "2026-04-28T21:31:20",
-    "_window_id": "20260428T213119",
+    "_generated": "2026-04-28T22:06:06",
+    "_window_id": "20260428T220606",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-05",
@@ -12585,8 +12585,8 @@
     "_fonte": "backtest.metrics.target.maxdd (fallback)"
   },
   "etf_composition": {
-    "_generated": "2026-04-28T21:31:20",
-    "_window_id": "20260428T213119",
+    "_generated": "2026-04-28T22:06:06",
+    "_window_id": "20260428T220606",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -12643,8 +12643,8 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-04-28T21:31:20",
-    "_window_id": "20260428T213119",
+    "_generated": "2026-04-28T22:06:06",
+    "_window_id": "20260428T220606",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -12778,8 +12778,8 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-04-28T21:31:20",
-    "_window_id": "20260428T213119",
+    "_generated": "2026-04-28T22:06:06",
+    "_window_id": "20260428T220606",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.7926,
