@@ -3855,6 +3855,8 @@ def main():
     sync_nubank_resumo()
 
     state = load_state()
+    # p_quality: extraído aqui (escopo main) para estar disponível ao construir fire_section
+    p_quality = state.get("fire", {}).get("p_quality")
 
     # Carregar posições IBKR se não estão no state (fallback inteligente)
     if not state.get("posicoes") or len(state.get("posicoes", {})) == 0:
@@ -4937,6 +4939,7 @@ def main():
         "mc_date":             fire_state.get("mc_date"),
         "plano_status":        macro.get("plano_status") if macro else None,
         "swr_current":         swr_current,
+        "p_quality":           p_quality,
     }
 
     # Earliest FIRE date
@@ -5447,6 +5450,12 @@ def main():
         print(f"  ✓ Gap U factor_value_spread: SV={_fvs.get('sv_proxy_3m_pct')}% pct={_fvs.get('percentile_sv')} status={_fvs.get('status')}")
     else:
         print("  ⚠️ Gap U factor_value_spread: None (componente desativado no dashboard)")
+
+    # Gap T: p_quality — qualidade de vida FIRE (trajetórias acima do piso lifestyle)
+    _p_quality = data.get("fire", {}).get("p_quality")
+    assert _p_quality is not None, "fire.p_quality ausente — rode fire_montecarlo.py"
+    assert isinstance(_p_quality, (int, float)) and 0 <= _p_quality <= 100, f"fire.p_quality inválido: {_p_quality}"
+    print(f"  ✓ Gap T p_quality: {_p_quality}%")
 
     # ─── Limpar NaN valores antes de escrever JSON ──────────────────────────────────
     # Python's NaN can't be serialized to JSON. Replace with None.

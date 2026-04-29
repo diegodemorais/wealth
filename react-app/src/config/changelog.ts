@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-28 — Gap T: Widget Qualidade FIRE (p_quality) ──
+  { datetime: '2026-04-28T22:00:00', type: 'dado', component: 'Gap T — Qualidade FIRE', tab: 'assumptions', anchor: 'assumptions-onde-estou', de: '—', para: 'card com P(quality)=64.3%, P(quality|surviving), piso go-go e slow-go (80% do gasto da fase) — FR-guardrails-categoria-elasticidade' },
   // ── 2026-04-28 — Gap W: Tracking Error Rolling 12m AVGS vs SWRD ──
   { datetime: '2026-04-28T23:45:00', type: 'gráfico', component: 'Factor Tracking Error Rolling 12m', tab: 'portfolio', anchor: '', de: '—', para: 'gráfico linha rolling 12m excess return AVGS vs SWRD (verde/amarelo -5pp/vermelho -10pp) + drought counter integrado como label — Gap W 2026-04-28' },
   // ── 2026-04-28 — Header: restaurar ícone Hammer na version pill ──

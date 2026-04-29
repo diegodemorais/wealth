@@ -842,6 +842,51 @@ export default function AssumptionsPage() {
             </div>
           </div>
 
+          {/* Gap T — Qualidade FIRE */}
+          {fire.p_quality != null && (
+            <div data-testid="gap-t-quality" style={{ marginBottom: 14 }}>
+              <Block title="Gap T — Qualidade FIRE">
+                <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 8, marginBottom: 10 }}>
+                  <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderTop: `2px solid ${pfireColor(fire.p_quality)}`, borderRadius: 7, padding: '10px 12px' }}>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>P(quality)</div>
+                    <div data-testid="gap-t-p-quality" style={{ fontSize: 20, fontWeight: 700, color: pfireColor(fire.p_quality), fontFamily: 'monospace' }}>
+                      {fire.p_quality.toFixed(1)}%
+                    </div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2, lineHeight: 1.4 }}>trajetórias acima do piso</div>
+                  </div>
+                  {pfire.base != null && pfire.base > 0 && (
+                    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderTop: '2px solid var(--accent)', borderRadius: 7, padding: '10px 12px' }}>
+                      <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>P(quality | surviving)</div>
+                      <div data-testid="gap-t-p-quality-conditional" style={{ fontSize: 20, fontWeight: 700, color: 'var(--accent)', fontFamily: 'monospace' }}>
+                        {(fire.p_quality / pfire.base * 100).toFixed(1)}%
+                      </div>
+                      <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2, lineHeight: 1.4 }}>condicional a não falir</div>
+                    </div>
+                  )}
+                  <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderTop: '2px solid var(--border)', borderRadius: 7, padding: '10px 12px' }}>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>Piso go-go</div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', fontFamily: 'monospace' }}>
+                      {sm.go_go?.gasto != null ? `R$${(sm.go_go.gasto * 0.8 / 1000).toFixed(0)}k` : '—'}
+                    </div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>80% de R${sm.go_go?.gasto != null ? `${(sm.go_go.gasto / 1000).toFixed(0)}k` : '—'}</div>
+                  </div>
+                  <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderTop: '2px solid var(--border)', borderRadius: 7, padding: '10px 12px' }}>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>Piso slow-go</div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', fontFamily: 'monospace' }}>
+                      {sm.slow_go?.gasto != null ? `R$${(sm.slow_go.gasto * 0.8 / 1000).toFixed(0)}k` : '—'}
+                    </div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>80% de R${sm.slow_go?.gasto != null ? `${(sm.slow_go.gasto / 1000).toFixed(0)}k` : '—'}</div>
+                  </div>
+                </div>
+                <p style={{ margin: 0, padding: '7px 9px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 5, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
+                  <strong>Definição:</strong> trajetórias onde lifestyle nunca cai abaixo de 80% do target por mais de 10% dos anos de aposentadoria.
+                  Saúde (inelástica) é sempre paga. Lifestyle (elástica) está sujeita a guardrails.
+                  P(quality) mede se a vida real na aposentadoria mantém o padrão — não apenas se o portfólio sobrevive.
+                </p>
+              </Block>
+            </div>
+          )}
+
           {/* FIRE Scenarios Comparison */}
           <div style={{ marginBottom: 14 }}>
             <Block title="FIRE Scenarios — Trade-offs">

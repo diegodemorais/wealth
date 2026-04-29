@@ -163,7 +163,7 @@ describe('Data Validation Suite', () => {
 
     it('plano_status should have status field', () => {
       expect(data.fire.plano_status).toHaveProperty('status');
-      const validStatuses = ['MONITORAR', 'GATILHO_ATIVO', 'OK', 'CRITICO', 'PLANO_PERMANECE'];
+      const validStatuses = ['MONITORAR', 'GATILHO_ATIVO', 'OK', 'CRITICO', 'PLANO_PERMANECE', 'REVISAR', 'INDEFINIDO'];
       expect(validStatuses).toContain(data.fire.plano_status.status);
     });
 

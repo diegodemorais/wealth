@@ -1381,6 +1381,18 @@
       "optional": true,
       "privacy": true,
       "_optional_reason": "Campo novo — renderiza apenas se contribuicao_retorno_crossover estiver no data.json"
+    },
+    {
+      "id": "gap-t-quality",
+      "tab": "assumptions",
+      "label": "Gap T — Qualidade FIRE",
+      "type": "kpi",
+      "purpose": "Mostra P(quality) = trajetórias onde lifestyle nunca cai abaixo de 80% do target por mais de 10% dos anos. Complementa P(FIRE) com dimensão de qualidade de vida.",
+      "data_fields": [
+        "fire.p_quality"
+      ],
+      "optional": false,
+      "privacy": false
     }
   ]
 }
