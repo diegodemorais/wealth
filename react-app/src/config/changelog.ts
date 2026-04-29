@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-29 — FR-pfire-model-robustness: intervalo de incerteza de modelo ──
+  { datetime: '2026-04-29T07:47:00', type: 'dado', component: 'P(FIRE) Hero — Intervalo Incerteza', tab: 'fire', anchor: '', de: 'número pontual 83.7%', para: 'exibe "modelo: ~72–92%" abaixo do número central — FR-pfire-model-robustness (RF fix 6.0%→5.34%, iid assumption)' },
   // ── 2026-04-28 — Gap T: Widget Qualidade FIRE (p_quality) ──
   { datetime: '2026-04-28T22:00:00', type: 'dado', component: 'Gap T — Qualidade FIRE', tab: 'assumptions', anchor: 'assumptions-onde-estou', de: '—', para: 'card com P(quality)=64.3%, P(quality|surviving), piso go-go e slow-go (80% do gasto da fase) — FR-guardrails-categoria-elasticidade' },
   // ── 2026-04-28 — Gap W: Tracking Error Rolling 12m AVGS vs SWRD ──

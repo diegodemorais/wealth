@@ -5447,6 +5447,18 @@ def main():
             }
             print(f"  ✓ pfire_base.percentiles via sensitivity: p5={p5_v:.1f}% p50={pfire_base_pct:.1f}% p95={p95_v:.1f}%")
 
+    # Incerteza de modelo: range ampliado considerando limitações do modelo iid
+    # Fundamentado em FR-pfire-model-robustness 2026-04-29 (Advocate/Quant)
+    # iid assumption subestima regimes persistentes (P1) → caudas otimistas em ~2-4pp
+    # Regime switching esperado: -5-8pp no P(FIRE) central
+    if isinstance(pfire_base, dict):
+        pfire_base["model_uncertainty"] = {
+            "low": 72,
+            "high": 92,
+            "basis": "iid (sem regime switching)",
+            "note": "FR-pfire-model-robustness 2026-04-29"
+        }
+
     # Gap P: Correlation matrix em stress
     correlation_stress = compute_correlation_stress(retornos_mensais)
     data["correlation_stress"] = correlation_stress

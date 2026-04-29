@@ -582,6 +582,7 @@ export default function FirePage() {
   // ── Hero banner values ──────────────────────────────────────────────────────
   const pfireHero: number | null = derived?.pfireBase ?? null; // pfireBase is 0-100 scale
   const pfireHeroColor = pfireColorFn(pfireHero);
+  const modelUncertainty = (data as any)?.pfire_base?.model_uncertainty as { low: number; high: number } | null ?? null;
   const prem = (data as any)?.premissas ?? {};
   const fireYearHero: number | null = (() => {
     const p0 = (data as any)?.fire_matrix?.by_profile?.[0];
@@ -629,6 +630,11 @@ export default function FirePage() {
           <div style={{ fontSize: 'var(--text-xs)', color: pfireHeroColor, fontWeight: 600, marginTop: 4 }}>
             {pfireHero != null ? (pfireHero >= 90 ? <><CheckCircle size={14} className="inline mr-1" />ON TRACK</> : pfireHero >= 85 ? <><AlertCircle size={14} className="inline mr-1" />ADEQUADO</> : <><XCircle size={14} className="inline mr-1" />ATENÇÃO</>) : ''}
           </div>
+          {modelUncertainty && (
+            <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: 3, opacity: 0.75 }}>
+              modelo: ~{modelUncertainty.low}–{modelUncertainty.high}%
+            </div>
+          )}
         </div>
         {/* Separator */}
         <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />

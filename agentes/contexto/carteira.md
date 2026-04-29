@@ -270,16 +270,16 @@ Retorno real esperado em USD: mediana multi-fonte (AQR, Vanguard VCMM, JPMorgan 
 | Taxa pos-custodia | 7.01% |
 | Nominal bruto | (1.0701)(1.04)-1 = 11.29% |
 | Nominal liquido (IR 15%) | 11.29% × 0.85 = 9.60% |
-| **Real liquido HTM 14 anos** | **(1.0960/1.04)-1 = ~6.0%** |
+| **Real liquido HTM 14 anos** | **(1.0960/1.04)-1 = ~5.4%** |
 
-Nota: IPCA+ liquido ~6.0% considera hold to maturity 14 anos. O calculo anterior de 5.34% usava IR 15% incidindo sobre TODO o nominal. O valor real liquido depende do holding period e do IPCA efetivo.
+Nota: IPCA+ liquido ~5.4% considera hold to maturity, taxa 7.16% bruto, IR 15% sobre nominal total, IPCA 4%. **Errata FR-pfire-model-robustness 2026-04-29**: o valor anterior de ~6.0% era erro aritmético — (1.0960/1.04)-1 = 5.38%, não 6.0%. A nota HD-006 anterior estava equivocada ao rejeitar o cálculo de 5.34%.
 
 ### Comparacao All-In: R$100 por 14 anos
 | Instrumento | Resultado Real Liquido | Retorno Anualizado |
 |-------------|----------------------|-------------------|
-| IPCA+ 2040 | R$225.8 | 6.0%/ano |
+| IPCA+ 2040 | R$207.3 | 5.4%/ano |
 | Equity bloco (cenario base) | R$193.0 | 4.85%/ano |
-| **Delta** | **IPCA+ vence por R$32.8 e 115 bps** | |
+| **Delta** | **IPCA+ vence por R$14.3 e 49bps** | |
 
 ### Breakeven All-In
 | Parametro | Valor |
@@ -305,7 +305,7 @@ Pesos do bloco equity: **SWRD 50% / AVGS 30% / AVEM 20%** (aprovado FI-equity-re
 |----------|------|-----------|--------|
 | Depreciacao real BRL | 0.5%/ano | 1.5%/ano | 0%/ano |
 | Equity real ponderado em BRL (pre-tax) | **4.85%** | **5.85%** | **4.35%** |
-| IPCA+ 2040 liquido HTM 14 anos (7.21% bruto) | **~6.0%/ano** | — | — |
+| IPCA+ 2040 liquido HTM 14 anos (7.16% bruto) | **~5.4%/ano** | — | — |
 | IPCA medio estimado | 4%/ano | — | — |
 | Breakeven IPCA+ bruto all-in vs equity | **~5.5%** | — | — |
 | Piso operacional IPCA+ | **6.0%** | — | — |
@@ -394,9 +394,9 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | inss_katia_inicio_ano | 2049 | Katia ~age 60, INSS antecipado |
 | pgbl_katia_saldo_fire | 490000 | estimativa PGBL Katia no FIRE Day |
 | gasto_katia_solo | 160000 | R$/ano se Diego falecer |
-| retorno_rf_real_bond_pool | 0.06 | 6.0% real líquido HTM (alinhado PREMISSAS MC) |
+| retorno_rf_real_bond_pool | 0.0534 | 5.34% real líquido HTM — corrigido FR-pfire-model-robustness 2026-04-29 (anterior 6.0% era erro aritmético) |
 | retorno_equity_base | 0.0485 | 4.85% real BRL — FI-premissas-retorno 2026-04-01 |
-| retorno_ipca_plus | 0.0600 | 6.0% real líquido HTM 14 anos — HD-006 |
+| retorno_ipca_plus | 0.0534 | 5.34% real líquido HTM 14 anos — corrigido FR-pfire-model-robustness 2026-04-29 (anterior 6.0% era erro aritmético; taxa 7.16% bruto, IR 15% nominal, IPCA 4%) |
 | retorno_swrd_usd_real | 0.037 | 3.7% USD real — mediana 5 fontes (AQR/Vanguard/JPM/RA/Schwab) |
 | retorno_avgs_usd_real | 0.050 | 5.0% USD real — mediana multi-fonte + haircut 58% (FI-premissas-retorno) |
 | retorno_avem_usd_real | 0.050 | 5.0% USD real — média 4 fontes (AQR/JPM/GMO/RA) arredondado conserv. |
@@ -437,6 +437,6 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | saude_decay | 0.15 | FR-saude-modelo-custo 2026-04-29 — redução de 15% após No-Go (anterior 50% causava descontinuidade abrupta sem justificativa clínica) |
 | ipca_plus_taxa_anual | 0.0716 | snapshot taxa bruta Tesouro IPCA+ (atualizar quando taxa mudar) |
 | ipca_plus_custodia | 0.0020 | custódia B3 0.20%/ano sobre Tesouro Direto |
-| pfire_canonical_base   | 84.1   | P(FIRE) base canônico (MC 10k, VCMH 3.5%, SAUDE_DECAY 15%) |
-| pfire_canonical_fav    | 91.4   | P(FIRE) favorável canônico |
-| pfire_canonical_stress | 79.0   | P(FIRE) stress canônico |
+| pfire_canonical_base   | 83.7   | P(FIRE) base canônico (MC 10k, VCMH 3.5%, SAUDE_DECAY 15%, RF 5.34%) |
+| pfire_canonical_fav    | 91.0   | P(FIRE) favorável canônico |
+| pfire_canonical_stress | 78.9   | P(FIRE) stress canônico |

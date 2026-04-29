@@ -40,11 +40,13 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
+| FR-regime-switching-model | Regime Switching no MC FIRE — Limitação iid do t-Student | FIRE + Quant | 🟡 Média | FR-pfire-model-robustness (2026-04-29) |
 
 ### Done — Últimas Issues Concluídas
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| FR-pfire-model-robustness | Auditoria de Robustez do Modelo P(FIRE) | 2026-04-29 | 9 críticas ChatGPT avaliadas por FIRE+Quant+FC+Advocate. RF arithmetic bug 6.0%→5.34%. P(FIRE) base: 84.1%→83.7%. Intervalo modelo 72-92% exibido no dashboard. Sub-issue FR-regime-switching-model aberta. 323/323 spec, 28/28 Playwright. |
 | FR-saude-modelo-custo | Auditoria Modelo de Custo de Saúde no MC | 2026-04-29 | VCMH 5%→3.5%, SAUDE_DECAY 50%→15%. P(FIRE) base: 79.0%→84.1%, fav: 87.9%→91.4%, stress: 73.3%→79.0%. Debate FIRE+Quant+FC. Arquiteto: zero hardcoding. 323/323 spec. Dashboard v1.136.1. FR-saude-decay absorvida. |
 | HD-pfire-consistencia-modelo | Consistência e Correção do Modelo P(FIRE) | 2026-04-29 | Debate 4 agentes (FIRE·Quant·FC·Advocate). Veredicto: ACEITAR 79.0% — correção de erro real (saúde comprimida no floor era premissa errada). by_profile re-rodado. 5 arquivos propagados. Dashboard v1.134.0. Issue FR-saude-decay-nogo-phase aberta. |
 | FR-guardrails-categoria-elasticidade | Separar Saúde de Lifestyle nos Guardrails MC | 2026-04-28 | Saúde inelástica separada dos guardrails MC. P(FIRE): 86.4%→79.0% (correção correta). P(quality)=64.3% (N=10k) / 81.4% (condicional). piso dinâmico 80% do target da fase. Widget Gap T em Assumptions tab. 323/323 spec fields, 563 testes ✅. |
