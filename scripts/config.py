@@ -243,6 +243,8 @@ GUARDRAILS_PISO_PCT   = _P.get("guardrails_piso_pct",   0.28)
 GASTO_PISO               = _P.get("gasto_piso",               180_000)
 PISO_LIFESTYLE_FRACTION  = _P.get("piso_lifestyle_fraction",  0.90)
 SAUDE_BASE               = _P.get("saude_base",                24_000)
+SAUDE_INFLATOR           = _P.get("saude_inflator",            0.035)   # FR-saude-modelo-custo 2026-04-29
+SAUDE_DECAY              = _P.get("saude_decay",               0.15)    # FR-saude-modelo-custo 2026-04-29
 
 # Withdrawal Engine — VPW / Guyton-Klinger constants (fonte: withdrawal_engine.py)
 GASTO_TETO_PCT        = _P.get("gasto_teto_pct",        400_000)

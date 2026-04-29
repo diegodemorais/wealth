@@ -39,6 +39,7 @@ from config import (
     GUARDRAILS_BANDA1_MIN, GUARDRAILS_BANDA2_MIN, GUARDRAILS_BANDA3_MIN,
     GUARDRAILS_CORTE1_PCT, GUARDRAILS_CORTE2_PCT, GUARDRAILS_PISO_PCT,
     GASTO_PISO, PISO_LIFESTYLE_FRACTION, SAUDE_BASE,
+    SAUDE_INFLATOR, SAUDE_DECAY,
     update_dashboard_state,
 )
 from guardrail_engine import GuardrailEngine, GuardrailRequest
@@ -174,10 +175,9 @@ SPENDING_SMILE = {
     "no_go":   {"gasto": SPENDING_SMILE_NO_GO,   "inicio": 30, "fim": 99},   # anos 30+ (saúde domina)
 }
 
-# SAUDE_BASE importado de config (fonte: carteira.md, HD-multimodel-premissas 2026-04-06)
-SAUDE_INFLATOR     = 0.050    # 5.0%/ano real — VCMH IESS: média 18a=2.7%, recente=7-10%, 5% = mid-term (FR-healthcare-recalibracao 2026-04-23)
-SAUDE_INFLATOR_CAP = 0.060    # 6.0% cap conservador
-SAUDE_DECAY        = 0.50     # 50% após No-Go (mobilidade cai; cuidado institucional já no no_go base)
+# SAUDE_BASE, SAUDE_INFLATOR, SAUDE_DECAY importados de config (fonte: carteira.md → carteira_params.json)
+# FR-saude-modelo-custo 2026-04-29: VCMH 5%→3.5%, SAUDE_DECAY 50%→15%
+SAUDE_INFLATOR_CAP = 0.060    # 6.0% cap conservador (fixo — não é decisão financeira)
 IDADE_FIRE_SAUDE   = 53       # idade no FIRE Day (faixa ANS 49-53 = 3.0×)
 
 # ─── GUARDRAILS (fonte: carteira.md, aprovados 2026-03-20) ────────────────────
@@ -1033,7 +1033,7 @@ def run_canonical_mc_with_ir_discount(ir_diferido: float,
             "patrimonio_liquido = patrimonio_atual - ir_diferido_total_brl "
             "(fonte: tax_snapshot.json). Todas as demais premissas idênticas "
             "ao MC canônico (seed=42, 10k sims, spending smile, guardrails, "
-            "bond tent, INSS R$18k/ano@65, VCMH 5.0%)."
+            f"bond tent, INSS R$18k/ano@65, VCMH {SAUDE_INFLATOR*100:.1f}%)."
         ),
         "_generated": str(_date.today()),
     }

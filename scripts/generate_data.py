@@ -515,8 +515,8 @@ def get_premissas():
         piso = mod.GASTO_PISO
         smile = mod.SPENDING_SMILE
         p.setdefault("saude_base",     getattr(mod, "SAUDE_BASE",         24_000))
-        p.setdefault("saude_inflator", getattr(mod, "SAUDE_INFLATOR",     0.050))
-        p.setdefault("saude_decay",    getattr(mod, "SAUDE_DECAY",        0.50))
+        p.setdefault("saude_inflator", getattr(mod, "SAUDE_INFLATOR",     0.035))  # FR-saude-modelo-custo 2026-04-29
+        p.setdefault("saude_decay",    getattr(mod, "SAUDE_DECAY",        0.15))   # FR-saude-modelo-custo 2026-04-29
         return p, g, piso, smile
     except Exception as e:
         print(f"  ⚠️ fire_montecarlo import: {e}")
@@ -4291,6 +4291,8 @@ def main():
         "horizonte_vida":         premissas_raw.get("horizonte_vida", 90),
         "taxa_ipca_plus_longa":   premissas_raw.get("renda_plus_taxa_default", 7.08),
         "saude_base":             premissas_raw.get("saude_base", 24_000),
+        "saude_inflator":         premissas_raw.get("saude_inflator", 0.035),   # FR-saude-modelo-custo 2026-04-29
+        "saude_decay":            premissas_raw.get("saude_decay", 0.15),       # FR-saude-modelo-custo 2026-04-29
         "aporte_mensal_aspiracional": premissas_raw.get("aporte_cenario_aspiracional", 30_000),
         # Retornos esperados por ETF (USD real, base — fonte: carteira.md §150-153)
         "retornos_por_etf": {
@@ -4632,9 +4634,9 @@ def main():
             if state_pfire is not None:
                 pfire_base = {"base": state_pfire, "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
             else:
-                # ÚLTIMO RECURSO: valores de carteira.md (2026-04-27)
-                # Source: carteira.md linha 33 — P(FIRE Base): 86,4% (MC 10k, seed=42, spending smile + guardrails + bond tent + IR 15% nominal + INSS + vol bond pool 13.3% + SAUDE_BASE R$24k + VCMH 5.0%)
-                pfire_base = {"base": 86.4, "fav": 92.0, "stress": 82.5}
+                # ÚLTIMO RECURSO: valores de carteira.md (2026-04-29, FR-saude-modelo-custo)
+                # Source: carteira.md — P(FIRE Base): 84.1% (MC 10k, VCMH 3.5%, SAUDE_DECAY 15%)
+                pfire_base = {"base": 84.1, "fav": 91.4, "stress": 79.0}
 
     # ─── TLH Lotes individuais (FIFO) ──────────────────────────────────────────
     def _load_tlh_lotes():
