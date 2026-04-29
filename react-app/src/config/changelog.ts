@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-29 — P(quality) seletores proxy/partial/full no hero ──
+  { datetime: '2026-04-29T23:00:00.000Z', type: 'dado', component: 'P(Quality) Hero Seletores', tab: 'fire', anchor: '', de: 'P(quality) hero mostrando apenas valor canônico (partial)', para: 'v1.162.0 — P(quality) seletores: proxy / partial / full no hero do dashboard FIRE. Full=88.7% base (potencial com bucket completo).' },
   // ── 2026-04-29 — Bond Pool partial isolation (FR-mc-bond-pool-partial-isolation) ──
   { datetime: '2026-04-29T22:00:00.000Z', type: 'cálculo', component: 'BondPoolIsolationBadge', tab: 'fire', anchor: '', de: 'Bond pool isolation binário: ativo somente quando >= 80% do target (~R$416k)', para: 'v1.161.0 — Bond pool partial isolation: vol e guardrails proporcionais à fração de cobertura do bucket. P(quality) mais preciso durante acumulação (atual: 24%). Badge distingue: verde (completo), amarelo (partial), cinza (sem pool)' },
   // ── 2026-04-29 — Bond Pool Isolation status badge (FR-mc-bond-pool-isolation) ──

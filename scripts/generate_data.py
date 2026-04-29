@@ -3871,6 +3871,7 @@ def main():
     # p_quality: extraído aqui (escopo main) para estar disponível ao construir fire_section
     p_quality = state.get("fire", {}).get("p_quality")
     p_quality_proxy = state.get("fire", {}).get("p_quality_proxy")
+    p_quality_full = state.get("fire", {}).get("p_quality_full")
     p_quality_aspiracional = state.get("fire", {}).get("p_quality_aspiracional")
 
     # Carregar posições IBKR se não estão no state (fallback inteligente)
@@ -4965,6 +4966,7 @@ def main():
         "swr_current":              swr_current,
         "p_quality":                p_quality,
         "p_quality_proxy":          p_quality_proxy,
+        "p_quality_full":           p_quality_full,
         "p_quality_aspiracional":   p_quality_aspiracional,
         "bond_pool_status":               _bp_status,
         "bond_pool_isolation_enabled":    _bp_status.get("enabled", False) if _bp_status else False,
@@ -5504,6 +5506,13 @@ def main():
     assert _p_quality is not None, "fire.p_quality ausente — rode fire_montecarlo.py"
     assert isinstance(_p_quality, (int, float)) and 0 <= _p_quality <= 100, f"fire.p_quality inválido: {_p_quality}"
     print(f"  ✓ Gap T p_quality: {_p_quality}%")
+    # p_quality_full: warning (não erro crítico) — pode não estar calculado em runs antigos
+    _p_quality_proxy = data.get("fire", {}).get("p_quality_proxy")
+    _p_quality_full = data.get("fire", {}).get("p_quality_full")
+    if _p_quality_full is None and _p_quality_proxy is not None:
+        print("  ⚠️ fire.p_quality_full ausente — rode fire_montecarlo.py para calcular full (bond_pool_completion_fraction=1.0)")
+    elif _p_quality_full is not None:
+        print(f"  ✓ p_quality_full: {_p_quality_full}%")
 
     # P(quality) Matrix — 5 critérios × 3 perfis × 3 cenários (FR-pquality-matrix 2026-04-29)
     if not args.skip_scripts:

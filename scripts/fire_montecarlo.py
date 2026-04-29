@@ -1592,10 +1592,15 @@ def main():
         bond_pool_isolation_active = premissas.get("bond_pool_isolation", False)
         p_quality = compute_p_quality(premissas, n_sim=args.n_sim,
                                        bond_pool_isolation=bond_pool_isolation_active)
+        # Full (potencial quando bucket completo — vol=0, 100% spending do bucket)
+        p_quality_full = compute_p_quality(premissas, n_sim=args.n_sim,
+                                            bond_pool_isolation=True,
+                                            bond_pool_completion_fraction=1.0)
         key = "p_quality" if cenario == "base" else "p_quality_aspiracional"
         fire_data[key] = round(p_quality * 100, 1)
         fire_data["p_quality_proxy"] = round(p_quality_proxy * 100, 1)
-        print(f"  P(quality) [{cenario}]: {p_quality:.1%} canônico, {p_quality_proxy:.1%} proxy (piso {PISO_LIFESTYLE_FRACTION:.0%}, min_frac {MIN_QUALITY_FRAC:.0%}, go-go {MIN_QUALITY_GOGOWINDOW}a)")
+        fire_data["p_quality_full"] = round(p_quality_full * 100, 1)
+        print(f"  P(quality) [{cenario}]: {p_quality:.1%} canônico, {p_quality_proxy:.1%} proxy, {p_quality_full:.1%} full (piso {PISO_LIFESTYLE_FRACTION:.0%}, min_frac {MIN_QUALITY_FRAC:.0%}, go-go {MIN_QUALITY_GOGOWINDOW}a)")
         # Bond pool status
         fire_data["bond_pool_status"] = premissas.get("bond_pool_status", {})
         fire_data["bond_pool_isolation_enabled"] = premissas.get("bond_pool_isolation", False)

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { EC, EC_AXIS_LABEL, EC_AXIS_LINE, EC_SPLIT_LINE, EC_TOOLTIP } from '@/utils/echarts-theme';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
@@ -593,6 +593,12 @@ export default function FirePage() {
   const pfireHeroColor = pfireColorFn(pfireHero);
   const pqualityHero: number | null = (data as any)?.fire?.p_quality ?? null;
   const pqualityProxy: number | null = (data as any)?.fire?.p_quality_proxy ?? null;
+  const pqualityFull: number | null = (data as any)?.fire?.p_quality_full ?? null;
+  const [pqSelector, setPqSelector] = useState<'proxy' | 'partial' | 'full'>('partial');
+  const pqualityDisplay: number | null =
+    pqSelector === 'proxy'  ? pqualityProxy :
+    pqSelector === 'full'   ? pqualityFull :
+    pqualityHero;  // 'partial' = canônico atual
   const bondPoolStatus = (data as any)?.fire?.bond_pool_status ?? null;
   const bondPoolIsolationEnabled: boolean = (data as any)?.fire?.bond_pool_isolation_enabled ?? false;
   const bondPoolFullyEnabled: boolean = (data as any)?.fire?.bond_pool_fully_enabled ?? false;
@@ -654,10 +660,40 @@ export default function FirePage() {
         {/* Separator */}
         <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
         {/* P(quality) */}
-        <div style={{ textAlign: 'center', minWidth: 100 }}>
+        <div style={{ textAlign: 'center', minWidth: 140 }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>P(quality)</div>
-          <div data-testid="pquality-hero" style={{ fontSize: '2.5rem', fontWeight: 900, color: pqualityColor(pqualityHero), lineHeight: 1 }}>
-            {pqualityHero != null ? `${pqualityHero.toFixed(1)}%` : '—'}
+          <div data-testid="pquality-hero" style={{ fontSize: '2.5rem', fontWeight: 900, color: pqualityColor(pqualityDisplay), lineHeight: 1 }}>
+            {pqualityDisplay != null ? `${pqualityDisplay.toFixed(1)}%` : '—'}
+          </div>
+          {/* Seletores proxy / partial / full */}
+          <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginTop: 6 }}>
+            {(['proxy', 'partial', 'full'] as const).map(mode => {
+              const val = mode === 'proxy' ? pqualityProxy : mode === 'full' ? pqualityFull : pqualityHero;
+              const label = mode === 'proxy' ? 'Proxy' : mode === 'partial' ? `Atual ${bondPoolCompletionPct.toFixed(0)}%` : 'Full 100%';
+              const active = pqSelector === mode;
+              if (val == null) return null;
+              return (
+                <button
+                  key={mode}
+                  data-testid={`pquality-selector-${mode}`}
+                  onClick={() => setPqSelector(mode)}
+                  style={{
+                    fontSize: '9px',
+                    padding: '2px 6px',
+                    borderRadius: 4,
+                    border: `1px solid ${active ? pqualityColor(val) : 'var(--border)'}`,
+                    background: active ? `color-mix(in srgb, ${pqualityColor(val)} 12%, transparent)` : 'transparent',
+                    color: active ? pqualityColor(val) : 'var(--muted)',
+                    cursor: 'pointer',
+                    fontWeight: active ? 700 : 400,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  <div>{label}</div>
+                  <div style={{ fontWeight: 700 }}>{val.toFixed(1)}%</div>
+                </button>
+              );
+            })}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>vida como planejada</div>
         </div>
