@@ -26,23 +26,21 @@ Critério Tier 3: metodologia controversa, dados externos não disponíveis, ou 
 
 ## Escopo
 
-### T: P(FIRE Quality) — Métrica Separada do Headline ✗ FECHADO
+### T: P(FIRE Quality) — Métrica Separada do Headline ✓ IMPLEMENTADO 2026-04-28
 
-**Status:** Fechado sem implementação — bloqueio metodológico. Data: 2026-04-28.
+**Status:** Implementado via FR-guardrails-categoria-elasticidade. Data: 2026-04-28.
 
-**Decisões tomadas:**
-- Piso: R$200k lifestyle (ex-saúde), dinâmico com spending smile
-- Tolerância: max 3 anos consecutivos abaixo do piso
+**Decisões finais (após debate FIRE + Quant + Fact-Checker):**
+- Piso: dinâmico = 80% do gasto da fase (ex-saúde), `PISO_LIFESTYLE_FRACTION=0.80`
+- Tolerância: ≥ 90% dos anos da trajetória acima do piso
 - Denominador: N total (10k trajetórias)
-- Gasto: lifestyle bruto proporcional (gasto_bruto × lifestyle_ratio)
+- Gasto: `gasto_spending_smile_split()` — saúde separada, guardrails só cortam lifestyle
 
-**Bloqueio identificado:** o modelo de guardrails corta saúde e lifestyle proporcionalmente no mesmo valor (`gasto_bruto`). Para calcular "gasto_lifestyle" corretamente, seria necessário que os guardrails protegessem saúde (categoria inelástica) e só cortassem lifestyle. Sem essa separação, a extração `gasto_lifestyle = gasto_bruto × lifestyle_ratio` resulta em P(quality) = 29.5% — implausível vs literatura (esperado 75-85% para SWR 2.4%).
+**Resultado:** P(quality)=64.3% (N=10k) / P(quality|surviving)=81.4%. Widget Gap T em Assumptions tab.
 
-**Por que não implementar opção simplificada (B):** P(gasto_bruto >= R$220k) é métrica sem benchmark na literatura, arbitrária, e gera confusão vs headline P(FIRE) = 86.1%.
+**Descoberta colateral:** P(FIRE) corrigido de 86.4% → 79.0% — modelo antigo comprimia saúde no guardrail floor (bug). Novo modelo: total mínimo = R$180k lifestyle + saúde (R$24k–R$197k por fase).
 
-**Pré-requisito para reabrir:** separar saúde de lifestyle nos guardrails (FR-guardrails-categoria-elasticidade). Após isso, recalcular P(quality) com modelo correto.
-
-**Referência:** debate completo em sessão 2026-04-28. Quant: 2 bugs corrigidos. FIRE + Head: 2-0 por C (fechar).
+**Referência:** FR-guardrails-categoria-elasticidade (concluída 2026-04-28).
 
 ---
 
@@ -108,7 +106,7 @@ Critério Tier 3: metodologia controversa, dados externos não disponíveis, ou 
 
 Todos os 4 gaps do Tier 3 encerrados em 2026-04-28:
 
-- **T:** Fechado sem implementação — bloqueio técnico (guardrails não separam saúde de lifestyle). Pré-requisito: FR-guardrails-categoria-elasticidade.
+- **T:** Implementado via FR-guardrails-categoria-elasticidade (2026-04-28). P(quality)=64.3%/81.4%. Widget Gap T em Assumptions tab. P(FIRE) corrigido 86.4%→79.0%.
 - **U:** Resolvido — AQR HML Devil + KF SMB (58/42). Widget semáforo implementado em Portfolio tab.
 - **V:** Resolvido — projeção de venda imóvel (2027) e terreno (2031) com IR 15%, FV@FIRE ~R$759k. Exibido em Assumptions tab como upside.
 - **W:** Resolvido — gráfico rolling 12m TE AVGS vs SWRD com zonas de cor e drought counter integrado em Portfolio tab.
@@ -123,7 +121,7 @@ Issue completa. Tier 3 encerrado.
 
 ## Próximos Passos
 
-- [x] Gap T — fechado sem implementação (bloqueio: guardrails não separam saúde de lifestyle)
+- [x] Gap T — **IMPLEMENTADO 2026-04-28** via FR-guardrails-categoria-elasticidade. P(quality)=64.3%/81.4%. Widget em Assumptions tab.
 - [x] Gap U — **RESOLVIDO 2026-04-28**: widget semáforo value spread em Portfolio tab
 - [x] Gap V — **RESOLVIDO 2026-04-28**: projeção venda imóvel + terreno em Assumptions tab
 - [x] Gap W — **RESOLVIDO 2026-04-28**: gráfico rolling TE + drought counter em Portfolio tab
