@@ -437,3 +437,6 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | saude_decay | 0.15 | FR-saude-modelo-custo 2026-04-29 — redução de 15% após No-Go (anterior 50% causava descontinuidade abrupta sem justificativa clínica) |
 | ipca_plus_taxa_anual | 0.0716 | snapshot taxa bruta Tesouro IPCA+ (atualizar quando taxa mudar) |
 | ipca_plus_custodia | 0.0020 | custódia B3 0.20%/ano sobre Tesouro Direto |
+| pfire_canonical_base   | 84.1   | P(FIRE) base canônico (MC 10k, VCMH 3.5%, SAUDE_DECAY 15%) |
+| pfire_canonical_fav    | 91.4   | P(FIRE) favorável canônico |
+| pfire_canonical_stress | 79.0   | P(FIRE) stress canônico |

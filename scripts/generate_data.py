@@ -72,6 +72,7 @@ from config import (
     GUARDRAILS_CORTE1_PCT, GUARDRAILS_CORTE2_PCT, GUARDRAILS_PISO_PCT,
     GASTO_PISO, SAUDE_BASE,
     CENARIOS_ESTENDIDOS,
+    PFIRE_CANONICAL_BASE, PFIRE_CANONICAL_FAV, PFIRE_CANONICAL_STRESS,
     update_dashboard_state,
 )
 
@@ -4642,13 +4643,12 @@ def main():
         else:
             # Fallback 1: usar pfire_base genérico do state (pode ser stale)
             state_pfire = s.get("pfire_base")
-            # Fallback 2: se state não tem, usar carteira.md (linha 33: Base 86.4%, Fav 92.0%, Stress 82.5%)
+            # Fallback 2: se state não tem, usar carteira.md via config.PFIRE_CANONICAL_*
             if state_pfire is not None:
                 pfire_base = {"base": state_pfire, "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
             else:
-                # ÚLTIMO RECURSO: valores de carteira.md (2026-04-29, FR-saude-modelo-custo)
-                # Source: carteira.md — P(FIRE Base): 84.1% (MC 10k, VCMH 3.5%, SAUDE_DECAY 15%)
-                pfire_base = {"base": 84.1, "fav": 91.4, "stress": 79.0}
+                # ÚLTIMO RECURSO: valores de carteira.md (via config.PFIRE_CANONICAL_*)
+                pfire_base = {"base": PFIRE_CANONICAL_BASE, "fav": PFIRE_CANONICAL_FAV, "stress": PFIRE_CANONICAL_STRESS}
 
     # ─── TLH Lotes individuais (FIFO) ──────────────────────────────────────────
     def _load_tlh_lotes():
@@ -5187,7 +5187,7 @@ def main():
         "_pipeline_run": _pipeline_run_id,  # DATA_PIPELINE_CENTRALIZATION: run ID para rastreabilidade
         "_snapshots_metadata": _snapshot_ages,  # DATA_PIPELINE_CENTRALIZATION: age/mtime de cada snapshot usado
         "_data_sources": {  # Architect: rastreabilidade de cada fonte (V3 fix)
-            "pfire_base": "carteira.md linha 33 (Base 86.4%, MC 10k, guardrails) vs dashboard_state.json (pode divergir)",
+            "pfire_base": "carteira.md §Parâmetros para Scripts (pfire_canonical_base via config.py) vs dashboard_state.json (pode divergir)",
             "posicoes": "ibkr_sync.py fallback chain",
             "rf": "reconstruct_tax.py ou dashboard_state.json",
             "lumpy_events": "reconstruct_fire_data.py gen_lumpy_events()",
@@ -5195,8 +5195,8 @@ def main():
             "fire_trilha": "reconstruct_fire_data.py fire_trilha.json",
             "drawdown_history": "reconstruct_fire_data.py drawdown_history.json",
         },
-        "_pfire_canonical_carteira": {"base": 84.1, "fav": 91.4, "stress": 79.0},  # carteira.md 2026-04-29, FR-saude-modelo-custo
-        "_pfire_divergence_warning": "pfire_base em data.json pode diferir de _pfire_canonical_carteira se state.json está desatualizado. Rode fire_montecarlo.py para sincronizar." if pfire_base.get("base") != 84.1 else None,
+        "_pfire_canonical_carteira": {"base": PFIRE_CANONICAL_BASE, "fav": PFIRE_CANONICAL_FAV, "stress": PFIRE_CANONICAL_STRESS},
+        "_pfire_divergence_warning": "pfire_base em data.json pode diferir de _pfire_canonical_carteira se state.json está desatualizado. Rode fire_montecarlo.py para sincronizar." if pfire_base.get("base") != PFIRE_CANONICAL_BASE else None,
         "date":       str(date.today()),
         "timestamps": timestamps,
         "cambio":     cambio,
@@ -5416,7 +5416,7 @@ def main():
     print(f"  ✓ Gap L spending_ceiling: piso(P90)=R${spending_ceiling.get('floor_p90', 0)/1e3:.0f}k central(P85)=R${spending_ceiling.get('central_p85', 0)/1e3:.0f}k teto(P80)=R${spending_ceiling.get('ceiling_p80', 0)/1e3:.0f}k")
 
     # Gap N: Sensibilidade P(FIRE)
-    pfire_base_pct = (pfire_base or {}).get("base") or 86.1  # fallback carteira.md 2026-04-28
+    pfire_base_pct = (pfire_base or {}).get("base") or PFIRE_CANONICAL_BASE  # fallback via config.PFIRE_CANONICAL_BASE
     pfire_sensitivity = compute_pfire_sensitivity(premissas_raw, float(pfire_base_pct))
     data["pfire_sensitivity"] = pfire_sensitivity
     assert data.get("pfire_sensitivity") is not None, "pfire_sensitivity missing"

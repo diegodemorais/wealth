@@ -246,6 +246,11 @@ SAUDE_BASE               = _P.get("saude_base",                24_000)
 SAUDE_INFLATOR           = _P.get("saude_inflator",            0.035)   # FR-saude-modelo-custo 2026-04-29
 SAUDE_DECAY              = _P.get("saude_decay",               0.15)    # FR-saude-modelo-custo 2026-04-29
 
+# P(FIRE) canônicos — fonte: carteira.md §Parâmetros para Scripts (FR-saude-modelo-custo 2026-04-29)
+PFIRE_CANONICAL_BASE   = _P.get("pfire_canonical_base",   84.1)
+PFIRE_CANONICAL_FAV    = _P.get("pfire_canonical_fav",    91.4)
+PFIRE_CANONICAL_STRESS = _P.get("pfire_canonical_stress", 79.0)
+
 # Withdrawal Engine — VPW / Guyton-Klinger constants (fonte: withdrawal_engine.py)
 GASTO_TETO_PCT        = _P.get("gasto_teto_pct",        400_000)
 GASTO_TETO_VPW        = _P.get("gasto_teto_vpw",        500_000)
