@@ -594,14 +594,16 @@ test.describe('Risk Dashboard — R3+R4 (Portfolio tab)', () => {
     await gotoAndWait(page, ROUTES.portfolio);
   });
 
-  // R3: Risk Contribution Chart — P2 visible (inside collapsible, may be closed)
+  // R3: Risk Contribution Chart — inside collapsed section, open first
   test('risk-contribution-chart element exists in DOM', async ({ page }) => {
+    await page.click('[data-test="section-header-section-risk-contribution"]');
     const el = page.locator('[data-testid="risk-contribution-chart"]');
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
 
-  // R4: Duration Scenarios Table — P2 exists in DOM
+  // R4: Duration Scenarios Table — inside collapsed section, open first
   test('duration-scenarios-table element exists in DOM', async ({ page }) => {
+    await page.click('[data-test="section-header-section-duration-scenarios"]');
     const el = page.locator('[data-testid="duration-scenarios-table"]');
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
@@ -624,8 +626,9 @@ test.describe('Risk Dashboard — R6 (FIRE tab)', () => {
     await gotoAndWait(page, ROUTES.fire);
   });
 
-  // R6: SoRR Indicator — P2 exists (inside collapsible)
+  // R6: SoRR Indicator — inside collapsed section, open first
   test('sorr-indicator element exists in DOM', async ({ page }) => {
+    await page.click('[data-test="section-header-section-sorr-indicator"]');
     const el = page.locator('[data-testid="sorr-indicator"]');
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
@@ -640,8 +643,9 @@ test.describe('Tier1 gaps — NOW tab', () => {
     await gotoAndWait(page, ROUTES.now);
   });
 
-  // Gap C: pfire-liquido in PatrimonioLiquidoIR (inside collapsible, may be closed)
+  // Gap C: pfire-liquido in PatrimonioLiquidoIR (inside collapsed section, open first)
   test('pfire-liquido exists in DOM', async ({ page }) => {
+    await page.click('[data-test="section-header-section-patrimonio-liquido-ir"]');
     const el = page.locator('[data-testid="pfire-liquido"]');
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
@@ -718,11 +722,11 @@ test.describe('Tier1 gaps — Performance tab', () => {
     await gotoAndWait(page, ROUTES.performance);
   });
 
-  // Gap J: Drawdown Context Banner (conditional — only visible when dd > 5%)
-  test('drawdown-context-banner exists in DOM when drawdown > 5%', async ({ page }) => {
-    // Current data has drawdown ~-7%, so banner should be visible
+  // Gap J: Drawdown Context Banner — só pós-FIRE; em acumulação não aparece (correto)
+  test('drawdown-context-banner not shown during accumulation phase', async ({ page }) => {
+    // Diego age 39 < FIRE target 53 → accumulation phase → banner correctly absent
     const el = page.locator('[data-testid="drawdown-context-banner"]');
-    await expect(el).toBeAttached({ timeout: 15_000 });
+    await expect(el).not.toBeAttached({ timeout: 5_000 });
   });
 });
 
