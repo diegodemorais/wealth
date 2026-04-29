@@ -706,6 +706,13 @@ def get_pfire_tornado():
             "source": canonical_aspiracional.source,
             "is_canonical": canonical_aspiracional.is_canonical,
         }
+        _sf_asp = load_state().get("fire", {})
+        _asp_fav = _sf_asp.get("pfire49_fav") or _sf_asp.get("pfire_fav")
+        _asp_stress = _sf_asp.get("pfire49_stress") or _sf_asp.get("pfire_stress")
+        if _asp_fav is not None:
+            pf_aspiracional["fav"] = _asp_fav
+        if _asp_stress is not None:
+            pf_aspiracional["stress"] = _asp_stress
         print(f"  ✓ Aspiracional (P@49): {canonical_aspiracional.pct_str} (canônico, source={canonical_aspiracional.source})")
     except Exception as e:
         print(f"  ⚠️ PFireEngine aspiracional falhou: {e} — usando fallback")
@@ -723,6 +730,11 @@ def get_pfire_tornado():
             "source": canonical_base.source,
             "is_canonical": canonical_base.is_canonical,
         }
+        _sf_base = load_state().get("fire", {})
+        if _sf_base.get("pfire_fav") is not None:
+            pf_base["fav"] = _sf_base["pfire_fav"]
+        if _sf_base.get("pfire_stress") is not None:
+            pf_base["stress"] = _sf_base["pfire_stress"]
         print(f"  ✓ Base (P@53): {canonical_base.pct_str} (canônico, source={canonical_base.source})")
     except Exception as e:
         print(f"  ⚠️ PFireEngine base falhou: {e} — usando fallback")
@@ -5183,8 +5195,8 @@ def main():
             "fire_trilha": "reconstruct_fire_data.py fire_trilha.json",
             "drawdown_history": "reconstruct_fire_data.py drawdown_history.json",
         },
-        "_pfire_canonical_carteira": {"base": 86.4, "fav": 92.0, "stress": 82.5},  # Arch V1: canonical source
-        "_pfire_divergence_warning": "pfire_base em data.json pode diferir de _pfire_canonical_carteira se state.json está desatualizado. Rode fire_montecarlo.py para sincronizar." if pfire_base.get("base") != 86.4 else None,
+        "_pfire_canonical_carteira": {"base": 84.1, "fav": 91.4, "stress": 79.0},  # carteira.md 2026-04-29, FR-saude-modelo-custo
+        "_pfire_divergence_warning": "pfire_base em data.json pode diferir de _pfire_canonical_carteira se state.json está desatualizado. Rode fire_montecarlo.py para sincronizar." if pfire_base.get("base") != 84.1 else None,
         "date":       str(date.today()),
         "timestamps": timestamps,
         "cambio":     cambio,

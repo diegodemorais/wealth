@@ -1,68 +1,68 @@
 {
-  "_generated": "2026-04-29T06:19:59",
-  "_generated_brt": "2026-04-29T06:19:59-03:00",
+  "_generated": "2026-04-29T06:40:33",
+  "_generated_brt": "2026-04-29T06:40:33-03:00",
   "_ibkr_sync_date": "2026-04-25T16:52:09",
   "_schema_version": "2.0",
-  "_pipeline_run": "20260429T061718",
+  "_pipeline_run": "20260429T063753",
   "_snapshots_metadata": {
     "backtest_r7": {
       "file": "backtest_r7.json",
       "mtime": "2026-04-27T20:59:01",
-      "age_h": 33.3,
+      "age_h": 33.7,
       "_generated": null
     },
     "fire_matrix": {
       "file": "fire_matrix.json",
-      "mtime": "2026-04-29T06:19:10",
+      "mtime": "2026-04-29T06:39:44",
       "age_h": 0.0,
-      "_generated": "2026-04-29T06:17:18"
+      "_generated": "2026-04-29T06:37:53"
     },
     "fire_swr_percentis": {
       "file": "fire_swr_percentis.json",
-      "mtime": "2026-04-29T06:17:18",
+      "mtime": "2026-04-29T06:37:53",
       "age_h": 0.0,
-      "_generated": "2026-04-29T06:17:18"
+      "_generated": "2026-04-29T06:37:53"
     },
     "fire_aporte_sensitivity": {
       "file": "fire_aporte_sensitivity.json",
-      "mtime": "2026-04-29T06:17:23",
+      "mtime": "2026-04-29T06:37:59",
       "age_h": 0.0,
-      "_generated": "2026-04-29T06:17:18"
+      "_generated": "2026-04-29T06:37:53"
     },
     "fire_trilha": {
       "file": "fire_trilha.json",
-      "mtime": "2026-04-29T06:17:18",
+      "mtime": "2026-04-29T06:37:53",
       "age_h": 0.0,
-      "_generated": "2026-04-29T06:17:18"
+      "_generated": "2026-04-29T06:37:53"
     },
     "drawdown_history": {
       "file": "drawdown_history.json",
-      "mtime": "2026-04-29T06:17:18",
+      "mtime": "2026-04-29T06:37:53",
       "age_h": 0.0,
-      "_generated": "2026-04-29T06:17:18"
+      "_generated": "2026-04-29T06:37:53"
     },
     "etf_composition": {
       "file": "etf_composition.json",
-      "mtime": "2026-04-29T06:17:18",
+      "mtime": "2026-04-29T06:37:53",
       "age_h": 0.0,
-      "_generated": "2026-04-29T06:17:18"
+      "_generated": "2026-04-29T06:37:53"
     },
     "bond_pool_runway": {
       "file": "bond_pool_runway.json",
-      "mtime": "2026-04-29T06:17:18",
+      "mtime": "2026-04-29T06:37:53",
       "age_h": 0.0,
-      "_generated": "2026-04-29T06:17:18"
+      "_generated": "2026-04-29T06:37:53"
     },
     "lumpy_events": {
       "file": "lumpy_events.json",
-      "mtime": "2026-04-29T06:17:26",
+      "mtime": "2026-04-29T06:38:01",
       "age_h": 0.0,
-      "_generated": "2026-04-29T06:17:18"
+      "_generated": "2026-04-29T06:37:53"
     },
     "fire_by_profile": {
       "file": "fire_by_profile.json",
       "mtime": "2026-04-29T06:13:44",
-      "age_h": 0.1,
+      "age_h": 0.4,
       "_generated": null
     }
   },
@@ -76,11 +76,11 @@
     "drawdown_history": "reconstruct_fire_data.py drawdown_history.json"
   },
   "_pfire_canonical_carteira": {
-    "base": 86.4,
-    "fav": 92.0,
-    "stress": 82.5
+    "base": 84.1,
+    "fav": 91.4,
+    "stress": 79.0
   },
-  "_pfire_divergence_warning": "pfire_base em data.json pode diferir de _pfire_canonical_carteira se state.json está desatualizado. Rode fire_montecarlo.py para sincronizar.",
+  "_pfire_divergence_warning": null,
   "date": "2026-04-29",
   "timestamps": {
     "posicoes_ibkr": "2026-04-25",
@@ -99,7 +99,7 @@
       "qty": 5291.6415,
       "avg_cost": 32.8795,
       "status": "alvo",
-      "price": 49.82,
+      "price": 49.845,
       "bucket": "SWRD",
       "ter": 0.12
     },
@@ -123,7 +123,7 @@
       "qty": 34.0,
       "avg_cost": 37.2259,
       "status": "transitório",
-      "price": 68.67,
+      "price": 68.7471,
       "bucket": "JPGL",
       "ter": null
     },
@@ -163,7 +163,7 @@
       "qty": 233.4292,
       "avg_cost": 24.9326,
       "status": "alvo",
-      "price": 27.53,
+      "price": 27.535,
       "bucket": "AVGS",
       "ter": 0.39
     }
@@ -186,15 +186,15 @@
   },
   "pfire_aspiracional": {
     "base": 91.4,
-    "fav": 94.4,
-    "stress": 83.4,
+    "fav": 91.4,
+    "stress": 79.0,
     "source": "mc",
     "is_canonical": true
   },
   "pfire_base": {
     "base": 84.1,
-    "fav": 87.1,
-    "stress": 76.1,
+    "fav": 91.4,
+    "stress": 79.0,
     "source": "mc",
     "is_canonical": true,
     "percentiles": {
@@ -234,7 +234,7 @@
     }
   },
   "premissas": {
-    "patrimonio_atual": 3718340,
+    "patrimonio_atual": 3719017,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -463,8 +463,8 @@
     "base": {
       "idade": 53,
       "base": 84.1,
-      "fav": 87.1,
-      "stress": 76.1,
+      "fav": 91.4,
+      "stress": 79.0,
       "pat_mediano": 11597034.0,
       "pat_p10": 7097769.0,
       "pat_p90": 18230356.0,
@@ -474,8 +474,8 @@
     "aspiracional": {
       "idade": 49,
       "base": 91.4,
-      "fav": 94.4,
-      "stress": 83.4,
+      "fav": 91.4,
+      "stress": 79.0,
       "pat_mediano": 0,
       "pat_p10": null,
       "pat_p90": null,
@@ -485,8 +485,8 @@
     "fire53": {
       "idade": 53,
       "base": 84.1,
-      "fav": 87.1,
-      "stress": 76.1,
+      "fav": 91.4,
+      "stress": 79.0,
       "pat_mediano": 11597034.0,
       "pat_p10": 7097769.0,
       "pat_p90": 18230356.0,
@@ -496,8 +496,8 @@
     "fire50": {
       "idade": 49,
       "base": 91.4,
-      "fav": 94.4,
-      "stress": 83.4,
+      "fav": 91.4,
+      "stress": 79.0,
       "pat_mediano": 0,
       "pat_p10": null,
       "pat_p90": null,
@@ -2457,7 +2457,7 @@
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -2631,7 +2631,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -2640,7 +2640,7 @@
       253.74,
       283.54,
       296.13,
-      304.69,
+      304.68,
       321.64,
       339.22,
       328.39,
@@ -2671,7 +2671,7 @@
       390.1,
       419.59,
       398.21,
-      428.82,
+      428.81,
       413.99,
       417.32,
       418.77,
@@ -2884,7 +2884,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -2895,7 +2895,7 @@
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -3005,7 +3005,7 @@
       4.86,
       13.32,
       13.34,
-      16.89
+      16.85
     ],
     "threshold": -5,
     "drought_months": 0,
@@ -3013,12 +3013,12 @@
     "threshold_red": -10
   },
   "factor_signal": {
-    "swrd_ytd_pct": 4.25,
-    "avgs_ytd_pct": 15.36,
-    "excess_ytd_pp": 11.11,
-    "swrd_since_launch_pct": 25.55,
-    "avgs_since_launch_pct": 37.69,
-    "excess_since_launch_pp": 12.14,
+    "swrd_ytd_pct": 4.3,
+    "avgs_ytd_pct": 15.38,
+    "excess_ytd_pp": 11.08,
+    "swrd_since_launch_pct": 25.61,
+    "avgs_since_launch_pct": 37.71,
+    "excess_since_launch_pp": 12.1,
     "avgs_launch_date": "2024-10-14",
     "meses_desde_launch": 18.5,
     "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
@@ -3244,23 +3244,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 77082.71,
+      "btc_atual_usd": 77233.99,
       "hodl11_brl_atual": 107348,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.04,
-          "valor_fire_brl": 111411
+          "valor_fire_brl": 111192
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.24,
-          "valor_fire_brl": 348158
+          "valor_fire_brl": 347476
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.49,
-          "valor_fire_brl": 696316
+          "upside_factor": 6.47,
+          "valor_fire_brl": 694952
         }
       }
     }
@@ -3334,7 +3334,7 @@
       "unidade": "pp",
       "piso": -2.0,
       "gap": -2.2,
-      "posicao_r": 1312574,
+      "posicao_r": 1312813,
       "acao": "Rebalancear",
       "detalhe": "drift: -4.20pp (atual 35.3% vs alvo 39.5%) · posição R$1313k"
     },
@@ -3356,7 +3356,7 @@
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.647025285476854,
+      "valor": -11.647635652109146,
       "unidade": "pp",
       "piso": -2.0,
       "gap": -9.65,
@@ -3495,7 +3495,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.2259,
-      "price": 68.67,
+      "price": 68.7471,
       "ucits": "JPGL.L"
     },
     {
@@ -8129,11 +8129,11 @@
   },
   "attribution": {
     "aportes": 2070997,
-    "retornoUsd": 1682201,
-    "cambio": -34858,
-    "fx": -78993,
-    "rf": 44135,
-    "crescReal": 3718340,
+    "retornoUsd": 1682892,
+    "cambio": -34872,
+    "fx": -79024,
+    "rf": 44152,
+    "crescReal": 3719017,
     "cagr_total": 12.42,
     "_estimativa": false,
     "_fonte": "retornos_mensais.json decomposicao (desde início)",
@@ -8146,7 +8146,7 @@
       },
       {
         "label": "Retorno USD",
-        "value_pct": 45.2
+        "value_pct": 45.3
       },
       {
         "label": "RF Doméstica",
@@ -8481,8 +8481,8 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 645968,
-    "retorno_usd": 254925,
+    "patrimonio_equity_usd": 646104,
+    "retorno_usd": 255061,
     "pct_aportes": 60.5,
     "pct_retorno": 39.5,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
@@ -8502,7 +8502,7 @@
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 86.4,
     "cds_brazil_5y_bps": 123.4,
-    "bitcoin_usd": 77082.71,
+    "bitcoin_usd": 77233.99,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "P(FIRE) 84.1% entre 80–85% — MONITORAR",
@@ -8517,13 +8517,13 @@
       }
     },
     "cambio": 4.9758,
-    "equity_usd": 645968.05
+    "equity_usd": 646104.13
   },
   "mercado": {
     "cambio_brl_usd": 4.9758,
-    "btc_usd": 77082.71,
+    "btc_usd": 77233.99,
     "cambio_mtd_pct": 0.15,
-    "btc_mtd_pct": -0.95,
+    "btc_mtd_pct": -0.76,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": null,
     "ref_mes": "2026-04",
@@ -8953,16 +8953,16 @@
   "cryptoLegado": 3641.53,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 167707.29,
+    "ir_diferido_total_brl": 167808.85,
     "ir_por_etf": {
       "SWRD": {
-        "ganho_usd": 89643.29,
+        "ganho_usd": 89775.58,
         "ptax_compra_medio": 4.9758,
         "ptax_atual": 4.9758,
         "custo_total_brl": 865721.0,
-        "valor_atual_brl": 1311768.06,
-        "ganho_brl": 446047.06,
-        "ir_estimado": 66907.06
+        "valor_atual_brl": 1312426.32,
+        "ganho_brl": 446705.31,
+        "ir_estimado": 67005.8
       },
       "EIMI": {
         "ganho_usd": 41306.7,
@@ -8983,13 +8983,13 @@
         "ir_estimado": 7580.27
       },
       "IWVL": {
-        "ganho_usd": 1069.1,
+        "ganho_usd": 1071.72,
         "ptax_compra_medio": 4.9758,
         "ptax_atual": 4.9758,
         "custo_total_brl": 6297.77,
-        "valor_atual_brl": 11617.4,
-        "ganho_brl": 5319.63,
-        "ir_estimado": 797.94
+        "valor_atual_brl": 11630.44,
+        "ganho_brl": 5332.67,
+        "ir_estimado": 799.9
       },
       "AVDV": {
         "ganho_usd": 41009.11,
@@ -9028,13 +9028,13 @@
         "ir_estimado": 13149.22
       },
       "AVGS": {
-        "ganho_usd": 606.31,
+        "ganho_usd": 607.48,
         "ptax_compra_medio": 4.9758,
         "ptax_atual": 4.9758,
         "custo_total_brl": 28959.15,
-        "valor_atual_brl": 31976.01,
-        "ganho_brl": 3016.87,
-        "ir_estimado": 452.53
+        "valor_atual_brl": 31981.82,
+        "ganho_brl": 3022.67,
+        "ir_estimado": 453.4
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -9070,12 +9070,12 @@
   "passivos": {
     "hipoteca_brl": 453417,
     "hipoteca_vencimento": "2051-02-15",
-    "ir_diferido_brl": 167707.29,
-    "total_brl": 621124.29,
+    "ir_diferido_brl": 167808.85,
+    "total_brl": 621225.85,
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3718340,
+    "financeiro_brl": 3719017,
     "imovel_equity_brl": 366583,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 453417,
@@ -9083,7 +9083,7 @@
     "capital_humano_vp": 3129022.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 7646945.0,
+    "total_brl": 7647622.0,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "non_financial_assets": {
@@ -9125,7 +9125,7 @@
     },
     "total_brasil_brl": 393143,
     "total_cripto_brl": 110989,
-    "total_portfolio_brl": 3718340,
+    "total_portfolio_brl": 3719017,
     "nota": "Brasil = RF soberano (TD) + COE XP (BRL estruturado). Cripto = HODL11 (BTC wrapper B3) + Binance legado (BTC/ETH/BNB/ADA). Três categorias: brasil + cambial(equity IBKR) + cripto = 100%."
   },
   "premissas_vs_realizado": {
@@ -10466,13 +10466,13 @@
   },
   "fire_montecarlo_liquido": {
     "patrimonio_bruto": 3320426.84,
-    "ir_diferido": 167707.29,
-    "patrimonio_liquido": 3152719.55,
+    "ir_diferido": 167808.85,
+    "patrimonio_liquido": 3152617.99,
     "pfire_bruto": 84.1,
     "pfire_liquido": 83.6,
     "delta_pp": -0.5,
     "pat_mediana_fire_bruto": 11597034.0,
-    "pat_mediana_fire_liquido": 11287767.0,
+    "pat_mediana_fire_liquido": 11287582.0,
     "n_sim": 10000,
     "seed": 42,
     "cenario": "base",
@@ -10480,8 +10480,8 @@
     "_generated": "2026-04-29"
   },
   "fire_matrix": {
-    "_generated": "2026-04-29T06:17:18",
-    "_window_id": "20260429T061718",
+    "_generated": "2026-04-29T06:37:53",
+    "_window_id": "20260429T063753",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -10783,8 +10783,8 @@
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-04-29T06:17:18",
-    "_window_id": "20260429T061718",
+    "_generated": "2026-04-29T06:37:53",
+    "_window_id": "20260429T063753",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 7097769.0,
@@ -10799,8 +10799,8 @@
     "mc_date": "2026-04-29"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-04-29T06:17:18",
-    "_window_id": "20260429T061718",
+    "_generated": "2026-04-29T06:37:53",
+    "_window_id": "20260429T063753",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -10824,8 +10824,8 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-29T06:17:18",
-    "_window_id": "20260429T061718",
+    "_generated": "2026-04-29T06:37:53",
+    "_window_id": "20260429T063753",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -12431,8 +12431,8 @@
     "trilha_percentis_source": "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
   },
   "drawdown_history": {
-    "_generated": "2026-04-29T06:17:18",
-    "_window_id": "20260429T061718",
+    "_generated": "2026-04-29T06:37:53",
+    "_window_id": "20260429T063753",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-05",
@@ -12587,8 +12587,8 @@
     "_fonte": "backtest.metrics.target.maxdd (fallback)"
   },
   "etf_composition": {
-    "_generated": "2026-04-29T06:17:18",
-    "_window_id": "20260429T061718",
+    "_generated": "2026-04-29T06:37:53",
+    "_window_id": "20260429T063753",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -12645,8 +12645,8 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-04-29T06:17:18",
-    "_window_id": "20260429T061718",
+    "_generated": "2026-04-29T06:37:53",
+    "_window_id": "20260429T063753",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -12780,8 +12780,8 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-04-29T06:17:18",
-    "_window_id": "20260429T061718",
+    "_generated": "2026-04-29T06:37:53",
+    "_window_id": "20260429T063753",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.835,
@@ -14244,14 +14244,14 @@
         "shift_pp": 1,
         "renda_plus_mtm_pct": -0.2012,
         "renda_plus_mtm_brl": -23707.92,
-        "renda_plus_mtm_portfolio_pct": -0.006376,
+        "renda_plus_mtm_portfolio_pct": -0.006375,
         "with_convexity_note": true
       },
       {
         "shift_pp": 2,
         "renda_plus_mtm_pct": -0.4024,
         "renda_plus_mtm_brl": -47415.85,
-        "renda_plus_mtm_portfolio_pct": -0.012752,
+        "renda_plus_mtm_portfolio_pct": -0.01275,
         "with_convexity_note": true
       }
     ],
@@ -14407,7 +14407,7 @@
     "swr_p90": 3.66,
     "swr_p85": 3.87,
     "swr_p80": 4.05,
-    "patrimonio_base": 3718340,
+    "patrimonio_base": 3719017,
     "nota": "Aproximação analítica (anuidade ajustada por risco). Aportes=0. Usar MC completo para valores definitivos.",
     "_metodo": "analytical_annuity_risk_adjusted"
   },
