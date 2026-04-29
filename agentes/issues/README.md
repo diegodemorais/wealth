@@ -27,7 +27,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| FR-pquality-recalibration | Recalibração e Expansão do P(quality) | FIRE + Dev | 🔴 Alta |
 
 ### Blocked
 > Issues aguardando dependências externas
