@@ -3870,6 +3870,7 @@ def main():
     state = load_state()
     # p_quality: extraído aqui (escopo main) para estar disponível ao construir fire_section
     p_quality = state.get("fire", {}).get("p_quality")
+    p_quality_proxy = state.get("fire", {}).get("p_quality_proxy")
     p_quality_aspiracional = state.get("fire", {}).get("p_quality_aspiracional")
 
     # Carregar posições IBKR se não estão no state (fallback inteligente)
@@ -4946,6 +4947,14 @@ def main():
     swr_current = round(rf_total_for_swr / gasto_anual, 2) if gasto_anual > 0 else 0
     print(f"  -> swr_current: {swr_current} (RF R${rf_total_for_swr/1e3:.0f}k / gastos R${gasto_anual/1e3:.0f}k)")
 
+    # ─── Bond pool isolation status (FR-mc-bond-pool-isolation 2026-04-29) ────
+    _bp_status: dict | None = None
+    try:
+        import fire_montecarlo as _fm_bp
+        _bp_status = _fm_bp.PREMISSAS.get("bond_pool_status")
+    except Exception as _e_bp:
+        print(f"  ⚠️ bond_pool_status: falhou ao importar fire_montecarlo ({_e_bp})")
+
     # ─── FIRE aggregate ─────────────────────────────────────────────────
     fire_section = {
         "bond_pool_readiness": bond_pool_readiness,
@@ -4955,7 +4964,11 @@ def main():
         "plano_status":        macro.get("plano_status") if macro else None,
         "swr_current":              swr_current,
         "p_quality":                p_quality,
+        "p_quality_proxy":          p_quality_proxy,
         "p_quality_aspiracional":   p_quality_aspiracional,
+        "bond_pool_status":               _bp_status,
+        "bond_pool_isolation_enabled":    _bp_status.get("enabled", False) if _bp_status else False,
+        "bond_pool_completion_pct":       _bp_status.get("completion_pct", 0.0) if _bp_status else 0.0,
     }
 
     # Earliest FIRE date

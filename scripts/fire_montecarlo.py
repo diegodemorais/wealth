@@ -35,6 +35,7 @@ from config import (
     ADJ_FAVORAVEL, ADJ_STRESS, IPCA_ANUAL,
     INSS_ANUAL, INSS_INICIO_ANO_POS_FIRE,
     BOND_TENT_META_ANOS, FIRE_P_THRESHOLD,
+    IPCA_LONGO_ATUAL_BRL, BOND_POOL_ISOLATION_THRESHOLD,
     SPENDING_SMILE_GO_GO, SPENDING_SMILE_SLOW_GO, SPENDING_SMILE_NO_GO,
     GUARDRAILS_BANDA1_MIN, GUARDRAILS_BANDA2_MIN, GUARDRAILS_BANDA3_MIN,
     GUARDRAILS_CORTE1_PCT, GUARDRAILS_CORTE2_PCT, GUARDRAILS_PISO_PCT,
@@ -73,6 +74,27 @@ def _load_patrimonio_atual() -> float:
         pass
     # 3. fallback hardcoded (desatualizado — atualizar ao rodar sessão)
     return 3_372_673.0
+
+# ─── BOND POOL ISOLATION — definida antes de PREMISSAS (usada no módulo-level) ──
+
+def compute_bond_pool_status(patrimonio_atual: float, ipca_longo_pct: float,
+                               ipca_longo_atual_brl: float,
+                               threshold_pct: float) -> dict:
+    """Status do bond pool para determinar se isolation está habilitada."""
+    target_brl = ipca_longo_pct * patrimonio_atual
+    threshold_brl = threshold_pct * target_brl
+    completion_pct = (ipca_longo_atual_brl / target_brl * 100) if target_brl > 0 else 0.0
+    enabled = ipca_longo_atual_brl >= threshold_brl
+    return {
+        "enabled": enabled,
+        "completion_pct": round(completion_pct, 1),
+        "ipca_longo_atual_brl": round(ipca_longo_atual_brl, 0),
+        "target_brl": round(target_brl, 0),
+        "threshold_pct": round(threshold_pct * 100, 1),
+        "threshold_brl": round(threshold_brl, 0),
+        "underestimation_warning": not enabled,
+    }
+
 
 # ─── PREMISSAS (fonte: carteira.md via parse_carteira.py → config.py) ────────
 
@@ -132,10 +154,24 @@ PREMISSAS = {
     # vol_bond_pool = pct_equity × vol_equity = 0.79 × 0.168 = 13.3%
     "vol_bond_pool":            EQUITY_PCT * VOLATILIDADE_EQUITY,
 
+    # Bond pool isolation (FR-mc-bond-pool-isolation 2026-04-29)
+    "ipca_longo_atual_brl":              IPCA_LONGO_ATUAL_BRL,
+    "bond_pool_isolation_threshold":     BOND_POOL_ISOLATION_THRESHOLD,
+
     # Gatilho FIRE (fonte: carteira.md → config.py)
     "patrimonio_gatilho":  PATRIMONIO_GATILHO,
     "swr_gatilho":         SWR_GATILHO,
 }
+
+# Computar bond pool isolation status (após PREMISSAS dict)
+_bp_status = compute_bond_pool_status(
+    PREMISSAS["patrimonio_atual"],
+    PREMISSAS["pct_ipca_longo"],
+    PREMISSAS["ipca_longo_atual_brl"],
+    PREMISSAS["bond_pool_isolation_threshold"],
+)
+PREMISSAS["bond_pool_isolation"] = _bp_status["enabled"]
+PREMISSAS["bond_pool_status"] = _bp_status
 
 # ─── PERFIS FIRE (fonte: carteira.md + FR-spending-modelo-familia 2026-04-06) ──
 # Cada perfil tem spending anual diferente; MC roda para cada um em 2 idades-alvo.
@@ -279,7 +315,8 @@ def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retor
                                      ipca_anual: float = 0.04, aliquota_ir: float = 0.15,
                                      inss_anual: float = 0.0, inss_inicio_ano: int = 12,
                                      vol_bond_pool: float = None,
-                                     strategy: str = "guardrails") -> tuple:
+                                     strategy: str = "guardrails",
+                                     bond_pool_isolation: bool = False) -> tuple:
     """
     Simula trajetória de desacumulação e retorna TRAJETÓRIA COMPLETA.
     Retorna (sobreviveu: bool, patrimônio_final: float, trajetoria: list[float])
@@ -297,7 +334,13 @@ def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retor
 
     t_scale = np.sqrt(df / (df - 2))
     for ano in range(n_anos):
-        vol_ano = vol_bond_pool if (vol_bond_pool is not None and ano < anos_bond_pool) else volatilidade
+        in_pool_phase = bond_pool_isolation and ano < anos_bond_pool
+        if in_pool_phase:
+            vol_ano = 0.0  # bond pool HTM — sem mark-to-market
+        elif vol_bond_pool is not None and ano < anos_bond_pool:
+            vol_ano = vol_bond_pool  # proxy legado
+        else:
+            vol_ano = volatilidade
 
         z = rng.standard_t(df) / t_scale
         retorno_anual = retorno_equity + vol_ano * z
@@ -311,17 +354,20 @@ def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retor
         pat_pico = max(pat_pico, pat)
 
         gasto_lifestyle_target, gasto_saude = gasto_spending_smile_split(ano, 0, escala_custo_vida)
-        withdrawal_req = WithdrawalRequest(
-            strategy=strategy,
-            gasto_smile=gasto_lifestyle_target,
-            patrimonio_atual=max(0, pat),  # Clamp to 0 (depleted portfolio)
-            patrimonio_pico=pat_pico,
-            ano=ano,
-            ctx=ctx,
-            guardrails_config=GUARDRAILS,
-        )
-        withdrawal_result = WithdrawalEngine.calculate(withdrawal_req)
-        gasto_lifestyle = withdrawal_result.gasto_anual
+        if in_pool_phase:
+            gasto_lifestyle = gasto_lifestyle_target  # bond pool cobre — sem corte
+        else:
+            withdrawal_req = WithdrawalRequest(
+                strategy=strategy,
+                gasto_smile=gasto_lifestyle_target,
+                patrimonio_atual=max(0, pat),  # Clamp to 0 (depleted portfolio)
+                patrimonio_pico=pat_pico,
+                ano=ano,
+                ctx=ctx,
+                guardrails_config=GUARDRAILS,
+            )
+            withdrawal_result = WithdrawalEngine.calculate(withdrawal_req)
+            gasto_lifestyle = withdrawal_result.gasto_anual
         gasto = gasto_lifestyle + gasto_saude  # saúde sempre pago, protegido de guardrails
 
         if inss_anual > 0 and ano >= inss_inicio_ano:
@@ -346,13 +392,15 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
                         inss_anual: float = 0.0, inss_inicio_ano: int = 12,
                         vol_bond_pool: float = None,
                         strategy: str = "guardrails",
-                        track_spending: bool = False) -> tuple:
+                        track_spending: bool = False,
+                        bond_pool_isolation: bool = False) -> tuple:
     """
     Simula uma trajetória de desacumulação.
     Retorna (sobreviveu: bool, patrimônio_final: float, patrimônio_pico: float, gastos: list|None)
 
     strategy: "guardrails" (default), "constant", "pct_portfolio", "vpw", "guyton_klinger", "gk_hybrid"
     track_spending: se True, retorna lista de gastos anuais no 4º elemento
+    bond_pool_isolation: se True, vol=0 e sem guardrails nos anos 0..anos_bond_pool-1
     """
     pat = patrimonio_inicial
     pat_pico = patrimonio_inicial
@@ -366,7 +414,13 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
 
     t_scale = np.sqrt(df / (df - 2))
     for ano in range(n_anos):
-        vol_ano = vol_bond_pool if (vol_bond_pool is not None and ano < anos_bond_pool) else volatilidade
+        in_pool_phase = bond_pool_isolation and ano < anos_bond_pool
+        if in_pool_phase:
+            vol_ano = 0.0  # bond pool HTM — sem mark-to-market
+        elif vol_bond_pool is not None and ano < anos_bond_pool:
+            vol_ano = vol_bond_pool  # proxy legado
+        else:
+            vol_ano = volatilidade
 
         z = rng.standard_t(df) / t_scale
         retorno_anual = retorno_equity + vol_ano * z
@@ -380,17 +434,20 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
         pat_pico = max(pat_pico, pat)
 
         gasto_lifestyle_target, gasto_saude = gasto_spending_smile_split(ano, 0, escala_custo_vida)
-        withdrawal_req = WithdrawalRequest(
-            strategy=strategy,
-            gasto_smile=gasto_lifestyle_target,
-            patrimonio_atual=max(0, pat),  # Clamp to 0 (depleted portfolio)
-            patrimonio_pico=pat_pico,
-            ano=ano,
-            ctx=ctx,
-            guardrails_config=GUARDRAILS,
-        )
-        withdrawal_result = WithdrawalEngine.calculate(withdrawal_req)
-        gasto_lifestyle = withdrawal_result.gasto_anual
+        if in_pool_phase:
+            gasto_lifestyle = gasto_lifestyle_target  # bond pool cobre — sem corte
+        else:
+            withdrawal_req = WithdrawalRequest(
+                strategy=strategy,
+                gasto_smile=gasto_lifestyle_target,
+                patrimonio_atual=max(0, pat),  # Clamp to 0 (depleted portfolio)
+                patrimonio_pico=pat_pico,
+                ano=ano,
+                ctx=ctx,
+                guardrails_config=GUARDRAILS,
+            )
+            withdrawal_result = WithdrawalEngine.calculate(withdrawal_req)
+            gasto_lifestyle = withdrawal_result.gasto_anual
         gasto = gasto_lifestyle + gasto_saude  # saúde sempre pago, protegido de guardrails
 
         if inss_anual > 0 and ano >= inss_inicio_ano:
@@ -422,7 +479,8 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
                       gogowindow: int | None = None,
                       max_bad_total: int | None = 1,
                       max_bad_consec: int = 0,
-                      cenario: str = "base") -> float:
+                      cenario: str = "base",
+                      bond_pool_isolation: bool = False) -> float:
     """P(quality): % de trajetórias onde lifestyle >= PISO_LIFESTYLE_FRACTION * smile_target.
 
     Critérios (ambos devem ser satisfeitos):
@@ -463,6 +521,8 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
     vol = premissas["volatilidade_equity"]
     t_scale = np.sqrt(df / (df - 2))
     ipca_anual = premissas.get("ipca_anual", 0.04)
+    anos_bond_pool = premissas.get("anos_bond_pool", 7)
+    vol_bond_pool = premissas.get("vol_bond_pool", None)
 
     qualidade_count = 0
     for i in range(n_sim):
@@ -479,23 +539,34 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
         gogo_max_consec = 0
 
         for ano in range(n_anos):
+            in_pool_phase = bond_pool_isolation and ano < anos_bond_pool
+            if in_pool_phase:
+                vol_ano = 0.0  # bond pool HTM — sem mark-to-market
+            elif vol_bond_pool is not None and ano < anos_bond_pool:
+                vol_ano = vol_bond_pool  # proxy legado
+            else:
+                vol_ano = vol
+
             z = rng.standard_t(df) / t_scale
-            retorno_anual = r_equity + vol * z
+            retorno_anual = r_equity + vol_ano * z
             ctx.retorno_ano = retorno_anual
             pat = pat * (1 + retorno_anual)
             pat_pico = max(pat_pico, pat)
 
             gasto_lifestyle_target, gasto_saude = gasto_spending_smile_split(ano, 0, escala_cv)
-            req = WithdrawalRequest(
-                strategy="guardrails",
-                gasto_smile=gasto_lifestyle_target,
-                patrimonio_atual=max(0, pat),
-                patrimonio_pico=pat_pico,
-                ano=ano,
-                ctx=ctx,
-                guardrails_config=GUARDRAILS,
-            )
-            gasto_lifestyle = WithdrawalEngine.calculate(req).gasto_anual
+            if in_pool_phase:
+                gasto_lifestyle = gasto_lifestyle_target  # bond pool cobre — sem corte
+            else:
+                req = WithdrawalRequest(
+                    strategy="guardrails",
+                    gasto_smile=gasto_lifestyle_target,
+                    patrimonio_atual=max(0, pat),
+                    patrimonio_pico=pat_pico,
+                    ano=ano,
+                    ctx=ctx,
+                    guardrails_config=GUARDRAILS,
+                )
+                gasto_lifestyle = WithdrawalEngine.calculate(req).gasto_anual
             gasto_total = gasto_lifestyle + gasto_saude
 
             piso_ano = PISO_LIFESTYLE_FRACTION * gasto_lifestyle_target
@@ -702,6 +773,7 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
     inss_anual = premissas.get("inss_anual", 0.0)
     inss_inicio_ano = premissas.get("inss_inicio_ano", 12)
     vol_bond_pool = premissas.get("vol_bond_pool", None)
+    bond_pool_isolation = premissas.get("bond_pool_isolation", False)
 
     for i in range(n_sim):
         pat_ini = float(pat_fire_trajetorias[i])
@@ -713,7 +785,8 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
             ipca_anual=ipca_anual, aliquota_ir=aliquota_ir,
             inss_anual=inss_anual, inss_inicio_ano=inss_inicio_ano,
             vol_bond_pool=vol_bond_pool,
-            strategy=strategy
+            strategy=strategy,
+            bond_pool_isolation=bond_pool_isolation,
         )
         if sobreviveu:
             sucessos += 1
@@ -774,6 +847,7 @@ def rodar_monte_carlo_com_trajetorias(premissas: dict, n_sim: int = 10_000,
     inss_anual = premissas.get("inss_anual", 0.0)
     inss_inicio_ano = premissas.get("inss_inicio_ano", 12)
     vol_bond_pool = premissas.get("vol_bond_pool", None)
+    bond_pool_isolation = premissas.get("bond_pool_isolation", False)
 
     # Guardar trajetórias completas
     trajetorias = []
@@ -790,7 +864,8 @@ def rodar_monte_carlo_com_trajetorias(premissas: dict, n_sim: int = 10_000,
             ipca_anual=ipca_anual, aliquota_ir=aliquota_ir,
             inss_anual=inss_anual, inss_inicio_ano=inss_inicio_ano,
             vol_bond_pool=vol_bond_pool,
-            strategy=strategy
+            strategy=strategy,
+            bond_pool_isolation=bond_pool_isolation,
         )
         if sobreviveu:
             sucessos += 1
@@ -1426,10 +1501,20 @@ def main():
     # P(quality) — cenário base e aspiracional (FR-pquality-recalibration 2026-04-29)
     if cenario in ("base", "aspiracional"):
         print(f"  Calculando P(quality) ({cenario}, {args.n_sim:,} sims)...")
-        p_quality = compute_p_quality(premissas, n_sim=args.n_sim)
+        # Proxy (modelo antigo — sempre rodar para comparação histórica)
+        p_quality_proxy = compute_p_quality(premissas, n_sim=args.n_sim, bond_pool_isolation=False)
+        # Canônico (com isolation se habilitada)
+        bond_pool_isolation_active = premissas.get("bond_pool_isolation", False)
+        p_quality = compute_p_quality(premissas, n_sim=args.n_sim,
+                                       bond_pool_isolation=bond_pool_isolation_active)
         key = "p_quality" if cenario == "base" else "p_quality_aspiracional"
         fire_data[key] = round(p_quality * 100, 1)
-        print(f"  P(quality) [{cenario}]: {p_quality:.1%} (piso {PISO_LIFESTYLE_FRACTION:.0%}, min_frac {MIN_QUALITY_FRAC:.0%}, go-go {MIN_QUALITY_GOGOWINDOW}a)")
+        fire_data["p_quality_proxy"] = round(p_quality_proxy * 100, 1)
+        print(f"  P(quality) [{cenario}]: {p_quality:.1%} canônico, {p_quality_proxy:.1%} proxy (piso {PISO_LIFESTYLE_FRACTION:.0%}, min_frac {MIN_QUALITY_FRAC:.0%}, go-go {MIN_QUALITY_GOGOWINDOW}a)")
+        # Bond pool status
+        fire_data["bond_pool_status"] = premissas.get("bond_pool_status", {})
+        fire_data["bond_pool_isolation_enabled"] = premissas.get("bond_pool_isolation", False)
+        fire_data["bond_pool_completion_pct"] = (premissas.get("bond_pool_status") or {}).get("completion_pct", 0.0)
 
     update_dashboard_state("fire", fire_data, generator="fire_montecarlo.py")
 
