@@ -5490,6 +5490,34 @@ def main():
     assert isinstance(_p_quality, (int, float)) and 0 <= _p_quality <= 100, f"fire.p_quality inválido: {_p_quality}"
     print(f"  ✓ Gap T p_quality: {_p_quality}%")
 
+    # P(quality) Matrix — 5 critérios × 3 perfis × 3 cenários (FR-pquality-matrix 2026-04-29)
+    if not args.skip_scripts:
+        print("  ▶ Computando P(quality) Matrix (5 critérios × 3 perfis × 3 cenários = 45 células) ...")
+        try:
+            import importlib.util as _ilu_pqm
+            _spec_pqm = _ilu_pqm.spec_from_file_location("fire_mc_pqm", ROOT / "scripts" / "fire_montecarlo.py")
+            _mod_pqm  = _ilu_pqm.module_from_spec(_spec_pqm)
+            _spec_pqm.loader.exec_module(_mod_pqm)
+
+            # PREMISSAS base (custo_vida e idade_fire_alvo sobrescritos por perfil dentro da função)
+            mc_premissas_pqm = getattr(_mod_pqm, 'PREMISSAS', {})
+            if not mc_premissas_pqm:
+                raise ValueError("PREMISSAS não encontrado em fire_montecarlo.py")
+
+            p_quality_matrix = _mod_pqm.compute_p_quality_matrix(mc_premissas_pqm, n_sim=5_000, seed=42)
+            data["fire"]["p_quality_matrix"] = p_quality_matrix
+            b_atual_base = p_quality_matrix["values"].get("B", {}).get("atual", {}).get("base")
+            print(f"  ✓ P(quality) Matrix: B/atual/base={b_atual_base}%")
+        except Exception as _e_pqm:
+            print(f"  ⚠️ P(quality) Matrix failed: {_e_pqm}")
+            data["fire"]["p_quality_matrix"] = None
+    else:
+        print("  ⊘ P(quality) Matrix (skip-scripts)")
+
+    # Assertions de schema para p_quality_matrix
+    assert data["fire"].get("p_quality_matrix") is not None, "p_quality_matrix ausente"
+    assert set(data["fire"]["p_quality_matrix"]["values"].keys()) == {"A", "B", "C", "D", "E"}, "p_quality_matrix keys"
+
     # ─── Limpar NaN valores antes de escrever JSON ──────────────────────────────────
     # Python's NaN can't be serialized to JSON. Replace with None.
     import math

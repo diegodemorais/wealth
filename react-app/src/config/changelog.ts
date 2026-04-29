@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-29 — FR-pquality-matrix: Matriz 5 critérios × 3 perfis × 3 cenários ──
+  { datetime: '2026-04-29T16:00:00.000Z', type: 'dado', component: 'PQualityMatrix', tab: 'fire', anchor: 'pquality-matrix', de: 'P(quality) único valor', para: 'Matriz 5 critérios × 3 perfis × 3 cenários de mercado; default muda para critério B (≤1 ano ruim no go-go)' },
   // ── 2026-04-29 — FR-pquality-recalibration: P(quality) hero + perfis + simulators ──
   { datetime: '2026-04-29T12:00:00', type: 'cálculo', component: 'P(Quality) Hero', tab: 'fire', anchor: '', de: 'não existia', para: 'banner hero exibe P(quality) com cor semáforo verde≥70%/amarelo≥55%/vermelho<55% — FR-pquality-recalibration 2026-04-29' },
   { datetime: '2026-04-29T12:00:00', type: 'cálculo', component: 'P(Quality) Perfis Familiares', tab: 'fire', anchor: 'section-pfire-familia', de: 'não existia', para: 'P(quality) por perfil (atual/casado/filho/aspiracional) com cor semáforo — piso 80% smile, min_frac 85% anos, go-go 10 anos — FR-pquality-recalibration' },

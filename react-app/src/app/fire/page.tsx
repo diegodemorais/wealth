@@ -21,6 +21,7 @@ import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
 import { HumanCapitalCrossover } from '@/components/dashboard/HumanCapitalCrossover';
 import { PFireDistribution } from '@/components/fire/PFireDistribution';
+import { PQualityMatrix } from '@/components/fire/PQualityMatrix';
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { EChart } from '@/components/primitives/EChart';
@@ -1046,6 +1047,21 @@ export default function FirePage() {
               </CollapsibleSection>
             </div>
           </section>
+        );
+      })()}
+
+      {/* P(quality) Matrix — 5 critérios × 3 perfis × 3 cenários */}
+      {(() => {
+        const matrix = (safeData as any)?.fire?.p_quality_matrix;
+        if (!matrix) return null;
+        return (
+          <CollapsibleSection
+            id="pquality-matrix"
+            title={secTitle('fire', 'pquality-matrix', 'Critérios de Qualidade — Go-Go Window')}
+            defaultOpen={secOpen('fire', 'pquality-matrix', true)}
+          >
+            <PQualityMatrix matrix={matrix} privacyMode={privacyMode} />
+          </CollapsibleSection>
         );
       })()}
 

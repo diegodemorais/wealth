@@ -267,6 +267,24 @@ test.describe('FIRE — semantic values', () => {
     const match = text.match(/([\d.]+)%/);
     expect(match, `pquality-profile-filho must show %, got: "${text}"`).not.toBeNull();
   });
+
+  // FR-pquality-matrix 2026-04-29 — section defaultOpen=true, visible on load
+  // NOTE: beforeEach already navigates to /wealth/fire — no extra page.goto needed
+  test('pquality-matrix-table is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="pquality-matrix-table"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('pquality-matrix-B-atual-base is a valid percentage', async ({ page }) => {
+    const el = page.locator('[data-testid="pquality-matrix-B-atual-base"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    const match = text.match(/([\d.]+)%/);
+    expect(match, `Expected percentage, got: "${text}"`).not.toBeNull();
+    const val = parseFloat(match![1]);
+    expect(val).toBeGreaterThanOrEqual(20);
+    expect(val).toBeLessThanOrEqual(100);
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

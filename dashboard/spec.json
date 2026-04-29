@@ -1468,6 +1468,28 @@
         "fire_matrix.by_profile"
       ],
       "privacy": false
+    },
+    {
+      "id": "pquality-matrix-table",
+      "tab": "fire",
+      "label": "P(Quality) Matrix — Tabela de Critérios",
+      "type": "table",
+      "purpose": "Tabela matriz de critérios de qualidade go-go window × perfis familiares (5 critérios × 3 perfis × 3 cenários)",
+      "data_fields": [
+        "fire.p_quality_matrix"
+      ],
+      "privacy": false
+    },
+    {
+      "id": "pquality-matrix-B-atual-base",
+      "tab": "fire",
+      "label": "P(Quality) Critério B / Solteiro / Base",
+      "type": "kpi",
+      "purpose": "P(quality) critério B (≤1 ano ruim no go-go), perfil solteiro, cenário base — célula âncora para testes",
+      "data_fields": [
+        "fire.p_quality_matrix.values.B.atual.base"
+      ],
+      "privacy": false
     }
   ]
 }

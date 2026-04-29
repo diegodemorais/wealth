@@ -419,14 +419,25 @@ def _retorno_equity_cenario(premissas: dict, cenario: str) -> float:
 
 def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
                       min_frac_anos: float | None = None,
-                      gogowindow: int | None = None) -> float:
+                      gogowindow: int | None = None,
+                      max_bad_total: int | None = 1,
+                      max_bad_consec: int = 0,
+                      cenario: str = "base") -> float:
     """P(quality): % de trajetórias onde lifestyle >= PISO_LIFESTYLE_FRACTION * smile_target.
 
     Critérios (ambos devem ser satisfeitos):
       1. >= min_frac_anos dos anos totais (default: MIN_QUALITY_FRAC from config)
-      2. >= gogowindow primeiros anos com lifestyle >= piso (go-go window, cortes iniciais penalizam mais)
+      2. go-go window — critério configurável via max_bad_total / max_bad_consec:
+           max_bad_total=0  → critério A (binário: nenhum ano ruim)
+           max_bad_total=1  → critério B (≤1 total, default)
+           max_bad_total=2  → critério C (≤2 total)
+           max_bad_total=None, max_bad_consec=1 → critério D (≤1 consecutivo)
+           max_bad_total=None, max_bad_consec=2 → critério E (≤2 consecutivos)
+
+    cenario: "base" | "favoravel" | "stress" — ajusta retorno equity.
 
     FR-pquality-recalibration 2026-04-29.
+    FR-pquality-matrix 2026-04-29.
     """
     if min_frac_anos is None:
         min_frac_anos = MIN_QUALITY_FRAC
@@ -434,9 +445,16 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
         gogowindow = MIN_QUALITY_GOGOWINDOW
 
     rng = np.random.default_rng(seed)
+
+    # Retorno equity ajustado por cenário
     r_equity = premissas["retorno_equity_base"]
+    if cenario == "favoravel":
+        r_equity += premissas.get("adj_favoravel", 0.0)
+    elif cenario == "stress":
+        r_equity += premissas.get("adj_stress", 0.0)
+
     anos_acum = premissas["idade_fire_alvo"] - premissas["idade_atual"]
-    pat_fire = projetar_acumulacao(premissas, r_equity, "base", n_sim, rng, anos_acum)
+    pat_fire = projetar_acumulacao(premissas, r_equity, cenario, n_sim, rng, anos_acum)
 
     # escala_cv: ratio do custo de vida do perfil vs base canônico (250k)
     escala_cv = premissas.get("custo_vida_base", CUSTO_VIDA_BASE) / CUSTO_VIDA_BASE
@@ -456,7 +474,9 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
             ipca_anual=ipca_anual,
         )
         anos_acima_piso = 0
-        gogowindow_ok = True
+        gogo_bad_total = 0
+        gogo_consec_atual = 0
+        gogo_max_consec = 0
 
         for ano in range(n_anos):
             z = rng.standard_t(df) / t_scale
@@ -482,18 +502,99 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
             acima_piso = gasto_lifestyle >= piso_ano
             if acima_piso:
                 anos_acima_piso += 1
-            # go-go window: se falhar em qualquer ano <= gogowindow, trajetória falha
-            if ano < gogowindow and not acima_piso:
-                gogowindow_ok = False
+
+            # Tracking para ambos os critérios (total e consecutivo)
+            if not acima_piso and ano < gogowindow:
+                gogo_bad_total += 1
+                gogo_consec_atual += 1
+                gogo_max_consec = max(gogo_max_consec, gogo_consec_atual)
+            elif ano < gogowindow:
+                gogo_consec_atual = 0
 
             pat -= gasto_total
             if pat <= 0:
                 break
 
-        if gogowindow_ok and (anos_acima_piso / n_anos >= min_frac_anos):
+        # Avaliar critério go-go ao final da trajetória
+        if max_bad_total is not None:
+            gogo_ok = gogo_bad_total <= max_bad_total
+        else:
+            gogo_ok = gogo_max_consec <= max_bad_consec
+
+        if gogo_ok and (anos_acima_piso / n_anos >= min_frac_anos):
             qualidade_count += 1
 
     return qualidade_count / n_sim
+
+
+# Critérios de qualidade para a matriz 5×3×3
+_CRITERIOS_MATRIZ = [
+    {"id": "A", "label": "Binário (nenhum)",  "descricao": "0 anos ruins no go-go", "max_bad_total": 0,    "max_bad_consec": 0},
+    {"id": "B", "label": "≤1 total",           "descricao": "máx 1 ano ruim total",  "max_bad_total": 1,    "max_bad_consec": None, "default": True},
+    {"id": "C", "label": "≤2 total",           "descricao": "máx 2 anos ruins total","max_bad_total": 2,    "max_bad_consec": None},
+    {"id": "D", "label": "≤1 consecutivo",     "descricao": "máx 1 consecutivo",     "max_bad_total": None, "max_bad_consec": 1},
+    {"id": "E", "label": "≤2 consecutivos",    "descricao": "máx 2 consecutivos",    "max_bad_total": None, "max_bad_consec": 2},
+]
+
+
+def compute_p_quality_matrix(premissas_base: dict, n_sim: int = 5_000, seed: int = 42) -> dict:
+    """Computa P(quality) para todas as combinações: 5 critérios × 3 perfis × 3 cenários.
+
+    Retorna dict estruturado para data.json['fire']['p_quality_matrix'].
+    FR-pquality-matrix 2026-04-29.
+    """
+    # Perfis com gasto anual (custo_vida_base) fixo por perfil
+    perfis_config = {
+        "atual":  {"custo_vida_base": 250_000, "idade_fire_alvo": 53},
+        "casado": {"custo_vida_base": 270_000, "idade_fire_alvo": 53},
+        "filho":  {"custo_vida_base": 300_000, "idade_fire_alvo": 53},
+    }
+    cenarios = ["base", "favoravel", "stress"]
+
+    # Metadados dos critérios (sem max_bad_* que são parâmetros internos)
+    criterios_meta = [
+        {k: v for k, v in c.items() if k not in ("max_bad_total", "max_bad_consec")}
+        for c in _CRITERIOS_MATRIZ
+    ]
+
+    values: dict = {}
+    total = len(_CRITERIOS_MATRIZ) * len(perfis_config) * len(cenarios)
+    done = 0
+
+    for crit in _CRITERIOS_MATRIZ:
+        crit_id = crit["id"]
+        values[crit_id] = {}
+
+        for perfil_id, perfil_cfg in perfis_config.items():
+            values[crit_id][perfil_id] = {}
+
+            # Construir premissas do perfil (cópia do base, ajustando custo de vida e horizonte)
+            p = dict(premissas_base)
+            p["custo_vida_base"] = perfil_cfg["custo_vida_base"]
+            p["idade_fire_alvo"] = perfil_cfg["idade_fire_alvo"]
+            p["anos_simulacao"] = premissas_base.get("horizonte_vida", 90) - perfil_cfg["idade_fire_alvo"]
+
+            for cenario in cenarios:
+                pq = compute_p_quality(
+                    p,
+                    n_sim=n_sim,
+                    seed=seed,
+                    max_bad_total=crit["max_bad_total"],
+                    max_bad_consec=crit["max_bad_consec"] if crit["max_bad_consec"] is not None else 0,
+                    cenario=cenario,
+                )
+                values[crit_id][perfil_id][cenario] = round(pq * 100, 1)
+                done += 1
+                print(f"    p_quality_matrix [{crit_id}][{perfil_id}][{cenario}] = {pq*100:.1f}% ({done}/{total})")
+
+    return {
+        "criterios": criterios_meta,
+        "perfis": list(perfis_config.keys()),
+        "cenarios": cenarios,
+        "values": values,
+        "gogowindow": MIN_QUALITY_GOGOWINDOW,
+        "min_frac_anos": MIN_QUALITY_FRAC,
+    }
 
 
 def compute_pfire_percentiles(premissas: dict, n_rodadas: int = 20, n_sim_por_rodada: int = 10_000) -> dict:
