@@ -669,7 +669,7 @@ export default function FirePage() {
           <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginTop: 6 }}>
             {(['proxy', 'partial', 'full'] as const).map(mode => {
               const val = mode === 'proxy' ? pqualityProxy : mode === 'full' ? pqualityFull : pqualityHero;
-              const label = mode === 'proxy' ? 'Proxy' : mode === 'partial' ? `Atual ${bondPoolCompletionPct.toFixed(0)}%` : 'Full 100%';
+              const label = mode === 'proxy' ? 'Sem bucket' : mode === 'partial' ? `Atual ${bondPoolCompletionPct.toFixed(0)}%` : 'Full 100%';
               const active = pqSelector === mode;
               if (val == null) return null;
               return (
