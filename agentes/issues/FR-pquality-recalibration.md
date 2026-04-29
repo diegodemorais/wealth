@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | FR-pquality-recalibration |
 | **Dono** | FIRE + Dev |
-| **Status** | Doing |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | FIRE, Quant, Advocate, Fact-Checker, Arquiteto (HD-ARCHITECT), Head, Dev |
 | **Co-sponsor** | Head, Diego |
@@ -87,10 +87,36 @@ P(quality) mede o que o FIRE *realmente entrega* — não apenas se o portfólio
 
 ## Análise
 
-> A preencher pelo time.
+Debate completo em 2026-04-29 com FIRE, Factor, RF, Behavioral e Advocate.
+
+**Critério go-go window:** variantes A-E simuladas (5k sim cada, 3 perfis × 3 cenários):
+- A binário (atual): Solteiro 58.9% / Casado 40.5% / C+Filho 38.7%
+- B ≤1 total (novo default): 65.3% / 49.7% / 42.0%
+- C ≤2 total: 68.8% / 55.3% / 43.6%
+- D ≤1 consecutivo: 66.0% / 51.2% / 42.4%
+- E ≤2 consecutivos: 69.4% / 56.5% / 44.0%
+
+**Decisão:** B escolhido como default. Narrativa: "ao menos um ajuste nos 10 anos go-go é tolerável; dois não." Os demais critérios (A-E) modelados e exibidos na PQualityMatrix.
+
+**Principais achados do debate:**
+- Gap P(FIRE) 86% vs P(quality) 65%: ~21pp. Principal causa = sequence-of-returns nos primeiros 10 anos do go-go acionando guardrails.
+- Piso R$193.6k coincide com guardrail banda 3 (>35% drawdown) — qualquer evento desse nível no go-go = falha de quality garantida.
+- Bond pool (IPCA+ 2040) resolve este problema structuralmente — mas o MC usava proxy de vol (omissão, não design).
+- Cenário família: P(quality) cai para 42% (casado+filho). Aspiracional e filho são dimensões separadas — não há combo formal.
+
+**Behavioral:** viés mais agudo = present bias no cenário filho. Anchoring em 65.3% como "OK" quando o nível absoluto ainda representa 35% de trajetórias com compressão de lifestyle no go-go.
 
 ---
 
 ## Conclusão
 
-> A preencher após debate e implementação.
+**Concluída em 2026-04-29. Dashboard v1.156.1.**
+
+Entregas realizadas:
+1. Critério B (≤1 ano ruim no go-go) definido como default — atualizado em `fire_montecarlo.py` e `config.py`
+2. `compute_p_quality_matrix`: 45 valores (5 critérios × 3 perfis × 3 cenários) em `data.json → fire.p_quality_matrix`
+3. `PQualityMatrix` component: tabela no FIRE tab com toggle de cenário, color-coding, badge "Padrão" na linha B
+4. P(quality) adicionado em: KpiHero (NOW), FireScenariosTable (FIRE), ReverseFire e WhatIf (Simuladores)
+5. 95/95 testes Playwright passando (5 falhas pré-existentes corrigidas)
+
+Issue derivada aberta: **FR-mc-bond-pool-isolation** — corrigir proxy de vol do bond pool para bucket isolation real.
