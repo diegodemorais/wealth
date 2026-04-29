@@ -27,7 +27,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| HD-pfire-consistencia-modelo | Consistência e Correção do Modelo P(FIRE) | Head + FIRE | 🔴 Alta |
 
 ### Blocked
 > Issues aguardando dependências externas
