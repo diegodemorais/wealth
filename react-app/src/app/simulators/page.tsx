@@ -946,6 +946,12 @@ function WhatIfSection() {
                       MC completo: {(byProfileA.p_at_threshold * 100).toFixed(0)}%
                     </div>
                   )}
+                  {/* P(quality) precomputado por perfil — FR-pquality-recalibration */}
+                  {byProfileA?.p_quality != null && (
+                    <div data-testid="whatif-pquality-a" style={{ fontSize: '10px', fontWeight: 600, marginTop: '2px', color: (() => { const v = byProfileA.p_quality as number; return v >= 70 ? 'var(--green)' : v >= 55 ? 'var(--yellow)' : 'var(--red)'; })() }}>
+                      P(qualidade): {privacyMode ? '••%' : `${(byProfileA.p_quality as number).toFixed(1)}%`}
+                    </div>
+                  )}
                 </div>
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>

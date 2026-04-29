@@ -35,6 +35,18 @@ export function FireScenariosTable() {
     };
   }, [data?.scenario_comparison]);
 
+  // P(quality) por cenário — lookup precomputado de data.fire
+  const pQualityBase: number | null = (data as any)?.fire?.p_quality ?? null;
+  const pQualityAspiracional: number | null = (data as any)?.fire?.p_quality_aspiracional ?? null;
+
+  // Cor semáforo para P(quality) — verde ≥70%, amarelo ≥50%, vermelho <50%
+  const pQualityColor = (v: number | null): string => {
+    if (v == null) return 'var(--muted)';
+    if (v >= 70) return 'var(--green)';
+    if (v >= 50) return 'var(--yellow)';
+    return 'var(--red)';
+  };
+
   // P(FIRE) com Câmbio Dinâmico (DEV-mc-regime-switching-fx)
   // r_anual = retorno_equity_base (USD puro, sem dep_BRL embutida)
   // fxRegime=true adiciona dep_BRL dinâmica via Markov switching
@@ -79,6 +91,16 @@ export function FireScenariosTable() {
       label: 'P(FIRE) — mercado base',
       base: <span style={{ fontWeight: 700, color: pfireColor(base.pfire) }}>{fmtPct(base.pfire)}</span>,
       asp: <span style={{ fontWeight: 700, color: pfireColor(aspiracional.pfire) }}>{fmtPct(aspiracional.pfire)}</span>,
+    },
+    {
+      // P(quality) — critério B (≤1 ano ruim no go-go), perfil solteiro, cenário base
+      label: 'P(Quality) — qualidade da aposent.',
+      base: pQualityBase != null
+        ? <span data-testid="pquality-scenarios-table" style={{ fontWeight: 700, color: pQualityColor(pQualityBase) }}>{privacyMode ? '••%' : fmtPct(pQualityBase)}</span>
+        : <span style={{ color: 'var(--muted)' }}>—</span>,
+      asp: pQualityAspiracional != null
+        ? <span style={{ fontWeight: 700, color: pQualityColor(pQualityAspiracional) }}>{privacyMode ? '••%' : fmtPct(pQualityAspiracional)}</span>
+        : <span style={{ color: 'var(--muted)' }}>—</span>,
     },
     {
       // DEV-mc-regime-switching-fx: dep_BRL via Markov Switching (Hamilton 1989)

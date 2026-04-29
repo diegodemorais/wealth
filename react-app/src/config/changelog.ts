@@ -15,6 +15,9 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-29 — P(quality) KpiHero + FireScenariosTable + WhatIf + ReverseFire ──
+  { datetime: '2026-04-29T17:00:00.000Z', type: 'dado', component: 'KpiHero', tab: 'now', anchor: '', de: 'P(FIRE) aspiracional sem quality', para: 'P(quality) aspiracional adicionado ao KPI hero card' },
+  { datetime: '2026-04-29T17:00:00.000Z', type: 'dado', component: 'FireScenariosTable', tab: 'fire', anchor: 'fire-scenarios', de: 'Tabela sem P(quality)', para: 'Coluna/linha P(quality) adicionada por cenário' },
   // ── 2026-04-29 — FR-pquality-matrix: Matriz 5 critérios × 3 perfis × 3 cenários ──
   { datetime: '2026-04-29T16:00:00.000Z', type: 'dado', component: 'PQualityMatrix', tab: 'fire', anchor: 'pquality-matrix', de: 'P(quality) único valor', para: 'Matriz 5 critérios × 3 perfis × 3 cenários de mercado; default muda para critério B (≤1 ano ruim no go-go)' },
   // ── 2026-04-29 — FR-pquality-recalibration: P(quality) hero + perfis + simulators ──

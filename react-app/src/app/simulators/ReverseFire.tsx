@@ -226,6 +226,19 @@ export function ReverseFire() {
     return fmRetornos[mktKey] ? fmRetornos[mktKey] : MKT_RETORNOS[mktKey];
   }, [mkt, fmRetornos, isCambioDinamico]);
 
+  // P(quality) — lookup precomputado por perfil (by_profile)
+  // Condição solteiro → 'atual', casado → 'casado', filho → 'filho'
+  const byProfile: any[] = (data as any)?.fire_matrix?.by_profile ?? [];
+  const condToProfileKey: Record<Cond, string> = { solteiro: 'atual', casado: 'casado', filho: 'filho' };
+  const pQualityProfile = byProfile.find((x: any) => x.profile === condToProfileKey[cond]);
+  const pQualityReverse: number | null = pQualityProfile?.p_quality ?? null;
+  const pQualityColor = (v: number | null): string => {
+    if (v == null) return 'var(--muted)';
+    if (v >= 70) return 'var(--green)';
+    if (v >= 50) return 'var(--yellow)';
+    return 'var(--red)';
+  };
+
   // Cálculo principal (custo anual vem do slider custoMensal)
   const custo = custoMensal * 12;
   const metaFire = custo / swrGatilho;
@@ -532,6 +545,12 @@ export function ReverseFire() {
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
                 probabilidade de atingir FIRE · N=1000 sims
               </div>
+              {/* P(quality) — precomputado por perfil (não varia com idadeFire/aporte) */}
+              {pQualityReverse != null && (
+                <div data-testid="reversefire-pquality" style={{ marginTop: '6px', fontSize: 'var(--text-xs)', fontWeight: 600, color: pQualityColor(pQualityReverse) }}>
+                  P(qualidade): {privacyMode ? '••%' : `${pQualityReverse.toFixed(1)}%`}
+                </div>
+              )}
             </div>
 
             {/* Meta FIRE */}

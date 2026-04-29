@@ -178,11 +178,26 @@ export default function HomePage() {
           label="P(Cenário Aspiracional)"
           data-testid="pfire-aspiracional"
           value={d.pfireAspiracional != null ? `${d.pfireAspiracional.toFixed(1)}%` : '—'}
-          sub={
-            d.pfireAspirFav != null && d.pfireAspirStress != null
+          sub={(() => {
+            const fireSub = d.pfireAspirFav != null && d.pfireAspirStress != null
               ? `fav ${d.pfireAspirFav.toFixed(1)}% · stress ${d.pfireAspirStress.toFixed(1)}%`
-              : 'cenário aspiracional (49a)'
-          }
+              : 'cenário aspiracional (49a)';
+            const pQualityAspiracionalRaw: number | null = (data as any)?.fire?.p_quality_aspiracional ?? null;
+            const pQualityColor = pQualityAspiracionalRaw == null ? 'var(--muted)'
+              : pQualityAspiracionalRaw >= 70 ? 'var(--green)'
+              : pQualityAspiracionalRaw >= 50 ? 'var(--yellow)'
+              : 'var(--red)';
+            return (
+              <>
+                <span>{fireSub}</span>
+                {pQualityAspiracionalRaw != null && (
+                  <span style={{ display: 'block', marginTop: '3px', fontWeight: 600, color: pQualityColor }} data-testid="pquality-aspiracional">
+                    P(qualidade) {privacyMode ? '••%' : `${pQualityAspiracionalRaw.toFixed(1)}%`}
+                  </span>
+                )}
+              </>
+            );
+          })()}
         />
         <MetricCard
           accent
