@@ -38,7 +38,7 @@ from config import (
     SPENDING_SMILE_GO_GO, SPENDING_SMILE_SLOW_GO, SPENDING_SMILE_NO_GO,
     GUARDRAILS_BANDA1_MIN, GUARDRAILS_BANDA2_MIN, GUARDRAILS_BANDA3_MIN,
     GUARDRAILS_CORTE1_PCT, GUARDRAILS_CORTE2_PCT, GUARDRAILS_PISO_PCT,
-    GASTO_PISO, SAUDE_BASE,
+    GASTO_PISO, PISO_LIFESTYLE_FRACTION, SAUDE_BASE,
     update_dashboard_state,
 )
 from guardrail_engine import GuardrailEngine, GuardrailRequest
@@ -219,28 +219,39 @@ def ans_faixa_multiplier(ano_pos_fire: int) -> float:
     return 1.0                          # 49-53 — faixa do FIRE Day
 
 
+def gasto_spending_smile_split(ano_pos_fire: int, ipca_acumulado: float,
+                                escala_custo_vida: float = 1.0) -> tuple[float, float]:
+    """Returns (gasto_lifestyle, gasto_saude) — elastic vs. inelastic spending.
+
+    gasto_lifestyle: spending smile (cortável por guardrails)
+    gasto_saude: saúde (inelástica, protegida — nunca cortada por guardrails)
+    FR-guardrails-categoria-elasticidade 2026-04-28.
+    """
+    for fase, cfg in SPENDING_SMILE.items():
+        if cfg["inicio"] <= ano_pos_fire < cfg["fim"]:
+            gasto_lifestyle = cfg["gasto"] * escala_custo_vida
+            break
+    else:
+        gasto_lifestyle = SPENDING_SMILE["no_go"]["gasto"] * escala_custo_vida
+
+    taxa_efetiva = min(SAUDE_INFLATOR, SAUDE_INFLATOR_CAP)
+    saude_vcmh = SAUDE_BASE * (1 + taxa_efetiva) ** ano_pos_fire
+    gasto_saude = saude_vcmh * ans_faixa_multiplier(ano_pos_fire)
+    if ano_pos_fire >= SPENDING_SMILE["no_go"]["inicio"]:
+        gasto_saude *= SAUDE_DECAY
+
+    return gasto_lifestyle, gasto_saude
+
+
 def gasto_spending_smile(ano_pos_fire: int, ipca_acumulado: float,
                           escala_custo_vida: float = 1.0) -> float:
-    """Gasto base ajustado pelo spending smile + saúde, em R$ reais (base 2026).
+    """Gasto total (lifestyle + saúde) em R$ reais (base 2026).
 
     escala_custo_vida: fator de escala relativo à base R$250k (ex: 1.1 = +10%).
     Usado pelo tornado para medir sensibilidade ao custo de vida.
     """
-    for fase, cfg in SPENDING_SMILE.items():
-        if cfg["inicio"] <= ano_pos_fire < cfg["fim"]:
-            gasto_base = cfg["gasto"] * escala_custo_vida
-            break
-    else:
-        gasto_base = SPENDING_SMILE["no_go"]["gasto"] * escala_custo_vida
-
-    # Saúde: VCMH 2.7%/ano real + saltos discretos ANS por faixa etária (RN 63/2003)
-    taxa_efetiva = min(SAUDE_INFLATOR, SAUDE_INFLATOR_CAP)
-    saude_vcmh = SAUDE_BASE * (1 + taxa_efetiva) ** ano_pos_fire
-    saude = saude_vcmh * ans_faixa_multiplier(ano_pos_fire)
-    if ano_pos_fire >= SPENDING_SMILE["no_go"]["inicio"]:
-        saude *= SAUDE_DECAY
-
-    return gasto_base + saude
+    g, s = gasto_spending_smile_split(ano_pos_fire, ipca_acumulado, escala_custo_vida)
+    return g + s
 
 
 def retorno_equity_net_ir(retorno_real: float, ipca: float, aliquota: float) -> float:
@@ -298,10 +309,10 @@ def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retor
         pat = pat * (1 + retorno_anual)
         pat_pico = max(pat_pico, pat)
 
-        gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)
+        gasto_lifestyle_target, gasto_saude = gasto_spending_smile_split(ano, 0, escala_custo_vida)
         withdrawal_req = WithdrawalRequest(
             strategy=strategy,
-            gasto_smile=gasto_base,
+            gasto_smile=gasto_lifestyle_target,
             patrimonio_atual=max(0, pat),  # Clamp to 0 (depleted portfolio)
             patrimonio_pico=pat_pico,
             ano=ano,
@@ -309,7 +320,8 @@ def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retor
             guardrails_config=GUARDRAILS,
         )
         withdrawal_result = WithdrawalEngine.calculate(withdrawal_req)
-        gasto = withdrawal_result.gasto_anual
+        gasto_lifestyle = withdrawal_result.gasto_anual
+        gasto = gasto_lifestyle + gasto_saude  # saúde sempre pago, protegido de guardrails
 
         if inss_anual > 0 and ano >= inss_inicio_ano:
             gasto = max(0, gasto - inss_anual)
@@ -366,10 +378,10 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
         pat = pat * (1 + retorno_anual)
         pat_pico = max(pat_pico, pat)
 
-        gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)
+        gasto_lifestyle_target, gasto_saude = gasto_spending_smile_split(ano, 0, escala_custo_vida)
         withdrawal_req = WithdrawalRequest(
             strategy=strategy,
-            gasto_smile=gasto_base,
+            gasto_smile=gasto_lifestyle_target,
             patrimonio_atual=max(0, pat),  # Clamp to 0 (depleted portfolio)
             patrimonio_pico=pat_pico,
             ano=ano,
@@ -377,7 +389,8 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
             guardrails_config=GUARDRAILS,
         )
         withdrawal_result = WithdrawalEngine.calculate(withdrawal_req)
-        gasto = withdrawal_result.gasto_anual
+        gasto_lifestyle = withdrawal_result.gasto_anual
+        gasto = gasto_lifestyle + gasto_saude  # saúde sempre pago, protegido de guardrails
 
         if inss_anual > 0 and ano >= inss_inicio_ano:
             gasto = max(0, gasto - inss_anual)
@@ -401,6 +414,71 @@ def _retorno_equity_cenario(premissas: dict, cenario: str) -> float:
     elif cenario == "stress":
         r += premissas["adj_stress"]
     return r
+
+
+def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
+                      min_frac_anos: float = 0.90) -> float:
+    """P(quality): % de trajetórias onde lifestyle >= PISO_LIFESTYLE_FRACTION * smile_target em >= 90% dos anos.
+
+    Piso dinâmico por fase: falha quando corte > 10% (banda 2+, dd >= 25%).
+    FR-guardrails-categoria-elasticidade 2026-04-28.
+    """
+    rng = np.random.default_rng(seed)
+    r_equity = premissas["retorno_equity_base"]
+    anos_acum = premissas["idade_fire_alvo"] - premissas["idade_atual"]
+    pat_fire = projetar_acumulacao(premissas, r_equity, "base", n_sim, rng, anos_acum)
+
+    escala_cv = premissas.get("custo_vida_base", 250_000) / 250_000
+    n_anos = premissas["anos_simulacao"]
+    df = premissas["t_dist_df"]
+    vol = premissas["volatilidade_equity"]
+    t_scale = np.sqrt(df / (df - 2))
+    ipca_anual = premissas.get("ipca_anual", 0.04)
+
+    qualidade_count = 0
+    for i in range(n_sim):
+        pat = float(pat_fire[i])
+        pat_pico = pat
+        ctx = WithdrawalCtx(
+            swr_inicial=premissas["custo_vida_base"] / pat if pat > 0 else SWR_FALLBACK,
+            anos_total=n_anos,
+            ipca_anual=ipca_anual,
+        )
+        anos_acima_piso = 0
+
+        for ano in range(n_anos):
+            z = rng.standard_t(df) / t_scale
+            retorno_anual = r_equity + vol * z
+            ctx.retorno_ano = retorno_anual
+            pat = pat * (1 + retorno_anual)
+            pat_pico = max(pat_pico, pat)
+
+            gasto_lifestyle_target, gasto_saude = gasto_spending_smile_split(ano, 0, escala_cv)
+            req = WithdrawalRequest(
+                strategy="guardrails",
+                gasto_smile=gasto_lifestyle_target,
+                patrimonio_atual=max(0, pat),
+                patrimonio_pico=pat_pico,
+                ano=ano,
+                ctx=ctx,
+                guardrails_config=GUARDRAILS,
+            )
+            gasto_lifestyle = WithdrawalEngine.calculate(req).gasto_anual
+            gasto_total = gasto_lifestyle + gasto_saude
+
+            # Piso dinâmico: fração do target da fase (falha quando banda 2+ ativa)
+            piso_ano = PISO_LIFESTYLE_FRACTION * gasto_lifestyle_target
+            if gasto_lifestyle >= piso_ano:
+                anos_acima_piso += 1
+
+            pat -= gasto_total
+            if pat <= 0:
+                break
+
+        if anos_acima_piso / n_anos >= min_frac_anos:
+            qualidade_count += 1
+
+    return qualidade_count / n_sim
 
 
 def compute_pfire_percentiles(premissas: dict, n_rodadas: int = 20, n_sim_por_rodada: int = 10_000) -> dict:
@@ -1218,6 +1296,13 @@ def main():
     fire_data[f"pat_mediano_{cenario}"] = round(resultados[0]["pat_mediana_fire"], 0)
     fire_data[f"pat_p10_{cenario}"]     = round(resultados[0]["pat_p10_fire"], 0)
     fire_data[f"pat_p90_{cenario}"]     = round(resultados[0]["pat_p90_fire"], 0)
+
+    # P(quality) — só para cenário base (FR-guardrails-categoria-elasticidade 2026-04-28)
+    if cenario == "base":
+        print("  Calculando P(quality) (guardrails lifestyle-only, 10k sims)...")
+        p_quality = compute_p_quality(premissas, n_sim=args.n_sim)
+        fire_data["p_quality"] = round(p_quality * 100, 1)
+        print(f"  P(quality): {p_quality:.1%} (lifestyle >= {PISO_LIFESTYLE_FRACTION:.0%} do smile target em >= 90% dos anos)")
 
     update_dashboard_state("fire", fire_data, generator="fire_montecarlo.py")
 

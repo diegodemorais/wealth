@@ -430,7 +430,8 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | guardrails_corte1_pct | 0.10 | §Guardrails aprovados 2026-03-20 — corte 10% (banda 15–25%) |
 | guardrails_corte2_pct | 0.20 | §Guardrails aprovados 2026-03-20 — corte 20% (banda 25–35%) |
 | guardrails_piso_pct | 0.28 | §Guardrails aprovados 2026-03-20 — corte 28% (dd > 35%) |
-| gasto_piso | 180000 | §Guardrails aprovados 2026-03-20 — piso absoluto R$/ano |
+| gasto_piso | 180000 | §Guardrails aprovados 2026-03-20 — piso absoluto lifestyle R$/ano (saúde paga separado, FR-guardrails-categoria-elasticidade 2026-04-28) |
+| piso_lifestyle_fraction | 0.80 | FR-guardrails-categoria-elasticidade 2026-04-28 — fração do gasto da fase como piso dinâmico P(quality). Falha quando corte > 20% (banda 3+, dd>35%). Ex-saúde. |
 | saude_base | 24000 | FR-healthcare-recalibracao 2026-04-23 — coletivo por adesão intermediário SP R$2k/mês (pesquisa: Bradesco/SulAmérica apto R$1.3-1.7k, buffer incluído) |
 | ipca_plus_taxa_anual | 0.0716 | snapshot taxa bruta Tesouro IPCA+ (atualizar quando taxa mudar) |
 | ipca_plus_custodia | 0.0020 | custódia B3 0.20%/ano sobre Tesouro Direto |
