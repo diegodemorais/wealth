@@ -542,7 +542,7 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
                       max_bad_consec: int = 0,
                       cenario: str = "base",
                       bond_pool_isolation: bool = False,
-                      bond_pool_completion_fraction: float = 1.0) -> float:
+                      bond_pool_completion_fraction: float | None = None) -> float:
     """P(quality): % de trajetórias onde lifestyle >= PISO_LIFESTYLE_FRACTION * smile_target.
 
     Critérios (ambos devem ser satisfeitos):
@@ -563,7 +563,7 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
         min_frac_anos = MIN_QUALITY_FRAC
     if gogowindow is None:
         gogowindow = MIN_QUALITY_GOGOWINDOW
-    if bond_pool_completion_fraction == 1.0:  # não sobreescrito explicitamente
+    if bond_pool_completion_fraction is None:
         bond_pool_completion_fraction = premissas.get("bond_pool_completion_fraction", 1.0)
 
     rng = np.random.default_rng(seed)
