@@ -579,9 +579,18 @@ export default function FirePage() {
   // TypeScript narrowing: stateEl being null guarantees data is non-null (pageStateElement returns JSX when data is null)
   const safeData = data!;
 
+  // ── P(quality) helper — verde >=70, amarelo 55-70, vermelho <55
+  const pqualityColor = (v: number | null | undefined): string => {
+    if (v == null) return 'var(--muted)';
+    if (v >= 70) return 'var(--green)';
+    if (v >= 55) return 'var(--yellow)';
+    return 'var(--red)';
+  };
+
   // ── Hero banner values ──────────────────────────────────────────────────────
   const pfireHero: number | null = derived?.pfireBase ?? null; // pfireBase is 0-100 scale
   const pfireHeroColor = pfireColorFn(pfireHero);
+  const pqualityHero: number | null = (data as any)?.fire?.p_quality ?? null;
   const modelUncertainty = (data as any)?.pfire_base?.model_uncertainty as { low: number; high: number } | null ?? null;
   const prem = (data as any)?.premissas ?? {};
   const fireYearHero: number | null = (() => {
@@ -635,6 +644,16 @@ export default function FirePage() {
               modelo: ~{modelUncertainty.low}–{modelUncertainty.high}%
             </div>
           )}
+        </div>
+        {/* Separator */}
+        <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
+        {/* P(quality) */}
+        <div style={{ textAlign: 'center', minWidth: 100 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>P(quality)</div>
+          <div data-testid="pquality-hero" style={{ fontSize: '2.5rem', fontWeight: 900, color: pqualityColor(pqualityHero), lineHeight: 1 }}>
+            {pqualityHero != null ? `${pqualityHero.toFixed(1)}%` : '—'}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>vida como planejada</div>
         </div>
         {/* Separator */}
         <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
@@ -925,6 +944,7 @@ export default function FirePage() {
                 // Use precomputed MC dates — consistent with P values (same MC run)
                 let fireAno: number | null, fireIdade: number | null;
                 let pfire: number, pfav: number, pstress: number;
+                let pquality: number | null;
                 if (isAspir) {
                   const ef = (data as any)?.earliest_fire;
                   fireAno = ef?.ano ?? null;
@@ -932,6 +952,7 @@ export default function FirePage() {
                   pfire  = (data as any)?.pfire_aspiracional?.base  ?? p.p_fire_50;
                   pfav   = (data as any)?.pfire_aspiracional?.fav   ?? p.p_fire_50_fav;
                   pstress = (data as any)?.pfire_aspiracional?.stress ?? p.p_fire_50_stress;
+                  pquality = (data as any)?.fire?.p_quality_aspiracional ?? null;
                 } else {
                   // Threshold scenario: earliest age where P(base) >= 85% with SWR=3% fixed
                   fireAno = p.fire_year_threshold ? parseInt(p.fire_year_threshold, 10) : null;
@@ -939,6 +960,7 @@ export default function FirePage() {
                   pfire  = p.p_at_threshold as number;
                   pfav   = p.p_at_threshold_fav as number;
                   pstress = p.p_at_threshold_stress as number;
+                  pquality = p.p_quality ?? null;
                 }
 
                 const pfireColor = pfireColorFn(pfire);
@@ -988,6 +1010,15 @@ export default function FirePage() {
                       <span style={{ fontSize: '10px', color: 'var(--muted)' }}>fav <span style={{ color: 'var(--green)' }}>{pfav.toFixed(0)}%</span></span>
                       <span style={{ fontSize: '10px', color: 'var(--muted)' }}>stress <span style={{ color: 'var(--red)' }}>{pstress.toFixed(0)}%</span></span>
                     </div>
+                    {pquality != null && (
+                      <div data-testid={`pquality-profile-${profile}${isAspir ? '-aspir' : ''}`}
+                           style={{ marginTop: '6px', padding: '3px 8px', borderRadius: 4,
+                                    background: `color-mix(in srgb, ${pqualityColor(pquality)} 12%, transparent)`,
+                                    border: `1px solid color-mix(in srgb, ${pqualityColor(pquality)} 30%, transparent)` }}>
+                        <span style={{ fontSize: '10px', color: 'var(--muted)' }}>quality </span>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: pqualityColor(pquality) }}>{pquality.toFixed(1)}%</span>
+                      </div>
+                    )}
                     <div style={{ marginTop: '10px' }}>
                       <Link href={href} style={{
                         display: 'inline-block', padding: '6px 18px',

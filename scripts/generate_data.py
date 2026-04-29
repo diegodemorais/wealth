@@ -3870,6 +3870,7 @@ def main():
     state = load_state()
     # p_quality: extraído aqui (escopo main) para estar disponível ao construir fire_section
     p_quality = state.get("fire", {}).get("p_quality")
+    p_quality_aspiracional = state.get("fire", {}).get("p_quality_aspiracional")
 
     # Carregar posições IBKR se não estão no state (fallback inteligente)
     if not state.get("posicoes") or len(state.get("posicoes", {})) == 0:
@@ -4952,8 +4953,9 @@ def main():
         "pat_mediano_fire50":  fire_state.get("pat_mediano_fire50"),
         "mc_date":             fire_state.get("mc_date"),
         "plano_status":        macro.get("plano_status") if macro else None,
-        "swr_current":         swr_current,
-        "p_quality":           p_quality,
+        "swr_current":              swr_current,
+        "p_quality":                p_quality,
+        "p_quality_aspiracional":   p_quality_aspiracional,
     }
 
     # Earliest FIRE date
@@ -5076,7 +5078,12 @@ def main():
         if fire_matrix_data is None:
             fire_matrix_data = {}
         fire_matrix_data["by_profile"] = _by_profile
-        print(f"  -> by_profile: {len(_by_profile)} perfis (MC scenarios 3x2x3) [{src}]")
+        # Warn if p_quality missing from any profile (FR-pquality-recalibration 2026-04-29)
+        missing_pq = [p.get("label", p.get("profile")) for p in _by_profile if p.get("p_quality") is None]
+        if missing_pq:
+            print(f"  ⚠️  by_profile p_quality MISSING for: {missing_pq} — run fire_montecarlo.py --by-profile")
+        else:
+            print(f"  -> by_profile: {len(_by_profile)} perfis (MC scenarios 3x2x3) [{src}], p_quality: {[round(p['p_quality'],1) for p in _by_profile]}")
     else:
         print("  ⚠️  by_profile MISSING — Cenário A will show '—'. Run fire_montecarlo.py --by_profile")
 

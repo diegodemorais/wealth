@@ -16,7 +16,7 @@
  * NOTE: Range assertions (e.g. P(FIRE) > 50%) may need recalibration if portfolio
  * changes significantly. Review when patrimônio crosses major thresholds.
  *
- * Coverage: 62 blocks across 7 tabs (NOW, FIRE, Performance, Portfolio, Backtest, Withdraw, Simulators)
+ * Coverage: 67 blocks across 7 tabs (NOW, FIRE, Performance, Portfolio, Backtest, Withdraw, Simulators)
  * Priority: P1 = value not "—" and contains digits, P2 = visible and not empty, P3 = visible only
  */
 
@@ -226,6 +226,46 @@ test.describe('FIRE — semantic values', () => {
   test('glide-path block is visible', async ({ page }) => {
     const el = page.locator('[data-testid="glide-path"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  // FR-pquality-recalibration 2026-04-29
+  test('pquality-hero is a valid percentage (≥20%)', async ({ page }) => {
+    const el = page.locator('[data-testid="pquality-hero"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    expect(text.trim(), 'pquality-hero shows placeholder "—"').not.toBe('—');
+    const match = text.match(/([\d.]+)%/);
+    expect(match, `pquality-hero must show a percentage, got: "${text}"`).not.toBeNull();
+    const val = parseFloat(match![1]);
+    expect(val, 'P(quality) hero < 20% — unexpected').toBeGreaterThanOrEqual(20);
+    expect(val, 'P(quality) hero > 100%').toBeLessThanOrEqual(100);
+  });
+
+  test('pquality-profile-atual shows a valid percentage', async ({ page }) => {
+    const el = page.locator('[data-testid="pquality-profile-atual"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    const match = text.match(/([\d.]+)%/);
+    expect(match, `pquality-profile-atual must show %, got: "${text}"`).not.toBeNull();
+    const val = parseFloat(match![1]);
+    expect(val).toBeGreaterThanOrEqual(20);
+    expect(val).toBeLessThanOrEqual(100);
+  });
+
+  test('pquality-profile-casado shows a valid percentage', async ({ page }) => {
+    const el = page.locator('[data-testid="pquality-profile-casado"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    const match = text.match(/([\d.]+)%/);
+    expect(match, `pquality-profile-casado must show %, got: "${text}"`).not.toBeNull();
+  });
+
+  test('pquality-profile-filho shows a valid percentage', async ({ page }) => {
+    const el = page.locator('[data-testid="pquality-profile-filho"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    const match = text.match(/([\d.]+)%/);
+    expect(match, `pquality-profile-filho must show %, got: "${text}"`).not.toBeNull();
   });
 });
 
@@ -492,6 +532,18 @@ test.describe('Simulators — semantic values', () => {
   test('stress-test-mc block is visible', async ({ page }) => {
     const el = page.locator('[data-testid="stress-test-mc"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  // FR-pquality-recalibration 2026-04-29
+  test('sim-pquality shows a valid percentage (≥20%)', async ({ page }) => {
+    const el = page.locator('[data-testid="sim-pquality"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const text = (await el.textContent()) ?? '';
+    const match = text.match(/([\d.]+)%/);
+    expect(match, `sim-pquality must show %, got: "${text}"`).not.toBeNull();
+    const val = parseFloat(match![1]);
+    expect(val, 'sim-pquality < 20%').toBeGreaterThanOrEqual(20);
+    expect(val, 'sim-pquality > 100%').toBeLessThanOrEqual(100);
   });
 });
 

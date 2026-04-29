@@ -432,6 +432,8 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | guardrails_piso_pct | 0.28 | §Guardrails aprovados 2026-03-20 — corte 28% (dd > 35%) |
 | gasto_piso | 180000 | §Guardrails aprovados 2026-03-20 — piso absoluto lifestyle R$/ano (saúde paga separado, FR-guardrails-categoria-elasticidade 2026-04-28) |
 | piso_lifestyle_fraction | 0.80 | FR-guardrails-categoria-elasticidade 2026-04-28 — fração do gasto da fase como piso dinâmico P(quality). Falha quando corte > 20% (banda 3+, dd>35%). Ex-saúde. |
+| min_quality_frac | 0.85 | FR-pquality-recalibration 2026-04-29 — fração mínima de anos onde lifestyle >= piso (0.85 = 32/37 anos). Anterior: 0.90 hardcoded. |
+| min_quality_gogowindow | 10 | FR-pquality-recalibration 2026-04-29 — janela go-go: lifestyle >= piso obrigatório nos primeiros N anos (cortes iniciais têm maior custo hedônico). |
 | saude_base | 24000 | FR-healthcare-recalibracao 2026-04-23 — coletivo por adesão intermediário SP R$2k/mês (pesquisa: Bradesco/SulAmérica apto R$1.3-1.7k, buffer incluído) |
 | saude_inflator | 0.035 | FR-saude-modelo-custo 2026-04-29 — VCMH 3.5%/ano real (conservador vs IESS ~2.7% histórico; anterior 5.0% sem suporte documentado) |
 | saude_decay | 0.15 | FR-saude-modelo-custo 2026-04-29 — redução de 15% após No-Go (anterior 50% causava descontinuidade abrupta sem justificativa clínica) |

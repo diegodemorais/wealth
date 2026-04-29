@@ -158,6 +158,17 @@ function FireSimuladorSection() {
   const pfire50 = (data as any)?.pfire_aspiracional?.base ?? null;
   const pfire53 = (data as any)?.pfire_base?.base ?? null;
 
+  // P(quality) color helper (verde >=70, amarelo 55-70, vermelho <55)
+  const pqualityColor = (v: number | null | undefined): string => {
+    if (v == null) return 'var(--muted)';
+    if (v >= 70) return 'var(--green)';
+    if (v >= 55) return 'var(--yellow)';
+    return 'var(--red)';
+  };
+  const byProfileForQuality: any[] = (data as any)?.fire_matrix?.by_profile ?? [];
+  // P(quality) by profile key — maps fireCond → profile key
+  const profileKeyForCond: Record<string, string> = { solteiro: 'atual', casamento: 'casado', filho: 'filho' };
+
   // SWR from data
   const swrPercentis = (data as any)?.fire_swr_percentis;
   const swrBruta = swrPercentis?.swr_p50;
@@ -304,6 +315,19 @@ function FireSimuladorSection() {
     })() : null;
   }
 
+  // P(quality) — lookup pré-computado de by_profile (FR-pquality-recalibration 2026-04-29)
+  let pqualitySim: number | null = null;
+  if (isPresetMode && !isCambioDinamico) {
+    if (isAspirPreset) {
+      pqualitySim = (data as any)?.fire?.p_quality_aspiracional ?? null;
+    } else {
+      const pqProf = byProfileForQuality.find((x: any) => x.profile === profileKeyForCond[fireCond]);
+      pqualitySim = pqProf?.p_quality ?? null;
+    }
+  } else {
+    pqualitySim = (data as any)?.fire?.p_quality ?? null;
+  }
+
   // SWR líquida (only meaningful in custom mode when pat is known)
   const swrLiquidaSimple = (result && result.pat > 0 && custoLiquido != null) ? ((custoLiquido / result.pat) * 100).toFixed(2) : null;
 
@@ -348,6 +372,11 @@ function FireSimuladorSection() {
           <div style={{ fontSize: '1rem', fontWeight: 700, marginTop: '4px', color: pfireCardColor }} className="pv" data-testid="sim-pfire">
             {firePire !== null ? `P = ${firePire}%` : 'P = —%'}
           </div>
+          {pqualitySim != null && (
+            <div data-testid="sim-pquality" style={{ marginTop: '4px', fontSize: '0.85rem', fontWeight: 600, color: pqualityColor(pqualitySim) }}>
+              quality {pqualitySim.toFixed(1)}%
+            </div>
+          )}
           {/* Semáforo badge */}
           {semaforo && (
             <div style={{ marginTop: '6px' }}>

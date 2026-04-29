@@ -38,8 +38,9 @@ from config import (
     SPENDING_SMILE_GO_GO, SPENDING_SMILE_SLOW_GO, SPENDING_SMILE_NO_GO,
     GUARDRAILS_BANDA1_MIN, GUARDRAILS_BANDA2_MIN, GUARDRAILS_BANDA3_MIN,
     GUARDRAILS_CORTE1_PCT, GUARDRAILS_CORTE2_PCT, GUARDRAILS_PISO_PCT,
-    GASTO_PISO, PISO_LIFESTYLE_FRACTION, SAUDE_BASE,
+    GASTO_PISO, PISO_LIFESTYLE_FRACTION, MIN_QUALITY_FRAC, MIN_QUALITY_GOGOWINDOW, SAUDE_BASE,
     SAUDE_INFLATOR, SAUDE_DECAY,
+    CUSTO_VIDA_BASE_CASADO, CUSTO_VIDA_BASE_FILHO,
     update_dashboard_state,
 )
 from guardrail_engine import GuardrailEngine, GuardrailRequest
@@ -417,18 +418,28 @@ def _retorno_equity_cenario(premissas: dict, cenario: str) -> float:
 
 
 def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
-                      min_frac_anos: float = 0.90) -> float:
-    """P(quality): % de trajetórias onde lifestyle >= PISO_LIFESTYLE_FRACTION * smile_target em >= 90% dos anos.
+                      min_frac_anos: float | None = None,
+                      gogowindow: int | None = None) -> float:
+    """P(quality): % de trajetórias onde lifestyle >= PISO_LIFESTYLE_FRACTION * smile_target.
 
-    Piso dinâmico por fase: falha quando corte > 10% (banda 2+, dd >= 25%).
-    FR-guardrails-categoria-elasticidade 2026-04-28.
+    Critérios (ambos devem ser satisfeitos):
+      1. >= min_frac_anos dos anos totais (default: MIN_QUALITY_FRAC from config)
+      2. >= gogowindow primeiros anos com lifestyle >= piso (go-go window, cortes iniciais penalizam mais)
+
+    FR-pquality-recalibration 2026-04-29.
     """
+    if min_frac_anos is None:
+        min_frac_anos = MIN_QUALITY_FRAC
+    if gogowindow is None:
+        gogowindow = MIN_QUALITY_GOGOWINDOW
+
     rng = np.random.default_rng(seed)
     r_equity = premissas["retorno_equity_base"]
     anos_acum = premissas["idade_fire_alvo"] - premissas["idade_atual"]
     pat_fire = projetar_acumulacao(premissas, r_equity, "base", n_sim, rng, anos_acum)
 
-    escala_cv = premissas.get("custo_vida_base", 250_000) / 250_000
+    # escala_cv: ratio do custo de vida do perfil vs base canônico (250k)
+    escala_cv = premissas.get("custo_vida_base", CUSTO_VIDA_BASE) / CUSTO_VIDA_BASE
     n_anos = premissas["anos_simulacao"]
     df = premissas["t_dist_df"]
     vol = premissas["volatilidade_equity"]
@@ -445,6 +456,7 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
             ipca_anual=ipca_anual,
         )
         anos_acima_piso = 0
+        gogowindow_ok = True
 
         for ano in range(n_anos):
             z = rng.standard_t(df) / t_scale
@@ -466,16 +478,19 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
             gasto_lifestyle = WithdrawalEngine.calculate(req).gasto_anual
             gasto_total = gasto_lifestyle + gasto_saude
 
-            # Piso dinâmico: fração do target da fase (falha quando banda 2+ ativa)
             piso_ano = PISO_LIFESTYLE_FRACTION * gasto_lifestyle_target
-            if gasto_lifestyle >= piso_ano:
+            acima_piso = gasto_lifestyle >= piso_ano
+            if acima_piso:
                 anos_acima_piso += 1
+            # go-go window: se falhar em qualquer ano <= gogowindow, trajetória falha
+            if ano < gogowindow and not acima_piso:
+                gogowindow_ok = False
 
             pat -= gasto_total
             if pat <= 0:
                 break
 
-        if anos_acima_piso / n_anos >= min_frac_anos:
+        if gogowindow_ok and (anos_acima_piso / n_anos >= min_frac_anos):
             qualidade_count += 1
 
     return qualidade_count / n_sim
@@ -854,6 +869,7 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
         "p_at_threshold": 87.2,          # P(base) nessa idade
         "swr_at_fire": 0.0225,           # gasto_anual / pat_mediano_at_threshold
         "pat_mediano_threshold": 11100000,
+        "p_quality": 66.1,  # P(quality) para perfil (fire_age_threshold), em %
       }
     """
     results = []
@@ -938,6 +954,15 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
             entry["p_at_threshold_stress"]   = None
             entry["swr_at_fire"]             = round(swr, 4) if swr else None
             entry["pat_mediano_threshold"]   = pat_med
+
+        # P(quality) para este perfil (usa idade_fire_alvo = fire_age_threshold)
+        age_q = entry["fire_age_threshold"]
+        p_quality_premissas = dict(premissas)
+        p_quality_premissas["custo_vida_base"] = perfil["gasto_anual"]
+        p_quality_premissas["idade_fire_alvo"] = age_q
+        p_quality_premissas["anos_simulacao"] = HORIZONTE_VIDA - age_q
+        p_q = compute_p_quality(p_quality_premissas, n_sim=n_sim, seed=seed)
+        entry["p_quality"] = round(p_q * 100, 1)
 
         results.append(entry)
 
@@ -1264,7 +1289,7 @@ def main():
 
     # ── Export dashboard_state.json ──
     from datetime import date
-    idade_fire = premissas["idade_cenario_base"]  # 53 = base, 49 = aspiracional
+    idade_fire = premissas.get("idade_fire_alvo", premissas["idade_cenario_base"])
 
     # Detectar cenário: base (53) ou aspiracional (49)
     cenario = "base" if idade_fire == IDADE_CENARIO_BASE else "aspiracional"
@@ -1297,12 +1322,13 @@ def main():
     fire_data[f"pat_p10_{cenario}"]     = round(resultados[0]["pat_p10_fire"], 0)
     fire_data[f"pat_p90_{cenario}"]     = round(resultados[0]["pat_p90_fire"], 0)
 
-    # P(quality) — só para cenário base (FR-guardrails-categoria-elasticidade 2026-04-28)
-    if cenario == "base":
-        print("  Calculando P(quality) (guardrails lifestyle-only, 10k sims)...")
+    # P(quality) — cenário base e aspiracional (FR-pquality-recalibration 2026-04-29)
+    if cenario in ("base", "aspiracional"):
+        print(f"  Calculando P(quality) ({cenario}, {args.n_sim:,} sims)...")
         p_quality = compute_p_quality(premissas, n_sim=args.n_sim)
-        fire_data["p_quality"] = round(p_quality * 100, 1)
-        print(f"  P(quality): {p_quality:.1%} (lifestyle >= {PISO_LIFESTYLE_FRACTION:.0%} do smile target em >= 90% dos anos)")
+        key = "p_quality" if cenario == "base" else "p_quality_aspiracional"
+        fire_data[key] = round(p_quality * 100, 1)
+        print(f"  P(quality) [{cenario}]: {p_quality:.1%} (piso {PISO_LIFESTYLE_FRACTION:.0%}, min_frac {MIN_QUALITY_FRAC:.0%}, go-go {MIN_QUALITY_GOGOWINDOW}a)")
 
     update_dashboard_state("fire", fire_data, generator="fire_montecarlo.py")
 

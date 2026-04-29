@@ -15,6 +15,10 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-29 — FR-pquality-recalibration: P(quality) hero + perfis + simulators ──
+  { datetime: '2026-04-29T12:00:00', type: 'cálculo', component: 'P(Quality) Hero', tab: 'fire', anchor: '', de: 'não existia', para: 'banner hero exibe P(quality) com cor semáforo verde≥70%/amarelo≥55%/vermelho<55% — FR-pquality-recalibration 2026-04-29' },
+  { datetime: '2026-04-29T12:00:00', type: 'cálculo', component: 'P(Quality) Perfis Familiares', tab: 'fire', anchor: 'section-pfire-familia', de: 'não existia', para: 'P(quality) por perfil (atual/casado/filho/aspiracional) com cor semáforo — piso 80% smile, min_frac 85% anos, go-go 10 anos — FR-pquality-recalibration' },
+  { datetime: '2026-04-29T12:00:00', type: 'dado', component: 'P(Quality) Simuladores', tab: 'simulators', anchor: '', de: 'não existia', para: 'card P(quality) no resultado do simulador FIRE (lookup precomputado by_profile) — FR-pquality-recalibration 2026-04-29' },
   // ── 2026-04-29 — FR-pfire-model-robustness: intervalo de incerteza de modelo ──
   { datetime: '2026-04-29T07:47:00', type: 'dado', component: 'P(FIRE) Hero — Intervalo Incerteza', tab: 'fire', anchor: '', de: 'número pontual 83.7%', para: 'exibe "modelo: ~72–92%" abaixo do número central — FR-pfire-model-robustness (RF fix 6.0%→5.34%, iid assumption)' },
   // ── 2026-04-28 — Gap T: Widget Qualidade FIRE (p_quality) ──

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-04-22",
+  "generated": "2026-04-29T14:06:15Z",
   "tabs": [
     {
       "id": "now",
@@ -1392,6 +1392,81 @@
         "fire.p_quality"
       ],
       "optional": false,
+      "privacy": false
+    },
+    {
+      "id": "pquality-hero",
+      "tab": "fire",
+      "label": "P(Quality) — Herói FIRE",
+      "type": "kpi",
+      "purpose": "Mostra probabilidade de aposentadoria com qualidade de vida (lifestyle ≥ 80% do smile target em ≥ 85% dos anos E nos primeiros 10 anos go-go) para complementar P(FIRE) com critério hedônico",
+      "data_fields": [
+        "fire.p_quality"
+      ],
+      "global_headline": false,
+      "privacy": false
+    },
+    {
+      "id": "pquality-profile-atual",
+      "tab": "fire",
+      "label": "P(Quality) — Perfil Atual (Solteiro)",
+      "type": "kpi",
+      "purpose": "P(quality) calculado para o perfil familiar atual (solteiro) — threshold age and spending from by_profile MC",
+      "data_fields": [
+        "fire_matrix.by_profile"
+      ],
+      "privacy": false,
+      "optional": true,
+      "note": "dynamic testid (template literal) — cannot be detected by sync_spec.py regex"
+    },
+    {
+      "id": "pquality-profile-casado",
+      "tab": "fire",
+      "label": "P(Quality) — Perfil Casado",
+      "type": "kpi",
+      "purpose": "P(quality) calculado para o perfil casado — impacto de gasto elevado na sustentabilidade hedônica",
+      "data_fields": [
+        "fire_matrix.by_profile"
+      ],
+      "privacy": false,
+      "optional": true,
+      "note": "dynamic testid (template literal) — cannot be detected by sync_spec.py regex"
+    },
+    {
+      "id": "pquality-profile-filho",
+      "tab": "fire",
+      "label": "P(Quality) — Perfil Casado + Filho",
+      "type": "kpi",
+      "purpose": "P(quality) calculado para o perfil com filho — teste de stress máximo no modelo FIRE de Diego",
+      "data_fields": [
+        "fire_matrix.by_profile"
+      ],
+      "privacy": false,
+      "optional": true,
+      "note": "dynamic testid (template literal) — cannot be detected by sync_spec.py regex"
+    },
+    {
+      "id": "pquality-profile-atual-aspir",
+      "tab": "fire",
+      "label": "P(Quality) — Perfil Atual Aspiracional",
+      "type": "kpi",
+      "purpose": "P(quality) para cenário aspiracional (FIRE aos 49) no perfil atual — mede qualidade na aposentadoria antecipada",
+      "data_fields": [
+        "fire.p_quality_aspiracional"
+      ],
+      "privacy": false,
+      "optional": true,
+      "note": "dynamic testid (template literal) — cannot be detected by sync_spec.py regex"
+    },
+    {
+      "id": "sim-pquality",
+      "tab": "simulators",
+      "label": "P(Quality) — Simuladores",
+      "type": "kpi",
+      "purpose": "P(quality) exibido na tela de simuladores para o perfil e condição ativos — precomputed lookup do by_profile MC",
+      "data_fields": [
+        "fire_matrix.by_profile"
+      ],
       "privacy": false
     }
   ]
