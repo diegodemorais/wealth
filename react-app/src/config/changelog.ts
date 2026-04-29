@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-29 — Bond Pool partial isolation (FR-mc-bond-pool-partial-isolation) ──
+  { datetime: '2026-04-29T22:00:00.000Z', type: 'cálculo', component: 'BondPoolIsolationBadge', tab: 'fire', anchor: '', de: 'Bond pool isolation binário: ativo somente quando >= 80% do target (~R$416k)', para: 'v1.161.0 — Bond pool partial isolation: vol e guardrails proporcionais à fração de cobertura do bucket. P(quality) mais preciso durante acumulação (atual: 24%). Badge distingue: verde (completo), amarelo (partial), cinza (sem pool)' },
   // ── 2026-04-29 — Bond Pool Isolation status badge (FR-mc-bond-pool-isolation) ──
   { datetime: '2026-04-29T18:00:00.000Z', type: 'dado', component: 'BondPoolIsolationBadge', tab: 'fire', anchor: '', de: 'Sem badge de bond pool isolation', para: 'Badge amarelo/verde mostrando completion % do bond pool e se P(quality) usa proxy ou isolation real' },
   // ── 2026-04-29 — P(quality) KpiHero + FireScenariosTable + WhatIf + ReverseFire ──

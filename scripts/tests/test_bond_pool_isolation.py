@@ -31,23 +31,25 @@ from fire_montecarlo import (
 class TestComputeBondPoolStatus:
 
     def test_below_threshold_not_enabled(self):
+        """Abaixo do threshold: partial isolation ativo (enabled=True), mas não fully_enabled."""
         status = compute_bond_pool_status(3_472_335, 0.15, 124_675, 0.80)
-        assert not status["enabled"]
+        # enabled=True pois há posição > 0 (partial isolation ativo)
         assert status["underestimation_warning"] is True
+        assert not status["fully_enabled"]
         assert status["completion_pct"] < 80.0
 
     def test_at_threshold_enabled(self):
         target = 3_472_335 * 0.15          # ~R$520k
         at_threshold = target * 0.80       # ~R$416k
         status = compute_bond_pool_status(3_472_335, 0.15, at_threshold, 0.80)
-        assert status["enabled"]
+        assert status["fully_enabled"]
         assert not status["underestimation_warning"]
 
     def test_above_threshold_enabled(self):
         target = 3_472_335 * 0.15
         above = target * 1.0               # 100% > 80%
         status = compute_bond_pool_status(3_472_335, 0.15, above, 0.80)
-        assert status["enabled"]
+        assert status["fully_enabled"]
 
     def test_completion_pct_correct(self):
         status = compute_bond_pool_status(3_472_335, 0.15, 124_675, 0.80)
@@ -88,9 +90,10 @@ class TestCurrentBondPoolState:
         assert "target_brl" in s
         assert "underestimation_warning" in s
 
-    def test_current_state_not_enabled(self):
-        """Estado atual: ~24% completo → isolation NÃO habilitada."""
-        assert PREMISSAS["bond_pool_isolation"] is False
+    def test_current_state_partial_isolation_active(self):
+        """Estado atual: ~24% completo → partial isolation ativo mas não fully_enabled."""
+        assert PREMISSAS["bond_pool_isolation"] is True
+        assert PREMISSAS["bond_pool_status"]["fully_enabled"] is False
 
     def test_current_completion_below_threshold(self):
         """Posição ~R$124k vs target ~R$520k = ~24% < 80%."""
@@ -152,4 +155,22 @@ class TestBondPoolIsolationInSimulation:
         # Sem bond pool phase, ambos devem ser iguais (mesmo caminho de código)
         assert abs(p_proxy - p_isolation) < 0.01, (
             f"Com anos_bond_pool=0, proxy ({p_proxy:.3f}) e isolation ({p_isolation:.3f}) devem ser iguais"
+        )
+
+    def test_partial_isolation_between_proxy_and_full(self):
+        """P(quality) com partial deve estar entre proxy e full isolation."""
+        p = dict(PREMISSAS)
+        p["idade_fire_alvo"] = 53
+        p["anos_simulacao"] = 90 - 53
+        p["bond_pool_completion_fraction"] = 0.50  # 50% completo
+
+        p_proxy = compute_p_quality(p, n_sim=1000, seed=42, bond_pool_isolation=False,
+                                     bond_pool_completion_fraction=0.0)
+        p_partial = compute_p_quality(p, n_sim=1000, seed=42, bond_pool_isolation=True,
+                                       bond_pool_completion_fraction=0.50)
+        p_full = compute_p_quality(p, n_sim=1000, seed=42, bond_pool_isolation=True,
+                                    bond_pool_completion_fraction=1.0)
+
+        assert p_proxy <= p_partial <= p_full, (
+            f"proxy({p_proxy:.3f}) <= partial({p_partial:.3f}) <= full({p_full:.3f})"
         )

@@ -605,7 +605,8 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
         for ano in range(n_anos):
             in_pool_phase = bond_pool_isolation and ano < anos_bond_pool
             if in_pool_phase:
-                vol_ano = 0.0  # bond pool HTM — sem mark-to-market
+                f = bond_pool_completion_fraction  # 0.0 to 1.0
+                vol_ano = vol * (1.0 - f)  # vol reduz proporcionalmente à cobertura do bucket
             elif vol_bond_pool is not None and ano < anos_bond_pool:
                 vol_ano = vol_bond_pool  # proxy legado
             else:
@@ -619,7 +620,23 @@ def compute_p_quality(premissas: dict, n_sim: int = 10_000, seed: int = 42,
 
             gasto_lifestyle_target, gasto_saude = gasto_spending_smile_split(ano, 0, escala_cv)
             if in_pool_phase:
-                gasto_lifestyle = gasto_lifestyle_target  # bond pool cobre — sem corte
+                f = bond_pool_completion_fraction
+                gasto_from_bucket = f * gasto_lifestyle_target
+                remaining_target = (1.0 - f) * gasto_lifestyle_target
+                if remaining_target > 0:
+                    req = WithdrawalRequest(
+                        strategy="guardrails",
+                        gasto_smile=remaining_target,
+                        patrimonio_atual=max(0, pat),
+                        patrimonio_pico=pat_pico,
+                        ano=ano,
+                        ctx=ctx,
+                        guardrails_config=GUARDRAILS,
+                    )
+                    gasto_from_equity = WithdrawalEngine.calculate(req).gasto_anual
+                else:
+                    gasto_from_equity = 0.0
+                gasto_lifestyle = gasto_from_bucket + gasto_from_equity
             else:
                 req = WithdrawalRequest(
                     strategy="guardrails",
@@ -838,6 +855,7 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
     inss_inicio_ano = premissas.get("inss_inicio_ano", 12)
     vol_bond_pool = premissas.get("vol_bond_pool", None)
     bond_pool_isolation = premissas.get("bond_pool_isolation", False)
+    bond_pool_completion_fraction = premissas.get("bond_pool_completion_fraction", 1.0)
 
     for i in range(n_sim):
         pat_ini = float(pat_fire_trajetorias[i])
@@ -851,6 +869,7 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
             vol_bond_pool=vol_bond_pool,
             strategy=strategy,
             bond_pool_isolation=bond_pool_isolation,
+            bond_pool_completion_fraction=bond_pool_completion_fraction,
         )
         if sobreviveu:
             sucessos += 1
@@ -912,6 +931,7 @@ def rodar_monte_carlo_com_trajetorias(premissas: dict, n_sim: int = 10_000,
     inss_inicio_ano = premissas.get("inss_inicio_ano", 12)
     vol_bond_pool = premissas.get("vol_bond_pool", None)
     bond_pool_isolation = premissas.get("bond_pool_isolation", False)
+    bond_pool_completion_fraction = premissas.get("bond_pool_completion_fraction", 1.0)
 
     # Guardar trajetórias completas
     trajetorias = []
@@ -930,6 +950,7 @@ def rodar_monte_carlo_com_trajetorias(premissas: dict, n_sim: int = 10_000,
             vol_bond_pool=vol_bond_pool,
             strategy=strategy,
             bond_pool_isolation=bond_pool_isolation,
+            bond_pool_completion_fraction=bond_pool_completion_fraction,
         )
         if sobreviveu:
             sucessos += 1
@@ -1579,6 +1600,8 @@ def main():
         fire_data["bond_pool_status"] = premissas.get("bond_pool_status", {})
         fire_data["bond_pool_isolation_enabled"] = premissas.get("bond_pool_isolation", False)
         fire_data["bond_pool_completion_pct"] = (premissas.get("bond_pool_status") or {}).get("completion_pct", 0.0)
+        fire_data["bond_pool_fully_enabled"] = premissas.get("bond_pool_status", {}).get("fully_enabled", False)
+        fire_data["bond_pool_completion_fraction"] = premissas.get("bond_pool_completion_fraction", 0.0)
 
     update_dashboard_state("fire", fire_data, generator="fire_montecarlo.py")
 

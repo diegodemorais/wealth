@@ -595,6 +595,7 @@ export default function FirePage() {
   const pqualityProxy: number | null = (data as any)?.fire?.p_quality_proxy ?? null;
   const bondPoolStatus = (data as any)?.fire?.bond_pool_status ?? null;
   const bondPoolIsolationEnabled: boolean = (data as any)?.fire?.bond_pool_isolation_enabled ?? false;
+  const bondPoolFullyEnabled: boolean = (data as any)?.fire?.bond_pool_fully_enabled ?? false;
   const bondPoolCompletionPct: number = (data as any)?.fire?.bond_pool_completion_pct ?? 0;
   const modelUncertainty = (data as any)?.pfire_base?.model_uncertainty as { low: number; high: number } | null ?? null;
   const prem = (data as any)?.premissas ?? {};
@@ -691,7 +692,7 @@ export default function FirePage() {
         </div>
       </div>
 
-      {/* Bond Pool Isolation Status Badge (FR-mc-bond-pool-isolation 2026-04-29) */}
+      {/* Bond Pool Isolation Status Badge (FR-mc-bond-pool-partial-isolation 2026-04-29) */}
       {bondPoolStatus != null && (
         <div
           data-testid="bond-pool-isolation-status"
@@ -701,23 +702,31 @@ export default function FirePage() {
             gap: 8,
             padding: '8px 14px',
             borderRadius: 'var(--radius-lg)',
-            background: bondPoolIsolationEnabled
+            background: bondPoolFullyEnabled
               ? 'color-mix(in srgb, var(--green) 10%, transparent)'
-              : 'color-mix(in srgb, var(--yellow) 10%, transparent)',
-            border: `1px solid color-mix(in srgb, ${bondPoolIsolationEnabled ? 'var(--green)' : 'var(--yellow)'} 35%, transparent)`,
+              : bondPoolIsolationEnabled
+                ? 'color-mix(in srgb, var(--yellow) 10%, transparent)'
+                : 'color-mix(in srgb, var(--muted) 10%, transparent)',
+            border: `1px solid color-mix(in srgb, ${bondPoolFullyEnabled ? 'var(--green)' : bondPoolIsolationEnabled ? 'var(--yellow)' : 'var(--muted)'} 35%, transparent)`,
             marginBottom: 12,
             fontSize: 'var(--text-xs)',
           }}
         >
-          <span style={{ color: bondPoolIsolationEnabled ? 'var(--green)' : 'var(--yellow)', fontWeight: 600 }}>
-            {bondPoolIsolationEnabled ? 'Bond pool isolation ativo' : `Bond pool ${bondPoolCompletionPct.toFixed(1)}% completo`}
+          <span style={{ color: bondPoolFullyEnabled ? 'var(--green)' : bondPoolIsolationEnabled ? 'var(--yellow)' : 'var(--muted)', fontWeight: 600 }}>
+            {bondPoolFullyEnabled
+              ? 'Bond pool completo — P(quality) real'
+              : bondPoolIsolationEnabled
+                ? `Bond pool ${bondPoolCompletionPct.toFixed(1)}% — partial isolation ativo`
+                : `Bond pool 0% — P(quality) proxy`}
           </span>
           <span style={{ color: 'var(--muted)' }}>
-            {bondPoolIsolationEnabled
-              ? '— P(quality) real (vol=0 + guardrails suspensos nos anos 0-7)'
-              : '— P(quality) usa proxy (vol 13.3%, guardrails ativos)'}
+            {bondPoolFullyEnabled
+              ? '— vol=0 + guardrails suspensos nos anos 0-7'
+              : bondPoolIsolationEnabled
+                ? `— vol e guardrails proporcionais à cobertura do bucket`
+                : '— vol 13.3%, guardrails ativos'}
           </span>
-          {!bondPoolIsolationEnabled && pqualityProxy != null && pqualityHero != null && Math.abs(pqualityProxy - pqualityHero) >= 0.1 && (
+          {!bondPoolFullyEnabled && pqualityProxy != null && pqualityHero != null && Math.abs(pqualityProxy - pqualityHero) >= 0.1 && (
             <span style={{ color: 'var(--muted)', marginLeft: 4 }}>
               | proxy: {pqualityProxy.toFixed(1)}%
             </span>

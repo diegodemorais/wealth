@@ -4969,6 +4969,8 @@ def main():
         "bond_pool_status":               _bp_status,
         "bond_pool_isolation_enabled":    _bp_status.get("enabled", False) if _bp_status else False,
         "bond_pool_completion_pct":       _bp_status.get("completion_pct", 0.0) if _bp_status else 0.0,
+        "bond_pool_fully_enabled":        (_bp_status.get("fully_enabled", False) if _bp_status else False),
+        "bond_pool_completion_fraction":  (_bp_status.get("completion_fraction", 0.0) if _bp_status else 0.0),
     }
 
     # Earliest FIRE date

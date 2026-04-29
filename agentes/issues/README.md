@@ -45,6 +45,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| FR-mc-bond-pool-partial-isolation | Bond Pool Partial Isolation no MC FIRE | 2026-04-29 | Isolation gradual/proporcional: vol e guardrails proporcionais à fração de cobertura do bucket (atual: 24%). enabled=True sempre que posição > 0. Badge distingue partial/full/zero. P(quality) mais preciso durante acumulação. 18 testes. Dashboard v1.161.0. |
 | FR-mc-bond-pool-isolation | Bond Pool Isolation Real no MC FIRE | 2026-04-29 | vol=0 + guardrails suprimidos anos 0-6 quando isolation ativa. compute_bond_pool_status() automático. Estado: 24% completo, isolation inativa (ativa ao atingir R$416k). p_quality_proxy preservado. Badge dashboard. 17 testes. Fase 4: TD 2040 → Selic se FIRE atrasa. Dashboard v1.160.0. |
 | FR-pquality-recalibration | Recalibração e Expansão do P(quality) | 2026-04-29 | Critério B (≤1 ano ruim go-go) como default. PQualityMatrix 5×3×3. P(quality) adicionado em KpiHero, FireScenariosTable, Simuladores. 95/95 Playwright. Dashboard v1.156.1. Issue derivada: FR-mc-bond-pool-isolation. |
 | FR-regime-switching-model | Regime Switching no MC FIRE | 2026-04-29 | Debate 4 agentes. Delta P(FIRE) revisado: -3 a +2pp (não -5 a -8pp). Nenhuma das 5 decisões muda. Veredicto: NÃO implementar — limitação conhecida documentada. P(quality) frágil (~56-62% com regime). Reabertura condicional a evidência out-of-sample. |
