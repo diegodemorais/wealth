@@ -592,6 +592,10 @@ export default function FirePage() {
   const pfireHero: number | null = derived?.pfireBase ?? null; // pfireBase is 0-100 scale
   const pfireHeroColor = pfireColorFn(pfireHero);
   const pqualityHero: number | null = (data as any)?.fire?.p_quality ?? null;
+  const pqualityProxy: number | null = (data as any)?.fire?.p_quality_proxy ?? null;
+  const bondPoolStatus = (data as any)?.fire?.bond_pool_status ?? null;
+  const bondPoolIsolationEnabled: boolean = (data as any)?.fire?.bond_pool_isolation_enabled ?? false;
+  const bondPoolCompletionPct: number = (data as any)?.fire?.bond_pool_completion_pct ?? 0;
   const modelUncertainty = (data as any)?.pfire_base?.model_uncertainty as { low: number; high: number } | null ?? null;
   const prem = (data as any)?.premissas ?? {};
   const fireYearHero: number | null = (() => {
@@ -686,6 +690,40 @@ export default function FirePage() {
           </div>
         </div>
       </div>
+
+      {/* Bond Pool Isolation Status Badge (FR-mc-bond-pool-isolation 2026-04-29) */}
+      {bondPoolStatus != null && (
+        <div
+          data-testid="bond-pool-isolation-status"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 14px',
+            borderRadius: 'var(--radius-lg)',
+            background: bondPoolIsolationEnabled
+              ? 'color-mix(in srgb, var(--green) 10%, transparent)'
+              : 'color-mix(in srgb, var(--yellow) 10%, transparent)',
+            border: `1px solid color-mix(in srgb, ${bondPoolIsolationEnabled ? 'var(--green)' : 'var(--yellow)'} 35%, transparent)`,
+            marginBottom: 12,
+            fontSize: 'var(--text-xs)',
+          }}
+        >
+          <span style={{ color: bondPoolIsolationEnabled ? 'var(--green)' : 'var(--yellow)', fontWeight: 600 }}>
+            {bondPoolIsolationEnabled ? 'Bond pool isolation ativo' : `Bond pool ${bondPoolCompletionPct.toFixed(1)}% completo`}
+          </span>
+          <span style={{ color: 'var(--muted)' }}>
+            {bondPoolIsolationEnabled
+              ? '— P(quality) real (vol=0 + guardrails suspensos nos anos 0-7)'
+              : '— P(quality) usa proxy (vol 13.3%, guardrails ativos)'}
+          </span>
+          {!bondPoolIsolationEnabled && pqualityProxy != null && pqualityHero != null && Math.abs(pqualityProxy - pqualityHero) >= 0.1 && (
+            <span style={{ color: 'var(--muted)', marginLeft: 4 }}>
+              | proxy: {pqualityProxy.toFixed(1)}%
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Gap G: FIRE Number explícito — Meta / Atual / Gap / Progresso */}
       {(() => {

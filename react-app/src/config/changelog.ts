@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-29 — Bond Pool Isolation status badge (FR-mc-bond-pool-isolation) ──
+  { datetime: '2026-04-29T18:00:00.000Z', type: 'dado', component: 'BondPoolIsolationBadge', tab: 'fire', anchor: '', de: 'Sem badge de bond pool isolation', para: 'Badge amarelo/verde mostrando completion % do bond pool e se P(quality) usa proxy ou isolation real' },
   // ── 2026-04-29 — P(quality) KpiHero + FireScenariosTable + WhatIf + ReverseFire ──
   { datetime: '2026-04-29T17:00:00.000Z', type: 'dado', component: 'KpiHero', tab: 'now', anchor: '', de: 'P(FIRE) aspiracional sem quality', para: 'P(quality) aspiracional adicionado ao KPI hero card' },
   { datetime: '2026-04-29T17:00:00.000Z', type: 'dado', component: 'FireScenariosTable', tab: 'fire', anchor: 'fire-scenarios', de: 'Tabela sem P(quality)', para: 'Coluna/linha P(quality) adicionada por cenário' },
