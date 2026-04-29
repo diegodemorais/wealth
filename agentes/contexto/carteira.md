@@ -437,6 +437,8 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | saude_base | 24000 | FR-healthcare-recalibracao 2026-04-23 — coletivo por adesão intermediário SP R$2k/mês (pesquisa: Bradesco/SulAmérica apto R$1.3-1.7k, buffer incluído) |
 | saude_inflator | 0.035 | FR-saude-modelo-custo 2026-04-29 — VCMH 3.5%/ano real (conservador vs IESS ~2.7% histórico; anterior 5.0% sem suporte documentado) |
 | saude_decay | 0.15 | FR-saude-modelo-custo 2026-04-29 — redução de 15% após No-Go (anterior 50% causava descontinuidade abrupta sem justificativa clínica) |
+| ipca_longo_atual_brl | 124675.79 | posição IPCA+ longo atual (2040+2050) — atualizar após cada DCA |
+| bond_pool_isolation_threshold | 0.80 | fração do target para habilitar bond pool isolation no MC |
 | ipca_plus_taxa_anual | 0.0716 | snapshot taxa bruta Tesouro IPCA+ (atualizar quando taxa mudar) |
 | ipca_plus_custodia | 0.0020 | custódia B3 0.20%/ano sobre Tesouro Direto |
 | pfire_canonical_base   | 83.7   | P(FIRE) base canônico (MC 10k, VCMH 3.5%, SAUDE_DECAY 15%, RF 5.34%) |

@@ -161,6 +161,8 @@ RENDA_ESTIMADA      = _P.get("renda_estimada",      45_000)
 IDADE_ATUAL         = _P.get("idade_atual",         39)
 ANO_NASCIMENTO      = _P.get("ano_nascimento",      1987)
 BOND_TENT_META_ANOS = _P.get("bond_tent_anos",      7)
+IPCA_LONGO_ATUAL_BRL          = _P.get("ipca_longo_atual_brl",           124_675.79)
+BOND_POOL_ISOLATION_THRESHOLD = _P.get("bond_pool_isolation_threshold",  0.80)
 
 # Patrimônio holístico
 TERRENO_BRL              = _P.get("terreno_brl",              150_000)

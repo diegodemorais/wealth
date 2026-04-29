@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { EC, EC_AXIS_LABEL, EC_AXIS_LINE, EC_SPLIT_LINE, EC_TOOLTIP } from '@/utils/echarts-theme';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
@@ -592,6 +592,17 @@ export default function FirePage() {
   const pfireHero: number | null = derived?.pfireBase ?? null; // pfireBase is 0-100 scale
   const pfireHeroColor = pfireColorFn(pfireHero);
   const pqualityHero: number | null = (data as any)?.fire?.p_quality ?? null;
+  const pqualityProxy: number | null = (data as any)?.fire?.p_quality_proxy ?? null;
+  const pqualityFull: number | null = (data as any)?.fire?.p_quality_full ?? null;
+  const [pqSelector, setPqSelector] = useState<'proxy' | 'partial' | 'full'>('partial');
+  const pqualityDisplay: number | null =
+    pqSelector === 'proxy'  ? pqualityProxy :
+    pqSelector === 'full'   ? pqualityFull :
+    pqualityHero;  // 'partial' = canônico atual
+  const bondPoolStatus = (data as any)?.fire?.bond_pool_status ?? null;
+  const bondPoolIsolationEnabled: boolean = (data as any)?.fire?.bond_pool_isolation_enabled ?? false;
+  const bondPoolFullyEnabled: boolean = (data as any)?.fire?.bond_pool_fully_enabled ?? false;
+  const bondPoolCompletionPct: number = (data as any)?.fire?.bond_pool_completion_pct ?? 0;
   const modelUncertainty = (data as any)?.pfire_base?.model_uncertainty as { low: number; high: number } | null ?? null;
   const prem = (data as any)?.premissas ?? {};
   const fireYearHero: number | null = (() => {
@@ -649,10 +660,40 @@ export default function FirePage() {
         {/* Separator */}
         <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
         {/* P(quality) */}
-        <div style={{ textAlign: 'center', minWidth: 100 }}>
+        <div style={{ textAlign: 'center', minWidth: 140 }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>P(quality)</div>
-          <div data-testid="pquality-hero" style={{ fontSize: '2.5rem', fontWeight: 900, color: pqualityColor(pqualityHero), lineHeight: 1 }}>
-            {pqualityHero != null ? `${pqualityHero.toFixed(1)}%` : '—'}
+          <div data-testid="pquality-hero" style={{ fontSize: '2.5rem', fontWeight: 900, color: pqualityColor(pqualityDisplay), lineHeight: 1 }}>
+            {pqualityDisplay != null ? `${pqualityDisplay.toFixed(1)}%` : '—'}
+          </div>
+          {/* Seletores proxy / partial / full */}
+          <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginTop: 6 }}>
+            {(['proxy', 'partial', 'full'] as const).map(mode => {
+              const val = mode === 'proxy' ? pqualityProxy : mode === 'full' ? pqualityFull : pqualityHero;
+              const label = mode === 'proxy' ? 'Sem bucket' : mode === 'partial' ? `Atual ${bondPoolCompletionPct.toFixed(0)}%` : 'Full 100%';
+              const active = pqSelector === mode;
+              if (val == null) return null;
+              return (
+                <button
+                  key={mode}
+                  data-testid={`pquality-selector-${mode}`}
+                  onClick={() => setPqSelector(mode)}
+                  style={{
+                    fontSize: '9px',
+                    padding: '2px 6px',
+                    borderRadius: 4,
+                    border: `1px solid ${active ? pqualityColor(val) : 'var(--border)'}`,
+                    background: active ? `color-mix(in srgb, ${pqualityColor(val)} 12%, transparent)` : 'transparent',
+                    color: active ? pqualityColor(val) : 'var(--muted)',
+                    cursor: 'pointer',
+                    fontWeight: active ? 700 : 400,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  <div>{label}</div>
+                  <div style={{ fontWeight: 700 }}>{val.toFixed(1)}%</div>
+                </button>
+              );
+            })}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>vida como planejada</div>
         </div>
@@ -686,6 +727,48 @@ export default function FirePage() {
           </div>
         </div>
       </div>
+
+      {/* Bond Pool Isolation Status Badge (FR-mc-bond-pool-partial-isolation 2026-04-29) */}
+      {bondPoolStatus != null && (
+        <div
+          data-testid="bond-pool-isolation-status"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 14px',
+            borderRadius: 'var(--radius-lg)',
+            background: bondPoolFullyEnabled
+              ? 'color-mix(in srgb, var(--green) 10%, transparent)'
+              : bondPoolIsolationEnabled
+                ? 'color-mix(in srgb, var(--yellow) 10%, transparent)'
+                : 'color-mix(in srgb, var(--muted) 10%, transparent)',
+            border: `1px solid color-mix(in srgb, ${bondPoolFullyEnabled ? 'var(--green)' : bondPoolIsolationEnabled ? 'var(--yellow)' : 'var(--muted)'} 35%, transparent)`,
+            marginBottom: 12,
+            fontSize: 'var(--text-xs)',
+          }}
+        >
+          <span style={{ color: bondPoolFullyEnabled ? 'var(--green)' : bondPoolIsolationEnabled ? 'var(--yellow)' : 'var(--muted)', fontWeight: 600 }}>
+            {bondPoolFullyEnabled
+              ? 'Bond pool completo — P(quality) real'
+              : bondPoolIsolationEnabled
+                ? `Bond pool ${bondPoolCompletionPct.toFixed(1)}% — partial isolation ativo`
+                : `Bond pool 0% — P(quality) proxy`}
+          </span>
+          <span style={{ color: 'var(--muted)' }}>
+            {bondPoolFullyEnabled
+              ? '— vol=0 + guardrails suspensos nos anos 0-7'
+              : bondPoolIsolationEnabled
+                ? `— vol e guardrails proporcionais à cobertura do bucket`
+                : '— vol 13.3%, guardrails ativos'}
+          </span>
+          {!bondPoolFullyEnabled && pqualityProxy != null && pqualityHero != null && Math.abs(pqualityProxy - pqualityHero) >= 0.1 && (
+            <span style={{ color: 'var(--muted)', marginLeft: 4 }}>
+              | proxy: {pqualityProxy.toFixed(1)}%
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Gap G: FIRE Number explícito — Meta / Atual / Gap / Progresso */}
       {(() => {

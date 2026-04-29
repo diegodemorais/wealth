@@ -3870,6 +3870,8 @@ def main():
     state = load_state()
     # p_quality: extraído aqui (escopo main) para estar disponível ao construir fire_section
     p_quality = state.get("fire", {}).get("p_quality")
+    p_quality_proxy = state.get("fire", {}).get("p_quality_proxy")
+    p_quality_full = state.get("fire", {}).get("p_quality_full")
     p_quality_aspiracional = state.get("fire", {}).get("p_quality_aspiracional")
 
     # Carregar posições IBKR se não estão no state (fallback inteligente)
@@ -4946,6 +4948,14 @@ def main():
     swr_current = round(rf_total_for_swr / gasto_anual, 2) if gasto_anual > 0 else 0
     print(f"  -> swr_current: {swr_current} (RF R${rf_total_for_swr/1e3:.0f}k / gastos R${gasto_anual/1e3:.0f}k)")
 
+    # ─── Bond pool isolation status (FR-mc-bond-pool-isolation 2026-04-29) ────
+    _bp_status: dict | None = None
+    try:
+        import fire_montecarlo as _fm_bp
+        _bp_status = _fm_bp.PREMISSAS.get("bond_pool_status")
+    except Exception as _e_bp:
+        print(f"  ⚠️ bond_pool_status: falhou ao importar fire_montecarlo ({_e_bp})")
+
     # ─── FIRE aggregate ─────────────────────────────────────────────────
     fire_section = {
         "bond_pool_readiness": bond_pool_readiness,
@@ -4955,7 +4965,14 @@ def main():
         "plano_status":        macro.get("plano_status") if macro else None,
         "swr_current":              swr_current,
         "p_quality":                p_quality,
+        "p_quality_proxy":          p_quality_proxy,
+        "p_quality_full":           p_quality_full,
         "p_quality_aspiracional":   p_quality_aspiracional,
+        "bond_pool_status":               _bp_status,
+        "bond_pool_isolation_enabled":    _bp_status.get("enabled", False) if _bp_status else False,
+        "bond_pool_completion_pct":       _bp_status.get("completion_pct", 0.0) if _bp_status else 0.0,
+        "bond_pool_fully_enabled":        (_bp_status.get("fully_enabled", False) if _bp_status else False),
+        "bond_pool_completion_fraction":  (_bp_status.get("completion_fraction", 0.0) if _bp_status else 0.0),
     }
 
     # Earliest FIRE date
@@ -5489,6 +5506,13 @@ def main():
     assert _p_quality is not None, "fire.p_quality ausente — rode fire_montecarlo.py"
     assert isinstance(_p_quality, (int, float)) and 0 <= _p_quality <= 100, f"fire.p_quality inválido: {_p_quality}"
     print(f"  ✓ Gap T p_quality: {_p_quality}%")
+    # p_quality_full: warning (não erro crítico) — pode não estar calculado em runs antigos
+    _p_quality_proxy = data.get("fire", {}).get("p_quality_proxy")
+    _p_quality_full = data.get("fire", {}).get("p_quality_full")
+    if _p_quality_full is None and _p_quality_proxy is not None:
+        print("  ⚠️ fire.p_quality_full ausente — rode fire_montecarlo.py para calcular full (bond_pool_completion_fraction=1.0)")
+    elif _p_quality_full is not None:
+        print(f"  ✓ p_quality_full: {_p_quality_full}%")
 
     # P(quality) Matrix — 5 critérios × 3 perfis × 3 cenários (FR-pquality-matrix 2026-04-29)
     if not args.skip_scripts:
