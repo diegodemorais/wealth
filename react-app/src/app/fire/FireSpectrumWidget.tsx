@@ -98,7 +98,7 @@ function BandRow({
               fontWeight: 700,
             }}
           >
-            ← posição atual
+            ← próxima meta
           </span>
         )}
       </div>
@@ -141,20 +141,24 @@ export function FireSpectrumWidget({ spectrum, diegoTarget, privacyMode }: FireS
       </div>
 
       {/* 4 bands — rendered highest threshold first (Fat FIRE) */}
-      {spectrum.bandas.map((band) => {
-        const isActive =
-          spectrum.banda_atual === band.nome.toLowerCase().replace(' ', '_') ||
-          (spectrum.banda_atual === 'below_barista' && band.nome === 'Barista FIRE');
-        return (
-          <BandRow
-            key={band.nome}
-            band={band}
-            patrimonioAtual={spectrum.patrimonio_atual}
-            privacyMode={privacyMode}
-            isActive={isActive}
-          />
-        );
-      })}
+      {(() => {
+        // Highlight the lowest band not yet reached (= próxima meta), not the last one passed
+        const nextTarget = [...spectrum.bandas].reverse().find(b => !b.atingido);
+        return spectrum.bandas.map((band) => {
+          const isActive = nextTarget
+            ? band.nome === nextTarget.nome
+            : spectrum.banda_atual === band.nome.toLowerCase().replace(' ', '_');
+          return (
+            <BandRow
+              key={band.nome}
+              band={band}
+              patrimonioAtual={spectrum.patrimonio_atual}
+              privacyMode={privacyMode}
+              isActive={isActive}
+            />
+          );
+        });
+      })()}
 
       {/* Lean/Barista SWR disclaimer — Quant flag: unsustainable for 37y horizon */}
       <div

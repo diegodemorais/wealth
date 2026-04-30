@@ -210,15 +210,16 @@ def _compute_duration_scenarios(
     modified_duration: float,
     renda_plus_pct: float,
 ) -> list[dict]:
-    """MtM da Renda+ para shift paralelo de +1pp e +2pp.
+    """MtM da Renda+ para shift paralelo de -2pp, -1pp, +1pp e +2pp.
 
     Campos:
     - renda_plus_mtm_pct: variação % no preço do título (não % do portfolio)
     - renda_plus_mtm_portfolio_pct: impacto sobre o portfolio total (= mtm_pct × peso Renda+)
     - with_convexity_note: True — valores sem ajuste de convexidade (conservador)
+    Negativo = queda de taxa = valorização (ganho MtM). Positivo = alta de taxa = perda.
     """
     scenarios = []
-    for shift_pp in [1, 2]:
+    for shift_pp in [-2, -1, 1, 2]:
         # Δprice% = -modified_duration × Δy (sem convexidade — valor conservador)
         mtm_pct = round(-modified_duration * (shift_pp / 100), 4)
         mtm_brl = round(portfolio_value * renda_plus_pct * mtm_pct, 2) if portfolio_value else None

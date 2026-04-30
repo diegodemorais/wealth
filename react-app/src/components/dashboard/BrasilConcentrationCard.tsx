@@ -8,8 +8,9 @@ interface BrasilConcentrationCardProps {
   ipcaTotal: number;
   rendaPlus: number;
   cryptoLegado: number;
-  totalBrl: number;          // brasil total (RF + COE + crypto_legado)
-  concentrationBrazil: number; // brasil_pct / 100
+  totalBrl: number;                   // brasil total (RF + COE + crypto_legado)
+  concentrationBrazil: number;        // brasil_pct / 100
+  patrimonioHolisticoTotal?: number;  // inclui capital humano, INSS, imóvel, terreno
 }
 
 const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
@@ -19,6 +20,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
   cryptoLegado,
   totalBrl,
   concentrationBrazil,
+  patrimonioHolisticoTotal,
 }) => {
   const { privacyMode } = useUiStore();
 
@@ -59,7 +61,14 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
               : concentrationBrazil > 0.55
               ? 'Moderado — 55-65%'
               : 'Aceitável — abaixo de 55%'}
+            {' '}do portfólio financeiro
           </div>
+          {patrimonioHolisticoTotal != null && patrimonioHolisticoTotal > 0 && (
+            <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginTop: 4 }}>
+              {`${(totalBrl / patrimonioHolisticoTotal * 100).toFixed(1)}%`} do balanço holístico
+              {' '}<span style={{ opacity: 0.7 }}>(incl. capital humano, INSS, imóvel)</span>
+            </div>
+          )}
         </div>
 
         {/* Breakdown by asset class */}

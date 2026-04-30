@@ -836,6 +836,7 @@ export default function PortfolioPage() {
                     cryptoLegado={comp.crypto_legado_brl ?? 0}
                     totalBrl={c.total_brasil_brl ?? 0}
                     concentrationBrazil={(c.brasil_pct ?? 0) / 100}
+                    patrimonioHolisticoTotal={(data as any)?.patrimonio_holistico?.total_brl}
                   />
                 </div>
               );
@@ -1105,30 +1106,36 @@ export default function PortfolioPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {scenarios.map(s => (
-                      <tr key={s.shift_pp} style={{ borderBottom: '1px solid var(--card2)' }}>
-                        <td style={{ padding: '8px 10px', fontWeight: 700 }}>+{s.shift_pp}pp</td>
-                        <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--red)', fontWeight: 700 }}>
-                          {privacyMode ? '••%' : `${(s.renda_plus_mtm_pct * 100).toFixed(2)}%`}
-                        </td>
-                        <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--muted)' }}>
-                          {privacyMode ? '••••' : (s.renda_plus_mtm_brl != null
-                            ? fmtBRL(s.renda_plus_mtm_brl)
-                            : '—')}
-                        </td>
-                        <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>
-                          {s.renda_plus_mtm_portfolio_pct != null
-                            ? (privacyMode ? '••%' : `${(s.renda_plus_mtm_portfolio_pct * 100).toFixed(2)}%`)
-                            : '—'}
-                        </td>
-                      </tr>
-                    ))}
+                    {scenarios.map(s => {
+                      const isGain = s.renda_plus_mtm_pct > 0;
+                      const mtmColor = isGain ? 'var(--green)' : 'var(--red)';
+                      const shiftLabel = s.shift_pp > 0 ? `+${s.shift_pp}pp` : `${s.shift_pp}pp`;
+                      return (
+                        <tr key={s.shift_pp} style={{ borderBottom: '1px solid var(--card2)', background: s.shift_pp < 0 ? 'color-mix(in srgb, var(--green) 4%, transparent)' : 'transparent' }}>
+                          <td style={{ padding: '8px 10px', fontWeight: 700 }}>{shiftLabel}</td>
+                          <td style={{ padding: '8px 10px', textAlign: 'right', color: mtmColor, fontWeight: 700 }}>
+                            {privacyMode ? '••%' : `${isGain ? '+' : ''}${(s.renda_plus_mtm_pct * 100).toFixed(2)}%`}
+                          </td>
+                          <td style={{ padding: '8px 10px', textAlign: 'right', color: isGain ? 'var(--green)' : 'var(--muted)' }}>
+                            {privacyMode ? '••••' : (s.renda_plus_mtm_brl != null
+                              ? fmtBRL(s.renda_plus_mtm_brl)
+                              : '—')}
+                          </td>
+                          <td style={{ padding: '8px 10px', textAlign: 'right', color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>
+                            {s.renda_plus_mtm_portfolio_pct != null
+                              ? (privacyMode ? '••%' : `${isGain ? '+' : ''}${(s.renda_plus_mtm_portfolio_pct * 100).toFixed(2)}%`)
+                              : '—'}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
               <div className="src">
-                MtM = Mark-to-Market. Modified Duration × shift (sem convexidade — estimativa conservadora).
-                Renda+ 2065 é posição tática (~3.4% do portfólio). Impacto no portfólio total = % Renda+ × peso da posição.
+                MtM = Mark-to-Market. Δpreço% = −duration × Δtaxa (sem convexidade — estimativa conservadora).
+                Shift negativo = queda de juros = valorização (ganho). Shift positivo = alta = perda.
+                Renda+ 2065 é posição tática (~3.4% do portfólio).
               </div>
             </div>
           </CollapsibleSection>
