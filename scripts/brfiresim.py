@@ -250,12 +250,16 @@ def main() -> None:
 
     end_yr = date.today().year - 1
 
-    print("\n1. Fetching IPCA (BCB SGS 433)...")
-    ipca = fetch_ipca_monthly(2003, end_yr)
+    # Start from 1999: BRL was floated Jan/1999 (crawling-peg before that — BRL=X
+    # pre-1999 would understate real FX volatility). Post-float data is behaviorally valid.
+    start_yr = 1999
+
+    print(f"\n1. Fetching IPCA (BCB SGS 433, from {start_yr})...")
+    ipca = fetch_ipca_monthly(start_yr, end_yr)
     print(f"   → {len(ipca)} months")
 
-    print(f"2. Fetching equity returns ({SWRD_PROXY_TICKER} → BRL via {FX_TICKER})...")
-    equity = fetch_equity_brl_monthly(2003, end_yr)
+    print(f"2. Fetching equity returns ({SWRD_PROXY_TICKER} → BRL via {FX_TICKER}, from {start_yr})...")
+    equity = fetch_equity_brl_monthly(start_yr, end_yr)
     print(f"   → {len(equity)} months")
 
     print("3. Computing cycles...")

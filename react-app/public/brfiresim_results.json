@@ -1,7 +1,7 @@
 {
-  "_generated": "2026-04-30T11:16:30.426995Z",
+  "_generated": "2026-04-30T13:23:18.778240Z",
   "data_range": {
-    "inicio": "2003-01",
+    "inicio": "1999-01",
     "fim": "2025-12"
   },
   "config": {
@@ -17,6 +17,110 @@
     "equity_alloc": 0.79
   },
   "cycles": [
+    {
+      "ano_inicio": 1999,
+      "duracao_anos": 20,
+      "resultados_swr": {
+        "3pct": {
+          "sucesso": true,
+          "saldo_final": 19134146.0,
+          "min_saldo": 8290703.0
+        },
+        "4pct": {
+          "sucesso": true,
+          "saldo_final": 9060552.0,
+          "min_saldo": 6349501.0
+        },
+        "6pct": {
+          "sucesso": false,
+          "saldo_final": 0,
+          "min_saldo": 0
+        },
+        "8pct": {
+          "sucesso": false,
+          "saldo_final": 0,
+          "min_saldo": 0
+        }
+      }
+    },
+    {
+      "ano_inicio": 2000,
+      "duracao_anos": 20,
+      "resultados_swr": {
+        "3pct": {
+          "sucesso": true,
+          "saldo_final": 23036220.0,
+          "min_saldo": 8069221.0
+        },
+        "4pct": {
+          "sucesso": true,
+          "saldo_final": 11583047.0,
+          "min_saldo": 6406365.0
+        },
+        "6pct": {
+          "sucesso": false,
+          "saldo_final": 0,
+          "min_saldo": 0
+        },
+        "8pct": {
+          "sucesso": false,
+          "saldo_final": 0,
+          "min_saldo": 0
+        }
+      }
+    },
+    {
+      "ano_inicio": 2001,
+      "duracao_anos": 20,
+      "resultados_swr": {
+        "3pct": {
+          "sucesso": true,
+          "saldo_final": 30279483.0,
+          "min_saldo": 7792901.0
+        },
+        "4pct": {
+          "sucesso": true,
+          "saldo_final": 15577790.0,
+          "min_saldo": 6340392.0
+        },
+        "6pct": {
+          "sucesso": false,
+          "saldo_final": 0,
+          "min_saldo": 0
+        },
+        "8pct": {
+          "sucesso": false,
+          "saldo_final": 0,
+          "min_saldo": 0
+        }
+      }
+    },
+    {
+      "ano_inicio": 2002,
+      "duracao_anos": 20,
+      "resultados_swr": {
+        "3pct": {
+          "sucesso": true,
+          "saldo_final": 36856814.0,
+          "min_saldo": 7538106.0
+        },
+        "4pct": {
+          "sucesso": true,
+          "saldo_final": 20056036.0,
+          "min_saldo": 6294603.0
+        },
+        "6pct": {
+          "sucesso": false,
+          "saldo_final": 0,
+          "min_saldo": 0
+        },
+        "8pct": {
+          "sucesso": false,
+          "saldo_final": 0,
+          "min_saldo": 0
+        }
+      }
+    },
     {
       "ano_inicio": 2003,
       "duracao_anos": 20,
@@ -123,18 +227,66 @@
     }
   ],
   "resumo": {
-    "n_ciclos": 4,
-    "n_sucesso_3pct": 4,
+    "n_ciclos": 8,
+    "n_sucesso_3pct": 8,
     "taxa_sucesso_3pct": 1.0,
-    "n_sucesso_4pct": 4,
+    "n_sucesso_4pct": 8,
     "taxa_sucesso_4pct": 1.0,
     "n_sucesso_6pct": 1,
-    "taxa_sucesso_6pct": 0.25,
+    "taxa_sucesso_6pct": 0.125,
     "n_sucesso_8pct": 0,
     "taxa_sucesso_8pct": 0.0
   },
   "series": {
     "datas": [
+      "1999-01",
+      "1999-02",
+      "1999-03",
+      "1999-04",
+      "1999-05",
+      "1999-06",
+      "1999-07",
+      "1999-08",
+      "1999-09",
+      "1999-10",
+      "1999-11",
+      "1999-12",
+      "2000-01",
+      "2000-02",
+      "2000-03",
+      "2000-04",
+      "2000-05",
+      "2000-06",
+      "2000-07",
+      "2000-08",
+      "2000-09",
+      "2000-10",
+      "2000-11",
+      "2000-12",
+      "2001-01",
+      "2001-02",
+      "2001-03",
+      "2001-04",
+      "2001-05",
+      "2001-06",
+      "2001-07",
+      "2001-08",
+      "2001-09",
+      "2001-10",
+      "2001-11",
+      "2001-12",
+      "2002-01",
+      "2002-02",
+      "2002-03",
+      "2002-04",
+      "2002-05",
+      "2002-06",
+      "2002-07",
+      "2002-08",
+      "2002-09",
+      "2002-10",
+      "2002-11",
+      "2002-12",
       "2003-01",
       "2003-02",
       "2003-03",
@@ -425,6 +577,54 @@
       0,
       0,
       0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
       2.865,
       0.687,
       -2.029,
@@ -691,6 +891,54 @@
       3.0
     ],
     "ipca_mensal_pct": [
+      0.7,
+      1.05,
+      1.1,
+      0.56,
+      0.3,
+      0.19,
+      1.09,
+      0.56,
+      0.31,
+      1.19,
+      0.95,
+      0.6,
+      0.62,
+      0.13,
+      0.22,
+      0.42,
+      0.01,
+      0.23,
+      1.61,
+      1.31,
+      0.23,
+      0.14,
+      0.32,
+      0.59,
+      0.57,
+      0.46,
+      0.38,
+      0.58,
+      0.41,
+      0.52,
+      1.33,
+      0.7,
+      0.28,
+      0.83,
+      0.71,
+      0.65,
+      0.52,
+      0.36,
+      0.6,
+      0.8,
+      0.21,
+      0.42,
+      1.19,
+      0.65,
+      0.72,
+      1.31,
+      3.02,
+      2.1,
       2.25,
       1.57,
       1.23,
@@ -974,5 +1222,5 @@
     "equity_brl": "^990100-USD-STRD (MSCI World NR USD (yfinance)) × BRL=X (USD/BRL)",
     "proxy_fonte": "REGIME7_CONFIG (config.py) — alinhado com backtest_portfolio.py"
   },
-  "_caveat": "~2025 anos de dados → 4 janelas de 20 anos. Interprete como sanity check do Monte Carlo, NÃO como estimativa probabilística rival. taxa_sucesso = fração de ciclos históricos (denominador pequeno). Não use linguagem de '% de chance de sucesso'."
+  "_caveat": "~2025 anos de dados → 8 janelas de 20 anos. Interprete como sanity check do Monte Carlo, NÃO como estimativa probabilística rival. taxa_sucesso = fração de ciclos históricos (denominador pequeno). Não use linguagem de '% de chance de sucesso'."
 }

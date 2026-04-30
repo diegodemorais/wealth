@@ -47,7 +47,7 @@ function buildScenarios(coast: CoastFireData, patrimonioAtual: number): Scenario
       ano: ano(coast.coast_number_fav, coast.r_real_fav),
     },
     {
-      label: 'Stress',
+      label: 'Conservador',
       r_real: coast.r_real_stress,
       coast_number: coast.coast_number_stress,
       gap: coast.coast_number_stress - patrimonioAtual,
@@ -232,6 +232,8 @@ export function CoastFireCard({ coast, patrimonioAtual, privacyMode }: CoastFire
         FIRE Number alvo: {fmtPrivacy(coast.fire_number, privacyMode)}.{' '}
         Assume <strong>zero aportes após atingir o Coast Number</strong> — com aportes contínuos,
         o patrimônio necessário é menor.{' '}
+        O cenário "Conservador" reduz o retorno anual em {((coast.r_real_base - coast.r_real_stress) * 100).toFixed(1)}pp —
+        não captura sequências adversas de retorno nos primeiros anos.{' '}
         Não modela spending smile (Blanchett 2014) nem escalada de custos de saúde na velhice.
       </div>
     </div>
