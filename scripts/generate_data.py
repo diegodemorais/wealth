@@ -5514,27 +5514,48 @@ def main():
     elif _p_quality_full is not None:
         print(f"  ✓ p_quality_full: {_p_quality_full}%")
 
-    # P(quality) Matrix — 5 critérios × 3 perfis × 3 cenários (FR-pquality-matrix 2026-04-29)
+    # P(quality) Matrix — 3 modos: sem_bucket, partial, full (FR-pquality-matrix 2026-04-29)
     if not args.skip_scripts:
-        print("  ▶ Computando P(quality) Matrix (5 critérios × 3 perfis × 3 cenários = 45 células) ...")
+        print("  ▶ Computando P(quality) Matrix — 3 modos (135 calls × n_sim=1000) ...")
         try:
             import importlib.util as _ilu_pqm
             _spec_pqm = _ilu_pqm.spec_from_file_location("fire_mc_pqm", ROOT / "scripts" / "fire_montecarlo.py")
             _mod_pqm  = _ilu_pqm.module_from_spec(_spec_pqm)
             _spec_pqm.loader.exec_module(_mod_pqm)
 
-            # PREMISSAS base (custo_vida e idade_fire_alvo sobrescritos por perfil dentro da função)
             mc_premissas_pqm = getattr(_mod_pqm, 'PREMISSAS', {})
             if not mc_premissas_pqm:
                 raise ValueError("PREMISSAS não encontrado em fire_montecarlo.py")
 
-            p_quality_matrix = _mod_pqm.compute_p_quality_matrix(mc_premissas_pqm, n_sim=5_000, seed=42)
-            data["fire"]["p_quality_matrix"] = p_quality_matrix
+            completion_fraction = mc_premissas_pqm.get("bond_pool_completion_fraction", 0.0)
+
+            # Modo 1: sem bucket (proxy legado)
+            matrix_proxy = _mod_pqm.compute_p_quality_matrix(
+                mc_premissas_pqm, n_sim=1000, seed=42,
+                bond_pool_isolation=False,
+            )
+            # Modo 2: partial (canônico — usa completion_fraction atual)
+            p_quality_matrix = _mod_pqm.compute_p_quality_matrix(
+                mc_premissas_pqm, n_sim=1000, seed=42,
+                bond_pool_isolation=True,
+            )
+            # Modo 3: full (potencial com bucket completo)
+            matrix_full = _mod_pqm.compute_p_quality_matrix(
+                mc_premissas_pqm, n_sim=1000, seed=42,
+                bond_pool_isolation=True,
+                bond_pool_completion_fraction=1.0,
+            )
+
+            data["fire"]["p_quality_matrix"]       = p_quality_matrix
+            data["fire"]["p_quality_matrix_proxy"] = matrix_proxy
+            data["fire"]["p_quality_matrix_full"]  = matrix_full
             b_atual_base = p_quality_matrix["values"].get("B", {}).get("atual", {}).get("base")
-            print(f"  ✓ P(quality) Matrix: B/atual/base={b_atual_base}%")
+            print(f"  ✓ P(quality) Matrix 3 modos: B/atual/base={b_atual_base}% (partial), completion={completion_fraction:.1%}")
         except Exception as _e_pqm:
             print(f"  ⚠️ P(quality) Matrix failed: {_e_pqm}")
             data["fire"]["p_quality_matrix"] = None
+            data["fire"]["p_quality_matrix_proxy"] = None
+            data["fire"]["p_quality_matrix_full"]  = None
     else:
         print("  ⊘ P(quality) Matrix (skip-scripts)")
 

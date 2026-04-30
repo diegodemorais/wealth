@@ -689,11 +689,17 @@ _CRITERIOS_MATRIZ = [
 ]
 
 
-def compute_p_quality_matrix(premissas_base: dict, n_sim: int = 5_000, seed: int = 42) -> dict:
+def compute_p_quality_matrix(premissas_base: dict, n_sim: int = 5_000, seed: int = 42,
+                              bond_pool_isolation: bool = False,
+                              bond_pool_completion_fraction: float | None = None) -> dict:
     """Computa P(quality) para todas as combinações: 5 critérios × 3 perfis × 3 cenários.
 
     Retorna dict estruturado para data.json['fire']['p_quality_matrix'].
     FR-pquality-matrix 2026-04-29.
+
+    Args:
+        bond_pool_isolation: Se True, usa isolamento do bond pool (reduz vol).
+        bond_pool_completion_fraction: Fração de conclusão do bucket (None = lê de premissas).
     """
     # Perfis com gasto anual (custo_vida_base) fixo por perfil
     perfis_config = {
@@ -734,10 +740,20 @@ def compute_p_quality_matrix(premissas_base: dict, n_sim: int = 5_000, seed: int
                     max_bad_total=crit["max_bad_total"],
                     max_bad_consec=crit["max_bad_consec"] if crit["max_bad_consec"] is not None else 0,
                     cenario=cenario,
+                    bond_pool_isolation=bond_pool_isolation,
+                    bond_pool_completion_fraction=bond_pool_completion_fraction,
                 )
                 values[crit_id][perfil_id][cenario] = round(pq * 100, 1)
                 done += 1
                 print(f"    p_quality_matrix [{crit_id}][{perfil_id}][{cenario}] = {pq*100:.1f}% ({done}/{total})")
+
+    # Identificar o modo para label no frontend
+    if not bond_pool_isolation:
+        _mode = "sem_bucket"
+    elif bond_pool_completion_fraction == 1.0:
+        _mode = "full"
+    else:
+        _mode = "partial"
 
     return {
         "criterios": criterios_meta,
@@ -746,6 +762,7 @@ def compute_p_quality_matrix(premissas_base: dict, n_sim: int = 5_000, seed: int
         "values": values,
         "gogowindow": MIN_QUALITY_GOGOWINDOW,
         "min_frac_anos": MIN_QUALITY_FRAC,
+        "bond_pool_mode": _mode,
     }
 
 

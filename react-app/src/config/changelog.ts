@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — Matriz P(quality): seletores Sem bucket / Atual X% / Full 100% ──
+  { datetime: '2026-04-30T00:00:00.000Z', type: 'dado', component: 'PQualityMatrix', tab: 'fire', anchor: 'pquality-matrix', de: 'Matriz P(quality) mostrando apenas modo canônico (partial)', para: 'v1.163.0 — Matriz P(quality): seletores Sem bucket / Atual 24% / Full 100% (135 calls, n_sim=1000 cada modo)' },
   // ── 2026-04-29 — P(quality) seletores proxy/partial/full no hero ──
   { datetime: '2026-04-29T23:00:00.000Z', type: 'dado', component: 'P(Quality) Hero Seletores', tab: 'fire', anchor: '', de: 'P(quality) hero mostrando apenas valor canônico (partial)', para: 'v1.162.0 — P(quality) seletores: proxy / partial / full no hero do dashboard FIRE. Full=88.7% base (potencial com bucket completo).' },
   // ── 2026-04-29 — Bond Pool partial isolation (FR-mc-bond-pool-partial-isolation) ──

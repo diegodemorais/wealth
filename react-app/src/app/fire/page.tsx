@@ -1137,13 +1137,21 @@ export default function FirePage() {
       {(() => {
         const matrix = (safeData as any)?.fire?.p_quality_matrix;
         if (!matrix) return null;
+        const matrixProxy = (safeData as any)?.fire?.p_quality_matrix_proxy ?? null;
+        const matrixFull  = (safeData as any)?.fire?.p_quality_matrix_full  ?? null;
         return (
           <CollapsibleSection
             id="pquality-matrix"
             title={secTitle('fire', 'pquality-matrix', 'Critérios de Qualidade — Go-Go Window')}
             defaultOpen={secOpen('fire', 'pquality-matrix', true)}
           >
-            <PQualityMatrix matrix={matrix} privacyMode={privacyMode} />
+            <PQualityMatrix
+              matrix={matrix}
+              matrixProxy={matrixProxy}
+              matrixFull={matrixFull}
+              privacyMode={privacyMode}
+              bondPoolCompletionPct={bondPoolCompletionPct}
+            />
           </CollapsibleSection>
         );
       })()}

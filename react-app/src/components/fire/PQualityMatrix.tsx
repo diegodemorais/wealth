@@ -23,7 +23,10 @@ interface PQualityMatrixData {
 
 interface PQualityMatrixProps {
   matrix: PQualityMatrixData;
+  matrixProxy?: PQualityMatrixData | null;
+  matrixFull?: PQualityMatrixData | null;
   privacyMode: boolean;
+  bondPoolCompletionPct?: number;  // para label "Atual X%"
 }
 
 const PERFIL_LABELS: Record<string, string> = {
@@ -51,25 +54,58 @@ function cellBg(val: number): string {
   return 'color-mix(in srgb, var(--red) 10%, transparent)';
 }
 
-export function PQualityMatrix({ matrix, privacyMode }: PQualityMatrixProps) {
+export function PQualityMatrix({ matrix, matrixProxy, matrixFull, privacyMode, bondPoolCompletionPct }: PQualityMatrixProps) {
   const [cenarioAtivo, setCenarioAtivo] = useState<string>('base');
+  const [matrixMode, setMatrixMode] = useState<'proxy' | 'partial' | 'full'>('partial');
 
   if (!matrix?.values || !matrix.criterios) return null;
 
-  const perfis = matrix.perfis ?? ['atual', 'casado', 'filho'];
+  const activeMatrix =
+    matrixMode === 'proxy' ? (matrixProxy ?? matrix) :
+    matrixMode === 'full'  ? (matrixFull ?? matrix) :
+    matrix;
+
+  const perfis = activeMatrix.perfis ?? ['atual', 'casado', 'filho'];
 
   return (
     <div style={{ padding: '0 16px 16px' }}>
+      {/* Bond pool mode selector */}
+      {(matrixProxy != null || matrixFull != null) && (
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+          {(['proxy', 'partial', 'full'] as const).map(mode => {
+            const label = mode === 'proxy' ? 'Sem bucket' : mode === 'partial' ? `Atual ${(bondPoolCompletionPct ?? 0).toFixed(0)}%` : 'Full 100%';
+            const active = matrixMode === mode;
+            if (mode === 'proxy' && !matrixProxy) return null;
+            if (mode === 'full' && !matrixFull) return null;
+            return (
+              <button
+                key={mode}
+                onClick={() => setMatrixMode(mode)}
+                style={{
+                  fontSize: '11px', padding: '3px 10px', borderRadius: 6,
+                  border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`,
+                  background: active ? 'color-mix(in srgb, var(--accent) 12%, transparent)' : 'transparent',
+                  color: active ? 'var(--accent)' : 'var(--muted)',
+                  cursor: 'pointer', fontWeight: active ? 700 : 400,
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Título + Toggle de cenário */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
         <div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
-            go-go window: {matrix.gogowindow} anos · min {Math.round(matrix.min_frac_anos * 100)}% anos acima do piso
+            go-go window: {activeMatrix.gogowindow} anos · min {Math.round(activeMatrix.min_frac_anos * 100)}% anos acima do piso
           </div>
         </div>
         {/* Cenário toggle */}
         <div style={{ display: 'flex', gap: 4 }}>
-          {matrix.cenarios.map(c => (
+          {activeMatrix.cenarios.map(c => (
             <button
               key={c}
               onClick={() => setCenarioAtivo(c)}
@@ -112,7 +148,7 @@ export function PQualityMatrix({ matrix, privacyMode }: PQualityMatrixProps) {
             </tr>
           </thead>
           <tbody>
-            {matrix.criterios.map((crit, idx) => {
+            {activeMatrix.criterios.map((crit, idx) => {
               const isDefault = !!crit.default;
               const rowStyle: React.CSSProperties = isDefault
                 ? { background: 'color-mix(in srgb, var(--accent) 5%, transparent)', fontWeight: 700 }
@@ -121,7 +157,7 @@ export function PQualityMatrix({ matrix, privacyMode }: PQualityMatrixProps) {
               return (
                 <tr key={crit.id} style={rowStyle}>
                   {/* Critério ID + badge padrão */}
-                  <td style={{ padding: '7px 8px', borderBottom: idx < matrix.criterios.length - 1 ? '1px solid var(--border)' : 'none', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '7px 8px', borderBottom: idx < activeMatrix.criterios.length - 1 ? '1px solid var(--border)' : 'none', whiteSpace: 'nowrap' }}>
                     <span style={{ fontWeight: 700, color: 'var(--text)', marginRight: 4 }}>{crit.id}</span>
                     <span style={{ color: 'var(--muted)' }}>{crit.label}</span>
                     {isDefault && (
@@ -136,12 +172,12 @@ export function PQualityMatrix({ matrix, privacyMode }: PQualityMatrixProps) {
                     )}
                   </td>
                   {/* Descrição */}
-                  <td style={{ padding: '7px 8px', color: 'var(--muted)', borderBottom: idx < matrix.criterios.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                  <td style={{ padding: '7px 8px', color: 'var(--muted)', borderBottom: idx < activeMatrix.criterios.length - 1 ? '1px solid var(--border)' : 'none' }}>
                     {crit.descricao}
                   </td>
                   {/* Células de valor por perfil */}
                   {perfis.map(perfil => {
-                    const val = matrix.values[crit.id]?.[perfil]?.[cenarioAtivo];
+                    const val = activeMatrix.values[crit.id]?.[perfil]?.[cenarioAtivo];
                     const testId = crit.id === 'B' && perfil === 'atual' && cenarioAtivo === 'base'
                       ? 'pquality-matrix-B-atual-base'
                       : undefined;
@@ -153,7 +189,7 @@ export function PQualityMatrix({ matrix, privacyMode }: PQualityMatrixProps) {
                         style={{
                           textAlign: 'center',
                           padding: '7px 8px',
-                          borderBottom: idx < matrix.criterios.length - 1 ? '1px solid var(--border)' : 'none',
+                          borderBottom: idx < activeMatrix.criterios.length - 1 ? '1px solid var(--border)' : 'none',
                         }}
                       >
                         {val != null ? (
