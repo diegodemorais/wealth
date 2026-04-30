@@ -45,6 +45,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|----------|
 | DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | Head + Dev | 🟡 Média | — |
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
+| HD-aposenteaos40-ui-gaps-v2 | Análise UI aposenteaos40.org — Gaps Acionáveis | Head | 🟡 Média | — |
 
 ### Done — Últimas Issues Concluídas
 
