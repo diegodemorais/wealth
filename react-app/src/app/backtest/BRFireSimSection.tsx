@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { BRFireSimChart } from '@/components/charts/BRFireSimChart';
+import { SWR_KEYS } from './brfiresim-constants';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -35,18 +36,23 @@ interface BRFireSimResult {
   _caveat: string;
 }
 
-const SWR_KEYS = ['3pct', '4pct', '6pct', '8pct'] as const;
 const SWR_LABELS: Record<string, string> = {
-  '3pct': 'SWR 3% (Fat FIRE)',
-  '4pct': 'SWR 4% (FIRE)',
-  '6pct': 'SWR 6% (Lean FIRE)',
-  '8pct': 'SWR 8% (Barista FIRE)',
+  '3pct': 'SWR 3% · Fat FIRE',
+  '4pct': 'SWR 4% · FIRE',
+  '6pct': 'SWR 6% · Lean FIRE',
+  '8pct': 'SWR 8% · Barista FIRE',
 };
 const SWR_COLORS: Record<string, string> = {
   '3pct': 'var(--green)',
   '4pct': 'var(--accent)',
   '6pct': 'var(--yellow)',
   '8pct': 'var(--red)',
+};
+const SWR_FIRE_NAMES: Record<string, string> = {
+  '3pct': 'Fat FIRE',
+  '4pct': 'FIRE',
+  '6pct': 'Lean FIRE',
+  '8pct': 'Barista',
 };
 
 function useBRFireSim(): { data: BRFireSimResult | null; error: string | null; loading: boolean } {
@@ -161,7 +167,10 @@ export function BRFireSimSection() {
               <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Ciclo</th>
               {SWR_KEYS.map(key => (
                 <th key={key} style={{ textAlign: 'center', padding: '6px 8px', color: SWR_COLORS[key], fontWeight: 600 }}>
-                  {key.replace('pct', '%')}
+                  <div>{key.replace('pct', '%')}</div>
+                  <div style={{ fontSize: 9, fontWeight: 400, color: SWR_COLORS[key], opacity: 0.8 }}>
+                    {SWR_FIRE_NAMES[key]}
+                  </div>
                 </th>
               ))}
             </tr>

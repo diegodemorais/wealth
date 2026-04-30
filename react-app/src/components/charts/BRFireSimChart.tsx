@@ -5,6 +5,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
+import { SWR_KEYS } from '@/app/backtest/brfiresim-constants';
 
 interface CycleResult {
   sucesso: boolean;
@@ -22,12 +23,11 @@ interface Props {
   cycles: Cycle[];
 }
 
-const SWR_KEYS = ['3pct', '4pct', '6pct', '8pct'];
 const SWR_LABELS: Record<string, string> = {
-  '3pct': 'SWR 3%',
-  '4pct': 'SWR 4%',
-  '6pct': 'SWR 6%',
-  '8pct': 'SWR 8%',
+  '3pct': 'SWR 3% · Fat FIRE',
+  '4pct': 'SWR 4% · FIRE',
+  '6pct': 'SWR 6% · Lean FIRE',
+  '8pct': 'SWR 8% · Barista FIRE',
 };
 const SWR_COLORS: Record<string, string> = {
   '3pct': EC.green,
@@ -66,12 +66,13 @@ export function BRFireSimChart({ cycles }: Props) {
       markLine: undefined,
     }));
 
-    // Failure indicator series (negative = failed)
+    // Failure indicator series — names prefixed with '_' so they're excluded from legend
     const failSeries = SWR_KEYS.map(key => ({
-      name: `${SWR_LABELS[key]} (falha)`,
+      name: `_fail_${key}`,
       type: 'bar' as const,
       stack: `fail_${key}`,
       barGap: '10%',
+      silent: true,
       itemStyle: { color: EC.red, opacity: 0.6, borderRadius: [3, 3, 0, 0] },
       data: cycles.map(c => {
         const r = c.resultados_swr?.[key];
@@ -83,7 +84,11 @@ export function BRFireSimChart({ cycles }: Props) {
     return {
       backgroundColor: 'transparent',
       legend: {
-        data: SWR_KEYS.map(k => SWR_LABELS[k]),
+        // Explicit itemStyle per entry so ECharts uses correct colors even with dynamic bar color fn
+        data: SWR_KEYS.map(k => ({
+          name: SWR_LABELS[k],
+          itemStyle: { color: SWR_COLORS[k] },
+        })),
         textStyle: { color: theme.tooltip.textStyle.color, fontSize: 11 },
         bottom: 0,
       },

@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — BRFireSim polish ──
+  { datetime: '2026-04-30T13:00:00.000Z', type: 'visual', component: 'BRFireSimChart / BRFireSimSection', tab: 'backtest', anchor: '', de: 'legend sem nomes FIRE, cores erradas no legend, cabeçalho só percentual', para: 'legend com "SWR X% · Nome FIRE" e cores explícitas por série; cabeçalho da tabela com percentual + nome FIRE; SWR_KEYS extraído para brfiresim-constants.ts' },
   // ── 2026-04-30 — DEV-iifpt-dashboard: CC1+DC1+DC2+DC3 ──
   { datetime: '2026-04-30T20:00:00.000Z', type: 'dado', component: 'IifptRadar', tab: 'now', anchor: 'section-iifpt-radar', de: 'ausente', para: 'Radar de cobertura IIFPT — 6 domínios (Inv/Ret/Tax/CF/RM/Est) vs pesos IPS. RM e Est destacados como gaps (<30%). Collapsible.' },
   { datetime: '2026-04-30T20:00:00.000Z', type: 'visual', component: 'RegimeVidaBadge', tab: 'now', anchor: '', de: 'ausente', para: 'Badge inline "Acumulação · r3 ~2034" no topo da seção Status. Azul=r2, laranja=r3, verde=r4.' },
