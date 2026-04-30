@@ -186,11 +186,20 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const _anoFireAspir = today.getFullYear() + ((data.premissas.idade_cenario_aspiracional ?? 50) - data.premissas.idade_atual);
   const _anoFire = today.getFullYear() + (data.premissas.idade_cenario_base - data.premissas.idade_atual);
 
-  const fireDate = new Date(`${_anoFire}-01-01`);
+  // Use same calendar month as today so FIRE date is "today + N_ANOS years", not Jan 1
+  const fireDate = new Date(_anoFire, today.getMonth(), 1);
   const msLeft = fireDate.getTime() - today.getTime();
   const yearsLeft = msLeft / (1000 * 60 * 60 * 24 * 365.25);
   const yrInt = Math.floor(yearsLeft);
   const moInt = Math.round((yearsLeft - yrInt) * 12);
+
+  const _PT_MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const fireDateFormatted = `${_PT_MONTHS[fireDate.getMonth()]}/${_anoFire}`;
+  const taxaPoupanca: number | null = (() => {
+    const renda = data.premissas?.renda_mensal_liquida ?? 0;
+    const aporte = data.premissas?.aporte_mensal ?? 0;
+    return renda > 0 ? Math.round((aporte / renda) * 1000) / 10 : null;
+  })();
 
   // P(FIRE) — probability of success from pfire_base (base scenario)
   // No fallback: if pfire_base.base is absent, data pipeline is broken — fail visibly
@@ -589,6 +598,8 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
     // FIRE tracking
     fireDate,
+    fireDateFormatted,
+    taxaPoupanca,
     fireMonthsAway: moInt + yrInt * 12,
     firePercentage: (progPct / 100),
     pfire, // Probability of FIRE success (0-1)

@@ -25,6 +25,7 @@ export interface KpiHeroProps {
   fireYearAspir?: number;
   fireAgeAspir?: number;
   firePatrimonioGatilho?: number;
+  fireDateFormatted?: string; // e.g. "Abr/2040"
 }
 
 export function KpiHero({
@@ -40,6 +41,7 @@ export function KpiHero({
   fireYearAspir,
   fireAgeAspir,
   firePatrimonioGatilho,
+  fireDateFormatted,
 }: KpiHeroProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
@@ -87,11 +89,9 @@ export function KpiHero({
         <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }}>
           {yearsMonthsStr}
         </div>
-        {fireSubtitle && (
-          <div className="kpi-sub">
-            {fireSubtitle}
-          </div>
-        )}
+        <div className="kpi-sub">
+          {fireDateFormatted ?? fireSubtitle ?? null}
+        </div>
       </div>
 
       {/* Card 3: Progresso FIRE */}

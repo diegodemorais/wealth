@@ -170,6 +170,7 @@ export default function HomePage() {
         yearsToFire={d.fireMonthsAway / 12}
         pfire={d.pfire}
         cambio={d.CAMBIO}
+        fireDateFormatted={(d as any).fireDateFormatted}
       />
 
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Retorno Real, Aporte Mês */}
@@ -240,6 +241,14 @@ export default function HomePage() {
           value={d.ultimoAporte ? fmtPrivacy(d.ultimoAporte, privacyMode) : '—'}
           sub={d.aporteMediaHistorica ? `${d.ultimoAporteData || 'último'} · média ${fmtPrivacy(d.aporteMediaHistorica, privacyMode)}/mês` : (d.ultimoAporteData || 'último aporte')}
         />
+        {(d as any).taxaPoupanca != null && (
+          <MetricCard
+            data-testid="taxa-poupanca"
+            label="Taxa de Poupança"
+            value={privacyMode ? '••%' : `${(d as any).taxaPoupanca.toFixed(1)}%`}
+            sub={`aporte / renda · meta FIRE ≥ 30%`}
+          />
+        )}
       </div>
 
       {/* ── CAMADA 2: Decisão do Mês ── */}
