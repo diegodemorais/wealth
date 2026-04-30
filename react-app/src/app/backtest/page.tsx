@@ -18,6 +18,8 @@ import { TrendingDown } from 'lucide-react';
 import { BRFireSimSection } from './BRFireSimSection';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -732,6 +734,153 @@ function BondTentAnalysisSection() {
   );
 }
 
+// ── B11: Timeline Attribution Chart ──────────────────────────────────────────
+
+interface TimelineAttribution {
+  dates: string[];
+  rf: number[];
+  equity_usd: number[];
+  cambio: number[];
+}
+
+/** Format BRL value in compact notation */
+function fmtBRL(v: number): string {
+  const abs = Math.abs(v);
+  const sign = v < 0 ? '−' : '';
+  if (abs >= 1_000_000) return `${sign}R$${(abs / 1_000_000).toFixed(2)}M`;
+  if (abs >= 1_000) return `${sign}R$${(abs / 1_000).toFixed(0)}k`;
+  return `${sign}R$${abs.toFixed(0)}`;
+}
+
+/** Aggregate monthly series into yearly totals */
+function aggregateByYear(dates: string[], values: number[]): { years: string[]; totals: number[] } {
+  const map = new Map<string, number>();
+  dates.forEach((d, i) => {
+    const year = d.slice(0, 4);
+    map.set(year, (map.get(year) ?? 0) + (values[i] ?? 0));
+  });
+  const years = Array.from(map.keys()).sort();
+  return { years, totals: years.map(y => map.get(y) ?? 0) };
+}
+
+function TimelineAttributionChart() {
+  const data = useDashboardStore(s => s.data);
+  const { pv, pvLabel, privacyMode } = useEChartsPrivacy();
+
+  const ta = (data as Record<string, unknown>)?.timeline_attribution as TimelineAttribution | undefined;
+  if (!ta?.dates?.length) return null;
+
+  const { years, totals: rfTotals }     = aggregateByYear(ta.dates, ta.rf);
+  const { totals: eqTotals }            = aggregateByYear(ta.dates, ta.equity_usd);
+  const { totals: fxTotals }            = aggregateByYear(ta.dates, ta.cambio);
+
+  // Accumulated totals across all years (for summary spans)
+  const totalRf  = rfTotals.reduce((a, b) => a + b, 0);
+  const totalEq  = eqTotals.reduce((a, b) => a + b, 0);
+  const totalFx  = fxTotals.reduce((a, b) => a + b, 0);
+
+  const option = {
+    backgroundColor: 'transparent',
+    grid: { left: 60, right: 16, top: 32, bottom: 48 },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      backgroundColor: EC.card,
+      borderColor: EC.border2,
+      textStyle: { color: EC.text, fontSize: 11 },
+      formatter: (params: Array<{ seriesName: string; value: number; color: string }>) => {
+        const year = (params[0] as unknown as { axisValueLabel?: string; name?: string }).name ?? '';
+        const rows = params.map(p => {
+          const val = privacyMode ? fmtPrivacy(p.value, true) : fmtBRL(p.value);
+          return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${p.color};margin-right:4px"></span>${p.seriesName}: <b>${val}</b>`;
+        }).join('<br/>');
+        return `<b>${year}</b><br/>${rows}`;
+      },
+    },
+    legend: {
+      top: 6,
+      textStyle: { color: EC.muted, fontSize: 11 },
+      data: ['RF', 'Equity', 'FX/Câmbio'],
+    },
+    xAxis: {
+      type: 'category',
+      data: years,
+      axisLabel: { color: EC.muted, fontSize: 11 },
+      axisLine: { lineStyle: { color: EC.border2 } },
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        color: EC.muted,
+        fontSize: 10,
+        formatter: (v: number) => pvLabel(v),
+      },
+      splitLine: { lineStyle: { color: EC.border3 } },
+    },
+    series: [
+      {
+        name: 'RF',
+        type: 'bar',
+        stack: 'total',
+        data: rfTotals.map(v => pv(v)),
+        itemStyle: { color: EC.green },
+      },
+      {
+        name: 'Equity',
+        type: 'bar',
+        stack: 'total',
+        data: eqTotals.map(v => pv(v)),
+        itemStyle: { color: EC.accent },
+      },
+      {
+        name: 'FX/Câmbio',
+        type: 'bar',
+        stack: 'total',
+        data: fxTotals.map(v => pv(v)),
+        itemStyle: { color: EC.orange },
+      },
+    ],
+  };
+
+  return (
+    <CollapsibleSection
+      id="attribution-by-period"
+      title={secTitle('backtest', 'attribution-by-period', 'Atribuição de Retorno — RF vs Equity vs FX')}
+      defaultOpen={secOpen('backtest', 'attribution-by-period', false)}
+    >
+      <div style={{ padding: '0 16px 16px' }}>
+        <EChart option={option} style={{ height: 300 }} />
+
+        {/* Accumulated totals */}
+        <div className="grid grid-cols-3 gap-3" style={{ marginTop: 14 }}>
+          {[
+            { label: 'RF Total Acum.', testId: 'b11-attr-rf-total',     value: totalRf,  color: EC.green  },
+            { label: 'Equity Total Acum.', testId: 'b11-attr-equity-total', value: totalEq,  color: EC.accent },
+            { label: 'FX Total Acum.', testId: 'b11-attr-fx-total',     value: totalFx,  color: EC.orange },
+          ].map(({ label, testId, value, color }) => (
+            <div
+              key={testId}
+              style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}
+            >
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>{label}</div>
+              <span
+                data-testid={testId}
+                style={{ fontSize: '1.05rem', fontWeight: 700, color }}
+              >
+                {fmtPrivacy(value, privacyMode)}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="src" style={{ marginTop: 10 }}>
+          Atribuição mensal agregada por ano · Fonte: timeline_attribution (data.json) · BRL · 2021–2026
+        </div>
+      </div>
+    </CollapsibleSection>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function BacktestPage() {
@@ -858,6 +1007,9 @@ export default function BacktestPage() {
           </CollapsibleSection>
         );
       })()}
+
+      {/* B11: Timeline Attribution — RF vs Equity vs FX por período */}
+      <TimelineAttributionChart />
 
       <SectionDivider label="Deep Dive" />
       {/* 3. Shadow Portfolios — Tracking */}
