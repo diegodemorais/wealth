@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — HD-gaps-aposenteaos40-spec: Feature 3 — Historical Cycle Simulation ──
+  { datetime: '2026-04-30T12:30:00.000Z', type: 'dado', component: 'BRFireSimSection', tab: 'backtest', anchor: 'section-brfiresim', de: 'ausente', para: 'brFIRESim — Historical Cycle Simulation (Bengen/cFIREsim): 4 ciclos históricos de 20 anos, SWR 3-8%, caveat sanity-check proeminente' },
   // ── 2026-04-30 — HD-gaps-aposenteaos40-spec: Feature 2 — FIRE Spectrum Widget ──
   { datetime: '2026-04-30T12:00:00.000Z', type: 'dado', component: 'FireSpectrumWidget', tab: 'fire', anchor: 'section-fire-spectrum', de: 'ausente', para: 'FIRE Spectrum — Fat FIRE / FIRE / Lean FIRE / Barista FIRE com múltiplos e SWR implícito' },
   // ── 2026-04-30 — HD-gaps-aposenteaos40-spec: Feature 1 — Coast FIRE Calculator ──

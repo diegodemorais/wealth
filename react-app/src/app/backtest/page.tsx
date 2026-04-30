@@ -15,6 +15,7 @@ import { BtcIndicatorsChart } from '@/components/dashboard/BtcIndicatorsChart';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { DrawdownExtendedChart } from '@/components/charts/DrawdownExtendedChart';
 import { TrendingDown } from 'lucide-react';
+import { BRFireSimSection } from './BRFireSimSection';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -749,6 +750,16 @@ export default function BacktestPage() {
             </div>
           )}
         </div>
+      </CollapsibleSection>
+
+      {/* Historical Cycle Simulation — HD-gaps-aposenteaos40-spec Feature 3 */}
+      <SectionDivider label="Historical Cycle Simulation" />
+      <CollapsibleSection
+        id="section-brfiresim"
+        title={secTitle('backtest', 'section-brfiresim', 'brFIRESim — Historical Cycle Simulation (Bengen/cFIREsim)')}
+        defaultOpen={secOpen('backtest', 'section-brfiresim', false)}
+      >
+        <BRFireSimSection />
       </CollapsibleSection>
     </div>
   );
