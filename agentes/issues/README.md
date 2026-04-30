@@ -50,6 +50,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| HD-benchmark-aposenteaos40 | Benchmark vs lab.aposenteaos40.org | 2026-04-30 | Mapeamento completo das 7 ferramentas (brFIRESim, MC, Coast FIRE, Backtest multi-carteira, Meu IPCA, Fronteira Eficiente, PIP) e conteúdo educacional (TSR BR, Termômetro FIRE 4 bandas, Anuário FIRE). Top gaps: Meu IPCA pessoal, brFIRESim por ciclos históricos, Thermometer bands, heatmap retornos anuais, Coast FIRE calculator. |
 | FR-mc-bond-pool-partial-isolation | Bond Pool Partial Isolation no MC FIRE | 2026-04-29 | Isolation gradual/proporcional: vol e guardrails proporcionais à fração de cobertura do bucket (atual: 24%). enabled=True sempre que posição > 0. Badge distingue partial/full/zero. P(quality) mais preciso durante acumulação. 18 testes. Dashboard v1.161.0. |
 | FR-mc-bond-pool-isolation | Bond Pool Isolation Real no MC FIRE | 2026-04-29 | vol=0 + guardrails suprimidos anos 0-6 quando isolation ativa. compute_bond_pool_status() automático. Estado: 24% completo, isolation inativa (ativa ao atingir R$416k). p_quality_proxy preservado. Badge dashboard. 17 testes. Fase 4: TD 2040 → Selic se FIRE atrasa. Dashboard v1.160.0. |
 | FR-pquality-recalibration | Recalibração e Expansão do P(quality) | 2026-04-29 | Critério B (≤1 ano ruim go-go) como default. PQualityMatrix 5×3×3. P(quality) adicionado em KpiHero, FireScenariosTable, Simuladores. 95/95 Playwright. Dashboard v1.156.1. Issue derivada: FR-mc-bond-pool-isolation. |
