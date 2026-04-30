@@ -109,16 +109,34 @@ function BandRow({
 export function FireSpectrumWidget({ spectrum, diegoTarget, privacyMode }: FireSpectrumWidgetProps) {
   const targetK = diegoTarget ?? 10_000_000;
   const targetMultiple = Math.round(targetK / spectrum.custo_mensal);
-  const targetSwr = (1 / (targetMultiple / 100)).toFixed(1);
+  // SWR% = (custo_anual / FIRE_number) × 100 = (custo_mensal × 12 / FIRE_number) × 100 = 1200 / targetMultiple
+  const targetSwr = (1200 / targetMultiple).toFixed(1);
 
   return (
     <div data-testid="fire-spectrum-widget" style={{ padding: '0 16px 16px' }}>
       {/* Header */}
       <div style={{ marginBottom: 10 }}>
-        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>
-          Custo mensal base: {fmtPrivacy(spectrum.custo_mensal, privacyMode)}/mês
-          &nbsp;·&nbsp;
-          Patrimônio atual: {fmtPrivacy(spectrum.patrimonio_atual, privacyMode)}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
+          <span
+            style={{
+              padding: '2px 8px',
+              borderRadius: 6,
+              background: 'color-mix(in srgb, var(--muted) 12%, transparent)',
+              border: '1px solid color-mix(in srgb, var(--muted) 30%, transparent)',
+              color: 'var(--muted)',
+              fontWeight: 700,
+              fontSize: 10,
+              letterSpacing: '.8px',
+              textTransform: 'uppercase',
+            }}
+          >
+            Referência
+          </span>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+            Custo mensal base: {fmtPrivacy(spectrum.custo_mensal, privacyMode)}/mês
+            &nbsp;·&nbsp;
+            Patrimônio atual: {fmtPrivacy(spectrum.patrimonio_atual, privacyMode)}
+          </span>
         </div>
       </div>
 
@@ -153,8 +171,23 @@ export function FireSpectrumWidget({ spectrum, diegoTarget, privacyMode }: FireS
       >
         <strong style={{ color: 'var(--yellow)' }}>⚠</strong>{' '}
         Lean FIRE (SWR 6%) and Barista FIRE (SWR 8%) are reference bands only —
-        both exceed the safe withdrawal rate for a 37-year retirement horizon (Bengen: &lt;4.5%).
+        both exceed the safe withdrawal rate for a 37-year retirement horizon
+        (Bengen 1994: 4.0% for 30 years; ~3.5% for 37 years per ERN 2018).
         Not recommended as withdrawal strategies for Diego's plan.
+      </div>
+
+      {/* Spending smile / healthcare footnote */}
+      <div
+        style={{
+          marginTop: 8,
+          fontSize: 10,
+          color: 'var(--muted)',
+          fontStyle: 'italic',
+          lineHeight: 1.5,
+        }}
+      >
+        Assume custo de vida constante em termos reais — não modela spending smile
+        (Blanchett 2014) nem escalada de custos de saúde na velhice.
       </div>
 
       {/* Diego's model target note */}

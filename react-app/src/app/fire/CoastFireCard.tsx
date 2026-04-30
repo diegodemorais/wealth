@@ -76,8 +76,23 @@ export function CoastFireCard({ coast, patrimonioAtual, privacyMode }: CoastFire
         padding: '16px 18px',
       }}
     >
-      {/* Header: status badge */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+      {/* Header: referencia badge + status badge */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+        <span
+          style={{
+            padding: '2px 8px',
+            borderRadius: 6,
+            background: 'color-mix(in srgb, var(--muted) 12%, transparent)',
+            border: '1px solid color-mix(in srgb, var(--muted) 30%, transparent)',
+            color: 'var(--muted)',
+            fontWeight: 700,
+            fontSize: 10,
+            letterSpacing: '.8px',
+            textTransform: 'uppercase',
+          }}
+        >
+          Referência
+        </span>
         <span
           data-testid="coast-fire-status"
           style={{
@@ -210,10 +225,14 @@ export function CoastFireCard({ coast, patrimonioAtual, privacyMode }: CoastFire
           fontStyle: 'italic',
           borderTop: '1px solid var(--border)',
           paddingTop: 8,
+          lineHeight: 1.5,
         }}
       >
         Coast FIRE uses portfolio real return ({(coast.r_real_base * 100).toFixed(2)}% base), not fixed SWR.
-        FIRE Number alvo: {fmtPrivacy(coast.fire_number, privacyMode)}.
+        FIRE Number alvo: {fmtPrivacy(coast.fire_number, privacyMode)}.{' '}
+        Assume <strong>zero aportes após atingir o Coast Number</strong> — com aportes contínuos,
+        o patrimônio necessário é menor.{' '}
+        Não modela spending smile (Blanchett 2014) nem escalada de custos de saúde na velhice.
       </div>
     </div>
   );
