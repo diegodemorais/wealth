@@ -731,6 +731,20 @@
       "privacy": false
     },
     {
+      "id": "b11-attr-rf-total",
+      "tab": "backtest",
+      "label": "Atribuição de Retorno — RF vs Equity vs FX",
+      "type": "chart-bar-stacked",
+      "purpose": "Mostra atribuição de retorno anual separada em RF, equity USD e câmbio para entender de onde vem a performance real do portfólio em BRL",
+      "data_fields": [
+        "timeline_attribution.dates",
+        "timeline_attribution.rf",
+        "timeline_attribution.equity_usd",
+        "timeline_attribution.cambio"
+      ],
+      "privacy": true
+    },
+    {
       "id": "hodl11-pnl",
       "tab": "performance",
       "label": "HODL11 — P&L e Custo Médio",
