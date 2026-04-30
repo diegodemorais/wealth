@@ -587,6 +587,151 @@ function BacktestLongoSection() {
   );
 }
 
+// ── B9: Bond Tent Analysis ────────────────────────────────────────────────────
+
+function BondTentAnalysisSection() {
+  const data = useDashboardStore(s => s.data);
+
+  const patrimonio: number = (data as any)?.premissas?.patrimonio_atual ?? 0;
+  const bondPool: { atual_brl?: number; cobertura_anos?: number; meta_anos?: number; meta_brl?: number } =
+    (data as any)?.bond_pool ?? {};
+  const custoAnual: number = (data as any)?.premissas?.custo_vida_base ?? 250000;
+
+  // Bond Tent: equity 79% → 40% nos 5 anos pré-FIRE (2035-2040)
+  const equityAtual = 0.79;
+  const equityFire  = 0.40;
+  const tentFrac    = equityAtual - equityFire; // 0.39
+  const tentBrl     = patrimonio * tentFrac;
+
+  // RF necessária para cobrir o tent
+  const bondPoolAtual = bondPool.atual_brl ?? 0;
+  const bondPoolMeta  = bondPool.meta_brl ?? 0;
+  const coberturaBondAtual = bondPool.cobertura_anos ?? 0;
+  const metaAnos = bondPool.meta_anos ?? 7;
+
+  const rfNecessaria  = tentBrl;
+  const rfDisponivel  = bondPoolAtual;
+  const gapRf         = rfNecessaria - rfDisponivel;
+  const pctMeta       = patrimonio > 0 ? (bondPoolAtual / rfNecessaria) * 100 : 0;
+  const coberturaTent = custoAnual > 0 ? rfNecessaria / custoAnual : 0;
+
+  const fmtBrl = (v: number) => {
+    if (v >= 1_000_000) return `R$${(v / 1_000_000).toFixed(2)}M`;
+    if (v >= 1_000)     return `R$${(v / 1_000).toFixed(0)}k`;
+    return `R$${v.toFixed(0)}`;
+  };
+  const fmtAnos = (v: number) => `${v.toFixed(1)} anos`;
+
+  const gapColor = gapRf <= 0 ? 'var(--green)' : gapRf < rfNecessaria * 0.5 ? 'var(--yellow)' : 'var(--red)';
+
+  return (
+    <CollapsibleSection
+      id="bond-tent-analysis"
+      title={secTitle('backtest', 'bond-tent-analysis', 'Bond Tent — Análise de Glide Path (2035-2040)')}
+      defaultOpen={secOpen('backtest', 'bond-tent-analysis', false)}
+    >
+      <div style={{ padding: '0 16px 16px' }}>
+        {/* Conceito */}
+        <div style={{ padding: '10px 14px', background: 'rgba(88,166,255,.06)', border: '1px solid rgba(88,166,255,.2)', borderRadius: 8, marginBottom: 14, fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
+          <strong style={{ color: 'var(--text)' }}>O que é Bond Tent?</strong> Estratégia de glide path onde a alocação em equity é
+          reduzida progressivamente de <strong>{(equityAtual * 100).toFixed(0)}%</strong> para <strong>{(equityFire * 100).toFixed(0)}%</strong> nos
+          5 anos pré-FIRE (2035–2040), mitigando o risco de sequence of returns.
+          A RF "tent" cobre as despesas iniciais da aposentadoria sem forçar venda de equity em baixa.
+        </div>
+
+        {/* Métricas principais */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" style={{ marginBottom: 14 }}>
+          <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>Tent Size</div>
+            <div data-testid="b9-tent-size-brl" style={{ fontSize: '1.1rem', fontWeight: 700 }}>{fmtBrl(tentBrl)}</div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>39% × patrimônio</div>
+          </div>
+          <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>Bond Pool Atual</div>
+            <div data-testid="b9-bond-pool-atual" style={{ fontSize: '1.1rem', fontWeight: 700 }}>{fmtBrl(rfDisponivel)}</div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{fmtAnos(coberturaBondAtual)}</div>
+          </div>
+          <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: `1px solid ${gapColor}` }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>Gap RF</div>
+            <div data-testid="b9-gap-rf" style={{ fontSize: '1.1rem', fontWeight: 700, color: gapColor }}>
+              {gapRf <= 0 ? `${fmtBrl(Math.abs(gapRf))} excesso` : fmtBrl(gapRf)}
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+              {pctMeta.toFixed(0)}% cobertura
+            </div>
+          </div>
+          <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>Tent em Anos</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{fmtAnos(coberturaTent)}</div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>vs meta {metaAnos}a</div>
+          </div>
+        </div>
+
+        {/* Glide path textual */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontWeight: 600, fontSize: 'var(--text-sm)', marginBottom: 8 }}>Glide Path 2026–2040</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 'var(--text-sm)' }}>
+            {[
+              { ano: '2026 (hoje)', equity: 79, rf: 21, nota: 'Alocação atual' },
+              { ano: '2031 (−9a)', equity: 71, rf: 29, nota: 'Redução gradual' },
+              { ano: '2035 (−5a)', equity: 63, rf: 37, nota: 'Início do tent' },
+              { ano: '2040 (FIRE)', equity: 40, rf: 60, nota: 'Máx proteção RF' },
+            ].map(row => (
+              <div key={row.ano} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <span style={{ color: 'var(--muted)', minWidth: 110, fontSize: 'var(--text-xs)' }}>{row.ano}</span>
+                <div style={{ flex: 1, height: 16, borderRadius: 4, overflow: 'hidden', background: 'var(--card)', display: 'flex' }}>
+                  <div style={{ width: `${row.equity}%`, background: 'var(--accent)', transition: 'width .3s' }} />
+                  <div style={{ width: `${row.rf}%`, background: 'var(--green)', opacity: 0.7 }} />
+                </div>
+                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', minWidth: 32 }}>{row.equity}%</span>
+                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', minWidth: 32 }}>{row.rf}%</span>
+                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{row.nota}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'flex', gap: 12, marginTop: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+            <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--accent)', borderRadius: 2, marginRight: 4 }} />Equity</span>
+            <span><span style={{ display: 'inline-block', width: 10, height: 10, background: 'var(--green)', opacity: 0.7, borderRadius: 2, marginRight: 4 }} />RF</span>
+          </div>
+        </div>
+
+        {/* Situação atual vs meta */}
+        <div style={{ padding: '10px 14px', background: 'var(--card2)', borderRadius: 8, border: '1px solid var(--border)', fontSize: 'var(--text-sm)' }}>
+          <div style={{ fontWeight: 600, marginBottom: 8 }}>Situação Atual vs Meta Tent</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--muted)' }}>RF necessária (tent 39%)</span>
+              <span style={{ fontWeight: 600 }}>{fmtBrl(rfNecessaria)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--muted)' }}>Bond pool disponível</span>
+              <span>{fmtBrl(rfDisponivel)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border)', paddingTop: 4, marginTop: 2 }}>
+              <span style={{ color: 'var(--muted)' }}>Gap a acumular</span>
+              <span style={{ fontWeight: 700, color: gapColor }}>{gapRf <= 0 ? 'Cobertura OK' : fmtBrl(gapRf)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--muted)' }}>Meta bond pool (estrutural)</span>
+              <span>{bondPoolMeta > 0 ? fmtBrl(bondPoolMeta) : '—'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: 10, padding: '6px 10px', background: 'rgba(234,179,8,.06)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+          Bond Tent é estratégia pré-FIRE — a acumulação de RF deve ocorrer nos anos anteriores ao FIRE,
+          não necessariamente hoje. O gap de {fmtBrl(gapRf > 0 ? gapRf : 0)} deve ser construído até 2035.
+        </div>
+
+        <div className="src" style={{ marginTop: 10 }}>
+          Tent size = patrimônio × (equity_atual − equity_fire) = {fmtBrl(patrimonio)} × {(tentFrac * 100).toFixed(0)}% ·
+          Bond pool: data.bond_pool · Equity atual: {(equityAtual * 100).toFixed(0)}% (IPS)
+        </div>
+      </div>
+    </CollapsibleSection>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function BacktestPage() {
@@ -835,6 +980,9 @@ export default function BacktestPage() {
       >
         <BRFireSimSection />
       </CollapsibleSection>
+
+      {/* B9: Bond Tent — análise textual de glide path pré-FIRE */}
+      <BondTentAnalysisSection />
     </div>
   );
 }
