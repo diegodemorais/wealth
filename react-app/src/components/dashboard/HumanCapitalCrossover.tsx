@@ -3,15 +3,9 @@
 import React, { useState, useMemo } from 'react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EChart } from '@/components/primitives/EChart';
+import { useChartResize } from '@/hooks/useChartResize';
 import { EC } from '@/utils/echarts-theme';
 import { fmtPrivacy } from '@/utils/privacyTransform';
-
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 interface Ponto {
   ano: number;
@@ -50,6 +44,7 @@ export function HumanCapitalCrossover({
   rendaAnual,
 }: HumanCapitalCrossoverProps) {
   const { privacyMode } = useEChartsPrivacy();
+  const chartRef = useChartResize();
   const [tableOpen, setTableOpen] = useState(false);
 
   const anoAtual = pontos[0]?.ano ?? new Date().getFullYear();
