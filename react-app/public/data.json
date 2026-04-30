@@ -11135,7 +11135,7 @@
         "p_at_threshold_stress": 81.3,
         "swr_at_fire": 0.0202,
         "pat_mediano_threshold": 12348376.0,
-        "p_quality": 74.4,
+        "p_quality": 77.3,
         "p_quality_proxy": 74.4,
         "p_quality_full": 88.2
       },
@@ -11160,7 +11160,7 @@
         "p_at_threshold_stress": 82.8,
         "swr_at_fire": 0.0207,
         "pat_mediano_threshold": 13028892.0,
-        "p_quality": 59.6,
+        "p_quality": 68.1,
         "p_quality_proxy": 59.6,
         "p_quality_full": 85.1
       },
@@ -11185,7 +11185,7 @@
         "p_at_threshold_stress": 82.0,
         "swr_at_fire": 0.023,
         "pat_mediano_threshold": 13028892.0,
-        "p_quality": 48.1,
+        "p_quality": 50.1,
         "p_quality_proxy": 48.1,
         "p_quality_full": 58.4
       }
