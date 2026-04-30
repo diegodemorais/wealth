@@ -22,12 +22,12 @@ import { fmtPrivacy } from '@/utils/privacyTransform';
 import { useChartResize } from '@/hooks/useChartResize';
 
 const DOMAIN_LABELS: Record<string, string> = {
-  inv: 'Inv',
-  ret: 'Ret',
+  inv: 'Investment',
+  ret: 'Retirement',
   tax: 'Tax',
-  cf:  'CF',
-  rm:  'RM',
-  est: 'Est',
+  cf:  'Cash Flow',
+  rm:  'Risk Mgmt',
+  est: 'Estate',
 };
 
 const DOMAIN_ORDER = ['inv', 'ret', 'tax', 'cf', 'rm', 'est'];
@@ -145,7 +145,7 @@ export function IifptRadar({ domainCoverage, priorityWeights }: IifptRadarProps)
     <CollapsibleSection
       id="section-iifpt-radar"
       title="Cobertura IIFPT"
-      defaultOpen={true}
+      defaultOpen={false}
       summary={
         gapDomains.length > 0 ? (
           <span style={{ fontSize: 'var(--text-xs)', color: EC.red, fontWeight: 600 }}>

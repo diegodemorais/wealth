@@ -160,44 +160,12 @@ export default function HomePage() {
     ];
   })();
 
-  // DC2 — Regime badge data
-  const regimeVida: string = (data as any)?.regime_vida ?? '';
   const domainCoverage: Record<string, number> = (data as any)?.domain_coverage ?? {};
   const priorityWeights: Record<string, number> = (data as any)?.priority_matrix?.weights ?? {};
-  const regimeBadgeColor = regimeVida === 'r4_retired' ? 'var(--green)'
-    : regimeVida === 'r3_pre_fire' ? 'var(--orange)'
-    : 'var(--accent)'; // r2_mid_career or unknown
-
-  const regimeLabel = regimeVida === 'r2_mid_career' ? 'Acumulação · r3 ~2034'
-    : regimeVida === 'r3_pre_fire' ? 'Pré-FIRE · r3'
-    : regimeVida === 'r4_retired' ? 'FIRE · r4'
-    : null;
 
   return (
     <div>
       <SectionDivider label="Status" />
-      {/* DC2 — Regime IIFPT badge (inline, next to section label) */}
-      {regimeLabel && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-          <span
-            data-testid="regime-vida-badge"
-            title="Regime IIFPT atual: r2 Mid-career. Trigger r3: patrimônio ≥ R$9M ou P(FIRE) ≥ 90% por 2 anos."
-            style={{
-              display: 'inline-block',
-              fontSize: 10,
-              fontWeight: 600,
-              color: regimeBadgeColor,
-              background: `${regimeBadgeColor}18`,
-              border: `1px solid ${regimeBadgeColor}40`,
-              borderRadius: 5,
-              padding: '2px 8px',
-              cursor: 'help',
-            }}
-          >
-            {regimeLabel}
-          </span>
-        </div>
-      )}
       {/* 1. HERO STRIP — Patrimônio Total | Anos até FIRE | Progresso FIRE */}
       <KpiHero
         networth={d.networth}
