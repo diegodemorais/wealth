@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | FR-audit-p2-improvements |
 | **Dono** | Dev |
-| **Status** | Em progresso 🔄 — Sprint Alpha + FIRE UX + Portfolio + Simulators concluídos 2026-04-30 |
+| **Status** | Em progresso 🔄 — Sprint Alpha + FIRE UX + Portfolio + Simulators + B9/B10/B13 + A7/C10/C13 concluídos 2026-04-30 |
 | **Prioridade** | 🟡 P2 — Melhorias de Clareza e Completude |
 | **Criado em** | 2026-04-30 |
 | **Origem** | HD-visual-audit-playwright — Fase 3 (síntese) |
@@ -139,12 +139,14 @@ Para atacar este backlog de forma eficiente, sugerimos agrupamentos por sprint:
 - [x] C2 — ETFRegionComposition: tab default → AVGS (era SWRD)
 - [x] C3 — N/A: JPGL não está mais em posicoes — transitório encerrado
 
+### Sprint Final ✅ 2026-04-30
+- [x] A7 — FIRE: barra de progresso duplicada removida do Gap G (KpiHero já mostra %; Gap G mantém R$ absolutos)
+- [x] B9 — Backtest: BondTentAnalysisSection — tent size (39% patrimônio), glide path 2026–2040, gap RF vs bond pool atual
+- [x] B10 — Backtest: drawdown_extended.periods populado no pipeline — 4 períodos (real, medium, long, academic)
+- [x] B13 — Simulators: RendaVsIpcaDuracaoSection — comparação Renda+2065 vs IPCA+2050 (duration, taxa, spread, bond pool impact)
+- [x] C10 — FIRE: section-scenario-compare extraída do aninhamento e posicionada antes de Coast FIRE + FIRE Spectrum
+- [x] C13 — FIRE: histograma P(FIRE date) — barras marginais por ano alvo usando fire_matrix.by_profile + earliest_fire
+
 ### Pendente — Próximas sessões
-- [ ] A7 — FIRE: barra progresso duplicada — requer verificação visual UI (KpiHero card vs Gap G section)
-- [ ] B9 — Backtest: preset "Bond Tent" — requer pipeline (série de retorno RF histórica)
-- [ ] B10 — Backtest: highlight SoRR window — `drawdown_extended.periods` não populado no data.json
-- [ ] B11 — Backtest: RF vs equity attribution por período — requer série histórica RF
-- [ ] B13 — Simulators: What-If Renda+ 2065 → IPCA+2050 (duration + retorno)
+- [ ] B11 — Backtest: RF vs equity attribution por período — requer série histórica RF (pipeline parcialmente preparado)
 - [ ] C8 — NOW: mini card capital humano Katia — requer dados INSS/Katia no pipeline
-- [ ] C10 — FIRE: revisar ordem das seções (Hero → Trilha → Cenários → Bond Pool → SoRR...) — requer verificação visual
-- [ ] C13 — FIRE: histograma P(FIRE date) por ano — requer série P(FIRE) por ano do pipeline
