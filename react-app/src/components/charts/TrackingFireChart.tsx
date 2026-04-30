@@ -32,6 +32,13 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
     const trilhaP90: number[] = ft.trilha_p90_brl ?? [];
     const metaFireBrl: number = ft.meta_fire_brl ?? 8333333;
     const nHistorico: number = ft.n_historico ?? 0;
+    const custoVida: number = (data as any)?.premissas?.custo_vida_base ?? 250000;
+
+    // ── FIRE milestone thresholds ────────────────────────────────────────
+    const baristaThreshold = custoVida / 0.08;  // ~3.125M for 250k
+    const leanThreshold    = custoVida / 0.06;  // ~4.167M for 250k
+    const fireThreshold    = custoVida / 0.04;  // ~6.25M for 250k
+    // Fat FIRE = metaFireBrl — already rendered as "Meta FIRE" line, do not duplicate
 
     if (rawDates.length === 0) {
       return { title: { text: 'Sem dados de trilha FIRE', textStyle: { color: '#94a3b8' } } };
@@ -99,6 +106,43 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       }
     }
     const crossoverYear = crossoverIdx != null ? downsampledDates[crossoverIdx]?.slice(0, 4) : null;
+
+    // ── Find P50 × Lean FIRE crossover ───────────────────────────────────
+    let leanCrossoverIdx: number | null = null;
+    for (let i = 1; i < downsampledP50.length; i++) {
+      if (downsampledP50[i] >= leanThreshold && downsampledP50[i - 1] < leanThreshold) {
+        leanCrossoverIdx = i;
+        break;
+      }
+    }
+    const leanCrossoverYear = leanCrossoverIdx != null ? downsampledDates[leanCrossoverIdx]?.slice(0, 4) : null;
+
+    // ── Find P50 × FIRE crossover ────────────────────────────────────────
+    let fireCrossoverIdx: number | null = null;
+    for (let i = 1; i < downsampledP50.length; i++) {
+      if (downsampledP50[i] >= fireThreshold && downsampledP50[i - 1] < fireThreshold) {
+        fireCrossoverIdx = i;
+        break;
+      }
+    }
+    const fireCrossoverYear = fireCrossoverIdx != null ? downsampledDates[fireCrossoverIdx]?.slice(0, 4) : null;
+
+    // ── Find Barista FIRE crossover in historical Realizado series ────────
+    let baristaCrossoverIdx: number | null = null;
+    for (let i = 1; i < downsampledRealizado.length; i++) {
+      const prev = downsampledRealizado[i - 1];
+      const curr = downsampledRealizado[i];
+      if (curr != null && prev != null && curr >= baristaThreshold && prev < baristaThreshold) {
+        baristaCrossoverIdx = i;
+        break;
+      }
+    }
+    // If Barista was already above at start, mark at first non-null historical point
+    if (baristaCrossoverIdx == null) {
+      const firstAbove = downsampledRealizado.findIndex((v) => v != null && v >= baristaThreshold);
+      if (firstAbove > 0) baristaCrossoverIdx = firstAbove;
+    }
+    const baristaCrossoverYear = baristaCrossoverIdx != null ? downsampledDates[baristaCrossoverIdx]?.slice(0, 4) : null;
 
     return {
       backgroundColor: 'transparent',
@@ -195,6 +239,58 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           itemStyle: { color: EC.green },
           lineStyle: { width: 2, color: EC.green, type: 'dashed' as const },
           symbolSize: 0,
+          markLine: {
+            silent: true,
+            symbol: 'none',
+            lineStyle: { type: 'dashed' as const },
+            label: { show: !privacyMode, position: 'insideEndTop' as const, fontSize: 10, padding: [2, 4] },
+            data: [
+              ...(leanCrossoverIdx != null ? [{
+                yAxis: leanThreshold,
+                lineStyle: { color: 'rgba(148,163,184,0.65)', width: 1, type: 'dashed' as const },
+                label: { show: !privacyMode, formatter: 'Lean FIRE', color: 'rgba(148,163,184,0.85)', fontSize: 10 },
+              }] : []),
+              ...(fireCrossoverIdx != null ? [{
+                yAxis: fireThreshold,
+                lineStyle: { color: 'rgba(148,163,184,0.8)', width: 1, type: 'dashed' as const },
+                label: { show: !privacyMode, formatter: 'FIRE', color: 'rgba(148,163,184,0.95)', fontSize: 10 },
+              }] : []),
+            ],
+          },
+          markPoint: {
+            symbol: 'circle',
+            symbolSize: 8,
+            data: [
+              ...(leanCrossoverIdx != null ? [{
+                coord: [downsampledDates[leanCrossoverIdx], leanThreshold],
+                itemStyle: { color: 'rgba(148,163,184,0.65)', borderColor: '#fff', borderWidth: 1.5 },
+                label: {
+                  show: !privacyMode,
+                  formatter: `Lean FIRE\n~${leanCrossoverYear}`,
+                  position: 'top' as const,
+                  fontSize: 10,
+                  color: 'rgba(148,163,184,1)',
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  padding: [3, 6] as [number, number],
+                  borderRadius: 4,
+                },
+              }] : []),
+              ...(fireCrossoverIdx != null ? [{
+                coord: [downsampledDates[fireCrossoverIdx], fireThreshold],
+                itemStyle: { color: 'rgba(148,163,184,0.8)', borderColor: '#fff', borderWidth: 1.5 },
+                label: {
+                  show: !privacyMode,
+                  formatter: `FIRE\n~${fireCrossoverYear}`,
+                  position: 'top' as const,
+                  fontSize: 10,
+                  color: 'rgba(148,163,184,1)',
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  padding: [3, 6] as [number, number],
+                  borderRadius: 4,
+                },
+              }] : []),
+            ],
+          },
         },
         {
           name: 'P90',
@@ -215,6 +311,35 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           symbolSize: 0,
           areaStyle: { opacity: 0.06, color: EC.accent },
           z: 10,
+          markLine: {
+            silent: true,
+            symbol: 'none',
+            data: [
+              {
+                yAxis: baristaThreshold,
+                lineStyle: { color: 'rgba(148,163,184,0.5)', width: 1, type: 'dashed' as const },
+                label: { show: !privacyMode, formatter: 'Barista FIRE', color: 'rgba(148,163,184,0.75)', fontSize: 10, position: 'insideEndTop' as const },
+              },
+            ],
+          },
+          markPoint: baristaCrossoverIdx != null ? {
+            symbol: 'circle',
+            symbolSize: 8,
+            data: [{
+              coord: [downsampledDates[baristaCrossoverIdx], baristaThreshold],
+              itemStyle: { color: 'rgba(148,163,184,0.5)', borderColor: '#fff', borderWidth: 1.5 },
+              label: {
+                show: !privacyMode,
+                formatter: `Barista FIRE\n~${baristaCrossoverYear}`,
+                position: 'top' as const,
+                fontSize: 10,
+                color: 'rgba(148,163,184,1)',
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                padding: [3, 6] as [number, number],
+                borderRadius: 4,
+              },
+            }],
+          } : undefined,
         },
         {
           name: 'Meta FIRE',
