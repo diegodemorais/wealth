@@ -247,10 +247,10 @@ export function IifptRadar({
       <div style={{ padding: '0 16px 16px' }}>
 
         {/* ── Sub-section 1: Score Hero ─────────────────────────────────── */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 16,
-          marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)',
-        }}>
+        <div
+          className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-4"
+          style={{ marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)' }}
+        >
           {/* Left: big score */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minWidth: 112, textAlign: 'center' }}>
             <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>
@@ -276,12 +276,11 @@ export function IifptRadar({
         </div>
 
         {/* ── Sub-section 2: Radar + Domain Table ──────────────────────── */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 16,
-          marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)',
-          alignItems: 'start',
-        }}>
-          {/* Left: Radar */}
+        <div
+          className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-4"
+          style={{ marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)', alignItems: 'start' }}
+        >
+          {/* Left: Radar — full width on mobile */}
           <div>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 6 }}>
               Azul = cobertura · Cinza = peso IPS
@@ -289,7 +288,7 @@ export function IifptRadar({
             <EChart
               ref={chartRef}
               option={radarOption}
-              style={{ height: 260 }}
+              style={{ height: 240 }}
               data-testid="iifpt-radar-chart"
             />
           </div>
@@ -306,7 +305,7 @@ export function IifptRadar({
                   <th style={{ textAlign: 'left', color: 'var(--muted)', fontWeight: 600, paddingBottom: 4, paddingRight: 8 }}>Cobertura</th>
                   <th style={{ textAlign: 'left', color: 'var(--muted)', fontWeight: 600, paddingBottom: 4, paddingRight: 8 }}>Peso</th>
                   <th style={{ textAlign: 'left', color: 'var(--muted)', fontWeight: 600, paddingBottom: 4, paddingRight: 8 }}>Leitura</th>
-                  <th style={{ textAlign: 'left', color: 'var(--muted)', fontWeight: 600, paddingBottom: 4 }}>Acionável</th>
+                  <th className="hidden sm:table-cell" style={{ textAlign: 'left', color: 'var(--muted)', fontWeight: 600, paddingBottom: 4 }}>Acionável</th>
                 </tr>
               </thead>
               <tbody>
@@ -353,8 +352,8 @@ export function IifptRadar({
                       <td style={{ padding: '6px 8px 6px 0', color: leitura.color, fontWeight: 600, whiteSpace: 'nowrap' }}>
                         {leitura.label}
                       </td>
-                      {/* Acionável */}
-                      <td style={{ padding: '6px 0', color: privacyMode ? 'var(--muted)' : (acionavel.color ?? 'var(--muted)') }}>
+                      {/* Acionável — oculto em mobile */}
+                      <td className="hidden sm:table-cell" style={{ padding: '6px 0', color: privacyMode ? 'var(--muted)' : (acionavel.color ?? 'var(--muted)') }}>
                         {privacyMode ? '••••' : acionavel.text}
                       </td>
                     </tr>
