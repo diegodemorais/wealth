@@ -1242,6 +1242,15 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
         p_q = compute_p_quality(p_quality_premissas, n_sim=n_sim, seed=seed)
         entry["p_quality"] = round(p_q * 100, 1)
 
+        # Variantes bond pool para seletor no simulador
+        p_q_proxy = compute_p_quality(p_quality_premissas, n_sim=n_sim, seed=seed,
+                                      bond_pool_isolation=False)
+        p_q_full  = compute_p_quality(p_quality_premissas, n_sim=n_sim, seed=seed,
+                                      bond_pool_isolation=True,
+                                      bond_pool_completion_fraction=1.0)
+        entry["p_quality_proxy"] = round(p_q_proxy * 100, 1)
+        entry["p_quality_full"]  = round(p_q_full  * 100, 1)
+
         results.append(entry)
 
     return results

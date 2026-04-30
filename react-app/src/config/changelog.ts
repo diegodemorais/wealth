@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — Simulador ReverseFire: seletor Sem bucket / Atual 24% / Full 100% em P(qualidade) ──
+  { datetime: '2026-04-30T01:00:00.000Z', type: 'dado', component: 'ReverseFire', tab: 'fire', anchor: '', de: 'P(qualidade) exibindo apenas modo canônico (partial)', para: 'v1.167.0 — Simulador: seletor bond pool mode (Sem bucket / Atual 24% / Full 100%) em P(qualidade) do ReverseFire' },
   // ── 2026-04-30 — Matriz P(quality): seletores Sem bucket / Atual X% / Full 100% ──
   { datetime: '2026-04-30T00:00:00.000Z', type: 'dado', component: 'PQualityMatrix', tab: 'fire', anchor: 'pquality-matrix', de: 'Matriz P(quality) mostrando apenas modo canônico (partial)', para: 'v1.163.0 — Matriz P(quality): seletores Sem bucket / Atual 24% / Full 100% (135 calls, n_sim=1000 cada modo)' },
   // ── 2026-04-29 — P(quality) seletores proxy/partial/full no hero ──

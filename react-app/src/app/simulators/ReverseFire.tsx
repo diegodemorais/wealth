@@ -231,7 +231,12 @@ export function ReverseFire() {
   const byProfile: any[] = (data as any)?.fire_matrix?.by_profile ?? [];
   const condToProfileKey: Record<Cond, string> = { solteiro: 'atual', casado: 'casado', filho: 'filho' };
   const pQualityProfile = byProfile.find((x: any) => x.profile === condToProfileKey[cond]);
-  const pQualityReverse: number | null = pQualityProfile?.p_quality ?? null;
+  const [bpMode, setBpMode] = useState<'proxy' | 'partial' | 'full'>('partial');
+  const bondPoolCompletionPct: number = (data as any)?.fire?.bond_pool_completion_pct ?? 0;
+  const pQualityReverse: number | null =
+    bpMode === 'proxy'  ? (pQualityProfile?.p_quality_proxy ?? null) :
+    bpMode === 'full'   ? (pQualityProfile?.p_quality_full  ?? null) :
+    (pQualityProfile?.p_quality ?? null);
   const pQualityColor = (v: number | null): string => {
     if (v == null) return 'var(--muted)';
     if (v >= 70) return 'var(--green)';
@@ -546,10 +551,36 @@ export function ReverseFire() {
                 probabilidade de atingir FIRE · N=1000 sims
               </div>
               {/* P(quality) — precomputado por perfil (não varia com idadeFire/aporte) */}
-              {pQualityReverse != null && (
-                <div data-testid="reversefire-pquality" style={{ marginTop: '6px', fontSize: 'var(--text-xs)', fontWeight: 600, color: pQualityColor(pQualityReverse) }}>
-                  P(qualidade): {privacyMode ? '••%' : `${pQualityReverse.toFixed(1)}%`}
-                </div>
+              {pQualityProfile != null && (
+                <>
+                  {/* Bond pool mode selector */}
+                  <div style={{ display: 'flex', gap: 4, marginBottom: 4, marginTop: '6px' }}>
+                    {(['proxy', 'partial', 'full'] as const).map(mode => {
+                      const label = mode === 'proxy' ? 'Sem bucket' : mode === 'partial' ? `Atual ${bondPoolCompletionPct.toFixed(0)}%` : 'Full 100%';
+                      const active = bpMode === mode;
+                      const val = mode === 'proxy' ? pQualityProfile?.p_quality_proxy : mode === 'full' ? pQualityProfile?.p_quality_full : pQualityProfile?.p_quality;
+                      if (val == null) return null;
+                      return (
+                        <button
+                          key={mode}
+                          onClick={() => setBpMode(mode)}
+                          style={{
+                            fontSize: '9px', padding: '2px 6px', borderRadius: 4,
+                            border: `1px solid ${active ? pQualityColor(pQualityReverse) : 'var(--border)'}`,
+                            background: active ? `color-mix(in srgb, ${pQualityColor(pQualityReverse)} 12%, transparent)` : 'transparent',
+                            color: active ? pQualityColor(pQualityReverse) : 'var(--muted)',
+                            cursor: 'pointer', fontWeight: active ? 700 : 400,
+                          }}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div data-testid="reversefire-pquality" style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: pQualityColor(pQualityReverse) }}>
+                    P(qualidade): {privacyMode ? '••%' : `${pQualityReverse != null ? pQualityReverse.toFixed(1) : '—'}%`}
+                  </div>
+                </>
               )}
             </div>
 
