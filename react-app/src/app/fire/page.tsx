@@ -337,22 +337,127 @@ export default function FirePage() {
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{privacyMode ? '••%' : `${(100 - progressoPct).toFixed(1)}%`} a acumular</div>
               </div>
             </div>
-            {/* Barra de progresso */}
-            <div style={{ height: 10, background: 'var(--border)', borderRadius: 5, overflow: 'hidden', position: 'relative' }}>
-              <div
-                style={{
-                  height: '100%',
-                  width: `${progressoPct}%`,
-                  background: progressoColor,
-                  borderRadius: 5,
-                  transition: 'width 0.4s',
-                }}
-              />
-            </div>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 5 }}>
-              FIRE Number = gastos anuais / SWR · Patrimônio gatilho = {fmtPrivacy(prem.patrimonio_gatilho ?? fireNumberMeta, privacyMode)}
-            </div>
           </div>
+        );
+      })()}
+
+      {/* C13: Histograma P(FIRE date) — distribuição de probabilidade por ano alvo */}
+      {(() => {
+        // Build (year, cumulativeP) points from fire_matrix by_profile 'atual' and earliest_fire
+        // These are: P(FIRE sucesso se aposentar naquele ano) — usamos como proxy de distribuição
+        const bp0 = (data as any)?.fire_matrix?.by_profile?.find((p: any) => p.profile === 'atual');
+        const ef = (data as any)?.earliest_fire;
+        const idadeAtual: number = prem.idade_atual ?? 39;
+        const anoAtual: number = prem.ano_atual ?? 2026;
+        const toAno = (idade: number) => anoAtual + (idade - idadeAtual);
+
+        // Collect (ano, P) data points sorted by year
+        type DataPoint = { ano: number; label: string; pCumulativa: number };
+        const rawPoints: DataPoint[] = [];
+
+        // Aspiracional / earliest_fire — menor data de aposentadoria possível
+        if (ef?.ano != null && ef?.pfire != null) {
+          rawPoints.push({ ano: ef.ano, label: `${ef.ano} (${ef.idade ?? idadeAtual + (ef.ano - anoAtual)})`, pCumulativa: ef.pfire as number });
+        }
+
+        // fire_age_50 — primeira meta de idade (ex.: 2037 → age 50)
+        if (bp0?.fire_age_50 != null && bp0?.p_fire_50 != null) {
+          const ano = parseInt(String(bp0.fire_age_50), 10);
+          const idade = toAno(50); // approximate
+          rawPoints.push({ ano, label: `${ano} (${idade})`, pCumulativa: bp0.p_fire_50 as number });
+        }
+
+        // fire_age_53 — cenário base (ex.: 2040 → age 53)
+        if (bp0?.fire_age_53 != null && bp0?.p_fire_53 != null) {
+          const ano = parseInt(String(bp0.fire_age_53), 10);
+          rawPoints.push({ ano, label: `${ano} (${idadeAtual + (ano - anoAtual)})`, pCumulativa: bp0.p_fire_53 as number });
+        }
+
+        // fire_year_threshold — primeiro ano onde P ≥ 85%
+        if (bp0?.fire_year_threshold != null && bp0?.p_at_threshold != null) {
+          const ano = parseInt(String(bp0.fire_year_threshold), 10);
+          rawPoints.push({ ano, label: `${ano} (${idadeAtual + (ano - anoAtual)})`, pCumulativa: bp0.p_at_threshold as number });
+        }
+
+        // Remover duplicatas de ano e ordenar por P cumulativa crescente (para marginal fizer sentido)
+        const seen = new Set<number>();
+        const points = rawPoints
+          .filter(p => { if (seen.has(p.ano)) return false; seen.add(p.ano); return true; })
+          .sort((a, b) => a.pCumulativa - b.pCumulativa); // sort ascending P for marginal
+
+        if (points.length < 2) return null;
+
+        // Compute marginals: P(FIRE neste ano) = P_cumul - P_anterior
+        // Inserir ponto 0 no início (P = 0 antes do primeiro ano)
+        const marginals = points.map((pt, i) => {
+          const prev = i === 0 ? 0 : points[i - 1].pCumulativa;
+          return { ...pt, marginal: Math.max(0, pt.pCumulativa - prev) };
+        });
+
+        const labels = marginals.map(m => m.label);
+        const values = marginals.map(m => parseFloat(m.marginal.toFixed(1)));
+        const colors = marginals.map(m =>
+          m.pCumulativa >= 85 ? 'var(--green)' : m.pCumulativa >= 70 ? 'var(--yellow)' : 'var(--accent)'
+        );
+
+        const option = {
+          backgroundColor: 'transparent',
+          grid: { left: 48, right: 16, top: 36, bottom: 48 },
+          tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(15,23,42,.95)',
+            borderColor: '#334155',
+            textStyle: { color: '#94a3b8', fontSize: 12 },
+            formatter: (params: { name: string; value: number; dataIndex: number }[]) => {
+              const p = params[0];
+              const pt = marginals[p.dataIndex];
+              const pctStr = privacyMode ? '••%' : `${p.value.toFixed(1)}pp`;
+              const cumStr = privacyMode ? '••%' : `${pt.pCumulativa.toFixed(1)}%`;
+              return `${p.name}<br/>Marginal: <b>${pctStr}</b><br/>Acumulado: <b>${cumStr}</b>`;
+            },
+          },
+          xAxis: {
+            type: 'category',
+            data: labels,
+            axisLabel: { color: EC.muted, fontSize: 10, rotate: 0 },
+            axisLine: { lineStyle: { color: EC.border } },
+          },
+          yAxis: {
+            type: 'value',
+            name: 'pp',
+            nameTextStyle: { color: EC.muted, fontSize: 10 },
+            axisLabel: { color: EC.muted, fontSize: 10, formatter: (v: number) => privacyMode ? '••' : `${v}pp` },
+            splitLine: { lineStyle: { color: EC.border, type: 'dashed' } },
+          },
+          series: [{
+            type: 'bar',
+            data: values.map((v, i) => ({ value: v, itemStyle: { color: colors[i], borderRadius: [4, 4, 0, 0] } })),
+            label: {
+              show: true,
+              position: 'top',
+              color: EC.muted,
+              fontSize: 10,
+              formatter: (p: { value: number }) => privacyMode ? '••' : `${p.value.toFixed(1)}pp`,
+            },
+          }],
+        };
+
+        return (
+          <CollapsibleSection
+            id="section-pfire-histogram"
+            title={secTitle('fire', 'pfire-histogram', 'Distribuição P(FIRE) por Ano — Probabilidade Marginal')}
+            defaultOpen={secOpen('fire', 'pfire-histogram', false)}
+          >
+            <div style={{ padding: '14px 16px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8, lineHeight: 1.5 }}>
+                Probabilidade marginal de FIRE por ano alvo — calculada como diferença entre P acumuladas dos cenários base. Cada barra = probabilidade adicional de sucesso naquele ano.
+              </div>
+              <EChart option={option} style={{ height: 220 }} />
+              <div className="src" style={{ marginTop: 8 }}>
+                Fonte: fire_matrix.by_profile[atual] · Monte Carlo {((data as any)?.fire_matrix?._by_profile_n_sim as number | null)?.toLocaleString('pt-BR') ?? '10k'} simulações · P ordenadas por probabilidade crescente
+              </div>
+            </div>
+          </CollapsibleSection>
         );
       })()}
 
@@ -460,6 +565,18 @@ export default function FirePage() {
               </>
             );
           })()}
+        </div>
+      </CollapsibleSection>
+
+      {/* C10: Tabela detalhada Base vs Aspiracional — movida para antes de Coast/Spectrum */}
+      <CollapsibleSection
+        id="section-scenario-compare"
+        title={secTitle('fire', 'scenario-compare', 'Tabela detalhada — Base vs Aspiracional')}
+        defaultOpen={secOpen('fire', 'scenario-compare', false)}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          <FireScenariosTable />
+          <div className="src">Base: Monte Carlo 10k simulações</div>
         </div>
       </CollapsibleSection>
 
@@ -767,19 +884,6 @@ export default function FirePage() {
                 </div>
               );
             })()}
-            {/* Sub-seção: tabela detalhada — merge de FireScenariosTable aqui */}
-            <div style={{ marginTop: 12 }}>
-              <CollapsibleSection
-                id="section-scenario-compare"
-                title="Tabela detalhada — Base vs Aspiracional"
-                defaultOpen={secOpen('fire', 'scenario-compare', false)}
-              >
-                <div style={{ padding: '0 16px 16px' }}>
-                  <FireScenariosTable />
-                  <div className="src">Base: Monte Carlo 10k simulações</div>
-                </div>
-              </CollapsibleSection>
-            </div>
           </section>
         );
       })()}
