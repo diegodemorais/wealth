@@ -4767,115 +4767,6 @@ def main():
     else:
         print("  ⚠️ B11 attribution_by_period: timeline_attribution insuficiente")
 
-    # ── B10: drawdown_extended.periods — séries de drawdown por janela temporal ──
-    # Converte séries de preços (índice = 100) em drawdown running (% desde o pico).
-    # Popula 4 períodos: real (CSV real), medium (backtest), long (backtestR5), academic (R7).
-    def _price_to_drawdown_pct(prices: list) -> list:
-        """Converte série de preços indexados em drawdown running (% desde pico, sempre <=0)."""
-        if not prices:
-            return []
-        peak = float(prices[0])
-        result = []
-        for v in prices:
-            fv = float(v)
-            if fv > peak:
-                peak = fv
-            result.append(round((fv - peak) / peak * 100, 2) if peak > 0 else 0.0)
-        return result
-
-    def _slice_series(dates: list, *series_list, start_ym: str = "") -> tuple:
-        """Fatia múltiplas séries a partir de start_ym (inclusive). Retorna (dates, *series)."""
-        if not start_ym:
-            return (dates, *series_list)
-        idx = next((i for i, d in enumerate(dates) if d >= start_ym), None)
-        if idx is None:
-            return ([], *[[] for _ in series_list])
-        return (dates[idx:], *[s[idx:] for s in series_list])
-
-    _dd_periods: dict = {}
-
-    # Período "real": histórico real da carteira (drawdown_history) vs backtest shadowA (mesmo período)
-    _dh = drawdown_hist_data or {}
-    _dh_dates = _dh.get("dates", [])
-    _dh_pct   = _dh.get("drawdown_pct", [])
-    if _dh_dates and _dh_pct and len(_dh_dates) == len(_dh_pct):
-        # Benchmark: shadowA do backtest para o mesmo período (2021+)
-        _bt_d, _bt_t, _bt_s = _bt_dates, _bt_target, _bt_shadow
-        _bench_dd_real = []
-        if _bt_d and _bt_s:
-            _r_d, _r_s = _slice_series(_bt_d, _bt_s, start_ym=_dh_dates[0])[:2]
-            _bench_dd_real = _price_to_drawdown_pct(_r_s)
-            # Alinhar ao mesmo tamanho que _dh_dates (pode diferir por 1-2 meses)
-            min_len = min(len(_dh_dates), len(_bench_dd_real))
-            _bench_dd_real = _bench_dd_real[:min_len]
-            _dh_dates_aligned = _dh_dates[:min_len]
-            _dh_pct_aligned   = _dh_pct[:min_len]
-        else:
-            _dh_dates_aligned = _dh_dates
-            _dh_pct_aligned   = _dh_pct
-            _bench_dd_real    = [0.0] * len(_dh_dates)
-        _dd_periods["real"] = {
-            "label": "Carteira Real (2021+)",
-            "dates": _dh_dates_aligned,
-            "dd_target_pct": _dh_pct_aligned,
-            "dd_benchmark_pct": _bench_dd_real,
-            "note": "Drawdown real da carteira (histórico_carteira.csv). Benchmark: VWRA proxy (backtest shadowA).",
-        }
-
-    # Período "medium": backtest (2019+)
-    if _bt_dates and _bt_target and _bt_shadow and len(_bt_dates) == len(_bt_target):
-        _dd_periods["medium"] = {
-            "label": "Backtest 7a (2019+)",
-            "dates": _bt_dates,
-            "dd_target_pct": _price_to_drawdown_pct(_bt_target),
-            "dd_benchmark_pct": _price_to_drawdown_pct(_bt_shadow),
-            "note": "Proxy backtest UCITS: AVGS/AVEM/SWRD (ago/2019–hoje). Target 50/30/20 vs VWRA.",
-        }
-
-    # Período "long": backtestR5 (2005+)
-    _r5_dates  = backtest_r5.get("dates", [])
-    _r5_target = backtest_r5.get("target", [])
-    _r5_shadow = backtest_r5.get("shadowA", [])
-    if _r5_dates and _r5_target and _r5_shadow and len(_r5_dates) == len(_r5_target):
-        _dd_periods["long"] = {
-            "label": "Backtest 21a (2005+)",
-            "dates": _r5_dates,
-            "dd_target_pct": _price_to_drawdown_pct(_r5_target),
-            "dd_benchmark_pct": _price_to_drawdown_pct(_r5_shadow),
-            "note": "Série longa pré-UCITS: proxies FF5/MSCI (2005–hoje). Inclui GFC 2008.",
-        }
-
-    # Período "academic": backtest_r7 cumulative_returns (1995+)
-    _r7_cr = (backtest_r7_data or {}).get("cumulative_returns", {})
-    _r7_cr_dates  = _r7_cr.get("dates", [])
-    _r7_cr_target = _r7_cr.get("target", [])
-    _r7_cr_bench  = _r7_cr.get("bench", [])
-    if _r7_cr_dates and _r7_cr_target and _r7_cr_bench and len(_r7_cr_dates) == len(_r7_cr_target):
-        # R7 dates são formato "YYYY-MM-DD" — normalizar para "YYYY-MM" para consistência
-        _r7_norm_dates = [d[:7] for d in _r7_cr_dates]
-        _dd_periods["academic"] = {
-            "label": "Série Longa 31a (1995+)",
-            "dates": _r7_norm_dates,
-            "dd_target_pct": _price_to_drawdown_pct(_r7_cr_target),
-            "dd_benchmark_pct": _price_to_drawdown_pct(_r7_cr_bench),
-            "note": "Série acadêmica 1995–2026 (proxies Fama-French + DFEMX). Inclui Dotcom, GFC, COVID.",
-        }
-
-    if _dd_periods:
-        # Enriquecer drawdown_extended com periods (mantém summary existente)
-        _dh_summary = {
-            "real_max_dd_target": _dh.get("max_drawdown") or (backtest.get("metrics", {}).get("target", {}).get("maxdd")),
-        }
-        drawdown_extended_computed = {
-            "summary": _dh_summary,
-            "periods": _dd_periods,
-            "_fonte": "generate_data.py: drawdown_history + backtest + backtestR5 + backtest_r7",
-        }
-        print(f"  ✓ B10 drawdown_extended.periods: {list(_dd_periods.keys())}")
-    else:
-        drawdown_extended_computed = None
-        print("  ⚠️ B10 drawdown_extended.periods: sem dados suficientes")
-
     # Shadows — ler do state e adicionar campos flat no nível raiz
     _shadows_raw = state.get("shadows", {})
     # Campos flat esperados pelo template: delta_vwra, delta_ipca, delta_shadow_c
@@ -5420,6 +5311,108 @@ def main():
     # Merge eventos na estrutura drawdown_history (alimenta drawdownCrisesTable no N1)
     if drawdown_hist_data and drawdown_evts_data and drawdown_evts_data.get("events"):
         drawdown_hist_data["events"] = drawdown_evts_data["events"]
+
+    # ── B10: drawdown_extended.periods — séries de drawdown por janela temporal ──
+    # Converte séries de preços em drawdown running (% desde pico, sempre ≤ 0).
+    # Requer: drawdown_hist_data (acima), backtest_r7_data (5276+), backtest/r5 (4578+).
+    def _price_to_drawdown_pct(prices: list) -> list:
+        """Converte preços indexados em drawdown running (% desde pico, sempre <=0)."""
+        if not prices:
+            return []
+        peak = float(prices[0])
+        result = []
+        for v in prices:
+            fv = float(v)
+            if fv > peak:
+                peak = fv
+            result.append(round((fv - peak) / peak * 100, 2) if peak > 0 else 0.0)
+        return result
+
+    def _slice_by_start(dates: list, series: list, start_ym: str) -> tuple:
+        """Fatia datas e série a partir de start_ym (inclusive)."""
+        idx = next((i for i, d in enumerate(dates) if d >= start_ym), None)
+        if idx is None:
+            return [], []
+        return dates[idx:], series[idx:]
+
+    _dd_periods: dict = {}
+    _dh = drawdown_hist_data or {}
+
+    # Período "real": drawdown real da carteira + shadowA como benchmark
+    _dh_dates = _dh.get("dates", [])
+    _dh_pct   = _dh.get("drawdown_pct", [])
+    if _dh_dates and _dh_pct and len(_dh_dates) == len(_dh_pct):
+        _bt_d_r  = backtest.get("dates", [])
+        _bt_sh_r = backtest.get("shadowA", [])
+        if _bt_d_r and _bt_sh_r:
+            _b_dates_r, _b_sh_r = _slice_by_start(_bt_d_r, _bt_sh_r, _dh_dates[0])
+            _bench_dd_real = _price_to_drawdown_pct(_b_sh_r)
+            min_len = min(len(_dh_dates), len(_bench_dd_real))
+        else:
+            min_len = len(_dh_dates)
+            _bench_dd_real = [0.0] * min_len
+        _dd_periods["real"] = {
+            "label": "Carteira Real (2021+)",
+            "dates": _dh_dates[:min_len],
+            "dd_target_pct": _dh_pct[:min_len],
+            "dd_benchmark_pct": _bench_dd_real[:min_len],
+            "note": "Drawdown real da carteira (histórico_carteira.csv). Benchmark: VWRA proxy (backtest shadowA).",
+        }
+
+    # Período "medium": backtest completo (2019+)
+    _bt_d_m  = backtest.get("dates", [])
+    _bt_tg_m = backtest.get("target", [])
+    _bt_sh_m = backtest.get("shadowA", [])
+    if _bt_d_m and _bt_tg_m and _bt_sh_m and len(_bt_d_m) == len(_bt_tg_m):
+        _dd_periods["medium"] = {
+            "label": "Backtest 7a (2019+)",
+            "dates": _bt_d_m,
+            "dd_target_pct": _price_to_drawdown_pct(_bt_tg_m),
+            "dd_benchmark_pct": _price_to_drawdown_pct(_bt_sh_m),
+            "note": "Proxy backtest UCITS: AVGS/AVEM/SWRD (ago/2019–hoje). Target 50/30/20 vs VWRA.",
+        }
+
+    # Período "long": backtestR5 (2005+)
+    _r5_d  = backtest_r5.get("dates", [])
+    _r5_tg = backtest_r5.get("target", [])
+    _r5_sh = backtest_r5.get("shadowA", [])
+    if _r5_d and _r5_tg and _r5_sh and len(_r5_d) == len(_r5_tg):
+        _dd_periods["long"] = {
+            "label": "Backtest 21a (2005+)",
+            "dates": _r5_d,
+            "dd_target_pct": _price_to_drawdown_pct(_r5_tg),
+            "dd_benchmark_pct": _price_to_drawdown_pct(_r5_sh),
+            "note": "Série longa pré-UCITS: proxies FF5/MSCI (2005–hoje). Inclui GFC 2008.",
+        }
+
+    # Período "academic": backtest_r7 cumulative_returns (1995+)
+    _r7_cr    = (backtest_r7_data or {}).get("cumulative_returns", {})
+    _r7_cr_d  = _r7_cr.get("dates", [])
+    _r7_cr_tg = _r7_cr.get("target", [])
+    _r7_cr_bn = _r7_cr.get("bench", [])
+    if _r7_cr_d and _r7_cr_tg and _r7_cr_bn and len(_r7_cr_d) == len(_r7_cr_tg):
+        # R7 dates são "YYYY-MM-DD" — normalizar para "YYYY-MM"
+        _dd_periods["academic"] = {
+            "label": "Série Longa 31a (1995+)",
+            "dates": [d[:7] for d in _r7_cr_d],
+            "dd_target_pct": _price_to_drawdown_pct(_r7_cr_tg),
+            "dd_benchmark_pct": _price_to_drawdown_pct(_r7_cr_bn),
+            "note": "Série acadêmica 1995–2026 (proxies Fama-French + DFEMX). Inclui Dotcom, GFC, COVID.",
+        }
+
+    if _dd_periods:
+        drawdown_extended_computed = {
+            "summary": {
+                "real_max_dd_target": _dh.get("max_drawdown") or (backtest.get("metrics", {}).get("target", {}).get("maxdd")),
+            },
+            "periods": _dd_periods,
+            "_fonte": "generate_data.py: drawdown_history + backtest + backtestR5 + backtest_r7",
+        }
+        print(f"  ✓ B10 drawdown_extended.periods: {list(_dd_periods.keys())}")
+    else:
+        drawdown_extended_computed = None
+        print("  ⚠️ B10 drawdown_extended.periods: sem dados suficientes")
+
     etf_comp_data       = _load_json_safe(ETF_COMP_PATH,         "etf_composition")
     # G10+G11: inject TER and AUM into etf_composition.etfs
     if etf_comp_data and isinstance(etf_comp_data.get("etfs"), dict):
