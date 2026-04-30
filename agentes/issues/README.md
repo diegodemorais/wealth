@@ -42,6 +42,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
+| HD-iifpt-integration | Aplicação do Framework IIFPT à Carteira de Diego | Head | 🟡 Média | Análise do paper concluída (2026-04-30) |
 | DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | Dev | 🟡 Média | ARCH-audit concluída |
 | DEV-qa-improvements | Implementar Melhorias QA-test-plan-audit (CR/MD/BX) | Dev | 🟡 Média | QA-test-plan-audit concluída |
 | DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | Head + Dev | 🟡 Média | — |
