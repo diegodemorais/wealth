@@ -26,6 +26,9 @@ export interface KpiHeroProps {
   fireAgeAspir?: number;
   firePatrimonioGatilho?: number;
   fireDateFormatted?: string; // e.g. "Abr/2040"
+  // DC3 — IIFPT gap note: shows when RM or Est coverage < 0.3
+  domainCoverageRm?: number | null;
+  domainCoverageEst?: number | null;
 }
 
 export function KpiHero({
@@ -42,6 +45,8 @@ export function KpiHero({
   fireAgeAspir,
   firePatrimonioGatilho,
   fireDateFormatted,
+  domainCoverageRm,
+  domainCoverageEst,
 }: KpiHeroProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
@@ -69,6 +74,16 @@ export function KpiHero({
   const gatilhoSubtitle = firePatrimonioGatilho
     ? `vs gatilho ${fmtBrlCompact(firePatrimonioGatilho, 2)}`
     : undefined;
+
+  // DC3: gap note — shown if RM or Est coverage < 0.3
+  const showGapNote = (domainCoverageRm != null && domainCoverageRm < 0.3)
+    || (domainCoverageEst != null && domainCoverageEst < 0.3);
+  const gapNoteText = (() => {
+    const parts: string[] = [];
+    if (domainCoverageRm != null && domainCoverageRm < 0.3) parts.push('RM ❌');
+    if (domainCoverageEst != null && domainCoverageEst < 0.3) parts.push('Est ⏳');
+    return parts.join(' ') + ' não modelados';
+  })();
 
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2.5 mb-4">
@@ -103,6 +118,22 @@ export function KpiHero({
         {gatilhoSubtitle && (
           <div className="kpi-sub">
             {privacyMode && firePatrimonioGatilho ? `vs gatilho ${fmtPrivacy(firePatrimonioGatilho, true)}` : gatilhoSubtitle}
+          </div>
+        )}
+        {/* DC3: IIFPT gap note — P(FIRE) modela apenas Inv+Ret; RM e Est fora do modelo */}
+        {showGapNote && !privacyMode && (
+          <div
+            data-testid="iifpt-gap-note"
+            title="P(FIRE) modela Investment + Retirement. RM e Estate não estão incluídos."
+            style={{
+              marginTop: 6,
+              fontSize: 10,
+              color: 'var(--muted)',
+              lineHeight: 1.3,
+              cursor: 'help',
+            }}
+          >
+            {gapNoteText}
           </div>
         )}
       </div>

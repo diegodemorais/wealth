@@ -74,6 +74,7 @@ from config import (
     CENARIOS_ESTENDIDOS,
     PFIRE_CANONICAL_BASE, PFIRE_CANONICAL_FAV, PFIRE_CANONICAL_STRESS,
     FIRE_NUMBER_TARGET, N_ANOS_FIRE,
+    IIFPT_COVERAGE,
     update_dashboard_state,
 )
 
@@ -106,6 +107,7 @@ SPENDING_SUMMARY    = ROOT / "dados" / "spending_summary.json"
 HEAD_RELAY          = ROOT / "dados" / "head_relay.json"
 OUT_PATH        = ROOT / "react-app" / "public" / "data.json"
 
+PRIORITY_MATRIX_PATH    = ROOT / "agentes" / "contexto" / "priority_matrix.json"
 BACKTEST_R7_PATH        = ROOT / "dados" / "backtest_r7.json"
 FIRE_MATRIX_PATH        = ROOT / "dados" / "fire_matrix.json"
 FIRE_SWR_PCT_PATH       = ROOT / "dados" / "fire_swr_percentis.json"
@@ -5601,6 +5603,24 @@ def main():
         print(f"  ✓ Gap U factor_value_spread: SV={_fvs.get('sv_proxy_3m_pct')}% pct={_fvs.get('percentile_sv')} status={_fvs.get('status')}")
     else:
         print("  ⚠️ Gap U factor_value_spread: None (componente desativado no dashboard)")
+
+    # CC1 — IIFPT: priority_matrix (lido de arquivo), domain_coverage, regime_vida
+    # Invariante: priority_matrix nunca é sobrescrito automaticamente — apenas lido de arquivo.
+    _pm_raw = json.loads(PRIORITY_MATRIX_PATH.read_text()) if PRIORITY_MATRIX_PATH.exists() else {}
+    _pm_inner = _pm_raw.get("priority_matrix", {})
+    data["priority_matrix"] = {
+        "weights": _pm_inner.get("weights", {}),
+        "version": _pm_inner.get("version", ""),
+    }
+    data["domain_coverage"] = IIFPT_COVERAGE
+    data["regime_vida"] = "r2_mid_career"
+    assert isinstance(data["priority_matrix"]["weights"], dict) and len(data["priority_matrix"]["weights"]) == 6, \
+        "priority_matrix.weights deve ter 6 domínios IIFPT"
+    assert isinstance(data["domain_coverage"], dict) and len(data["domain_coverage"]) == 6, \
+        "domain_coverage deve ter 6 domínios IIFPT"
+    assert data["regime_vida"] is not None and isinstance(data["regime_vida"], str), \
+        "regime_vida deve ser string"
+    print(f"  ✓ CC1 IIFPT: priority_matrix v{data['priority_matrix']['version']} | regime={data['regime_vida']}")
 
     # Gap T: p_quality — qualidade de vida FIRE (trajetórias acima do piso lifestyle)
     _p_quality = data.get("fire", {}).get("p_quality")

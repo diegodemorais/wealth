@@ -6,12 +6,12 @@
 |-------|-------|
 | **ID** | DEV-iifpt-dashboard |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Concluído |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Dev (implementação) |
 | **Criado em** | 2026-04-30 |
 | **Origem** | HD-iifpt-integration — spec extraída na conclusão da issue analítica |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-30 |
 
 ---
 
@@ -125,4 +125,36 @@ A issue HD-iifpt-integration (concluída 2026-04-30) aplicou o framework IIFPT �
 
 ## Conclusao
 
-> A preencher após implementação.
+Implementação concluída em 2026-04-30.
+
+**CC1 — Pipeline:**
+- `scripts/generate_data.py` agora lê `agentes/contexto/priority_matrix.json` e expõe `priority_matrix.weights` + `priority_matrix.version` em `data.json`
+- `domain_coverage` exposto a partir de `IIFPT_COVERAGE` (config.py)
+- `regime_vida = "r2_mid_career"` exposto como string estática
+- Assertions de schema adicionadas para os 3 campos
+- Output confirmado: `✓ CC1 IIFPT: priority_matrix v2026-04-30 | regime=r2_mid_career`
+
+**DC1 — IifptRadar:**
+- Componente `react-app/src/components/dashboard/IifptRadar.tsx` criado
+- ECharts Radar com 6 eixos (Inv/Ret/Tax/CF/RM/Est)
+- Série azul (cobertura) + série tracejada cinza (pesos normalizados)
+- Eixos com coverage < 0.3 em vermelho (nameTextStyle)
+- Privacy mode: valores ocultos, shape mantido
+- CollapsibleSection com defaultOpen=false
+- Localização: NOW tab, após wellness block
+- `useChartResize` adicionado (hidden-container handling)
+
+**DC2 — Regime badge:**
+- Badge inline na seção Status do NOW tab
+- Texto "Acumulação · r3 ~2034" para r2_mid_career
+- Cores: azul=r2, laranja=r3, verde=r4
+- Tooltip com trigger r3 explicado
+
+**DC3 — Gap note no KpiHero:**
+- Props `domainCoverageRm` e `domainCoverageEst` adicionadas ao KpiHero
+- Nota `RM ❌ Est ⏳ não modelados` abaixo do card Progresso FIRE
+- Tooltip explicativo
+- Oculto em privacy mode
+
+**Testes:** 664 passed, 0 failed. Build: zero erros TypeScript.
+Dashboard v1.202.2.

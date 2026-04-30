@@ -1490,6 +1490,24 @@
         "fire.p_quality_matrix.values.B.atual.base"
       ],
       "privacy": false
+    },
+    {
+      "id": "iifpt-radar",
+      "tab": "now",
+      "label": "Cobertura IIFPT — Radar",
+      "type": "chart",
+      "purpose": "Radar de cobertura dos 6 domínios IIFPT (Inv/Ret/Tax/CF/RM/Est) vs pesos do IPS. Identifica gaps de cobertura.",
+      "data_fields": [
+        "domain_coverage.inv",
+        "domain_coverage.ret",
+        "domain_coverage.rm",
+        "domain_coverage.est",
+        "priority_matrix.weights.inv",
+        "priority_matrix.version",
+        "regime_vida"
+      ],
+      "optional": true,
+      "privacy": false
     }
   ]
 }

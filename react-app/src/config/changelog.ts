@@ -15,6 +15,10 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — DEV-iifpt-dashboard: CC1+DC1+DC2+DC3 ──
+  { datetime: '2026-04-30T20:00:00.000Z', type: 'dado', component: 'IifptRadar', tab: 'now', anchor: 'section-iifpt-radar', de: 'ausente', para: 'Radar de cobertura IIFPT — 6 domínios (Inv/Ret/Tax/CF/RM/Est) vs pesos IPS. RM e Est destacados como gaps (<30%). Collapsible.' },
+  { datetime: '2026-04-30T20:00:00.000Z', type: 'visual', component: 'RegimeVidaBadge', tab: 'now', anchor: '', de: 'ausente', para: 'Badge inline "Acumulação · r3 ~2034" no topo da seção Status. Azul=r2, laranja=r3, verde=r4.' },
+  { datetime: '2026-04-30T20:00:00.000Z', type: 'dado', component: 'KpiHero', tab: 'now', anchor: '', de: 'sem nota de gaps IIFPT', para: 'Nota discreta "RM ❌ Est ⏳ não modelados" abaixo do card Progresso FIRE quando coverage < 30%.' },
   // ── 2026-04-30 — HD-gaps-aposenteaos40-spec: Feature 3 — Historical Cycle Simulation ──
   { datetime: '2026-04-30T12:30:00.000Z', type: 'dado', component: 'BRFireSimSection', tab: 'backtest', anchor: 'section-brfiresim', de: 'ausente', para: 'brFIRESim — Historical Cycle Simulation (Bengen/cFIREsim): 4 ciclos históricos de 20 anos, SWR 3-8%, caveat sanity-check proeminente' },
   // ── 2026-04-30 — HD-gaps-aposenteaos40-spec: Feature 2 — FIRE Spectrum Widget ──
