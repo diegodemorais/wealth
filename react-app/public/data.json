@@ -337,23 +337,6 @@
     }
   ],
   "gasto_piso": 180000,
-  "spendingSmile": {
-    "go_go": {
-      "gasto": 242000,
-      "inicio": 0,
-      "fim": 15
-    },
-    "slow_go": {
-      "gasto": 200000,
-      "inicio": 15,
-      "fim": 30
-    },
-    "no_go": {
-      "gasto": 187000,
-      "inicio": 30,
-      "fim": 99
-    }
-  },
   "spendingSensibilidade": [],
   "saude_base": 24000,
   "tornado": [
