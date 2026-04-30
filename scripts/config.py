@@ -333,6 +333,44 @@ ETF_TER = {
 }
 
 
+# ─── IIFPT — COUPLING INTENSITY (Appendix C, Kothakota SSRN 6030356, adaptado BR) ──
+
+IIFPT_COUPLING_INTENSITY = {
+    # (domain_a, domain_b): {"intensity": float, "classification": str, "br_notes": str}
+    # Strong S > 0.5 | Moderate 0.2 < S <= 0.5 | Weak S <= 0.2
+    ("tax", "inv"):    {"intensity": 0.60, "classification": "strong",   "br_notes": "Lei 14.754, DARF timing, TLH, asset location IBKR vs Brasil"},
+    ("tax", "ret"):    {"intensity": 0.55, "classification": "strong",   "br_notes": "IR diferido, DARF no FIRE Day, timing INSS, Renda+ DCA"},
+    ("est", "tax"):    {"intensity": 0.40, "classification": "moderate", "br_notes": "ITCMD, inventario, holding offshore (Diego: w_est=0.05, baixo impacto)"},
+    ("cf",  "ret"):    {"intensity": 0.35, "classification": "moderate", "br_notes": "Aportes mensais = fluxo CF -> patrimonio -> P(FIRE)"},
+    ("rm",  "cf"):     {"intensity": 0.30, "classification": "moderate", "br_notes": "Disability -> income stop -> saques antecipados do portfolio"},
+    ("rm",  "ret"):    {"intensity": 0.30, "classification": "moderate", "br_notes": "Disability -> FIRE atrasado, aportes param, SoRR piora"},
+    ("cf",  "inv"):    {"intensity": 0.20, "classification": "weak",     "br_notes": "Timing de aportes afeta custo medio; impacto operacional baixo"},
+    ("est", "inv"):    {"intensity": 0.15, "classification": "weak",     "br_notes": "Holding offshore: estrutura de titularidade dos ETFs IBKR"},
+    ("est", "ret"):    {"intensity": 0.15, "classification": "weak",     "br_notes": "Sucessao pos-FIRE; irrelevante enquanto Diego vivo"},
+    ("rm",  "inv"):    {"intensity": 0.15, "classification": "weak",     "br_notes": "Custo do seguro reduz capacidade de aporte"},
+}
+
+# Dominios IIFPT (6 dominios do framework)
+IIFPT_DOMAINS = {
+    "inv": "Investment — SWRD/AVGS/AVEM, factor tilt",
+    "ret": "Retirement — FIRE-50, P(FIRE), Monte Carlo",
+    "tax": "Tax — Lei 14.754, DARF, TLH, Lombard",
+    "cf":  "Cash Flow — gastos, aportes, renda empresa",
+    "rm":  "Risk Management — disability/saude",
+    "est": "Estate — testamento, holding, ITCMD",
+}
+
+# Domain Coverage Score atual (0=zero / 0.5=parcial / 1.0=ativo) — atualizar manualmente
+IIFPT_COVERAGE = {
+    "inv": 1.0,  # ativo: 10+ issues, factor regression, benchmark
+    "ret": 1.0,  # ativo: MC 10k, P(FIRE), guardrails, bond pool
+    "tax": 1.0,  # ativo: Lei 14.754, DARF, TLH, Lombard NPV
+    "cf":  0.8,  # monitorado: HD-009 auditado, spending_analysis.py
+    "rm":  0.1,  # GAP: risco de mercado coberto, disability pessoal = zero
+    "est": 0.1,  # deferral intencional: aguarda casamento ~2026-2027
+}
+
+
 # ─── TRIBUTAÇÃO (Lei 14.754/2023) ────────────────────────────────────────────
 
 IR_ALIQUOTA = 0.15

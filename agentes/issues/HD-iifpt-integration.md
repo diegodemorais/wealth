@@ -6,12 +6,12 @@
 |-------|-------|
 | **ID** | HD-iifpt-integration |
 | **Dono** | Head |
-| **Status** | Em andamento (Dim 1 ✅, Dim 2-5 pendentes) |
+| **Status** | Concluído |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head (coordenação), FIRE, Tax, RF, Risco, Quant |
 | **Criado em** | 2026-04-30 |
 | **Origem** | Análise do paper IIFPT (Kothakota, SSRN 6030356, Dez 2025) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-30 |
 
 ---
 
@@ -310,4 +310,30 @@ Inv: ✅ ativo (factor investing, SWRD/AVGS/AVEM)
 
 ## Conclusao
 
-> A preencher após implementação.
+**Concluído em 2026-04-30.**
+
+### Entregas por Dimensão
+
+| Dimensão | Status | Entregável |
+|----------|--------|-----------|
+| Dim 1 — Priority Matrix Λ | ✅ | `agentes/contexto/priority_matrix.json` — Inv 0.35 / Ret 0.25 / Tax 0.18 / CF 0.10 / RM 0.07 / Est 0.05 |
+| Dim 2 — Gaps Estratégicos | ✅ | Documentado na issue. G1 (RM) → HD-holding-e-seguro elevado. G2 (Tax×Inv) → driver dominante. G3 (r3) → trigger formalizado. G4 (Estate) → deferral confirmado. |
+| Dim 3 — Novos Dados | ✅ | D1+D2 criados. D3 em `config.py::IIFPT_COVERAGE`. D4 em `agentes/referencia/iifpt-coupling-reference.md`. |
+| Dim 4 — Dashboard | ➡️ Dev | Spec completa em `DEV-iifpt-dashboard.md` (DC1 Radar, DC2 Regime Badge, DC3 Gap Note, CC1 Pipeline) |
+| Dim 5 — Core | ✅ | CC1 spec para Dev. CC2 `config.py::IIFPT_COUPLING_INTENSITY`. CC3 `carteira.md::regime_vida`. CC4 estimativa Quant: Π^det ~7.8% NW midpoint, driver Tax↔Inv (46.8%). |
+
+### Achados Principais
+
+1. **Priority Matrix Λ validado:** Inv lidera (0.35), não Ret — Diego vê investimento como domínio independente, não apenas instrumento do FIRE. Tax = piso defensivo, não ofensivo.
+
+2. **Driver de integração: Tax↔Inv (46.8% do Q_Diego).** DARF timing + asset location entre IBKR e Brasil é a atividade de maior ROI no framework. Integration premium estimado R$194k-R$381k NW (ordem de grandeza — range largo).
+
+3. **Gap crítico confirmado: RM (disability).** w_RM=0.07 mas coverage=0.1. INSS disability cobre ~R$2k/mês vs renda ~R$55k/mês. HD-holding-e-seguro deve sair do backlog.
+
+4. **Regime r2_mid_career.** Trigger formal de transição para r3 documentado: patrimônio ≥ R$9M ou P(FIRE) ≥ 90% por 2 anos (~2034).
+
+5. **Estate: deferral intencional.** Revisar Λ formalmente pós-casamento (~2026-2027) — w_Est deve subir.
+
+### Issue Derivada
+
+`DEV-iifpt-dashboard.md` — implementação dos componentes de dashboard (Radar, Regime Badge, Gap Note) e pipeline (CC1).

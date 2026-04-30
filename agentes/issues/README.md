@@ -42,7 +42,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
-| HD-iifpt-integration | Aplicação do Framework IIFPT à Carteira de Diego | Head | 🟡 Média | Análise do paper concluída (2026-04-30) |
+| DEV-iifpt-dashboard | Dashboard IIFPT: Radar, Regime Badge, Gap Note, Pipeline | Dev | 🟡 Média | HD-iifpt-integration concluída (spec pronta) |
 | DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | Dev | 🟡 Média | ARCH-audit concluída |
 | DEV-qa-improvements | Implementar Melhorias QA-test-plan-audit (CR/MD/BX) | Dev | 🟡 Média | QA-test-plan-audit concluída |
 | DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | Head + Dev | 🟡 Média | — |
@@ -52,6 +52,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| HD-iifpt-integration | Aplicação do Framework IIFPT à Carteira de Diego | 2026-04-30 | Λ calibrado: Inv 0.35/Ret 0.25/Tax 0.18/CF 0.10/RM 0.07/Est 0.05. Driver Tax↔Inv (46.8%). Gap RM confirmado. Regime r2, trigger r3 ~2034. CC2 config.py. Coupling reference. Integration premium ~7.8% NW midpoint. Spec Dev → DEV-iifpt-dashboard. |
 | QA-test-plan-audit | Auditoria e Melhoria dos Planos de Teste | 2026-04-30 | Auditoria completa: 3 gaps críticos (CR-1 ••% masking, CR-2 assertions falsas, CR-3 E2E ineficaz), 4 médios, 3 baixos. Plano 3 fases documentado. Backlog implementação → DEV-qa-improvements. |
 | ARCH-audit | Auditoria de Arquitetura do Dashboard React | 2026-04-30 | 6 categorias auditadas (file structure, data flow, type safety, ECharts, privacy, performance). 1 bug crítico corrigido (CSS vars em canvas ECharts). Backlog P1/P2/P3 gerado → DEV-arch-fixes. |
 | HD-gaps-aposenteaos40-spec | Coast FIRE + FIRE Spectrum + brFIRESim | 2026-04-30 | 3 features implementadas: CoastFireCard (R$5.15M coast number, ano 2029), FireSpectrumWidget (4 bandas Fat/FIRE/Lean/Barista, Diego em Barista 167x), BRFireSimSection (4 ciclos 20a, SWR 3-6% → 4/4, SWR 8% → 2/4). Quant validated. Build ✅ |
