@@ -3,15 +3,9 @@
 import React from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { useConfig } from '@/hooks/useConfig';
 import { fmtPrivacy } from '@/utils/privacyTransform';
-
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 interface RollingMetricsChartProps {
   dates: string[];
@@ -28,6 +22,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
 }) => {
   const { privacyMode } = useEChartsPrivacy();
   const { config } = useConfig();
+  const chartRef = useChartResize();
   const [activeMetric, setActiveMetric] = React.useState<Metric>('sharpe');
 
   // Thin dates to at most MAX_POINTS for legibility
@@ -194,7 +189,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
         ))}
       </div>
 
-      <EChart option={option} style={{ height: 220 }} />
+      <EChart ref={chartRef} option={option} style={{ height: 220 }} />
 
       <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8 }}>
         Janela 12M rolling · {thinDates.length} pontos exibidos (de {rawDates.length}) · Sharpe &gt; 1 = bom

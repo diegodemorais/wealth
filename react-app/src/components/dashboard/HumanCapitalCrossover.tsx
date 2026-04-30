@@ -213,7 +213,7 @@ export function HumanCapitalCrossover({
       </div>
 
       {/* Zone 2 — ECharts área */}
-      <EChart option={chartOption} style={{ height: 200, marginBottom: 8 }} />
+      <EChart ref={chartRef} option={chartOption} style={{ height: 200, marginBottom: 8 }} />
 
       {/* Zone 3 — Texto dinâmico */}
       <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
