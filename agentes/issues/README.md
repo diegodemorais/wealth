@@ -27,7 +27,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| ARCH-audit | Auditoria de Arquitetura do Dashboard React | Arquiteto / Dev | 🔴 Alta |
 
 ### Blocked
 > Issues aguardando dependências externas
