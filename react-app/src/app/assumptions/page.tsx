@@ -86,6 +86,7 @@ const TYPE_COLORS: Record<ChangeType, string> = {
   gráfico:  '#a855f7',
   cálculo:  'var(--yellow)',
   visual:   '#06b6d4',
+  fix:      'var(--muted-foreground)',
 };
 
 const TAB_LABELS: Record<string, string> = {
@@ -119,7 +120,7 @@ function ChangelogTable() {
           </thead>
           <tbody>
             {entries.map((e, i) => {
-              const tabPath = e.tab === 'now' ? '' : `/${e.tab}`;
+              const tabPath = e.tab === 'now' ? '/' : `/${e.tab}`;
               const href = `${tabPath}${e.anchor ? '#' + e.anchor : ''}`;
               return (
                 <tr key={i} style={{ borderBottom: '1px solid var(--border)', opacity: i > 9 ? 0.75 : 1 }}>

@@ -2,7 +2,7 @@
 // REGRA: antes de qualquer commit em react-app/src/, o dev agent DEVE adicionar
 // entrada aqui (mais recente no topo). Veja CLAUDE.md → Changelog de Componentes.
 
-export type ChangeType = 'layout' | 'dado' | 'gráfico' | 'cálculo' | 'visual';
+export type ChangeType = 'layout' | 'dado' | 'gráfico' | 'cálculo' | 'visual' | 'fix';
 
 export interface ChangelogEntry {
   datetime: string;   // ISO '2026-04-27T20:48'
@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — fix changelog NOW tab links ──
+  { datetime: '2026-04-30T21:00:00.000Z', type: 'fix', component: 'Changelog links (NOW tab)', tab: 'assumptions', anchor: '', de: 'links NOW tab apontando para #anchor (erro — âncora na página assumptions)', para: 'links NOW tab apontando corretamente para /#anchor' },
   // ── 2026-04-30 — BRFireSim polish ──
   { datetime: '2026-04-30T13:00:00.000Z', type: 'visual', component: 'BRFireSimChart / BRFireSimSection', tab: 'backtest', anchor: '', de: 'legend sem nomes FIRE, cores erradas no legend, cabeçalho só percentual', para: 'legend com "SWR X% · Nome FIRE" e cores explícitas por série; cabeçalho da tabela com percentual + nome FIRE; SWR_KEYS extraído para brfiresim-constants.ts' },
   // ── 2026-04-30 — DEV-iifpt-dashboard: CC1+DC1+DC2+DC3 ──
