@@ -36,6 +36,19 @@ react-app/.next/
 dash/
 dashboard/audit-screenshots/
 dashboard/audit-reports/
+
+# Next.js root-level build artifacts (if build runs from repo root)
+/_next
+/index.html
+/assumptions
+/backtest
+/fire
+/performance
+/portfolio
+/simulators
+/withdraw
+/btc_indicators.json
+/data.json
 __pycache__/
 react-app/public/data/data.json
 

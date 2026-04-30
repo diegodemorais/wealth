@@ -15,6 +15,12 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — HD-gaps-aposenteaos40-spec: Feature 3 — Historical Cycle Simulation ──
+  { datetime: '2026-04-30T12:30:00.000Z', type: 'dado', component: 'BRFireSimSection', tab: 'backtest', anchor: 'section-brfiresim', de: 'ausente', para: 'brFIRESim — Historical Cycle Simulation (Bengen/cFIREsim): 4 ciclos históricos de 20 anos, SWR 3-8%, caveat sanity-check proeminente' },
+  // ── 2026-04-30 — HD-gaps-aposenteaos40-spec: Feature 2 — FIRE Spectrum Widget ──
+  { datetime: '2026-04-30T12:00:00.000Z', type: 'dado', component: 'FireSpectrumWidget', tab: 'fire', anchor: 'section-fire-spectrum', de: 'ausente', para: 'FIRE Spectrum — Fat FIRE / FIRE / Lean FIRE / Barista FIRE com múltiplos e SWR implícito' },
+  // ── 2026-04-30 — HD-gaps-aposenteaos40-spec: Feature 1 — Coast FIRE Calculator ──
+  { datetime: '2026-04-30T12:00:00.000Z', type: 'dado', component: 'CoastFireCard', tab: 'fire', anchor: 'section-coast-fire', de: 'ausente', para: 'Coast FIRE Calculator — 3 cenários, progress bar, ano projetado' },
   // ── 2026-04-30 — Privacy audit: mask financeiro em 11 componentes ──
   { datetime: '2026-04-30T10:00:00.000Z', type: 'visual', component: 'Privacy (global)', tab: 'now', anchor: '', de: '24 leaks: CAGR, delta, vol, VaR, drift %, P(FIRE), P(qual), allocation % visíveis em privacy mode', para: 'v1.180.0 — Todos os valores financeiros mascarados (••%) em privacy mode: PerformanceSummary, PFireMonteCarloTornado, HODL11PositionPanel, BRLPurchasingPowerTimeline, DecisaoDoMes, TimelineChart, ReverseFire, fire/page, withdraw/page, portfolio/page, page' },
   // ── 2026-04-30 — P(quality) nos cards Base/Favorável/Stress do PFireMonteCarloTornado ──

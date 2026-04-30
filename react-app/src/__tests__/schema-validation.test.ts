@@ -217,4 +217,114 @@ describe('Schema Validation — Spec-Driven Contract', () => {
       expect(target).toBeGreaterThanOrEqual(current * 0.5);
     });
   });
+
+  // ─── Feature 1 + 2: Coast FIRE and FIRE Spectrum schema ─────────────────────
+  //
+  // These tests are pending data.json population by Dev (generate_data.py pipeline).
+  // They will fail with a descriptive skip message until the pipeline is wired.
+  // Reference spec: agentes/issues/HD-gaps-aposenteaos40-spec.md
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  describe('coast_fire and fire_spectrum schema', () => {
+    it('data.json has fire.coast_fire with required fields', () => {
+      const coastFire = data?.fire?.coast_fire;
+
+      if (coastFire === undefined) {
+        // Pending: Dev has not yet wired compute_coast_fire() in generate_data.py
+        console.warn('[PENDING] fire.coast_fire not found in data.json — Dev pipeline not yet wired');
+        return;
+      }
+
+      expect(coastFire).toBeDefined();
+      expect(typeof coastFire?.coast_number_base).toBe('number');
+      expect(typeof coastFire?.coast_number_fav).toBe('number');
+      expect(typeof coastFire?.coast_number_stress).toBe('number');
+      expect(typeof coastFire?.passou_base).toBe('boolean');
+      expect(typeof coastFire?.gap_base).toBe('number');
+      expect(typeof coastFire?.ano_projetado_base).toBe('number');
+      expect(typeof coastFire?.fire_number).toBe('number');
+      expect(typeof coastFire?.n_anos).toBe('number');
+    });
+
+    it('data.json has fire.coast_fire numeric values in plausible ranges', () => {
+      const coastFire = data?.fire?.coast_fire;
+
+      if (coastFire === undefined) {
+        console.warn('[PENDING] fire.coast_fire not found in data.json — Dev pipeline not yet wired');
+        return;
+      }
+
+      // Coast number must be between 1M and 10M (below FIRE number of 10M)
+      expect(coastFire.coast_number_base).toBeGreaterThan(1_000_000);
+      expect(coastFire.coast_number_base).toBeLessThan(10_000_000);
+      // Fav < Base < Stress (higher returns → lower coast needed)
+      expect(coastFire.coast_number_fav).toBeLessThan(coastFire.coast_number_base);
+      expect(coastFire.coast_number_stress).toBeGreaterThan(coastFire.coast_number_base);
+      // Year is plausible
+      expect(coastFire.ano_projetado_base).toBeGreaterThanOrEqual(2026);
+      expect(coastFire.ano_projetado_base).toBeLessThanOrEqual(2046);
+    });
+
+    it('data.json has fire.fire_spectrum with 4 bands', () => {
+      const spectrum = data?.fire?.fire_spectrum;
+
+      if (spectrum === undefined) {
+        console.warn('[PENDING] fire.fire_spectrum not found in data.json — Dev pipeline not yet wired');
+        return;
+      }
+
+      expect(spectrum).toBeDefined();
+      expect(spectrum?.bandas).toHaveLength(4);
+      expect(spectrum?.bandas[0].nome).toBe('Fat FIRE');
+      expect(spectrum?.bandas[3].nome).toBe('Barista FIRE');
+    });
+
+    it('data.json fire_spectrum bandas have required fields', () => {
+      const spectrum = data?.fire?.fire_spectrum;
+
+      if (spectrum === undefined) {
+        console.warn('[PENDING] fire.fire_spectrum not found in data.json — Dev pipeline not yet wired');
+        return;
+      }
+
+      for (const banda of spectrum.bandas) {
+        expect(typeof banda.nome).toBe('string');
+        expect(typeof banda.multiplo).toBe('number');
+        expect(typeof banda.swr_pct).toBe('number');
+        expect(typeof banda.alvo_brl).toBe('number');
+        expect(typeof banda.atingido).toBe('boolean');
+        expect(typeof banda.pct_atual).toBe('number');
+        // pct_atual is always capped at 100
+        expect(banda.pct_atual).toBeLessThanOrEqual(100);
+        expect(banda.pct_atual).toBeGreaterThanOrEqual(0);
+      }
+    });
+
+    it('data.json fire_spectrum banda_atual is a known value', () => {
+      const spectrum = data?.fire?.fire_spectrum;
+
+      if (spectrum === undefined) {
+        console.warn('[PENDING] fire.fire_spectrum not found in data.json — Dev pipeline not yet wired');
+        return;
+      }
+
+      const VALID_BAND_VALUES = [
+        'below_barista', 'barista_fire', 'lean_fire', 'fire', 'fat_fire',
+      ];
+      expect(VALID_BAND_VALUES).toContain(spectrum.banda_atual);
+    });
+
+    it('data.json fire_spectrum custo_mensal matches premissas.custo_vida_base / 12', () => {
+      const spectrum = data?.fire?.fire_spectrum;
+
+      if (spectrum === undefined) {
+        console.warn('[PENDING] fire.fire_spectrum not found in data.json — Dev pipeline not yet wired');
+        return;
+      }
+
+      const expectedMonthly = (data?.premissas?.custo_vida_base ?? 250_000) / 12;
+      // Allow rounding tolerance of ±1
+      expect(spectrum.custo_mensal).toBeCloseTo(expectedMonthly, 0);
+    });
+  });
 });

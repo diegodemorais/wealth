@@ -274,6 +274,10 @@ IPCA_PLUS_CUSTODIA   = _P.get("ipca_plus_custodia",   0.0020)
 # Legacy (mantém compatibilidade)
 APORTE_MENSAL = APORTE_CENARIO_BASE
 
+# Coast FIRE Calculator — HD-gaps-aposenteaos40-spec Feature 1
+FIRE_NUMBER_TARGET = _P.get("fire_number_target", 10_000_000)  # R$10M — meta Diego
+N_ANOS_FIRE        = _P.get("n_anos_fire",         14)          # 2026 → 2040
+
 
 # ─── FALLBACKS MACRO (snapshot — atualizar quando taxas mudarem) ─────────────
 

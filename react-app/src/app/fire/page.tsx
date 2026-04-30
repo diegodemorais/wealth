@@ -26,6 +26,9 @@ import { Landmark, Building2, Heart, CheckCircle, AlertCircle, XCircle } from 'l
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { FloorUpsideFire } from './FloorUpsideFire';
 import { ContributionReturnsCrossover } from './ContributionReturnsCrossover';
+import { CoastFireCard } from './CoastFireCard';
+import { FireSpectrumWidget } from './FireSpectrumWidget';
+import { CoastFireData, FireSpectrumData } from '@/types/dashboard';
 
 
 export default function FirePage() {
@@ -445,6 +448,47 @@ export default function FirePage() {
           })()}
         </div>
       </CollapsibleSection>
+
+      {/* Coast FIRE Calculator — HD-gaps-aposenteaos40-spec Feature 1 */}
+      {(() => {
+        const coastFire = (safeData as any)?.fire?.coast_fire as CoastFireData | undefined;
+        const patrimonioAtual: number = prem.patrimonio_atual ?? 0;
+        if (!coastFire) return null;
+        return (
+          <CollapsibleSection
+            id="section-coast-fire"
+            title={secTitle('fire', 'coast-fire', 'Coast FIRE Calculator — 3 Cenários')}
+            defaultOpen={secOpen('fire', 'coast-fire', true)}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <CoastFireCard
+                coast={coastFire}
+                patrimonioAtual={patrimonioAtual}
+                privacyMode={privacyMode}
+              />
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
+
+      {/* FIRE Spectrum Widget — HD-gaps-aposenteaos40-spec Feature 2 */}
+      {(() => {
+        const spectrum = (safeData as any)?.fire?.fire_spectrum as FireSpectrumData | undefined;
+        if (!spectrum) return null;
+        return (
+          <CollapsibleSection
+            id="section-fire-spectrum"
+            title={secTitle('fire', 'fire-spectrum', 'FIRE Spectrum — Fat / FIRE / Lean / Barista')}
+            defaultOpen={secOpen('fire', 'fire-spectrum', true)}
+          >
+            <FireSpectrumWidget
+              spectrum={spectrum}
+              diegoTarget={10_000_000}
+              privacyMode={privacyMode}
+            />
+          </CollapsibleSection>
+        );
+      })()}
 
       {/* Gap F: Renda Floor Katia — nota conservadora no modelo MC */}
       {(() => {
