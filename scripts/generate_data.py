@@ -5674,6 +5674,33 @@ def main():
     assert data.get("spending_ceiling") is not None, "spending_ceiling missing"
     print(f"  ✓ Gap L spending_ceiling: piso(P90)=R${spending_ceiling.get('floor_p90', 0)/1e3:.0f}k central(P85)=R${spending_ceiling.get('central_p85', 0)/1e3:.0f}k teto(P80)=R${spending_ceiling.get('ceiling_p80', 0)/1e3:.0f}k")
 
+    # G4: Spending smile — fases pós-FIRE com lifestyle + saúde separados
+    saude_base_val = float(premissas_raw.get("saude_base", SAUDE_BASE))
+    saude_inflator = float(premissas_raw.get("saude_inflator", 0.035))
+    fire_age = int(premissas_raw.get("idade_cenario_base", 53))
+    # health at midpoint of each phase (anos 7, 22, 37 pós-FIRE)
+    def _saude_fase(anos_mid: int) -> int:
+        return round(saude_base_val * ((1 + saude_inflator) ** anos_mid))
+    spending_smile_out: dict = {}
+    if spending_smile:
+        for fase, cfg in spending_smile.items():
+            anos_mid = (cfg.get("inicio", 0) + min(cfg.get("fim", 30), 30)) // 2
+            lifestyle = cfg.get("gasto", 0)
+            saude = _saude_fase(anos_mid)
+            spending_smile_out[fase] = {
+                "gasto_lifestyle": lifestyle,
+                "gasto_saude_mid": saude,
+                "gasto_total_mid": lifestyle + saude,
+                "inicio": cfg.get("inicio", 0),
+                "fim": cfg.get("fim", 99),
+                "idade_inicio": fire_age + cfg.get("inicio", 0),
+                "idade_fim": fire_age + min(cfg.get("fim", 99), 99),
+            }
+    data["spending_smile"] = spending_smile_out or None
+    if spending_smile_out:
+        fases = list(spending_smile_out.keys())
+        print(f"  ✓ G4 spending_smile: {fases} (lifestyle+saúde por fase)")
+
     # Gap N: Sensibilidade P(FIRE)
     pfire_base_pct = (pfire_base or {}).get("base") or PFIRE_CANONICAL_BASE  # fallback via config.PFIRE_CANONICAL_BASE
     pfire_sensitivity = compute_pfire_sensitivity(premissas_raw, float(pfire_base_pct))

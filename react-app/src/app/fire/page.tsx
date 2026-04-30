@@ -29,6 +29,8 @@ import { ContributionReturnsCrossover } from './ContributionReturnsCrossover';
 import { CoastFireCard } from './CoastFireCard';
 import { FireSpectrumWidget } from './FireSpectrumWidget';
 import { CoastFireData, FireSpectrumData } from '@/types/dashboard';
+import { EChart } from '@/components/primitives/EChart';
+import { EC } from '@/utils/echarts-theme';
 
 
 export default function FirePage() {
@@ -1128,6 +1130,65 @@ export default function FirePage() {
             </div>
           </CollapsibleSection>
           </div>
+        );
+      })()}
+
+      {/* ── G4: Spending Smile — Gastos por Fase Pós-FIRE ────────────────────── */}
+      {(() => {
+        type SmileFase = { gasto_lifestyle: number; gasto_saude_mid: number; gasto_total_mid: number; idade_inicio: number; idade_fim: number };
+        const sm = (data as any)?.spending_smile as Record<string, SmileFase> | null;
+        if (!sm || Object.keys(sm).length === 0) return null;
+        const faseLabels: Record<string, string> = { go_go: 'Go-Go', slow_go: 'Slow-Go', no_go: 'No-Go' };
+        const fases = ['go_go', 'slow_go', 'no_go'].filter(f => sm[f]);
+        const labels = fases.map(f => {
+          const v = sm[f];
+          const fim = v.idade_fim > 120 ? '∞' : String(v.idade_fim);
+          return `${faseLabels[f] ?? f}\n${v.idade_inicio}–${fim}`;
+        });
+        const lifestyle = fases.map(f => sm[f].gasto_lifestyle);
+        const saude    = fases.map(f => sm[f].gasto_saude_mid);
+        const fmt = (v: number) => `R$${(v / 1000).toFixed(0)}k`;
+        const option = {
+          backgroundColor: 'transparent',
+          grid: { left: 60, right: 16, top: 16, bottom: 60 },
+          tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(15,23,42,.95)',
+            borderColor: '#334155',
+            textStyle: { color: '#94a3b8', fontSize: 12 },
+            formatter: (params: { seriesName: string; value: number }[]) => {
+              const lines = params.map(p => `${p.seriesName}: <b style="color:#e2e8f0">${fmt(p.value)}</b>`);
+              const total = params.reduce((s, p) => s + p.value, 0);
+              return `${lines.join('<br/>')}<br/><b style="color:#e2e8f0">Total: ${fmt(total)}</b>`;
+            },
+          },
+          legend: { top: 0, right: 0, textStyle: { color: EC.muted, fontSize: 11 } },
+          xAxis: { type: 'category', data: labels, axisLabel: { color: EC.muted, fontSize: 11 }, axisLine: { lineStyle: { color: EC.border } } },
+          yAxis: {
+            type: 'value', min: 0, max: 350000,
+            axisLabel: { color: EC.muted, fontSize: 10, formatter: (v: number) => `R$${v / 1000}k` },
+            axisLine: { show: false }, splitLine: { lineStyle: { color: EC.border, type: 'dashed' } },
+          },
+          series: [
+            { name: 'Lifestyle', type: 'bar', stack: 'total', data: lifestyle, itemStyle: { color: EC.accent, borderRadius: [0, 0, 0, 0] }, label: { show: true, position: 'inside', color: '#fff', fontSize: 10, formatter: (p: { value: number }) => fmt(p.value) } },
+            { name: 'Saúde', type: 'bar', stack: 'total', data: saude, itemStyle: { color: EC.orange ?? '#f97316', borderRadius: [4, 4, 0, 0] }, label: { show: true, position: 'inside', color: '#fff', fontSize: 10, formatter: (p: { value: number }) => fmt(p.value) } },
+          ],
+        };
+        return (
+          <CollapsibleSection
+            id="section-spending-smile"
+            title={secTitle('fire', 'spending-smile', 'Spending Smile — Gastos por Fase Pós-FIRE')}
+            defaultOpen={secOpen('fire', 'spending-smile', false)}
+          >
+            <div style={{ padding: '14px 16px' }}>
+              <EChart option={option} style={{ height: 260 }} />
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8, lineHeight: 1.5 }}>
+                Lifestyle = gastos ex-saúde (FR-spending-smile 2026-03-27) ·
+                Saúde = estimativa ponto médio da fase (base R${(sm.go_go?.gasto_saude_mid ?? 0) / 1000 | 0}k, +3.5%/a) ·
+                Componente saúde sobe com a idade mesmo quando lifestyle cai — padrão &ldquo;smile&rdquo;
+              </div>
+            </div>
+          </CollapsibleSection>
         );
       })()}
 

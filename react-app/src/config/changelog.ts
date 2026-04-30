@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T19:00:00', type: 'gráfico', component: 'SpendingSmileChart', tab: 'fire', anchor: 'section-spending-smile', de: 'Spending smile ausente do dashboard', para: 'G4: barras lifestyle + saúde por fase go-go/slow-go/no-go — dados de fire_montecarlo.SPENDING_SMILE + SAUDE_BASE' },
   { datetime: '2026-04-30T18:00:00', type: 'dado', component: 'FireSimuladorSection', tab: 'simulators', anchor: '', de: 'Sem contexto de taxa RF no simulador', para: 'G12: slider IPCA+ taxa (4–8%) com P(FIRE) estimado por sensibilidade (Pfau 2012 heurístico)' },
   { datetime: '2026-04-30T18:00:00', type: 'gráfico', component: 'BacktestPage', tab: 'backtest', anchor: 'section-ntnb-history', de: 'Sem histórico de taxas IPCA+2040', para: 'G9: chart ECharts com taxa indicativa ANBIMA mensal desde Jan/2020, linha gatilho DCA 6%' },
   { datetime: '2026-04-30T18:00:00', type: 'visual', component: 'AlphaVsSWRDChart', tab: 'performance', anchor: 'section-alpha-swrd', de: 'Fallback silencioso com valores hardcoded quando backtest.metrics_by_period ausente', para: 'G8: banner "* Dados estimados" visível quando metrics_by_period indisponível' },
