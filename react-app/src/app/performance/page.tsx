@@ -475,7 +475,7 @@ export default function PerformancePage() {
 
       <SectionDivider label="Fatores" />
       {/* Expected Return Waterfall — movido para primeiro em Fatores */}
-      <CollapsibleSection id="section-expected-return-waterfall" title={secTitle('performance', 'factor-waterfall', 'Expected Return Waterfall — Decomposição Fatorial FF6')} defaultOpen={secOpen('performance', 'factor-waterfall', false)}>
+      <CollapsibleSection id="section-expected-return-waterfall" title={secTitle('performance', 'factor-waterfall', 'Expected Return Waterfall — Decomposição Fatorial FF6')} defaultOpen={secOpen('performance', 'factor-waterfall', true)}>
         <ExpectedReturnWaterfall />
       </CollapsibleSection>
 

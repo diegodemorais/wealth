@@ -73,8 +73,9 @@ export function SequenceOfReturnsRisk({
   const pfireStress: number = pfire?.stress ?? 0;
 
   // Elasticidade aprovada FR-guardrails-categoria-elasticidade 2026-04-25
-  const pisoEssencial: number = 184000; // hipoteca R$60k + saúde R$24k + essencial R$100k
-  const discrecionario: number = custoVida - pisoEssencial; // R$66k (solteiro/FIRE Day)
+  // A6: piso vem de data.gasto_piso (via prop), não hardcodado — FR-audit-p2-improvements
+  const pisoEssencial: number = gastoPiso > 0 ? gastoPiso : 180000;
+  const discrecionario: number = custoVida - pisoEssencial;
 
   // INSS floors (piso adicional a partir de 2049)
   const inssKatiaAnual: number = premissas?.inss_katia_anual ?? 93600;

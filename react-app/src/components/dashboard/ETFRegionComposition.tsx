@@ -54,7 +54,7 @@ function BarRows({ regioes }: { regioes: Array<{ name: string; pct: number }> })
 
 const ETFRegionComposition: React.FC = () => {
   const data = useDashboardStore(s => s.data);
-  const [selectedTab, setSelectedTab] = useState<Tab>('SWRD');
+  const [selectedTab, setSelectedTab] = useState<Tab>('AVGS');
 
   const etfData = useMemo(() => {
     const etfs = (data as any)?.etf_composition?.etfs ?? {};

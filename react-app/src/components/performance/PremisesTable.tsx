@@ -125,6 +125,22 @@ export function PremisesTable() {
         </div>
       </div>
 
+      {/* B4: Statistical significance caveat */}
+      {eq?.periodo_anos != null && (
+        <div style={{
+          marginBottom: '12px',
+          padding: '8px 12px',
+          background: 'rgba(245,158,11,0.08)',
+          border: '1px solid rgba(245,158,11,0.25)',
+          borderRadius: '6px',
+          fontSize: 'var(--text-xs)',
+          color: 'var(--muted)',
+          lineHeight: 1.5,
+        }}>
+          <strong style={{ color: 'var(--yellow)' }}>⚠ N = {Math.round(eq.periodo_anos)} anos</strong> — período insuficiente para inferir significância estatística de alpha (mínimo ~10 anos). Comparar premissa vs realizado com cautela interpretativa.
+        </div>
+      )}
+
       {/* Annual breakdown with monthly avg */}
       {aporteData.length > 0 && (
         <div>

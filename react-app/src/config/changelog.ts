@@ -15,6 +15,10 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T21:00:00', type: 'layout', component: 'ETFRegionComposition', tab: 'portfolio', anchor: '', de: 'Tab default SWRD', para: 'C2: tab default mudado para AVGS (mais diferenciado — mix EM/DM, não só global)' },
+  { datetime: '2026-04-30T21:00:00', type: 'layout', component: 'ExpectedReturnWaterfall', tab: 'performance', anchor: 'section-expected-return-waterfall', de: 'CollapsibleSection collapsed por default', para: 'C1: defaultOpen=true — waterfall aberto por default na aba Performance' },
+  { datetime: '2026-04-30T21:00:00', type: 'cálculo', component: 'SequenceOfReturnsRisk', tab: 'fire', anchor: 'sequence-returns', de: 'pisoEssencial hardcoded em 184000', para: 'A6: pisoEssencial usa gastoPiso da prop (data.gasto_piso = 180000) — zero hardcode' },
+  { datetime: '2026-04-30T21:00:00', type: 'dado', component: 'PremisesTable', tab: 'performance', anchor: 'premissasVsRealizadoSection', de: 'Sem aviso de significância estatística', para: 'B4: nota "N = X anos — insuficiente para inferir significância de alpha (mínimo ~10 anos)"' },
   { datetime: '2026-04-30T20:00:00', type: 'dado', component: 'PerformancePage', tab: 'performance', anchor: '', de: 'Sem Tracking Error nem Information Ratio', para: 'B1: cards TE, IR e Alpha anualizado — calculados da série backtest.target vs shadowA (VWRA proxy)' },
   { datetime: '2026-04-30T20:00:00', type: 'dado', component: 'NowPage', tab: 'now', anchor: '', de: 'Sem semáforo de factor drought nem loadings agregados', para: 'C4+C5: strip compact — drought semáforo (verde/amarelo/vermelho) + Portfolio β SMB/HML/RMW ponderado por pesos IPS' },
   { datetime: '2026-04-30T20:00:00', type: 'visual', component: 'DecisaoDoMes', tab: 'now', anchor: '', de: 'Sem contexto fatorial na decisão de aporte', para: 'C6: linha "SWRD = market neutral · AVGS/AVEM = tilt value + profitability via Avantis" no banner ETF prioritário' },
