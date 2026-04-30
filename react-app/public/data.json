@@ -395,7 +395,7 @@
       }
     },
     "swr_current": 1.32,
-    "p_quality": 60.2,
+    "p_quality": 79.0,
     "p_quality_aspiracional": 55.0,
     "by_profile": [
       {
@@ -596,7 +596,24 @@
       },
       "gogowindow": 10,
       "min_frac_anos": 0.85
-    }
+    },
+    "p_quality_proxy": 75.7,
+    "p_quality_full": 89.4,
+    "bond_pool_status": {
+      "enabled": true,
+      "fully_enabled": false,
+      "completion_pct": 24.6,
+      "completion_fraction": 0.2464,
+      "ipca_longo_atual_brl": 124676.0,
+      "target_brl": 505901.0,
+      "threshold_pct": 80.0,
+      "threshold_brl": 404721.0,
+      "underestimation_warning": true
+    },
+    "bond_pool_isolation_enabled": true,
+    "bond_pool_fully_enabled": false,
+    "bond_pool_completion_pct": 24.6,
+    "bond_pool_completion_fraction": 0.2464
   },
   "scenario_comparison": {
     "base": {
