@@ -252,18 +252,18 @@ export function IifptRadar({
           marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)',
         }}>
           {/* Left: big score */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minWidth: 112, textAlign: 'center' }}>
+            <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>
+              Score
+            </div>
             <div style={{
-              fontSize: '3.5rem', fontWeight: 900, fontFamily: 'monospace', lineHeight: 1,
+              fontSize: '3rem', fontWeight: 900, lineHeight: 1,
               color: scoreColor(score),
             }}>
               {privacyMode ? '••' : score}
             </div>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
-              /100
-            </div>
-            <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4, textAlign: 'center' }}>
-              score de planejamento
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
+              /100 · planejamento
             </div>
           </div>
           {/* Right: interpretation */}
@@ -433,9 +433,6 @@ export function IifptRadar({
           </div>
         )}
 
-        <div className="src" style={{ marginTop: 12 }}>
-          Fonte: agentes/contexto/priority_matrix.json + IIFPT_COVERAGE (config.py)
-        </div>
       </div>
     </CollapsibleSection>
   );

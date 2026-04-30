@@ -95,7 +95,7 @@ export function CustoBaseTable({ defaultOpen = false }: { defaultOpen?: boolean 
           </tbody>
         </table>
       </div>
-      <div className="src">Fonte: IBKR · Custo médio ponderado (USD) · Pesos intra-equity vs alvo 50/30/20</div>
+      <div className="src">Custo médio ponderado (USD) · Pesos intra-equity vs alvo 50/30/20</div>
     </CollapsibleSection>
   );
 }

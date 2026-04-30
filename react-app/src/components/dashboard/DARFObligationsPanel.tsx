@@ -467,7 +467,7 @@ export default function DARFObligationsPanel({ realizedPnl, cambio = 5.15 }: DAR
         color: 'var(--muted)',
         lineHeight: 1.6,
       }}>
-        <strong>Fonte:</strong> ibkr/realized_pnl.json · <strong>Taxa:</strong> 15% flat sobre ganhos em moeda estrangeira
+        <strong>Taxa:</strong> 15% flat sobre ganhos em moeda estrangeira
         <br />
         <strong>Nota:</strong> Lei 14.754/2023 exige accrual-based reporting mensal. Valores em BRL usam cambio {cambio.toFixed(3)}.
       </div>

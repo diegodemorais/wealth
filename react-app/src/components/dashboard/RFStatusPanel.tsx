@@ -136,8 +136,6 @@ export default function RFStatusPanel({ rows }: RFStatusPanelProps) {
         })}
       </div>
       <div className="text-xs text-slate-500">
-        Fonte: Nubank / IBKR · DCA automático por gap vs alvo de alocação.
-        <br />
         Duration = sensibilidade do preço a mudança de 1pp em taxa. Renda+ 2065 (43.6a) é 2x mais volátil que IPCA+ 2040 (21.3a) em alta de juros.
       </div>
     </div>

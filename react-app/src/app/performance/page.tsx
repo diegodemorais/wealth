@@ -341,9 +341,6 @@ export default function PerformancePage() {
       <section className="section" id="premissasVsRealizadoSection">
         <h2>{secTitle('performance', 'premissas', 'Premissas vs Realizado — 5 Anos (2021-2026)')}</h2>
         <PremisesTable />
-        <div className="src">
-          Fonte: TWR reconstruído (IBKR+RF) · Retornos: pós-IPCA real BRL · Drawdown: histórico carteira · Dados auditados
-        </div>
       </section>
 
       {/* 6. Rolling 12m — AVGS vs SWRD (collapsible, collapsed) */}
@@ -388,7 +385,7 @@ export default function PerformancePage() {
       >
         <div style={{ padding: '16px' }}>
           <ETFFactorComposition />
-          <div className="src">Fonte: etf_composition.json · Fatores: Market, Value, Size, Quality (escala 0–100%)</div>
+          <div className="src">Fatores: Market, Value, Size, Quality (escala 0–100%)</div>
         </div>
       </CollapsibleSection>
       </div>

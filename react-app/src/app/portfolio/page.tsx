@@ -486,7 +486,6 @@ export default function PortfolioPage() {
       >
         <div style={{ padding: '16px' }}>
           <ETFRegionComposition />
-          <div className="src">Fonte: etf_composition.json · SWRD=MSCI World, AVGS=Global Small Cap Value, AVEM=Emerging Markets</div>
         </div>
       </CollapsibleSection>
       </div>
@@ -1241,7 +1240,6 @@ export default function PortfolioPage() {
               </tbody>
             </table>
             </div>
-            <div className="src">Fonte: IBKR · Nubank · Binance</div>
           </div>
         </CollapsibleSection>
         </div>

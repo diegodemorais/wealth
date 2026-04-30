@@ -155,9 +155,6 @@ function ChangelogTable() {
           </tbody>
         </table>
       </div>
-      <div style={{ marginTop: 8, fontSize: 10, color: 'var(--muted)', opacity: 0.6 }}>
-        Fonte: <code>react-app/src/config/changelog.ts</code> · Atualizado pelo dev agent antes de cada commit em react-app/src/
-      </div>
     </div>
   );
 }
@@ -1100,9 +1097,6 @@ export default function AssumptionsPage() {
       </CollapsibleSection>
 
       {/* Footer */}
-      <p style={{ marginTop: 10, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-        Fonte: <code>carteira_params.json</code> · Para alterar: <code>carteira.md</code> → <code>parse_carteira.py</code> → <code>generate_data.py</code>
-      </p>
     </div>
   );
 }

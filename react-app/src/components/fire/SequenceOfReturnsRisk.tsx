@@ -554,8 +554,7 @@ export function SequenceOfReturnsRisk({
           sobre o patrimônio-alvo.
         </div>
         <div className="src" style={{ marginTop: 8 }}>
-          Fonte: INSS Katia (TX-inss-katia, extrato 22/01/2025) · PGBL Icatu Seguros — Novus do Brasil (TX-pgbl-katia) ·
-          Projeção real 4,5%/ano até FIRE Day 2040, 8 anos adicionais sem aportes até 2049
+          Projeção real 4,5%/ano até FIRE Day 2040 · 8 anos adicionais sem aportes até 2049
         </div>
       </div>
 

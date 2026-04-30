@@ -535,9 +535,6 @@ export default function WithdrawPage() {
               />
             );
           })()}
-          <div className="src">
-            Fonte: CSV All-Accounts → spending_analysis.py → spending_summary.json. Executar script para atualizar.
-          </div>
         </div>
       </CollapsibleSection>
       </div>

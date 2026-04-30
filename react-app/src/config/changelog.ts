@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T00:02:00', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'Score hero sem label "SCORE", /100 em linha separada', para: 'Score hero com label SCORE + /100 · planejamento alinhado ao WellnessScore' },
+  { datetime: '2026-04-30T00:02:00', type: 'fix', component: 'Múltiplos', tab: 'now', anchor: '', de: 'Footers "Fonte:" com paths internos (json/py/md) visíveis no dashboard', para: 'Footers removidos ou sem referências a arquivos internos' },
   { datetime: '2026-04-30T00:01:00', type: 'fix', component: 'WellnessScore', tab: 'now', anchor: 'section-wellness', de: 'Coluna detail estreita; replaceAll faltando em humanCapitalStatus', para: 'Coluna w-28; solteiro sem dependentes exibe correto' },
   { datetime: '2026-04-30T00:01:00', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'Título "Modelo IIFPT"; "——/100" com dashes', para: 'Nome completo IIFPT; "/100" sem dashes' },
   { datetime: '2026-04-30T00:00:00', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'Siglas na tabela de interação (CF, RM)', para: 'Nomes completos (Cash Flow, Risk Mgmt)' },

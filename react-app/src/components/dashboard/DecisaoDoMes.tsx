@@ -388,7 +388,7 @@ export default function DecisaoDoMes({
           )}
 
           <div className="text-xs text-slate-500 mb-2">
-            Fonte: BCB / FRED · Spread alto (&gt;10pp) favorece carry, mas BRL apreciado reduz retorno em BRL do equity internacional.
+            Spread alto (&gt;10pp) favorece carry, mas BRL apreciado reduz retorno em BRL do equity internacional.
           </div>
         </div>
 
