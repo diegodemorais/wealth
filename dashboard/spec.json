@@ -783,7 +783,7 @@
         "premissas.patrimonio_gatilho",
         "premissas.idade_atual",
         "premissas.idade_cenario_base",
-        "spendingSmile"
+        "spending_smile"
       ],
       "privacy": true
     },
@@ -847,7 +847,7 @@
       "type": "table",
       "purpose": "Mostra estrutura de renda por fase (Go-Go/Slow-Go/No-Go) com spending smile para visualizar como o fluxo de caixa evolui na decumulação",
       "data_fields": [
-        "spendingSmile",
+        "spending_smile",
         "premissas.inss_anual",
         "premissas.inss_inicio_ano",
         "premissas.custo_vida_base"
@@ -988,7 +988,7 @@
       "type": "chart-line",
       "purpose": "Mostra projeção de renda e gasto de 2026 a 2077 com spending smile para confirmar sustentabilidade do plano ao longo de todo o ciclo de vida",
       "data_fields": [
-        "spendingSmile",
+        "spending_smile",
         "premissas.inss_anual",
         "premissas.inss_inicio_ano",
         "premissas.custo_vida_base",
