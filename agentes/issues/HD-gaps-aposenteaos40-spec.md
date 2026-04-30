@@ -6,12 +6,12 @@
 |-------|-------|
 | **ID** | HD-gaps-aposenteaos40-spec |
 | **Dono** | Dev |
-| **Status** | Em Execução |
+| **Status** | Concluído |
 | **Prioridade** | Alta |
 | **Participantes** | Arquiteto, Dev, QA, Quant |
 | **Criado em** | 2026-04-30 |
 | **Origem** | Benchmark vs lab.aposenteaos40.org — gaps aprovados pelo Head + especialistas FIRE/Macro |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-30 |
 
 ---
 
@@ -322,7 +322,14 @@ interface BRFireSimResult {
 ## Próximos Passos
 
 - [x] **Arquiteto**: spec estruturada (este arquivo)
-- [ ] **Dev**: implementar Features 1+2 (pipeline + React) → build → commit
-- [ ] **Dev**: implementar Feature 3 (brfiresim.py + UI) → build → commit
-- [ ] **QA**: escrever testes para as 3 features
-- [ ] **Quant**: validar cálculos (Coast Number, FIRE Spectrum thresholds, brFIRESim methodology)
+- [x] **Dev**: implementar Features 1+2 (pipeline + React) → build → commit `e5ddc75d`
+- [x] **Dev**: implementar Feature 3 (brfiresim.py + UI) → build → commit `dfaa8c4e`
+- [x] **QA**: testes criados — coast-fire.test.ts (26), fire-spectrum.test.ts (40), schema-validation + E2E → commit `6f78291d`
+- [x] **Quant**: validado. Achados críticos aplicados: adj_stress=-0.005 (config.py já correto), proxy SWRD.L (não BVSP), janela 20y→4 ciclos, taxa_sucesso como fração
+
+### Quant findings incorporados
+- `adj_stress = -0.005` em config.py (não -0.010 do spec) ✓
+- Proxy equity: SWRD.L+PTAX (não BVSP) — correlação BVSP/MSCI World ~0.60 < threshold 0.85
+- n_ciclos=4 para janela de 20 anos com dados 2003-2025 (Opção A do Quant)
+- `taxa_sucesso` exibida como "X de N ciclos históricos" — nunca como probabilidade %
+- Disclaimer: bandas Lean (6%) e Barista (8%) não são SWRs sustentáveis para 37 anos (na UI: caveat badge)
