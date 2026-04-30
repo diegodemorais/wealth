@@ -175,20 +175,24 @@ Verificar se `pfire_by_profile.casado.base` existe no pipeline (deve existir dad
 
 ---
 
-### B8 — Piso RF desatualizado: R$180k em data.json e config.py
+### B8 — Piso de gastos: simplificação incompatível com spending smile ⚠️ RECLASSIFICADO
 
 **Aba:** Withdraw  
 **Arquivo:** `scripts/config.py:245` + `react-app/public/data.json` (campo `gasto_piso`)  
-**Severidade:** Média — meta de acumulação RF incorreta na tela
+**Severidade:** ~~Média~~ → **Não é bug P0 — simplificação conhecida, depende de spending smile**
 
-**Dado atual:** `gasto_piso = 180_000` (R$180k/ano)
+**Dado atual:** `gasto_piso = 180_000` (R$180k/ano fixo)
 
-**Problema:** Pós-recalibração do modelo de saúde (FR-saude-modelo-custo), o piso de gastos foi recalibrado para R$184k/ano. O valor de R$180k ainda está em `config.py` e propagado para `data.json`.
+**Análise:** O piso de -20% em bear market é aplicado sobre o gasto da fase corrente (spending smile). Com spending smile:
+- Go-go (50–65): base ~R$250k → piso bear = R$200k
+- Slow-go (65–75): base menor → piso menor
+- No-go (75+): base menor + saúde sobe → piso específico de fase
 
-**Fix esperado:**
-1. Confirmar com Bookkeeper o valor correto do `gasto_piso` pós-recalibração.
-2. Atualizar `config.py` → `GASTO_PISO = 184_000` (ou o valor correto).
-3. Regenerar `data.json`.
+O `gasto_piso = R$180k` fixo ignora isso — é uma simplificação pré-spending smile que subestima o piso na fase go-go (R$200k correto vs R$180k atual) e pode superestimá-lo em fases posteriores.
+
+**Decisão:** NÃO alterar `gasto_piso` agora. O valor R$180k é conservador aceitável como simplificação temporária. Este item será resolvido como consequência natural da implementação do spending smile (G4 em FR-audit-p1-missing). Quando spending smile for implementado, `gasto_piso` vira `fase_spending × (1 - corte_maximo_fase)` dinâmico.
+
+**Relacionado:** FR-audit-p1-missing / G4 (spending smile)
 
 ---
 
@@ -268,14 +272,14 @@ Verificar se `haircut_alpha_liquido` está em decimal ou % no pipeline para ajus
 
 ## Checklist de Execução
 
-- [ ] B1 — RebalancingStatus: trocar "Vender" por lógica no-sell + remover menção IR vendas
+- [x] B1 — RebalancingStatus: trocar "Vender" por lógica no-sell + remover menção IR vendas ✅ 2026-04-30
 - [ ] B2 — E[R] column: renomear coluna para "E[R] USD" + tooltip (fix rápido) ou converter BRL (fix completo)
-- [ ] B3 — RebalancingStatus targets: adicionar clareza "% total portfolio" + remover menção de vendas no footer
-- [ ] B4 — TimeToFireProgressBar: substituir `39` por `premissas.idade_atual`
-- [ ] B5 — Hero FIRE: substituir "2040" hardcoded por `premissas.fire_year_base` dinâmico
-- [ ] B6 — CoastFireCard: substituir `300_000` por `premissas.aporte_mensal * 12`
-- [ ] B7 — Renda Floor Katia: trocar `pfire_aspiracional` por `pfire_by_profile.casado`
-- [ ] B8 — Piso RF: confirmar valor correto (R$184k?), atualizar config.py + regenerar data.json
-- [ ] B9 — DCA Renda+ badge vs recomendação: adicionar check posição vs alvo em `getAcaoRecomendada`
-- [ ] B10 — Alpha annualização: fórmula geométrica
-- [ ] B11 — Fee Analysis: usar `premissas.haircut_alpha_liquido` dinâmico
+- [x] B3 — RebalancingStatus targets: adicionar clareza "% total portfolio" + remover menção de vendas no footer ✅ 2026-04-30
+- [x] B4 — TimeToFireProgressBar: substituir `39` por `premissas.idade_atual` ✅ 2026-04-30
+- [ ] B5 — Hero FIRE: substituir "2040" hardcoded por `premissas.fire_year_base` dinâmico — campo ausente no pipeline, aguarda extensão
+- [x] B6 — CoastFireCard: substituir `300_000` por `premissas.aporte_mensal * 12` ✅ 2026-04-30
+- [ ] B7 — Renda Floor Katia: trocar `pfire_aspiracional` por `pfire_by_profile.casado` — `pfire_by_profile` vazio no pipeline, aguarda extensão
+- [~] B8 — Piso gasto: reclassificado — não é P0. Depende de spending smile (FR-audit-p1-missing/G4)
+- [x] B9 — DCA Renda+ badge vs recomendação: adicionar check posição vs alvo em `getAcaoRecomendada` ✅ 2026-04-30
+- [x] B10 — Alpha annualização: fórmula geométrica ✅ 2026-04-30
+- [ ] B11 — Fee Analysis: usar `premissas.haircut_alpha_liquido` dinâmico — campo ausente no pipeline, aguarda extensão
