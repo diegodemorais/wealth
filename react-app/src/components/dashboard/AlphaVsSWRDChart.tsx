@@ -3,14 +3,8 @@
 import React from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { fmtPrivacy } from '@/utils/privacyTransform';
-
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 interface AlphaVsSWRDChartProps {
   oneYear: { targetReturn: number; swrdReturn: number };
@@ -24,6 +18,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
   oneYear, threeYear, fiveYear, tenYear, alphaLiquidoPctYear,
 }) => {
   const { privacyMode } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const periods = ['1 ano', '3 anos', '5 anos', '10 anos'];
   const targetData = [oneYear.targetReturn, threeYear.targetReturn, fiveYear.targetReturn, tenYear.targetReturn];
@@ -125,7 +120,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
         Barras agrupadas por horizonte · linha amarela = alpha (Target − SWRD)
       </div>
 
-      <EChart option={option} style={{ height: 260 }} />
+      <EChart ref={chartRef} option={option} style={{ height: 260 }} />
 
       {/* Alpha cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" style={{ marginTop: 12 }}>

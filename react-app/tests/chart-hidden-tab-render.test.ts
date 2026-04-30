@@ -26,6 +26,7 @@ interface EChartUsage {
   hasResizeObserver: boolean;
   hasSetTimeoutRetry: boolean;
   hasOffsetWidthCheck: boolean;
+  hasUseChartResize: boolean;
   issuesFound: string[];
 }
 
@@ -39,16 +40,20 @@ function analyzeEChartFile(filePath: string): EChartUsage {
   const hasResizeObserver = /ResizeObserver/.test(content);
   const hasSetTimeoutRetry = /setTimeout.*\d+\)/.test(content) && /offsetWidth|offsetHeight/.test(content);
   const hasOffsetWidthCheck = /offsetWidth\s*===\s*0|offsetWidth\s*>\s*0|offsetHeight\s*===\s*0/.test(content);
+  // useChartResize hook encapsulates hidden-container handling (ResizeObserver + offsetWidth)
+  const hasUseChartResize = /useChartResize/.test(content);
 
-  // Check for EChart usage
-  const usesEChart = /EChart|echarts-for-react|ReactECharts/.test(content);
+  // Check for actual EChart component rendering (not just useEChartsPrivacy hook import)
+  // Match <EChart, echarts-for-react import, or ReactECharts — but NOT useEChartsPrivacy (which is a hook, not a chart)
+  const usesEChart = /<EChart|echarts-for-react|ReactECharts/.test(content);
 
   const issuesFound: string[] = [];
 
-  // Rule: If component uses EChart, it should have at least one pattern for handling hidden containers
-  if (usesEChart && !hasResizeObserver && !hasSetTimeoutRetry && !hasOffsetWidthCheck) {
+  // Rule: If component uses EChart, it should have at least one pattern for handling hidden containers.
+  // useChartResize is the canonical hook that encapsulates ResizeObserver + offsetWidth check.
+  if (usesEChart && !hasResizeObserver && !hasSetTimeoutRetry && !hasOffsetWidthCheck && !hasUseChartResize) {
     issuesFound.push(
-      'Component uses EChart but lacks pattern for handling hidden containers (no ResizeObserver, setTimeout retry, or offsetWidth check)'
+      'Component uses EChart but lacks pattern for handling hidden containers (no ResizeObserver, setTimeout retry, offsetWidth check, or useChartResize hook)'
     );
   }
 
@@ -58,6 +63,7 @@ function analyzeEChartFile(filePath: string): EChartUsage {
     hasResizeObserver,
     hasSetTimeoutRetry,
     hasOffsetWidthCheck,
+    hasUseChartResize,
     issuesFound,
   };
 }
@@ -150,7 +156,7 @@ describe('test_chart_hidden_tab_render', () => {
 
     for (const analysis of problematic) {
       expect(
-        analysis.hasResizeObserver || analysis.hasSetTimeoutRetry || analysis.hasOffsetWidthCheck,
+        analysis.hasResizeObserver || analysis.hasSetTimeoutRetry || analysis.hasOffsetWidthCheck || analysis.hasUseChartResize,
         `${analysis.componentName}: Uses EChart but lacks hidden container pattern`
       ).toBe(true);
     }

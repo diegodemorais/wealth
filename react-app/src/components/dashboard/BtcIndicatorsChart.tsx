@@ -3,15 +3,9 @@
 import React, { useState } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { EC } from '@/utils/echarts-theme';
 import { fmtPrivacy } from '@/utils/privacyTransform';
-
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 // ---------------------------------------------------------------------------
 // Types
@@ -132,6 +126,7 @@ function InlineBadge({
 // ---------------------------------------------------------------------------
 
 function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boolean }) {
+  const chartRef = useChartResize();
   const series = data.series;
   const dates = series.map(s => s.date);
   const prices = series.map(s => s.price_usd);
@@ -230,6 +225,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
 
   return (
     <EChart
+      ref={chartRef}
       option={option}
       style={{ height: 280, width: '100%' }}
       notMerge={true}
@@ -242,6 +238,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
 // ---------------------------------------------------------------------------
 
 function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: boolean }) {
+  const chartRef = useChartResize();
   const series = data.series;
   const dates = series.map(s => s.date);
   const zscores = series.map(s => s.zscore);
@@ -380,6 +377,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
 
   return (
     <EChart
+      ref={chartRef}
       option={option}
       style={{ height: 280, width: '100%' }}
       notMerge={true}
