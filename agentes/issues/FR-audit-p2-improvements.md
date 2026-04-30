@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | FR-audit-p2-improvements |
 | **Dono** | Dev |
-| **Status** | Em progresso 🔄 — Sprint Alpha + FIRE UX + Portfolio + Simulators + B9/B10/B13 + A7/C10/C13 concluídos 2026-04-30 |
+| **Status** | ✅ Concluído — todos os 40 itens endereçados (2026-04-30) |
 | **Prioridade** | 🟡 P2 — Melhorias de Clareza e Completude |
 | **Criado em** | 2026-04-30 |
 | **Origem** | HD-visual-audit-playwright — Fase 3 (síntese) |
@@ -147,6 +147,5 @@ Para atacar este backlog de forma eficiente, sugerimos agrupamentos por sprint:
 - [x] C10 — FIRE: section-scenario-compare extraída do aninhamento e posicionada antes de Coast FIRE + FIRE Spectrum
 - [x] C13 — FIRE: histograma P(FIRE date) — barras marginais por ano alvo usando fire_matrix.by_profile + earliest_fire
 
-### Pendente — Próximas sessões
-- [ ] B11 — Backtest: RF vs equity attribution por período — requer série histórica RF (pipeline parcialmente preparado)
-- [ ] C8 — NOW: mini card capital humano Katia — requer dados INSS/Katia no pipeline
+- [x] B11 — Backtest: TimelineAttributionChart — stacked bar RF/equity/FX por ano (timeline_attribution existente)
+- [x] C8 — NOW: mini card "Cap. Humano Katia" — INSS R$93.6k/ano, PGBL R$490k, custo solo R$160k/ano
