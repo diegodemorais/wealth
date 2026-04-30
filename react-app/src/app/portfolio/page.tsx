@@ -252,7 +252,8 @@ export default function PortfolioPage() {
             textStyle: { color: EC.text, fontSize: 11 },
             formatter: (params: any[]) => {
               const p = params[0];
-              return `${p.name}<br/>Excess: <b>${p.value >= 0 ? '+' : ''}${p.value}pp</b>`;
+              const val = privacyMode ? '••pp' : `${p.value >= 0 ? '+' : ''}${p.value}pp`;
+              return `${p.name}<br/>Excess: <b>${val}</b>`;
             },
           },
         };
@@ -403,13 +404,13 @@ export default function PortfolioPage() {
                       <span style={{ fontWeight: 700, fontSize: 'var(--text-md)' }}>{etf.name}</span>
                       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                         <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-                          atual <strong style={{ color: 'var(--text)' }}>{pctAtual.toFixed(1)}%</strong>
+                          atual <strong style={{ color: 'var(--text)' }}>{privacyMode ? '••%' : `${pctAtual.toFixed(1)}%`}</strong>
                         </span>
                         <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-                          alvo <strong style={{ color: 'var(--text)' }}>{pctAlvo.toFixed(1)}%</strong>
+                          alvo <strong style={{ color: 'var(--text)' }}>{privacyMode ? '••%' : `${pctAlvo.toFixed(1)}%`}</strong>
                         </span>
                         <span style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: deltaColor }}>
-                          {sign}{delta.toFixed(1)}pp
+                          {privacyMode ? '••pp' : `${sign}${delta.toFixed(1)}pp`}
                         </span>
                       </div>
                     </div>
@@ -454,7 +455,7 @@ export default function PortfolioPage() {
                         top: 16, fontSize: 'var(--text-xs)', color: 'var(--muted)',
                         transform: 'translateX(-50%)',
                         whiteSpace: 'nowrap',
-                      }}>▲ {pctAlvo.toFixed(0)}%</div>
+                      }}>▲ {privacyMode ? '••%' : `${pctAlvo.toFixed(0)}%`}</div>
                     </div>
                     <div style={{ marginBottom: 14 }} />
                   </div>
@@ -894,7 +895,7 @@ export default function PortfolioPage() {
             borderColor: '#30363d',
             textStyle: { color: EC.text, fontSize: 11 },
             formatter: (p: { name: string; value: number }) =>
-              `${p.name}: ${(p.value * 100).toFixed(1)}% risco`,
+              privacyMode ? `${p.name}: ••% risco` : `${p.name}: ${(p.value * 100).toFixed(1)}% risco`,
           },
         };
         return (

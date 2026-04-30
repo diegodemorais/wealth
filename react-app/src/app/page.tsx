@@ -221,9 +221,9 @@ export default function HomePage() {
           return (
             <KpiCard
               label="Retorno Real (CAGR)"
-              value={twrReal != null ? `${twrReal.toFixed(1)}%` : '—'}
+              value={twrReal != null ? (privacyMode ? '••%' : `${twrReal.toFixed(1)}%`) : '—'}
               accent={accent}
-              delta={delta != null ? {
+              delta={delta != null && !privacyMode ? {
                 text: `${delta >= 0 ? '+' : ''}${delta.toFixed(1)}pp vs ${premissa.toFixed(1)}%`,
                 positive: delta >= 0,
               } : undefined}
@@ -712,7 +712,7 @@ export default function HomePage() {
                     ))}
                     {risk?.vol_portfolio != null && (
                       <div style={{ marginTop: 6, paddingTop: 8, borderTop: '1px solid var(--border)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-                        Vol portfolio: {(risk.vol_portfolio * 100).toFixed(1)}% · VaR 95%: {risk.var_95_pct != null ? (risk.var_95_pct * 100).toFixed(1) + '%' : '—'}
+                        Vol portfolio: {privacyMode ? '••%' : `${(risk.vol_portfolio * 100).toFixed(1)}%`} · VaR 95%: {risk.var_95_pct != null ? (privacyMode ? '••%' : `${(risk.var_95_pct * 100).toFixed(1)}%`) : '—'}
                       </div>
                     )}
                     {/* CDS threshold note */}

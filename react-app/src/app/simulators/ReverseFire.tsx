@@ -275,7 +275,9 @@ export function ReverseFire() {
     ? '✅ Meta atingida'
     : aporteMinimo <= 0
       ? '✅ Patrimônio já suficiente'
-      : `⚠️ Precisa mais R$${Math.round((aporteMinimo - aporte) / 1000)}k/mês`;
+      : privacyMode
+        ? '⚠️ Precisa mais aporte'
+        : `⚠️ Precisa mais R$${Math.round((aporteMinimo - aporte) / 1000)}k/mês`;
 
   // Gráfico
   const growthData = useMemo(
@@ -593,7 +595,7 @@ export function ReverseFire() {
                 {fmtBRL(metaFire, privacyMode)}
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
-                R${Math.round(custo / 1000)}k/ano ÷ {(swrGatilho * 100).toFixed(1)}% SWR
+                {privacyMode ? '••k/ano' : `R$${Math.round(custo / 1000)}k/ano`} ÷ {(swrGatilho * 100).toFixed(1)}% SWR
               </div>
             </div>
 
@@ -606,12 +608,12 @@ export function ReverseFire() {
               {!metaAtingida && aporteMinimo > 0 && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
                   Aporte mínimo: {fmtBRL(Math.max(0, aporteMinimo), privacyMode)}/mês
-                  {excedente < 0 && ` (faltam R$${Math.round(Math.abs(excedente) / 1000)}k/mês)`}
+                  {excedente < 0 && (privacyMode ? ' (faltam ••k/mês)' : ` (faltam R$${Math.round(Math.abs(excedente) / 1000)}k/mês)`)}
                 </div>
               )}
               {metaAtingida && excedente > 0 && (
                 <div style={{ fontSize: 'var(--text-xs)', color: EC.green, marginTop: '2px' }}>
-                  Você aporta R${Math.round(excedente / 1000)}k/mês a mais que o necessário
+                  {privacyMode ? 'Você aporta mais que o necessário' : `Você aporta R$${Math.round(excedente / 1000)}k/mês a mais que o necessário`}
                 </div>
               )}
             </div>

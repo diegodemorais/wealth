@@ -48,7 +48,7 @@ export default function BRLPurchasingPowerTimeline({
     <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 16 }}>
       <h3 style={{ margin: '0 0 6px', fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>Equity USD em BRL — Sensibilidade Cambial</h3>
       <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
-        Equity: {(equityPctUsd * 100).toFixed(0)}% da carteira · USD {fmtBRL(equityUSD, false).replace('R$', 'US$')} · Câmbio R${cambio.toFixed(3)}
+        Equity: {(equityPctUsd * 100).toFixed(0)}% da carteira · USD {fmtBRL(equityUSD, privacyMode).replace('R$', 'US$')} · Câmbio R${cambio.toFixed(3)}
       </div>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ fontSize: 11, borderCollapse: 'collapse', width: '100%', minWidth: 300 }}>

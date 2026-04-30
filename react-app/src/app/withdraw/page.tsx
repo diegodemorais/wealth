@@ -242,7 +242,7 @@ function FloorUpsideWithdraw({
                   : '#ef4444',
             }}
           >
-            {coberturaAtual != null ? `${coberturaAtual.toFixed(0)}%` : '—'}
+            {coberturaAtual != null ? (privacyMode ? '••%' : `${coberturaAtual.toFixed(0)}%`) : '—'}
           </div>
           <div style={{ fontSize: '10px', color: 'var(--muted)' }}>
             do gap equity coberto
@@ -473,7 +473,7 @@ export default function WithdrawPage() {
                     P(FIRE) Atual
                   </span>
                   <span style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: zonaColor }}>
-                    {pfire.toFixed(1)}% — {statusLabel}
+                    {privacyMode ? '••%' : `${pfire.toFixed(1)}%`} — {statusLabel}
                   </span>
                 </div>
                 {/* Progress bar */}
@@ -659,7 +659,7 @@ export default function WithdrawPage() {
             const fire_data = (data as any)?.fire ?? {};
             const pat_mediano = fire_data.pat_mediano_fire ?? fire_data.pat_p50_fire ?? premissas.patrimonio_atual ?? 3_500_000;
             const fmtBrl = (v: number) => fmtPrivacy(v / 1000, privacyMode);
-            const fmtPct = (v: number) => `${(v * 100).toFixed(1)}%`;
+            const fmtPct = (v: number) => privacyMode ? '••%' : `${(v * 100).toFixed(1)}%`;
 
             const ltcCenarios = [
               { label: 'Sem LTC', saude_extra: 0 },
