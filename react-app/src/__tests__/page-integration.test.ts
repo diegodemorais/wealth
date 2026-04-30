@@ -137,4 +137,110 @@ describe('Page Integration', () => {
       }
     });
   });
+
+  it('Portfolio page should initialize without errors', () => {
+    // Portfolio page requires: posicoes, rf, premissas
+    expect(realData.posicoes).toBeDefined();
+    expect(typeof realData.posicoes).toBe('object');
+
+    // rf data structure
+    const rf = realData.rf ?? {};
+    expect(rf).toBeDefined();
+
+    // Portfolio displays allocation percentages — requires cambio for USD conversion
+    expect(typeof realData.cambio).toBe('number');
+    expect(realData.cambio).toBeGreaterThan(0);
+
+    // HoldingsTable needs posicoes with qty/price fields
+    const positions = Object.values(realData.posicoes);
+    if (positions.length > 0) {
+      const firstPos = positions[0] as any;
+      expect(firstPos).toHaveProperty('qty');
+      expect(firstPos).toHaveProperty('price');
+    }
+  });
+
+  it('FIRE page should initialize without errors', () => {
+    // FIRE page requires: premissas (critical fields), fire_matrix, fire_trilha
+    const p = realData.premissas ?? {};
+    expect(p.patrimonio_atual).toBeDefined();
+    expect(p.custo_vida_base).toBeDefined();
+    expect(p.idade_atual).toBeDefined();
+    expect(p.idade_cenario_base).toBeDefined();
+
+    // FIRE page uses scenario_comparison for FireScenariosTable
+    if (realData.scenario_comparison) {
+      const sc = (realData as any).scenario_comparison;
+      expect(sc.base).toBeDefined();
+      expect(sc.aspiracional).toBeDefined();
+    } else {
+      console.log('ℹ️  FIRE page: scenario_comparison missing — FireScenariosTable shows fallback');
+    }
+
+    // fire_matrix for floor/upside calculations
+    if ((realData as any).fire_matrix) {
+      const fm = (realData as any).fire_matrix;
+      expect(fm.perfis).toBeDefined();
+    }
+  });
+
+  it('Withdraw page should initialize without errors', () => {
+    // Withdraw page requires: premissas, rf, bond pool data
+    const p = realData.premissas ?? {};
+    expect(p.custo_vida_base).toBeDefined();
+    expect(p.idade_atual).toBeDefined();
+
+    const rf = realData.rf ?? {};
+    // Bond pool requires rf entries
+    const rfKeys = ['ipca2040', 'ipca2050', 'renda2065'];
+    rfKeys.forEach(key => {
+      if (!(key in rf)) {
+        console.warn(`⚠️  Withdraw page: rf.${key} missing`);
+      }
+    });
+
+    // Withdraw cenarios (perfis)
+    if ((realData as any).fire_matrix?.perfis) {
+      const perfis = (realData as any).fire_matrix.perfis;
+      expect(typeof perfis).toBe('object');
+    }
+  });
+
+  it('Backtest page should initialize without errors', () => {
+    // Backtest page requires: retornos_mensais, drawdown_extended, rolling_sharpe
+    const rm = (realData as any).retornos_mensais;
+    if (rm) {
+      expect(Array.isArray(rm.annual_returns)).toBe(true);
+      expect(typeof rm.twr_real_brl_pct === 'number' || rm.twr_real_brl_pct == null).toBe(true);
+    } else {
+      console.warn('⚠️  Backtest page: retornos_mensais missing');
+    }
+
+    // DrawdownExtendedChart needs drawdown_extended.periods
+    const ddExt = (realData as any).drawdown_extended;
+    if (ddExt) {
+      expect(typeof ddExt).toBe('object');
+    }
+  });
+
+  it('Simulators page should initialize with FIRE matrix data', () => {
+    // FireSimuladorSection uses fire_matrix.retornos_equity and perfis
+    const fm = (realData as any).fire_matrix;
+    if (fm) {
+      if (fm.retornos_equity) {
+        const { base } = fm.retornos_equity;
+        expect(typeof base).toBe('number');
+        expect(base).toBeGreaterThan(0);
+        expect(base).toBeLessThan(0.5); // sanity: return should be a fraction
+      } else {
+        console.warn('⚠️  Simulators page: fire_matrix.retornos_equity missing — using premissas fallback');
+      }
+    } else {
+      console.warn('⚠️  Simulators page: fire_matrix missing — using premissas fallback');
+    }
+
+    // WhatIfSection needs premissas.aporte_mensal and custo_vida_base
+    const p = realData.premissas ?? {};
+    expect(p.aporte_mensal ?? p.custo_vida_base).toBeDefined();
+  });
 });
