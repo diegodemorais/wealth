@@ -91,6 +91,112 @@ export interface NonFinancialAssets {
   _nota: string;
 }
 
+/** Single RF bond position — Tesouro Direto (IPCA+/Renda+) */
+export interface RfPosition {
+  cotas: number | null;
+  valor: number;
+  taxa: number;
+  tipo: string;
+  notas?: string;
+  _updated?: string;
+  custo_base_brl?: number;
+  total_aplicado_brl?: number;
+  total_resgatado_brl?: number;
+  n_aplicacoes?: number;
+  [key: string]: unknown;
+}
+
+/** Fixed-income positions — one entry per bond slug */
+export interface RfData {
+  ipca2029?: RfPosition;
+  ipca2040?: RfPosition;
+  ipca2050?: RfPosition;
+  renda2065?: RfPosition;
+  [key: string]: RfPosition | undefined;
+}
+
+/** Allocation drift for a single bucket */
+export interface DriftBucket {
+  atual: number;
+  alvo: number;
+  [key: string]: unknown;
+}
+
+/** Portfolio drift by allocation bucket */
+export interface DriftData {
+  SWRD?: DriftBucket;
+  AVGS?: DriftBucket;
+  AVEM?: DriftBucket;
+  IPCA?: DriftBucket;
+  HODL11?: DriftBucket;
+  Custo?: DriftBucket;
+  [key: string]: DriftBucket | undefined;
+}
+
+/** HODL11 position with BTC scenario projections */
+export interface Hodl11Data {
+  qty: number;
+  preco: number;
+  valor: number;
+  preco_medio?: number;
+  pnl_brl?: number;
+  pnl_pct?: number;
+  _updated?: string;
+  banda?: {
+    min_pct: number;
+    alvo_pct: number;
+    max_pct: number;
+    atual_pct: number;
+    status: string;
+  };
+  fire_projection?: {
+    btc_atual_usd: number;
+    hodl11_brl_atual: number;
+    cenarios: {
+      bear?: { btc_target_usd: number; upside_factor: number; valor_fire_brl: number };
+      base?: { btc_target_usd: number; upside_factor: number; valor_fire_brl: number };
+      bull?: { btc_target_usd: number; upside_factor: number; valor_fire_brl: number };
+    };
+  };
+  [key: string]: unknown;
+}
+
+/** Bond pool readiness summary */
+export interface BondPoolReadiness {
+  valor_atual_brl: number;
+  anos_gastos: number;
+  meta_anos: number;
+  status: string;
+  composicao?: Record<string, number>;
+  [key: string]: unknown;
+}
+
+/** FIRE module — Monte Carlo results + bond pool status */
+export interface FireModuleData {
+  bond_pool_readiness?: BondPoolReadiness;
+  pat_mediano_fire?: number | null;
+  pat_mediano_fire50?: number | null;
+  mc_date?: string;
+  plano_status?: Record<string, unknown>;
+  swr_current?: number;
+  p_quality?: number | null;
+  p_quality_aspiracional?: number | null;
+  p_quality_fav?: number | null;
+  p_quality_stress?: number | null;
+  p_quality_proxy?: number | null;
+  p_quality_full?: number | null;
+  by_profile?: unknown[];
+  p_quality_matrix?: Record<string, unknown>;
+  p_quality_matrix_proxy?: Record<string, unknown>;
+  p_quality_matrix_full?: Record<string, unknown>;
+  bond_pool_status?: Record<string, unknown>;
+  bond_pool_isolation_enabled?: boolean;
+  bond_pool_fully_enabled?: boolean;
+  bond_pool_completion_pct?: number;
+  bond_pool_completion_fraction?: number;
+  [key: string]: unknown;
+}
+
 export interface DashboardData {
   _generated: string;
   _generated_brt: string;
@@ -100,18 +206,18 @@ export interface DashboardData {
   posicoes: Positions;
   pesosTarget: PesosTarget;
   pisos: Pisos;
-  fire?: any; // Structure varies — allow flexibility
+  fire?: FireModuleData;
   macro?: Macro;
   attribution?: Attribution;
-  premissas: Record<string, any>;
-  timeline?: any;
-  backtest?: any;
-  drift?: any;
-  rf?: any;
-  hodl11?: any;
-  realized_pnl?: any; // ibkr/realized_pnl.json — DARF obligations data
+  premissas: Record<string, unknown>;
+  timeline?: unknown;
+  backtest?: any; // backtest has complex nested structure — typed per-consumer in backtest/page.tsx
+  drift?: DriftData;
+  rf?: RfData;
+  hodl11?: Hodl11Data;
+  realized_pnl?: unknown; // ibkr/realized_pnl.json — DARF obligations data
   non_financial_assets?: NonFinancialAssets; // Gap V — projeção de venda imóvel + terreno
-  [key: string]: any; // Allow for additional fields from Python generation
+  [key: string]: unknown; // Allow for additional fields from Python generation
 }
 
 export interface DerivedValues {
