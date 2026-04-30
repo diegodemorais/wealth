@@ -4,8 +4,8 @@
     "method": "blended_rp_ahp",
     "method_detail": "50% Revealed Preference (historico de issues) + 50% AHP estimado (4 comparacoes forcadas). Clarificacoes: Tax = piso defensivo (nao ofensivo); RM = risco disability nao emprego (quasi-CLT, alta empregabilidade). Ref: HD-iifpt-integration Dimensao 1.",
     "weights": {
-      "ret": 0.35,
-      "inv": 0.25,
+      "inv": 0.35,
+      "ret": 0.25,
       "tax": 0.18,
       "cf": 0.10,
       "rm": 0.07,

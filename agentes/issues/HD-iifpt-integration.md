@@ -42,7 +42,7 @@ Seis domínios: Cash Flow (CF), Retirement (Ret), Tax, Estate (Est), Risk Manage
 
 ## Dimensão 1 — Priority Matrix Λ ✅ CONCLUÍDA (2026-04-30)
 
-**Resultado:** `agentes/contexto/priority_matrix.json` criado. Λ calibrado: Ret 0.35 / Inv 0.25 / Tax 0.18 / CF 0.10 / RM 0.07 / Est 0.05.
+**Resultado:** `agentes/contexto/priority_matrix.json` criado. Λ calibrado: Inv 0.35 / Ret 0.25 / Tax 0.18 / CF 0.10 / RM 0.07 / Est 0.05.
 **Método:** Blended RP + AHP (4 comparações forçadas + 2 clarificações). Tax = piso defensivo. RM = risco disability (quasi-CLT, sem cobertura). Est = deferral intencional pré-casamento.
 **Regime:** r2_mid_career. Transição r3 ~2034. Trigger: patrimônio ≥ R$9M ou P(FIRE) ≥ 90% por 2 anos.
 
