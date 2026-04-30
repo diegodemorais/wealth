@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | FR-audit-p2-improvements |
 | **Dono** | Dev |
-| **Status** | Em progresso 🔄 — Sprint Alpha + FIRE UX concluídos 2026-04-30 |
+| **Status** | Em progresso 🔄 — Sprint Alpha + FIRE UX + Portfolio + Simulators concluídos 2026-04-30 |
 | **Prioridade** | 🟡 P2 — Melhorias de Clareza e Completude |
 | **Criado em** | 2026-04-30 |
 | **Origem** | HD-visual-audit-playwright — Fase 3 (síntese) |
@@ -127,22 +127,24 @@ Para atacar este backlog de forma eficiente, sugerimos agrupamentos por sprint:
 - [x] C14 — Withdraw: guardrail cut category ("recai sobre lifestyle, não saúde")
 - [x] C15 — Withdraw: Draw Sequence Diagram (Bond Pool → Equity, anos 0-7 vs 7+)
 
+### Sprint Portfolio + Simulators ✅ 2026-04-30
+- [x] A1 — Verificado: `equityAlvo = SWRD(0.395)+AVGS(0.237)+AVEM(0.158) = 0.79 = 79%` ✓ sem bug
+- [x] A3 — Verificado: já tinha subtitle "% do portfolio total" (linha 89 RebalancingStatus.tsx)
+- [x] A4 — Verificado: sem UCITS warning component — só texto informativo em caption
+- [x] A6 — SoRR: `pisoEssencial` usa prop `gastoPiso` (data.gasto_piso=180k) em vez de 184k hardcoded
+- [x] B4 — PremisesTable: nota "⚠ N = X anos — insuficiente para significância" dinâmica via periodo_anos
+- [x] B12 — Verificado: já implementado como G12 (ipcaTaxa slider no FireSimuladorSection)
+- [x] B14 — CascadeSection: linha "Taxa: IPCA+X% · piso Y% · gap ±Zpp" em IPCA+Longo e Renda+
+- [x] C1 — ExpectedReturnWaterfall: defaultOpen=true (era false)
+- [x] C2 — ETFRegionComposition: tab default → AVGS (era SWRD)
+- [x] C3 — N/A: JPGL não está mais em posicoes — transitório encerrado
+
 ### Pendente — Próximas sessões
-- [ ] A1 — IPS Summary: verificar se `equityAlvo * 100` = 79% ou bug
-- [ ] A3 — RebalancingStatus: subtitle "% do portfolio total" por linha de drift
-- [ ] A4 — Backtest: verificar UCITS warning vs AVGS (pode ser falso positivo)
-- [ ] A6 — SoRR: guardrail values via `data.guardrails.*` (não hardcoded)
-- [ ] A7 — FIRE: identificar e remover barra de progresso duplicada
-- [ ] B4 — Performance: nota "N = X anos — insuficiente para significância (<10 anos)"
-- [ ] B9 — Backtest: preset "Bond Tent" (equity 79% → 40% nos 5 anos pré-FIRE)
-- [ ] B10 — Backtest: highlight SoRR window (primeiros 5 anos pós-FIRE)
-- [ ] B11 — Backtest: barra de atribuição RF vs equity por período
-- [ ] B12 — Simulators: slider retorno RF (IPCA + spread)
+- [ ] A7 — FIRE: barra progresso duplicada — requer verificação visual UI (KpiHero card vs Gap G section)
+- [ ] B9 — Backtest: preset "Bond Tent" — requer pipeline (série de retorno RF histórica)
+- [ ] B10 — Backtest: highlight SoRR window — `drawdown_extended.periods` não populado no data.json
+- [ ] B11 — Backtest: RF vs equity attribution por período — requer série histórica RF
 - [ ] B13 — Simulators: What-If Renda+ 2065 → IPCA+2050 (duration + retorno)
-- [ ] B14 — Cascata: linha taxa atual / piso / gap por instrumento RF
-- [ ] C1 — Performance: Expected Return Waterfall `defaultOpen={true}`
-- [ ] C2 — Portfolio: ETFRegionComposition default tab = AVGS
-- [ ] C3 — Portfolio: painel dilution progress (posição transitória → target)
-- [ ] C8 — NOW: mini card capital humano Katia (INSS anual)
-- [ ] C10 — FIRE: revisar ordem das seções (Hero → Trilha → Cenários → Bond Pool → SoRR...)
-- [ ] C13 — FIRE: histograma P(FIRE date) por ano
+- [ ] C8 — NOW: mini card capital humano Katia — requer dados INSS/Katia no pipeline
+- [ ] C10 — FIRE: revisar ordem das seções (Hero → Trilha → Cenários → Bond Pool → SoRR...) — requer verificação visual
+- [ ] C13 — FIRE: histograma P(FIRE date) por ano — requer série P(FIRE) por ano do pipeline
