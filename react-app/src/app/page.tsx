@@ -525,6 +525,11 @@ export default function HomePage() {
           priorityWeights={priorityWeights}
           bondPoolCoverageAnos={(data as any)?.bond_pool?.cobertura_anos ?? null}
           bondPoolMetaAnos={(data as any)?.bond_pool?.meta_anos ?? 7}
+          yearsToFire={(() => {
+            const idadeFire = (data as any)?.premissas?.idade_fire_alvo;
+            const idadeAtual = (data as any)?.premissas?.idade_atual;
+            return (idadeFire && idadeAtual) ? idadeFire - idadeAtual : null;
+          })()}
         />
       )}
 

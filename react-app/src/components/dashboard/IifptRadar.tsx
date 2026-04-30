@@ -51,6 +51,7 @@ interface IifptRadarProps {
   priorityWeights: Record<string, number>;
   bondPoolCoverageAnos?: number | null;
   bondPoolMetaAnos?: number | null;
+  yearsToFire?: number | null;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -109,6 +110,7 @@ export function IifptRadar({
   priorityWeights,
   bondPoolCoverageAnos,
   bondPoolMetaAnos,
+  yearsToFire,
 }: IifptRadarProps) {
   const { privacyMode } = useUiStore();
   const chartRef = useChartResize();
@@ -195,14 +197,15 @@ export function IifptRadar({
       case 'cf': {
         const covAnos = bondPoolCoverageAnos != null ? bondPoolCoverageAnos.toFixed(1) : '—';
         const metaAnos = bondPoolMetaAnos ?? 7;
-        const text = `Construir bond tent (${covAnos}a / ${metaAnos}a)`;
+        const fireSuffix = yearsToFire != null ? ` · em ~${Math.round(yearsToFire)}a (FIRE)` : '';
+        const text = `Construir bond tent (${covAnos}a / ${metaAnos}a)${fireSuffix}`;
         const color = (domainCoverage['cf'] ?? 0) < 0.5 ? 'var(--yellow)' : undefined;
         return { text, color };
       }
       case 'rm':
-        return { text: 'HD-holding-e-seguro (disability — cobertura: zero)', color: 'var(--red)' };
+        return { text: 'Issue HD-holding-e-seguro · disability — cobertura: zero', color: 'var(--red)' };
       case 'est':
-        return { text: 'PT-planejamento-patrimonial (trigger: casamento)', color: 'var(--muted)' };
+        return { text: 'Issue PT-planejamento-patrimonial · trigger: casamento', color: 'var(--muted)' };
       default:
         return { text: '—' };
     }
