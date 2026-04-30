@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'RFStatusPanel', tab: 'now', anchor: 'section-dca-status', de: 'DCA badge contradiz recomendação quando posição >= alvo', para: 'recomendação verifica posição antes de checar taxa' },
+  { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'AlphaVsSWRDChart', tab: 'performance', anchor: 'section-alpha-swrd', de: 'annualização alpha por média aritmética', para: 'média geométrica (compounding correto)' },
   { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'TimeToFireProgressBar', tab: 'now', anchor: '', de: 'idade 39 hardcoded', para: 'usa premissas.idade_atual dinâmico' },
   { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'CoastFireCard', tab: 'fire', anchor: 'section-coast-fire', de: 'aporte R$300k hardcoded', para: 'usa premissas.aporte_mensal × 12 dinâmico' },
   { datetime: '2026-04-30T00:04:00', type: 'visual', component: 'TrackingFireChart', tab: 'fire', anchor: 'section-fire-trilha', de: 'Sem contexto de origem das bandas FIRE', para: 'Notas compactas: origem acadêmica vs convenção de comunidade por banda' },

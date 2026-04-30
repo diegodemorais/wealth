@@ -25,7 +25,10 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
   const swrdData = [oneYear.swrdReturn, threeYear.swrdReturn, fiveYear.swrdReturn, tenYear.swrdReturn];
   const alphaData = targetData.map((t, i) => t - swrdData[i]);
 
-  const avgAlpha = alphaData.reduce((s, a) => s + a, 0) / alphaData.length;
+  // Geometric mean: correct for multi-year compounding (alphaData in % units, e.g. 1.4 = 1.4%)
+  const avgAlpha = alphaData.length > 0
+    ? ((alphaData.reduce((p, a) => p * (1 + a / 100), 1) ** (1 / alphaData.length)) - 1) * 100
+    : 0;
 
   const option = {
     backgroundColor: 'transparent',

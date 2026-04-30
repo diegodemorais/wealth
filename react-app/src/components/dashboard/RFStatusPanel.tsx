@@ -25,6 +25,10 @@ function getAcaoRecomendada(row: RFStatusRow): { text: string; color: string } |
   const taxa = row.taxaAtual;
   if (taxa == null) return null;
   if (row.id === 'renda2065') {
+    // Check target first — if position already at/above target, DCA should be paused regardless of rate
+    if (row.pctAtual != null && row.pctAlvo != null && row.pctAtual >= row.pctAlvo) {
+      return { text: '→ Meta atingida — manter sem aportes', color: 'var(--muted)' };
+    }
     if (taxa >= 6.5) return { text: '→ DCA ativo (gatilho ativo)', color: 'var(--green)' };
     if (taxa >= 6.0) return { text: '→ Monitorar', color: 'var(--yellow)' };
     return { text: '→ Aguardar', color: 'var(--muted)' };
