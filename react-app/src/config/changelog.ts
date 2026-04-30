@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T00:00:00', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'Siglas na tabela de interação (CF, RM)', para: 'Nomes completos (Cash Flow, Risk Mgmt)' },
   { datetime: '2026-04-30T23:45:00.000Z', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'acionáveis sem prazo e sem prefixo Issue', para: 'CF mostra prazo até FIRE (~14a), RM e Estate prefixados com "Issue"' },
   // ── 2026-04-30 — IifptPanel completo ──
   { datetime: '2026-04-30T23:30:00.000Z', type: 'dado', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'radar simples com cobertura', para: 'Modelo IIFPT completo: score integrado, tabela de domínios com acionáveis, coupling table, callout RM' },

@@ -37,11 +37,11 @@ const DOMAIN_ORDER = ['inv', 'ret', 'tax', 'cf', 'rm', 'est'];
 
 // Hardcoded coupling data from IIFPT paper Appendix C
 const COUPLINGS = [
-  { pair: 'Tax ↔ Investment', intensity: 0.60, pctQ: 46.8, level: 'Forte'    },
-  { pair: 'Tax ↔ Retirement', intensity: 0.55, pctQ: 30.7, level: 'Forte'    },
-  { pair: 'CF ↔ Retirement',  intensity: 0.35, pctQ: 10.9, level: 'Moderado' },
-  { pair: 'RM ↔ CF',          intensity: 0.30, pctQ:  6.7, level: 'Moderado' },
-  { pair: 'RM ↔ Retirement',  intensity: 0.30, pctQ:  6.7, level: 'Moderado' },
+  { pair: 'Tax ↔ Investment',         intensity: 0.60, pctQ: 46.8, level: 'Forte'    },
+  { pair: 'Tax ↔ Retirement',         intensity: 0.55, pctQ: 30.7, level: 'Forte'    },
+  { pair: 'Cash Flow ↔ Retirement',   intensity: 0.35, pctQ: 10.9, level: 'Moderado' },
+  { pair: 'Risk Mgmt ↔ Cash Flow',    intensity: 0.30, pctQ:  6.7, level: 'Moderado' },
+  { pair: 'Risk Mgmt ↔ Retirement',   intensity: 0.30, pctQ:  6.7, level: 'Moderado' },
 ];
 
 // ── Props ─────────────────────────────────────────────────────────────────────
