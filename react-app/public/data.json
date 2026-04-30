@@ -510,92 +510,93 @@
       "values": {
         "A": {
           "atual": {
-            "base": 58.9,
-            "favoravel": 67.0,
-            "stress": 55.8
+            "base": 70.7,
+            "favoravel": 79.8,
+            "stress": 68.2
           },
           "casado": {
-            "base": 40.5,
-            "favoravel": 47.2,
-            "stress": 36.3
+            "base": 58.1,
+            "favoravel": 67.2,
+            "stress": 53.0
           },
           "filho": {
-            "base": 38.7,
-            "favoravel": 49.0,
-            "stress": 32.6
+            "base": 45.4,
+            "favoravel": 59.5,
+            "stress": 40.3
           }
         },
         "B": {
           "atual": {
-            "base": 65.3,
-            "favoravel": 73.3,
-            "stress": 62.2
+            "base": 75.3,
+            "favoravel": 84.4,
+            "stress": 73.1
           },
           "casado": {
-            "base": 49.7,
-            "favoravel": 57.3,
-            "stress": 45.4
+            "base": 67.6,
+            "favoravel": 75.5,
+            "stress": 61.2
           },
           "filho": {
-            "base": 42.0,
-            "favoravel": 53.3,
-            "stress": 35.9
+            "base": 47.4,
+            "favoravel": 61.7,
+            "stress": 42.2
           }
         },
         "C": {
           "atual": {
-            "base": 68.8,
-            "favoravel": 76.7,
-            "stress": 65.7
+            "base": 76.9,
+            "favoravel": 86.5,
+            "stress": 75.7
           },
           "casado": {
-            "base": 55.3,
-            "favoravel": 63.3,
-            "stress": 50.9
+            "base": 71.5,
+            "favoravel": 79.4,
+            "stress": 65.2
           },
           "filho": {
-            "base": 43.6,
-            "favoravel": 55.2,
-            "stress": 37.4
+            "base": 48.3,
+            "favoravel": 62.6,
+            "stress": 43.1
           }
         },
         "D": {
           "atual": {
-            "base": 66.0,
-            "favoravel": 73.9,
-            "stress": 63.1
+            "base": 75.5,
+            "favoravel": 84.8,
+            "stress": 73.3
           },
           "casado": {
-            "base": 51.2,
-            "favoravel": 58.7,
-            "stress": 47.1
+            "base": 68.5,
+            "favoravel": 75.9,
+            "stress": 61.7
           },
           "filho": {
-            "base": 42.4,
-            "favoravel": 53.8,
-            "stress": 36.4
+            "base": 47.4,
+            "favoravel": 61.9,
+            "stress": 42.3
           }
         },
         "E": {
           "atual": {
-            "base": 69.4,
-            "favoravel": 77.4,
-            "stress": 66.3
+            "base": 76.9,
+            "favoravel": 86.5,
+            "stress": 75.7
           },
           "casado": {
-            "base": 56.5,
-            "favoravel": 65.0,
-            "stress": 52.2
+            "base": 71.5,
+            "favoravel": 79.4,
+            "stress": 65.2
           },
           "filho": {
-            "base": 44.0,
-            "favoravel": 55.7,
-            "stress": 37.7
+            "base": 48.3,
+            "favoravel": 62.6,
+            "stress": 43.1
           }
         }
       },
       "gogowindow": 10,
-      "min_frac_anos": 0.85
+      "min_frac_anos": 0.85,
+      "bond_pool_mode": "partial"
     },
     "p_quality_proxy": 75.7,
     "p_quality_full": 89.4,
@@ -613,7 +614,267 @@
     "bond_pool_isolation_enabled": true,
     "bond_pool_fully_enabled": false,
     "bond_pool_completion_pct": 24.6,
-    "bond_pool_completion_fraction": 0.2464
+    "bond_pool_completion_fraction": 0.2464,
+    "p_quality_matrix_proxy": {
+      "criterios": [
+        {
+          "id": "A",
+          "label": "Binário (nenhum)",
+          "descricao": "0 anos ruins no go-go"
+        },
+        {
+          "id": "B",
+          "label": "≤1 total",
+          "descricao": "máx 1 ano ruim total",
+          "default": true
+        },
+        {
+          "id": "C",
+          "label": "≤2 total",
+          "descricao": "máx 2 anos ruins total"
+        },
+        {
+          "id": "D",
+          "label": "≤1 consecutivo",
+          "descricao": "máx 1 consecutivo"
+        },
+        {
+          "id": "E",
+          "label": "≤2 consecutivos",
+          "descricao": "máx 2 consecutivos"
+        }
+      ],
+      "perfis": [
+        "atual",
+        "casado",
+        "filho"
+      ],
+      "cenarios": [
+        "base",
+        "favoravel",
+        "stress"
+      ],
+      "values": {
+        "A": {
+          "atual": {
+            "base": 65.6,
+            "favoravel": 76.4,
+            "stress": 65.0
+          },
+          "casado": {
+            "base": 49.3,
+            "favoravel": 57.5,
+            "stress": 44.9
+          },
+          "filho": {
+            "base": 41.7,
+            "favoravel": 55.0,
+            "stress": 39.0
+          }
+        },
+        "B": {
+          "atual": {
+            "base": 70.7,
+            "favoravel": 81.4,
+            "stress": 69.6
+          },
+          "casado": {
+            "base": 59.8,
+            "favoravel": 67.7,
+            "stress": 54.1
+          },
+          "filho": {
+            "base": 44.7,
+            "favoravel": 57.9,
+            "stress": 41.9
+          }
+        },
+        "C": {
+          "atual": {
+            "base": 74.4,
+            "favoravel": 83.9,
+            "stress": 71.9
+          },
+          "casado": {
+            "base": 65.1,
+            "favoravel": 72.8,
+            "stress": 59.8
+          },
+          "filho": {
+            "base": 46.1,
+            "favoravel": 59.0,
+            "stress": 43.0
+          }
+        },
+        "D": {
+          "atual": {
+            "base": 71.4,
+            "favoravel": 82.1,
+            "stress": 70.0
+          },
+          "casado": {
+            "base": 61.3,
+            "favoravel": 68.8,
+            "stress": 55.1
+          },
+          "filho": {
+            "base": 44.8,
+            "favoravel": 58.0,
+            "stress": 42.0
+          }
+        },
+        "E": {
+          "atual": {
+            "base": 74.8,
+            "favoravel": 84.1,
+            "stress": 72.2
+          },
+          "casado": {
+            "base": 66.2,
+            "favoravel": 74.0,
+            "stress": 60.6
+          },
+          "filho": {
+            "base": 46.2,
+            "favoravel": 59.3,
+            "stress": 43.0
+          }
+        }
+      },
+      "gogowindow": 10,
+      "min_frac_anos": 0.85,
+      "bond_pool_mode": "sem_bucket"
+    },
+    "p_quality_matrix_full": {
+      "criterios": [
+        {
+          "id": "A",
+          "label": "Binário (nenhum)",
+          "descricao": "0 anos ruins no go-go"
+        },
+        {
+          "id": "B",
+          "label": "≤1 total",
+          "descricao": "máx 1 ano ruim total",
+          "default": true
+        },
+        {
+          "id": "C",
+          "label": "≤2 total",
+          "descricao": "máx 2 anos ruins total"
+        },
+        {
+          "id": "D",
+          "label": "≤1 consecutivo",
+          "descricao": "máx 1 consecutivo"
+        },
+        {
+          "id": "E",
+          "label": "≤2 consecutivos",
+          "descricao": "máx 2 consecutivos"
+        }
+      ],
+      "perfis": [
+        "atual",
+        "casado",
+        "filho"
+      ],
+      "cenarios": [
+        "base",
+        "favoravel",
+        "stress"
+      ],
+      "values": {
+        "A": {
+          "atual": {
+            "base": 83.8,
+            "favoravel": 89.4,
+            "stress": 82.2
+          },
+          "casado": {
+            "base": 74.4,
+            "favoravel": 80.4,
+            "stress": 71.4
+          },
+          "filho": {
+            "base": 54.0,
+            "favoravel": 64.5,
+            "stress": 47.5
+          }
+        },
+        "B": {
+          "atual": {
+            "base": 86.2,
+            "favoravel": 92.2,
+            "stress": 84.5
+          },
+          "casado": {
+            "base": 82.0,
+            "favoravel": 85.6,
+            "stress": 77.5
+          },
+          "filho": {
+            "base": 55.4,
+            "favoravel": 65.8,
+            "stress": 48.5
+          }
+        },
+        "C": {
+          "atual": {
+            "base": 87.4,
+            "favoravel": 93.4,
+            "stress": 85.5
+          },
+          "casado": {
+            "base": 84.0,
+            "favoravel": 87.7,
+            "stress": 80.2
+          },
+          "filho": {
+            "base": 55.8,
+            "favoravel": 66.3,
+            "stress": 48.7
+          }
+        },
+        "D": {
+          "atual": {
+            "base": 86.2,
+            "favoravel": 92.3,
+            "stress": 84.5
+          },
+          "casado": {
+            "base": 82.0,
+            "favoravel": 85.7,
+            "stress": 77.6
+          },
+          "filho": {
+            "base": 55.4,
+            "favoravel": 65.8,
+            "stress": 48.5
+          }
+        },
+        "E": {
+          "atual": {
+            "base": 87.4,
+            "favoravel": 93.4,
+            "stress": 85.5
+          },
+          "casado": {
+            "base": 84.0,
+            "favoravel": 87.7,
+            "stress": 80.2
+          },
+          "filho": {
+            "base": 55.8,
+            "favoravel": 66.3,
+            "stress": 48.7
+          }
+        }
+      },
+      "gogowindow": 10,
+      "min_frac_anos": 0.85,
+      "bond_pool_mode": "full"
+    }
   },
   "scenario_comparison": {
     "base": {
