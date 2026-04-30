@@ -13,9 +13,11 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import type { DashboardData } from '@/types/dashboard';
+import type { DashboardData, DerivedValues } from '@/types/dashboard';
+import { computeDerivedValues } from '@/utils/dataWiring';
 
 let data: DashboardData;
+let derived: DerivedValues;
 
 beforeAll(() => {
   // Load data.json from dashboard build output
@@ -23,6 +25,7 @@ beforeAll(() => {
   const dataPath = resolve(__dirname, '../../dashboard/data.json');
   const dataContent = readFileSync(dataPath, 'utf-8');
   data = JSON.parse(dataContent) as DashboardData;
+  derived = computeDerivedValues(data);
 });
 
 describe('Data Validation Suite', () => {
@@ -446,6 +449,34 @@ describe('Data Validation Suite', () => {
       // Just verify both exist; they CAN differ
       expect(real).toBeGreaterThan(0);
       expect(premissa).toBeGreaterThan(0);
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // Critical derived fields: dcaItems (MD-2, QA-test-plan-audit)
+  // ─────────────────────────────────────────────────────────────
+
+  describe('derived: dcaItems (DecisaoDoMes source)', () => {
+    it('dcaItems must exist and be an array (not undefined)', () => {
+      // dcaItems is computed by computeDerivedValues() in dataWiring.ts
+      // If this is empty/undefined, DecisaoDoMes renders no items — silent regression
+      expect(Array.isArray(derived.dcaItems)).toBe(true);
+    });
+
+    it('dcaItems must have at least one item (at minimum the equity ETF)', () => {
+      expect(derived.dcaItems.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('each dcaItem has required shape: { id, nome, posicaoBrl, status }', () => {
+      for (const item of derived.dcaItems) {
+        expect(item).toHaveProperty('id');
+        expect(item).toHaveProperty('nome');
+        expect(item).toHaveProperty('posicaoBrl');
+        expect(item).toHaveProperty('status');
+        expect(typeof item.id).toBe('string');
+        expect(typeof item.nome).toBe('string');
+        expect(typeof item.posicaoBrl).toBe('number');
+      }
     });
   });
 });

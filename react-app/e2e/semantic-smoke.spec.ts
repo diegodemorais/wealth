@@ -866,3 +866,46 @@ test.describe('Footer — version and data timestamp visible', () => {
     });
   }
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Privacy regression — MD-1 (QA-test-plan-audit)
+// Enables privacy mode and verifies patrimônio-total is masked (•• appears)
+// Strategy: inject privacyMode via localStorage (Zustand persist store) before load
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Privacy regression — NOW tab', () => {
+  async function gotoWithPrivacy(page: Page, route: string, privacyMode: boolean) {
+    await setAuthCookie(page);
+    await page.addInitScript((enabled: boolean) => {
+      const key = 'dashboard-ui-store';
+      const existing = localStorage.getItem(key);
+      let state: Record<string, unknown> = { state: {}, version: 0 };
+      try { if (existing) state = JSON.parse(existing); } catch { /* ignore */ }
+      state.state = { ...(state.state as Record<string, unknown> || {}), privacyMode: enabled };
+      localStorage.setItem(key, JSON.stringify(state));
+    }, privacyMode);
+    await page.goto(route, { waitUntil: 'networkidle', timeout: 30_000 });
+    await page.waitForFunction(
+      () => !document.body.innerText.includes('Carregando dados'),
+      { timeout: 15_000 }
+    );
+  }
+
+  test('patrimonio-total shows •• masking when privacyMode=true', async ({ page }) => {
+    await gotoWithPrivacy(page, ROUTES.now, true);
+    const el = page.locator('[data-testid="patrimonio-total"]');
+    await expect(el, 'patrimonio-total not found').toBeAttached({ timeout: 15_000 });
+    const text = await el.textContent();
+    // Must contain privacy masking characters (•) and NOT expose R$\d patterns
+    expect(text, `patrimonio-total should contain •• in privacy mode, got: ${text}`).toMatch(/••/);
+    expect(text, `patrimonio-total leaks real value: ${text}`).not.toMatch(/R\$\d/);
+  });
+
+  test('patrimonio-total shows real value (R$) when privacyMode=false', async ({ page }) => {
+    await gotoWithPrivacy(page, ROUTES.now, false);
+    const el = page.locator('[data-testid="patrimonio-total"]');
+    await expect(el, 'patrimonio-total not found').toBeAttached({ timeout: 15_000 });
+    const text = await el.textContent();
+    expect(text, `patrimonio-total should show real R$ value, got: ${text}`).toMatch(/R\$/);
+  });
+});

@@ -289,3 +289,38 @@ describe('Hydration safety — SSR-unsafe patterns', () => {
     // No hard assertion — just informational
   });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PerformanceSummary — privacyMode=true regression (MD-1, QA-test-plan-audit)
+// Verifies that enabling privacy mode masks real numeric values with ••%
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('PerformanceSummary — privacy mode masking', () => {
+  it('renders without crashing when data is available', async () => {
+    const { default: PerformanceSummary } = await import(
+      '@/components/dashboard/PerformanceSummary'
+    );
+    expect(() => {
+      render(React.createElement(PerformanceSummary, { data: realData }));
+    }).not.toThrow();
+  });
+
+  it('privacyMode=true: renders ••% instead of numeric percentages', async () => {
+    MOCK_UI_STATE.privacyMode = true;
+    try {
+      const { default: PerformanceSummary } = await import(
+        '@/components/dashboard/PerformanceSummary'
+      );
+      const { container } = render(
+        React.createElement(PerformanceSummary, { data: realData })
+      );
+      const text = container.textContent ?? '';
+      // Must contain the masking pattern for percentage values
+      expect(text).toContain('••%');
+      // Must NOT expose real CAGR values (e.g. "+12.3%" pattern)
+      expect(text).not.toMatch(/\+\d+\.\d+%/);
+    } finally {
+      MOCK_UI_STATE.privacyMode = false;
+    }
+  });
+});
