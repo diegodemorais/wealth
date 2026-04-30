@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | FR-audit-p2-improvements |
 | **Dono** | Dev |
-| **Status** | Aberta |
+| **Status** | Em progresso 🔄 — Sprint Alpha + FIRE UX concluídos 2026-04-30 |
 | **Prioridade** | 🟡 P2 — Melhorias de Clareza e Completude |
 | **Criado em** | 2026-04-30 |
 | **Origem** | HD-visual-audit-playwright — Fase 3 (síntese) |
@@ -99,3 +99,50 @@ Para atacar este backlog de forma eficiente, sugerimos agrupamentos por sprint:
 **Sprint Portfolio (0.5 dia):** A3, A4, C2, C3  
 **Sprint Perf/Backtest (1 dia):** B4, B9, B10, B11, C1  
 **Sprint Simulators (0.5 dia):** B12, B13, B14  
+
+---
+
+## Checklist de Execução
+
+### Sprint Alpha — Clareza Fatorial ✅ 2026-04-30
+- [x] A2 — ETFFactorComposition: RMW/CMA separados (granularidade fatorial)
+- [x] B1 — Tracking Error + Information Ratio cards na aba Performance
+- [x] B2 — Rolling alpha chart: markLine +5pp "target premium"
+- [x] B3 — Tabela anual: coluna SWRD como benchmark
+- [x] B5 — Factor Value Spread: percentil RMW adicionado
+- [x] B6 — Factor loadings por ETF com barra visual e threshold
+- [x] B7 — Factor drought counter: usa valor direto do pipeline
+- [x] B8 — Factor drought counter: inclui AVEM no monitoramento
+- [x] C4 — NOW: semáforo de factor drought (verde/amarelo/vermelho)
+- [x] C5 — NOW: card compacto com loadings agregados SMB/HML/RMW
+- [x] C6 — DecisaoDoMes: contexto fatorial por ETF ("SWRD = market neutral...")
+
+### Sprint FIRE UX ✅ 2026-04-30
+- [x] A5 — FireSpectrumWidget: `diegoTarget` via `premissas.patrimonio_gatilho` (não hardcode)
+- [x] A8 — Hero FIRE: patrimônio atual como subtítulo de contexto
+- [x] C7 — P(quality): tooltip com interpretação de threshold (>70%/>50%)
+- [x] C9 — NOW: strip P(FIRE casal) quando disponível no pipeline
+- [x] C11 — IPS Summary: linha "Gatilho FIRE: R$X" via `premissas.patrimonio_gatilho`
+- [x] C12 — FIRE: tabela de projeção de FIRE date por SWR variável (2.5–4.0%)
+- [x] C14 — Withdraw: guardrail cut category ("recai sobre lifestyle, não saúde")
+- [x] C15 — Withdraw: Draw Sequence Diagram (Bond Pool → Equity, anos 0-7 vs 7+)
+
+### Pendente — Próximas sessões
+- [ ] A1 — IPS Summary: verificar se `equityAlvo * 100` = 79% ou bug
+- [ ] A3 — RebalancingStatus: subtitle "% do portfolio total" por linha de drift
+- [ ] A4 — Backtest: verificar UCITS warning vs AVGS (pode ser falso positivo)
+- [ ] A6 — SoRR: guardrail values via `data.guardrails.*` (não hardcoded)
+- [ ] A7 — FIRE: identificar e remover barra de progresso duplicada
+- [ ] B4 — Performance: nota "N = X anos — insuficiente para significância (<10 anos)"
+- [ ] B9 — Backtest: preset "Bond Tent" (equity 79% → 40% nos 5 anos pré-FIRE)
+- [ ] B10 — Backtest: highlight SoRR window (primeiros 5 anos pós-FIRE)
+- [ ] B11 — Backtest: barra de atribuição RF vs equity por período
+- [ ] B12 — Simulators: slider retorno RF (IPCA + spread)
+- [ ] B13 — Simulators: What-If Renda+ 2065 → IPCA+2050 (duration + retorno)
+- [ ] B14 — Cascata: linha taxa atual / piso / gap por instrumento RF
+- [ ] C1 — Performance: Expected Return Waterfall `defaultOpen={true}`
+- [ ] C2 — Portfolio: ETFRegionComposition default tab = AVGS
+- [ ] C3 — Portfolio: painel dilution progress (posição transitória → target)
+- [ ] C8 — NOW: mini card capital humano Katia (INSS anual)
+- [ ] C10 — FIRE: revisar ordem das seções (Hero → Trilha → Cenários → Bond Pool → SoRR...)
+- [ ] C13 — FIRE: histograma P(FIRE date) por ano

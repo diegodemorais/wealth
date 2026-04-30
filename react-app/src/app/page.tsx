@@ -181,6 +181,24 @@ export default function HomePage() {
         domainCoverageEst={domainCoverage.est ?? null}
       />
 
+      {/* C9: P(FIRE casal) — mini strip when available */}
+      {(() => {
+        const pfireCasalBase: number | null = (data as any)?.pfire_by_profile?.casado?.base ?? null;
+        if (pfireCasalBase == null) return null;
+        const inssKatia: number = (data as any)?.premissas?.inss_katia_anual ?? 0;
+        const pCasalColor = pfireCasalBase >= 85 ? 'var(--green)' : pfireCasalBase >= 75 ? 'var(--yellow)' : 'var(--red)';
+        return (
+          <div
+            data-testid="pfire-casal-strip"
+            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '5px 12px', marginBottom: 8, background: 'var(--card)', borderRadius: 6, border: '1px solid var(--border)', fontSize: 'var(--text-xs)' }}
+          >
+            <span style={{ color: 'var(--muted)' }}>💍 Cenário casal:</span>
+            <span style={{ fontWeight: 700, color: pCasalColor }}>{privacyMode ? '••%' : `P(FIRE) ${pfireCasalBase.toFixed(1)}%`}</span>
+            {inssKatia > 0 && <span style={{ color: 'var(--muted)' }}>· incl. INSS Katia {fmtPrivacy(inssKatia, privacyMode)}/ano</span>}
+          </div>
+        );
+      })()}
+
       {/* G13: Guardrail zone mini-indicator + G2: Factor signal strip + G1: AUM alert */}
       {(() => {
         const sg = (data as any)?.spending_guardrails;
@@ -948,9 +966,12 @@ export default function HomePage() {
         const cdsThresh = 400;
         const ipca_piso = pisos.pisoTaxaIpcaLongo ?? 6.0;
         const renda_gatilho = pisos.pisoTaxaRendaPlus ?? 6.5;
+        // C11: Gatilho FIRE from pipeline; format as compact currency
+        const patrimonioGatilho: number | null = (data as any)?.premissas?.patrimonio_gatilho ?? null;
         const rules: Array<{ label: string; value: string }> = [
           { label: 'Equity alvo', value: `${(equityAlvo * 100).toFixed(0)}%` },
           { label: 'SWR', value: `${(swr * 100).toFixed(1)}%` },
+          ...(patrimonioGatilho != null ? [{ label: 'Gatilho FIRE', value: fmtPrivacy(patrimonioGatilho, privacyMode) }] : []),
           { label: 'IPCA+ piso DCA', value: `≥${ipca_piso.toFixed(1)}%` },
           { label: 'Renda+ gatilho', value: `≥${renda_gatilho.toFixed(1)}%` },
           { label: 'Guardrail piso (retirada)', value: fmtPrivacy(pisoGasto, privacyMode) + '/ano' },

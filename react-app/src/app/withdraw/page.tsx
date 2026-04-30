@@ -564,6 +564,33 @@ export default function WithdrawPage() {
                 {sg.nota && (
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>{sg.nota}</div>
                 )}
+                {/* C14: guardrail cut category — cortes recaem sobre lifestyle, não saúde */}
+                {(() => {
+                  const gastoPiso: number = (safeData as any).gasto_piso ?? 0;
+                  const custoVida: number = activeScenarioCfg.custo_vida_base;
+                  const lifestyleBase: number = custoVida - gastoPiso;
+                  const corte10: number = custoVida * 0.1;
+                  const corte20: number = custoVida * 0.2;
+                  if (gastoPiso <= 0) return null;
+                  return (
+                    <div style={{
+                      marginTop: 8,
+                      padding: '8px 12px',
+                      background: 'color-mix(in srgb, var(--yellow) 8%, transparent)',
+                      border: '1px solid color-mix(in srgb, var(--yellow) 30%, transparent)',
+                      borderRadius: 6,
+                      fontSize: 'var(--text-xs)',
+                    }}>
+                      <div style={{ fontWeight: 600, color: 'var(--yellow)', marginBottom: 4 }}>Categoria do corte guardrail</div>
+                      <div style={{ color: 'var(--muted)', lineHeight: 1.6 }}>
+                        Corte 10%: −{fmtPrivacy(corte10, privacyMode)}/ano → recai sobre <strong style={{ color: 'var(--text)' }}>lifestyle</strong> (não saúde, não hipoteca).
+                        Lifestyle base: {fmtPrivacy(lifestyleBase, privacyMode)}/ano ({((lifestyleBase / custoVida) * 100).toFixed(0)}% do gasto).
+                        <br />
+                        Corte 20%: −{fmtPrivacy(corte20, privacyMode)}/ano → idem. Floor: {fmtPrivacy(gastoPiso, privacyMode)}/ano (RF + INSS, intocável).
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             );
           })()}
@@ -641,6 +668,76 @@ export default function WithdrawPage() {
         </CollapsibleSection>
         </div>
       )}
+
+      {/* C15: Draw Sequence Diagram — Bond Pool → Equity */}
+      <CollapsibleSection
+        id="section-draw-sequence"
+        title={secTitle('withdraw', 'draw-sequence', 'Sequência de Saque — Bond Pool → Equity')}
+        defaultOpen={secOpen('withdraw', 'draw-sequence', true)}
+      >
+        <div style={{ padding: '14px 16px' }}>
+          {(() => {
+            const prem = safeData.premissas ?? {};
+            const bondTentAnos: number = (prem as any).bond_tent_meta_anos ?? 7;
+            const idadeFire: number = (prem as any).idade_cenario_base ?? 53;
+            const fases = [
+              { anos: `Ano 0–${bondTentAnos}`, label: 'Bond Pool', cor: '#2563eb', desc: 'Sacar apenas da RF (IPCA+2040/2050). Equity intocável — leave it alone.' },
+              { anos: `Ano ${bondTentAnos}+`, label: 'Equity (SWR)', cor: 'var(--accent)', desc: 'Bond pool esgotado. Sacar de equity com SWR dinâmico + guardrails.' },
+            ];
+            return (
+              <div data-testid="draw-sequence-diagram">
+                {/* Timeline horizontal */}
+                <div style={{ display: 'flex', gap: 0, marginBottom: 16, borderRadius: 8, overflow: 'hidden' }}>
+                  {fases.map((f, i) => (
+                    <div
+                      key={f.label}
+                      style={{
+                        flex: i === 0 ? bondTentAnos : 10,
+                        background: `color-mix(in srgb, ${f.cor} 15%, transparent)`,
+                        border: `1px solid color-mix(in srgb, ${f.cor} 40%, transparent)`,
+                        padding: '14px 16px',
+                        position: 'relative',
+                      }}
+                    >
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 4 }}>{f.anos}</div>
+                      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: f.cor, marginBottom: 6 }}>{f.label}</div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.5 }}>{f.desc}</div>
+                      {i === 0 && (
+                        <div style={{
+                          position: 'absolute', right: -14, top: '50%', transform: 'translateY(-50%)',
+                          fontSize: 20, color: 'var(--muted)', zIndex: 1,
+                        }}>→</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {/* Regras */}
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  {[
+                    { label: 'Proteção SoRR', text: `Primeiros ${bondTentAnos} anos pós-FIRE são o pior período para crash — bond pool isola equity da volatilidade.`, cor: '#2563eb' },
+                    { label: 'Rebalanceamento', text: 'Durante fase bond pool: equity cresce sem saques → % equity sobe → glide path natural.', cor: 'var(--green)' },
+                    { label: 'Gatilho', text: `FIRE Day: idade ${idadeFire}. Bond pool = ${bondTentAnos}× gastos anuais. Equity phase começa ~${idadeFire + bondTentAnos} anos.`, cor: 'var(--accent)' },
+                  ].map(r => (
+                    <div key={r.label} style={{
+                      flex: '1 1 200px',
+                      padding: '10px 12px',
+                      background: 'var(--card2)',
+                      borderRadius: 6,
+                      borderLeft: `3px solid ${r.cor}`,
+                    }}>
+                      <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: r.cor, marginBottom: 4 }}>{r.label}</div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.5 }}>{r.text}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="src" style={{ marginTop: 10 }}>
+                  Estratégia bucket: RF para SoRR buffer, equity para crescimento. Guardrails ativam na fase equity se drawdown {'>'} 15%.
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      </CollapsibleSection>
 
       {/* 5a. Sequence of Returns Heatmap — movido de FIRE */}
       <CollapsibleSection

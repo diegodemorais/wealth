@@ -208,7 +208,13 @@ export default function FirePage() {
               );
             })}
           </div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>vida como planejada</div>
+          {/* C7: threshold tooltip for P(quality) */}
+          <div
+            style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4, cursor: 'help' }}
+            title="P(quality) > 70% = boa distribuição de retornos (go-go window planejada). 50–70% = atenção (sequência pode comprometer estilo). < 50% = sequência preocupante — revisar bond pool e guardrails."
+          >
+            vida como planejada ⓘ
+          </div>
         </div>
         {/* Separator */}
         <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
@@ -238,6 +244,12 @@ export default function FirePage() {
               ? fmtPrivacy(patrimonioAlvoHero, privacyMode)
               : '—'}
           </div>
+          {/* A8: patrimônio atual como contexto no hero */}
+          {prem.patrimonio_atual != null && (
+            <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: 3 }}>
+              hoje: {fmtPrivacy(prem.patrimonio_atual, privacyMode)}
+            </div>
+          )}
         </div>
       </div>
 
@@ -484,9 +496,10 @@ export default function FirePage() {
             title={secTitle('fire', 'fire-spectrum', 'FIRE Spectrum — Fat / FIRE / Lean / Barista')}
             defaultOpen={secOpen('fire', 'fire-spectrum', true)}
           >
+            {/* A5: diegoTarget from pipeline — never hardcode */}
             <FireSpectrumWidget
               spectrum={spectrum}
-              diegoTarget={10_000_000}
+              diegoTarget={(safeData as any)?.premissas?.patrimonio_gatilho ?? (safeData as any)?.premissas?.meta_fire_brl ?? 10_000_000}
               privacyMode={privacyMode}
             />
           </CollapsibleSection>
@@ -671,6 +684,89 @@ export default function FirePage() {
               })}
             </div>
             <div className="src">Base: MC simulações · SWR {((prem.swr_gatilho ?? 0.03) * 100).toFixed(0)}% fixo · primeira idade onde P ≥ 85% (exceto aspiracional)</div>
+            {/* C12: SWR-variable FIRE date projection */}
+            {(() => {
+              const custoVida: number = prem.custo_vida_base ?? 250000;
+              const patrimonioAtual: number = prem.patrimonio_atual ?? 0;
+              const anoAtual: number = prem.ano_atual ?? 2026;
+              const idadeAtual: number = prem.idade_atual ?? 39;
+              const retornoReal: number = prem.retorno_equity_base ?? 0.0485;
+              const aporteAnual: number = (prem.aporte_mensal ?? 25000) * 12;
+              // For each SWR, compute FIRE number and years to reach (simplified: future value of current + aportes)
+              const swrVariants: { swr: number; label: string }[] = [
+                { swr: 0.025, label: '2.5% (ultra-conservador)' },
+                { swr: 0.03,  label: '3.0% (base)' },
+                { swr: 0.035, label: '3.5% (moderado)' },
+                { swr: 0.04,  label: '4.0% (agressivo)' },
+              ];
+              const rows = swrVariants.map(({ swr, label }) => {
+                const fireNumber = custoVida / swr;
+                if (patrimonioAtual >= fireNumber) {
+                  return { label, fireNumber, anoFire: anoAtual, idadeFire: idadeAtual };
+                }
+                // Solve: P*(1+r)^n + A*((1+r)^n - 1)/r = FN
+                // Binary search for n
+                let lo = 0, hi = 40;
+                for (let iter = 0; iter < 60; iter++) {
+                  const mid = (lo + hi) / 2;
+                  const growth = Math.pow(1 + retornoReal, mid);
+                  const projected = patrimonioAtual * growth + (retornoReal > 0 ? aporteAnual * (growth - 1) / retornoReal : aporteAnual * mid);
+                  if (projected >= fireNumber) hi = mid; else lo = mid;
+                }
+                const years = (lo + hi) / 2;
+                const anoFire = Math.round(anoAtual + years);
+                const idadeFire = Math.round(idadeAtual + years);
+                return { label, fireNumber, anoFire, idadeFire };
+              });
+              const baseRow = rows.find(r => r.label.includes('3.0')) ?? rows[1];
+              return (
+                <div data-testid="swr-fire-date-projection" style={{
+                  marginTop: 12, marginBottom: 8,
+                  background: 'var(--card2)', borderRadius: 8,
+                  padding: '12px 14px', border: '1px solid var(--border)',
+                }}>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 10 }}>
+                    Projeção FIRE por SWR <span style={{ fontWeight: 400 }}>— quando atinjo o patrimônio para cada taxa</span>
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-xs)' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                          <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>SWR</th>
+                          <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>FIRE Number</th>
+                          <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Ano FIRE</th>
+                          <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Idade</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.map(r => {
+                          const isBase = r.label === baseRow.label;
+                          return (
+                            <tr
+                              key={r.label}
+                              style={{
+                                borderBottom: '1px solid var(--card2)',
+                                background: isBase ? 'color-mix(in srgb, var(--accent) 8%, transparent)' : 'transparent',
+                              }}
+                            >
+                              <td style={{ padding: '5px 8px', fontWeight: isBase ? 700 : 400, color: isBase ? 'var(--accent)' : 'var(--text)' }}>
+                                {r.label}{isBase ? ' ★' : ''}
+                              </td>
+                              <td style={{ textAlign: 'right', padding: '5px 8px' }}>{fmtPrivacy(Math.round(r.fireNumber / 100000) * 100000, privacyMode)}</td>
+                              <td style={{ textAlign: 'right', padding: '5px 8px', fontWeight: 700, color: isBase ? 'var(--accent)' : 'var(--text)' }}>{r.anoFire}</td>
+                              <td style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)' }}>{r.idadeFire}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 6 }}>
+                    Estimativa analítica simples (retorno real {(retornoReal * 100).toFixed(1)}%, aportes {fmtPrivacy(aporteAnual, privacyMode)}/ano, sem MC). ★ = SWR base atual.
+                  </div>
+                </div>
+              );
+            })()}
             {/* Sub-seção: tabela detalhada — merge de FireScenariosTable aqui */}
             <div style={{ marginTop: 12 }}>
               <CollapsibleSection
@@ -810,10 +906,15 @@ export default function FirePage() {
         title={secTitle('fire', 'sequence-returns', 'Sequence of Returns — Risco e Guardrails')}
         defaultOpen={secOpen('fire', 'sequence-returns', false)}
       >
+        {/* A6: gastoPiso from data.json — never hardcode 184000 */}
         <SequenceOfReturnsRisk
           pfire={(data as any)?.pfire_base ?? null}
           premissas={(data as any)?.premissas ?? {}}
-          gastoPiso={(data as any)?.gasto_piso ?? 184000}
+          gastoPiso={(data as any)?.gasto_piso ?? (() => {
+            // fallback: last guardrail retirada or gasto_piso
+            const g: Array<{ retirada: number }> = (data as any)?.guardrails ?? [];
+            return Array.isArray(g) && g.length > 0 ? g[g.length - 1].retirada : 184000;
+          })()}
           privacyMode={privacyMode}
         />
       </CollapsibleSection>
