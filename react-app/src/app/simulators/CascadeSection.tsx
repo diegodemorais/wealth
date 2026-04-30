@@ -52,6 +52,14 @@ export function CascadeSection() {
     ? Math.round((rendaGapPp / 100) * totalBrl)
     : 0;
 
+  // B14: taxa atual / piso / gap por instrumento RF
+  const ipcaTaxa: number | null = (data as any)?.rf?.ipca2040?.taxa ?? null;
+  const ipcaPiso: number | null = (data as any)?.pisos?.pisoTaxaIpcaLongo ?? null;
+  const ipcaYieldGap: number | null = ipcaTaxa != null && ipcaPiso != null ? ipcaTaxa - ipcaPiso : null;
+  const rendaTaxa: number | null = (data as any)?.rf?.renda2065?.taxa ?? null;
+  const rendaPiso: number | null = (data as any)?.pisos?.pisoTaxaRendaPlus ?? null;
+  const rendaYieldGap: number | null = rendaTaxa != null && rendaPiso != null ? rendaTaxa - rendaPiso : null;
+
   // Cascade allocation: IPCA+ Longo → Renda+ → Equity (overflow)
   let remaining = aporte ?? 0;
   const ipcaAlloc = ipcaGapBrl !== null ? Math.min(remaining, ipcaGapBrl) : 0;
@@ -122,6 +130,17 @@ export function CascadeSection() {
             gap: <span className="pv">{ipcaGapBrl != null ? (fmtPrivacy(ipcaGapBrl, privacyMode)) : '—'}</span>
             {ipcaGapPp != null && ` (${ipcaGapPp.toFixed(1)}pp)`}
           </div>
+          {ipcaTaxa != null && ipcaPiso != null && (
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px', borderTop: '1px solid var(--border)', paddingTop: '4px' }}>
+              Taxa: <strong style={{ color: 'var(--text)' }}>IPCA+{ipcaTaxa.toFixed(2)}%</strong>
+              {' '}· piso: {ipcaPiso.toFixed(1)}%
+              {ipcaYieldGap != null && (
+                <span style={{ color: ipcaYieldGap > 0 ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}>
+                  {' '}· gap: {ipcaYieldGap >= 0 ? '+' : ''}{ipcaYieldGap.toFixed(2)}pp
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Nível 2: Renda+ */}
@@ -144,6 +163,17 @@ export function CascadeSection() {
             gap: <span className="pv">{rendaGapBrl != null ? (fmtPrivacy(rendaGapBrl, privacyMode)) : '—'}</span>
             {rendaGapPp != null && (rendaGapPp > 0 ? ` (${rendaGapPp.toFixed(1)}pp)` : ' (acima do alvo)')}
           </div>
+          {rendaTaxa != null && rendaPiso != null && (
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px', borderTop: '1px solid var(--border)', paddingTop: '4px' }}>
+              Taxa: <strong style={{ color: 'var(--text)' }}>IPCA+{rendaTaxa.toFixed(2)}%</strong>
+              {' '}· piso: {rendaPiso.toFixed(1)}%
+              {rendaYieldGap != null && (
+                <span style={{ color: rendaYieldGap > 0 ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}>
+                  {' '}· gap: {rendaYieldGap >= 0 ? '+' : ''}{rendaYieldGap.toFixed(2)}pp
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Nível 3: Equity (overflow) */}

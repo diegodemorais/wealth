@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T21:30:00', type: 'dado', component: 'CascadeSection', tab: 'simuladores', anchor: '', de: 'Cascade sem taxa de mercado por instrumento', para: 'B14: linha "Taxa: IPCA+X% · piso Y% · gap ±Zpp" em IPCA+Longo e Renda+' },
   { datetime: '2026-04-30T21:00:00', type: 'layout', component: 'ETFRegionComposition', tab: 'portfolio', anchor: '', de: 'Tab default SWRD', para: 'C2: tab default mudado para AVGS (mais diferenciado — mix EM/DM, não só global)' },
   { datetime: '2026-04-30T21:00:00', type: 'layout', component: 'ExpectedReturnWaterfall', tab: 'performance', anchor: 'section-expected-return-waterfall', de: 'CollapsibleSection collapsed por default', para: 'C1: defaultOpen=true — waterfall aberto por default na aba Performance' },
   { datetime: '2026-04-30T21:00:00', type: 'cálculo', component: 'SequenceOfReturnsRisk', tab: 'fire', anchor: 'sequence-returns', de: 'pisoEssencial hardcoded em 184000', para: 'A6: pisoEssencial usa gastoPiso da prop (data.gasto_piso = 180000) — zero hardcode' },
