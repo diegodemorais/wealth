@@ -171,8 +171,8 @@ export function RFCryptoComposition() {
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
                     {formatCurrency(data.hodl11.valor)}
                   </td>
-                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: data.hodl11.pnl_pct >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: '500' }}>
-                    {`${data.hodl11.pnl_pct.toFixed(2)}%`}
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: (data.hodl11.pnl_pct ?? 0) >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: '500' }}>
+                    {`${(data.hodl11.pnl_pct ?? 0).toFixed(2)}%`}
                   </td>
                 </tr>
               )}
