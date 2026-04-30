@@ -38,7 +38,7 @@ def compute_coast_fire(premissas: dict) -> dict:
     patrimonio_atual = premissas.get("patrimonio_atual", 3_472_335.0)
     r_base = premissas.get("retorno_equity_base", 0.0485)
     r_fav  = r_base + premissas.get("adj_favoravel", 0.010)
-    r_str  = r_base + premissas.get("adj_stress", -0.010)
+    r_str  = r_base + premissas.get("adj_stress", -0.005)  # -0.5pp per carteira.md (Quant corr.)
     n      = premissas.get("n_anos_fire", 14)          # 2026 → 2040
 
     def coast(r): return fire_number / (1 + r) ** n

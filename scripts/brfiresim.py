@@ -89,77 +89,77 @@ def fetch_ipca_monthly(start_year: int = 2003, end_year: int = 2025) -> dict[str
 
 
 def fetch_equity_brl_monthly(start_year: int = 2003, end_year: int = 2025) -> dict[str, float]:
-    """Try yfinance SWRD.L → convert to BRL via PTAX. Falls back to synthetic."""
+    """Try yfinance SWRD.L → convert to BRL via GBPUSD + USDBRL. Falls back to synthetic."""
     try:
         import yfinance as yf
 
-        # SWRD.L in GBP
-        swrd = yf.download("SWRD.L", start=f"{start_year}-01-01", end=f"{end_year}-12-31",
-                           interval="1mo", auto_adjust=True, progress=False)
-        if swrd.empty:
-            raise ValueError("SWRD.L returned empty data")
+        start, end = f"{start_year}-01-01", f"{end_year}-12-31"
 
-        # PTAX BRL/USD from BCB, and GBP/USD from yfinance (to convert GBP→BRL)
-        gbpusd = yf.download("GBPUSD=X", start=f"{start_year}-01-01", end=f"{end_year}-12-31",
-                              interval="1mo", auto_adjust=True, progress=False)
-        ptax_raw = _bcb_fetch(BCB_PTAX_SERIE, f"01/01/{start_year}", f"31/12/{end_year}")
-        # PTAX is daily — use month-end values
-        ptax_by_month: dict[str, float] = {}
-        for row in ptax_raw:
-            try:
-                parts = row['data'].split('/')
-                key = f"{parts[2]}-{parts[1]}"
-                ptax_by_month[key] = float(row['valor'].replace(',', '.'))
-            except Exception:
-                pass
+        def _monthly_close(ticker: str) -> dict[str, float]:
+            """Download monthly close prices as {YYYY-MM: float}."""
+            t = yf.Ticker(ticker)
+            hist = t.history(start=start, end=end, interval="1mo", auto_adjust=True)
+            if hist.empty:
+                raise ValueError(f"{ticker} returned empty data")
+            out: dict[str, float] = {}
+            for ts, row in hist.iterrows():
+                ym = ts.strftime("%Y-%m")
+                close = row["Close"]
+                # Ticker.history() always returns a scalar per column — no MultiIndex
+                out[ym] = float(close)
+            return out
 
+        swrd_prices  = _monthly_close("SWRD.L")   # GBP
+        gbpusd_prices = _monthly_close("GBPUSD=X")  # USD per GBP
+        usdbrl_prices = _monthly_close("BRL=X")    # BRL per USD (inverted: USD/BRL)
+
+        # Convert SWRD from GBP to BRL: SWRD_BRL = SWRD_GBP × GBPUSD × USDBRL
+        def _brl_price(ym: str) -> float | None:
+            s = swrd_prices.get(ym)
+            g = gbpusd_prices.get(ym)
+            u = usdbrl_prices.get(ym)
+            if s and g and u:
+                return s * g * u
+            return None
+
+        all_months = sorted(set(swrd_prices) & set(gbpusd_prices) & set(usdbrl_prices))
         monthly: dict[str, float] = {}
-        prev_swrd = None
-        prev_gbpusd_close = None
-        prev_ptax = None
+        prev_brl: float | None = None
 
-        for ts, row in swrd.iterrows():
-            ym = ts.strftime("%Y-%m")
-            swrd_close = float(row["Close"].iloc[0] if hasattr(row["Close"], 'iloc') else row["Close"])
+        for ym in all_months:
+            brl = _brl_price(ym)
+            if brl and prev_brl and prev_brl > 0:
+                monthly[ym] = brl / prev_brl - 1
+            prev_brl = brl or prev_brl
 
-            # GBP/USD for this month
-            gbp_ts = gbpusd[gbpusd.index.strftime("%Y-%m") == ym]
-            gbpusd_close = float(gbp_ts["Close"].iloc[-1]) if not gbp_ts.empty else prev_gbpusd_close
+        if len(monthly) >= 12:  # at least 1 year of real data
+            print(f"  ✓ Equity proxy: SWRD.L real data — {len(monthly)} months (GBPUSD + BRL=X)")
+            return monthly  # caller will backfill pre-inception months with synthetic
 
-            ptax = ptax_by_month.get(ym) or prev_ptax
-
-            if prev_swrd is not None and gbpusd_close and ptax and prev_gbpusd_close and prev_ptax:
-                # Return SWRD in BRL: (SWRD_GBP * GBPUSD * USDBRL) / previous
-                swrd_brl = swrd_close * gbpusd_close * ptax
-                prev_swrd_brl = prev_swrd * prev_gbpusd_close * prev_ptax
-                if prev_swrd_brl > 0:
-                    monthly[ym] = swrd_brl / prev_swrd_brl - 1
-
-            prev_swrd = swrd_close
-            prev_gbpusd_close = gbpusd_close
-            prev_ptax = ptax
-
-        if len(monthly) >= 12 * 10:  # at least 10 years
-            print(f"  ✓ Equity proxy: SWRD.L in BRL ({len(monthly)} months via yfinance + PTAX)")
-            return monthly
+        raise ValueError(f"Only {len(monthly)} months real data — need ≥12")
 
     except ImportError:
         print("  ⚠ yfinance not installed — using synthetic equity returns", file=sys.stderr)
     except Exception as e:
         print(f"  ⚠ yfinance SWRD.L failed ({e}) — using synthetic", file=sys.stderr)
 
-    # Synthetic fallback: MSCI World-like monthly real returns + IPCA to get nominal
-    print("  ⚠ Equity proxy: SYNTHETIC (MSCI World-calibrated, not historical SWRD.L data)")
+    # Synthetic fallback for months without real SWRD.L data
     import random
-    rng = random.Random(42)  # reproducible
+    rng = random.Random(42)
     months: dict[str, float] = {}
     for year in range(start_year, end_year + 1):
         for month in range(1, 13):
             ym = f"{year}-{month:02d}"
-            # ~0.5% real/month with 4.5% monthly vol
-            ret = rng.gauss(SYNTHETIC_EQUITY_REAL_MONTHLY, SYNTHETIC_VOL_MONTHLY)
-            months[ym] = ret
+            months[ym] = rng.gauss(SYNTHETIC_EQUITY_REAL_MONTHLY, SYNTHETIC_VOL_MONTHLY)
     return months
+
+
+def _blend_equity(real: dict[str, float], synthetic: dict[str, float]) -> tuple[dict[str, float], int, int]:
+    """Merge real SWRD.L data over synthetic baseline. Returns (merged, n_real, n_synthetic)."""
+    merged = {**synthetic, **real}  # real overwrites synthetic where available
+    n_real = sum(1 for k in merged if k in real)
+    n_syn = sum(1 for k in merged if k not in real)
+    return merged, n_real, n_syn
 
 
 # ─── Simulation engine ────────────────────────────────────────────────────────────
@@ -283,9 +283,20 @@ def main() -> None:
     ipca = fetch_ipca_monthly(2003, date.today().year - 1)
     print(f"   → {len(ipca)} months")
 
-    print("2. Fetching equity returns (SWRD.L or synthetic)...")
-    equity = fetch_equity_brl_monthly(2003, date.today().year - 1)
-    print(f"   → {len(equity)} months")
+    print("2. Fetching equity returns (SWRD.L real + synthetic backfill for pre-inception)...")
+    end_yr = date.today().year - 1
+    real_equity   = fetch_equity_brl_monthly(2003, end_yr)
+    synth_equity  = fetch_equity_brl_monthly.__wrapped__(2003, end_yr) if hasattr(fetch_equity_brl_monthly, '__wrapped__') else None
+    # Build synthetic baseline then overlay real data
+    import random as _rng_mod
+    _rng = _rng_mod.Random(42)
+    synthetic_all: dict[str, float] = {}
+    for yr in range(2003, end_yr + 1):
+        for mo in range(1, 13):
+            ym = f"{yr}-{mo:02d}"
+            synthetic_all[ym] = _rng.gauss(SYNTHETIC_EQUITY_REAL_MONTHLY, SYNTHETIC_VOL_MONTHLY)
+    equity, n_real, n_syn = _blend_equity(real_equity, synthetic_all)
+    print(f"   → {len(equity)} months total ({n_real} real SWRD.L, {n_syn} synthetic)")
 
     print("3. Computing cycles...")
     cycles, data_inicio, data_fim = compute_cycles(equity, ipca)
@@ -301,15 +312,13 @@ def main() -> None:
         "ipca_mensal_pct": [round(ipca.get(m, 0) * 100, 3) for m in all_months],
     }
 
-    # Determine equity proxy source
-    fontes: dict[str, str] = {"ipca": "BCB SGS 433"}
-    try:
-        import yfinance  # noqa: F401
-        fontes["equity_brl"] = "SWRD.L (yfinance) + PTAX BCB SGS 1 → BRL"
-        fontes["_nota_proxy"] = "SWRD.L = carteira real de Diego (SWRD/AVGS/AVEM é 100% global equity)"
-    except ImportError:
-        fontes["equity_brl"] = "SYNTHETIC — MSCI World-calibrated (yfinance não instalado)"
-        fontes["_nota_proxy"] = "AVISO: retornos sintéticos, não históricos reais"
+    fontes: dict[str, str] = {
+        "ipca": "BCB SGS 433",
+        "equity_brl": f"SWRD.L yfinance ({n_real} meses reais 2019+) + MSCI World synthetic ({n_syn} meses 2003-2018)",
+        "_nota_proxy": "SWRD.L = carteira real de Diego (SWRD/AVGS/AVEM é 100% global equity). Meses pré-2019 usam retornos sintéticos calibrados por MSCI World histórico.",
+        "_equity_real_months": str(n_real),
+        "_equity_synth_months": str(n_syn),
+    }
 
     result = {
         "_generated": datetime.utcnow().isoformat() + "Z",

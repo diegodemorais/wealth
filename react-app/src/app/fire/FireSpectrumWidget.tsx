@@ -138,10 +138,29 @@ export function FireSpectrumWidget({ spectrum, diegoTarget, privacyMode }: FireS
         );
       })}
 
+      {/* Lean/Barista SWR disclaimer — Quant flag: unsustainable for 37y horizon */}
+      <div
+        style={{
+          marginTop: 8,
+          padding: '7px 12px',
+          background: 'color-mix(in srgb, var(--yellow) 6%, transparent)',
+          border: '1px solid color-mix(in srgb, var(--yellow) 25%, transparent)',
+          borderRadius: 'var(--radius-sm)',
+          fontSize: 10,
+          color: 'var(--muted)',
+          lineHeight: 1.5,
+        }}
+      >
+        <strong style={{ color: 'var(--yellow)' }}>⚠</strong>{' '}
+        Lean FIRE (SWR 6%) and Barista FIRE (SWR 8%) are reference bands only —
+        both exceed the safe withdrawal rate for a 37-year retirement horizon (Bengen: &lt;4.5%).
+        Not recommended as withdrawal strategies for Diego's plan.
+      </div>
+
       {/* Diego's model target note */}
       <div
         style={{
-          marginTop: 12,
+          marginTop: 8,
           padding: '8px 12px',
           background: 'color-mix(in srgb, var(--accent) 6%, transparent)',
           border: '1px solid color-mix(in srgb, var(--accent) 30%, transparent)',

@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-30T10:47:22.103310Z",
+  "_generated": "2026-04-30T11:09:06.652970Z",
   "data_range": {
     "inicio": "2003-01",
     "fim": "2025-12"
@@ -23,17 +23,17 @@
       "resultados_swr": {
         "3pct": {
           "sucesso": true,
-          "saldo_final": 54588724.0,
+          "saldo_final": 66611409.0,
           "min_saldo": 9605270.0
         },
         "4pct": {
           "sucesso": true,
-          "saldo_final": 42196699.0,
+          "saldo_final": 51929857.0,
           "min_saldo": 9291587.0
         },
         "6pct": {
           "sucesso": true,
-          "saldo_final": 17412651.0,
+          "saldo_final": 22566753.0,
           "min_saldo": 8532324.0
         },
         "8pct": {
@@ -49,23 +49,23 @@
       "resultados_swr": {
         "3pct": {
           "sucesso": true,
-          "saldo_final": 55028699.0,
+          "saldo_final": 76095322.0,
           "min_saldo": 9193865.0
         },
         "4pct": {
           "sucesso": true,
-          "saldo_final": 43679528.0,
+          "saldo_final": 61025892.0,
           "min_saldo": 9012667.0
         },
         "6pct": {
           "sucesso": true,
-          "saldo_final": 20981186.0,
+          "saldo_final": 30887031.0,
           "min_saldo": 8511620.0
         },
         "8pct": {
-          "sucesso": false,
-          "saldo_final": 0,
-          "min_saldo": 0
+          "sucesso": true,
+          "saldo_final": 748170.0,
+          "min_saldo": 748170.0
         }
       }
     },
@@ -75,23 +75,23 @@
       "resultados_swr": {
         "3pct": {
           "sucesso": true,
-          "saldo_final": 75061792.0,
+          "saldo_final": 104939188.0,
           "min_saldo": 8899894.0
         },
         "4pct": {
           "sucesso": true,
-          "saldo_final": 61083831.0,
+          "saldo_final": 86344822.0,
           "min_saldo": 8818148.0
         },
         "6pct": {
           "sucesso": true,
-          "saldo_final": 33127909.0,
+          "saldo_final": 49156090.0,
           "min_saldo": 8542750.0
         },
         "8pct": {
           "sucesso": true,
-          "saldo_final": 5171986.0,
-          "min_saldo": 5171986.0
+          "saldo_final": 11967358.0,
+          "min_saldo": 8082204.0
         }
       }
     },
@@ -101,22 +101,22 @@
       "resultados_swr": {
         "3pct": {
           "sucesso": true,
-          "saldo_final": 69048829.0,
+          "saldo_final": 137615192.0,
           "min_saldo": 9776647.0
         },
         "4pct": {
           "sucesso": true,
-          "saldo_final": 59036503.0,
+          "saldo_final": 118882562.0,
           "min_saldo": 9727298.0
         },
         "6pct": {
           "sucesso": true,
-          "saldo_final": 39011851.0,
+          "saldo_final": 81417303.0,
           "min_saldo": 9628601.0
         },
         "8pct": {
           "sucesso": true,
-          "saldo_final": 18987200.0,
+          "saldo_final": 43952043.0,
           "min_saldo": 9529903.0
         }
       }
@@ -130,8 +130,8 @@
     "taxa_sucesso_4pct": 1.0,
     "n_sucesso_6pct": 4,
     "taxa_sucesso_6pct": 1.0,
-    "n_sucesso_8pct": 2,
-    "taxa_sucesso_8pct": 0.5
+    "n_sucesso_8pct": 3,
+    "taxa_sucesso_8pct": 0.75
   },
   "series": {
     "datas": [
@@ -607,88 +607,88 @@
       2.204,
       0.512,
       10.639,
-      -7.833,
-      3.611,
-      -0.87,
-      0.052,
-      9.009,
-      0.462,
-      10.527,
-      -1.478,
-      2.068,
-      -1.696,
-      -2.59,
-      0.78,
-      -0.764,
-      1.406,
-      -8.919,
-      9.46,
-      -0.247,
-      8.299,
-      -4.006,
-      1.809,
-      14.661,
-      -3.392,
-      -6.191,
-      -1.945,
-      2.614,
-      3.602,
-      6.274,
-      -0.65,
-      -6.669,
-      -1.447,
-      6.049,
-      2.584,
-      -8.256,
-      0.343,
-      6.756,
-      10.015,
-      3.013,
-      1.884,
-      -5.049,
-      -3.273,
-      0.71,
-      2.752,
-      3.096,
-      -1.64,
-      -4.654,
-      -2.98,
-      -4.677,
-      3.379,
-      -9.846,
-      -0.991,
-      2.513,
-      7.31,
-      0.819,
-      4.98,
-      -1.285,
-      -2.831,
-      -2.518,
-      7.334,
-      4.949,
-      2.681,
-      15.401,
-      0.355,
-      3.276,
-      1.876,
-      -0.493,
-      10.864,
-      7.241,
-      -5.762,
-      -1.289,
-      2.417,
-      4.004,
-      -5.534,
-      -9.592,
-      -8.03,
-      0.182,
-      0.038,
-      2.045,
-      -2.944,
-      -4.978,
-      -8.552,
-      1.973,
-      2.156
+      4.442,
+      2.929,
+      -6.659,
+      2.559,
+      -3.591,
+      6.491,
+      3.645,
+      2.782,
+      9.832,
+      -1.399,
+      5.171,
+      -6.772,
+      0.008,
+      13.312,
+      2.792,
+      4.114,
+      6.489,
+      13.854,
+      -2.128,
+      -0.361,
+      6.982,
+      3.528,
+      5.513,
+      7.011,
+      4.807,
+      -2.02,
+      1.537,
+      -6.599,
+      7.489,
+      0.984,
+      -1.732,
+      11.289,
+      -5.026,
+      4.672,
+      -9.745,
+      -5.713,
+      -5.988,
+      -7.825,
+      -5.415,
+      -4.217,
+      7.255,
+      -7.944,
+      -7.325,
+      7.381,
+      7.23,
+      -0.733,
+      5.392,
+      -2.334,
+      3.032,
+      1.21,
+      -1.391,
+      4.281,
+      2.477,
+      0.247,
+      -5.269,
+      -3.619,
+      10.82,
+      4.599,
+      3.349,
+      3.434,
+      4.372,
+      -1.655,
+      6.01,
+      10.817,
+      2.998,
+      4.112,
+      0.898,
+      1.273,
+      6.336,
+      -0.149,
+      -2.297,
+      -1.788,
+      -2.994,
+      1.905,
+      7.905,
+      2.851,
+      0.335,
+      -0.546,
+      1.995,
+      1.561,
+      0.375,
+      5.455
     ],
     "ipca_mensal_pct": [
       2.25,
@@ -971,8 +971,10 @@
   },
   "_fontes": {
     "ipca": "BCB SGS 433",
-    "equity_brl": "SYNTHETIC — MSCI World-calibrated (yfinance não instalado)",
-    "_nota_proxy": "AVISO: retornos sintéticos, não históricos reais"
+    "equity_brl": "SWRD.L yfinance (82 meses reais 2019+) + MSCI World synthetic (194 meses 2003-2018)",
+    "_nota_proxy": "SWRD.L = carteira real de Diego (SWRD/AVGS/AVEM é 100% global equity). Meses pré-2019 usam retornos sintéticos calibrados por MSCI World histórico.",
+    "_equity_real_months": "82",
+    "_equity_synth_months": "194"
   },
   "_caveat": "~2025 anos de dados BR → 4 janelas de 20 anos. Interprete como sanity check do Monte Carlo, NÃO como estimativa probabilística rival. taxa_sucesso = fração de ciclos históricos (denominador pequeno). Não use linguagem de '% de chance de sucesso'."
 }
