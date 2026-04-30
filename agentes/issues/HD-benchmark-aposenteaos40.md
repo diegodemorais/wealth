@@ -131,7 +131,7 @@ O AA40 opera duas propriedades: o blog educacional (`aposenteaos40.org`) e o lab
 | Feature deles | Nosso gap específico |
 |---------------|---------------------|
 | Backtest multi-carteira (até 3) | Nosso backtest é fixo na carteira real + shadow portfolios. Não temos entrada livre de ativos arbitrários |
-| Heatmap de retornos anuais | Temos retornos anuais em tabela (Performance), mas não em formato heatmap visual |
+| Heatmap de retornos anuais | **Superior ao deles** — temos heatmap mensal × anual (mês no eixo X, ano no Y), que dá leitura de sazonalidade mês a mês. O deles mostra só retorno anual consolidado por ativo → mover para seção "Já temos (superior)" |
 | Matriz de correlação interativa | Temos correlation_stress nos dados, mas sem visualização de matriz completa por ativo |
 | Comparativo de portfolios lado a lado | Temos shadow portfolios, mas comparação não é interativa com ativos livres |
 | Monte Carlo: escolha de volume (5k/10k) | Nosso MC roda 10k fixo. Não expõe parâmetro ao usuário |
@@ -148,7 +148,7 @@ O AA40 opera duas propriedades: o blog educacional (`aposenteaos40.org`) e o lab
 | **Coast FIRE Calculator** | Calculadora do ponto em que Diego pode parar aportes e ainda atingir FIRE. Responde: "quando posso relaxar os aportes?" | Médio — complementa o Simulators (ReverseFire) que temos |
 | **Shiller PE Ibovespa** | P/L ajustado do Ibovespa para decisões táticas de valuation (mesmo que Diego não invista em ações BR, é dado macro contextual) | Baixo para Diego (sem exposição BR equity) |
 | **Anuário FIRE** / dados de comunidade | Benchmarking vs outros participantes FIRE BR — taxa de poupança, idade, patrimônio | Baixo — mais informativo que acionável |
-| **Heatmap anual de retornos** | Visualização tipo calendário com retornos anuais coloridos por magnitude | Médio — adiciona camada visual útil na aba Performance |
+| **Heatmap anual de retornos** | ~~Já temos — heatmap mensal × anual na aba Performance, mais granular que o deles~~ | — |
 | **Backtest livre de ativos** | Testar hipóteses com ativos arbitrários (ex: "e se tivesse 100% SWRD?") sem alterar carteira real | Médio — hoje limitado a shadow portfolios fixos |
 | **Matriz de correlação visual** | Grid de correlações entre todos os ativos da carteira | Baixo — já temos nos dados, falta o widget |
 
@@ -167,8 +167,8 @@ Nosso P(FIRE) é 100% Monte Carlo distributivo. Adicionar simulação de ciclos 
 **3. FIRE Thermometer com bandas Fat/Tradicional/Flexível/Corda Bamba (Média prioridade)**
 Adicionar ao KpiHero ou aba FIRE um widget visual mostrando onde Diego está no espectro (atual: ~Xm R$ / meta: R$Y → banda Z). As 4 bandas (400x/300x/200x/150x de despesas mensais) dão contexto qualitativo ao número. Implementação simples — os dados já existem.
 
-**4. Heatmap anual de retornos na aba Performance (Média prioridade)**
-Transformar a tabela de retornos anuais da aba Performance em heatmap visual (ECharts heatmap). Verde escuro = anos de alta, vermelho = baixa. Leitura imediata de padrões sazonais e sequence of returns. Muito mais impactante visualmente que a tabela atual.
+**4. ~~Heatmap anual de retornos~~ — já temos, superior ao deles**
+Nosso heatmap é mensal × anual (mês no eixo X, ano no Y) — leitura de sazonalidade e sequence of returns muito mais granular que o retorno anual consolidado do AA40. Item removido do backlog.
 
 **5. Coast FIRE — quando Diego pode parar de aportar (Média prioridade)**
 Calculadora dedicada: dado o patrimônio atual e as premissas de retorno real, em que data Diego pode reduzir/zerar aportes e ainda atingir R$10M+ FIRE? Complementa o ReverseFire que já temos. Dados: já disponíveis. Implementação: novo card no Simulators ou FIRE tab. Fórmula simples: `CoastNumber = FIRE_Number / (1 + r)^n`.
