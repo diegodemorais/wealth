@@ -874,7 +874,9 @@
       "gogowindow": 10,
       "min_frac_anos": 0.85,
       "bond_pool_mode": "full"
-    }
+    },
+    "p_quality_fav": 84.8,
+    "p_quality_stress": 74.5
   },
   "scenario_comparison": {
     "base": {

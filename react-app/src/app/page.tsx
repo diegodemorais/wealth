@@ -284,6 +284,9 @@ export default function HomePage() {
           tornadoData={d.tornadoData}
           firePatrimonioAtual={d.firePatrimonioAtual}
           firePatrimonioGatilho={d.firePatrimonioGatilho}
+          pQualityBase={(data as any)?.fire?.p_quality ?? null}
+          pQualityFav={(data as any)?.fire?.p_quality_fav ?? null}
+          pQualityStress={(data as any)?.fire?.p_quality_stress ?? null}
         />
       )}
 

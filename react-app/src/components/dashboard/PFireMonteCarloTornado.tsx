@@ -1,6 +1,6 @@
-import { fmtPrivacy } from '@/utils/privacyTransform';
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface TornadoData {
   label: string;
@@ -17,6 +17,9 @@ interface PFireMonteCarloTornadoProps {
   tornadoData: TornadoData[];
   firePatrimonioAtual?: number;
   firePatrimonioGatilho?: number;
+  pQualityBase?: number | null;
+  pQualityFav?: number | null;
+  pQualityStress?: number | null;
 }
 
 const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
@@ -26,6 +29,9 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
   tornadoData = [],
   firePatrimonioAtual,
   firePatrimonioGatilho,
+  pQualityBase,
+  pQualityFav,
+  pQualityStress,
 }) => {
   const { privacyMode } = useUiStore();
 
@@ -50,9 +56,9 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
   const maxDelta = Math.max(...sortedTornado.map(t => Math.abs(t.delta)), 10);
 
   const scenarioCards = [
-    { label: 'Base', value: pfireBase },
-    { label: 'Favorável', value: pfireFav },
-    { label: 'Stress', value: pfireStress },
+    { label: 'Base', value: pfireBase, quality: pQualityBase ?? null },
+    { label: 'Favorável', value: pfireFav, quality: pQualityFav ?? null },
+    { label: 'Stress', value: pfireStress, quality: pQualityStress ?? null },
   ];
 
   const patrimonioProgressPct = firePatrimonioAtual != null && firePatrimonioGatilho != null
@@ -69,7 +75,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
         <div className={sortedTornado.length > 0 ? 'flex-shrink-0 w-64' : 'w-full'}>
           {/* Scenario cards */}
           <div data-testid="stress-cenarios" className="flex flex-col gap-2">
-            {scenarioCards.map(({ label, value }) => (
+            {scenarioCards.map(({ label, value, quality }) => (
               <div
                 key={label}
                 className="rounded p-3 flex items-center justify-between border"
@@ -79,11 +85,18 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                 }}
               >
                 <div className="text-xs uppercase font-semibold text-muted tracking-widest">{label}</div>
-                <div
-                  className="text-xl font-black leading-none"
-                  style={{ color: getBadgeColor(value) }}
-                >
-                  {value.toFixed(1)}%
+                <div className="flex flex-col items-end gap-0.5">
+                  <div
+                    className="text-xl font-black leading-none"
+                    style={{ color: getBadgeColor(value) }}
+                  >
+                    {privacyMode ? '••%' : `${value.toFixed(1)}%`}
+                  </div>
+                  {quality != null && (
+                    <div className="text-xs text-muted leading-none">
+                      P(qual) {privacyMode ? '••%' : `${quality.toFixed(1)}%`}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

@@ -3870,6 +3870,8 @@ def main():
     state = load_state()
     # p_quality: extraído aqui (escopo main) para estar disponível ao construir fire_section
     p_quality = state.get("fire", {}).get("p_quality")
+    p_quality_fav = state.get("fire", {}).get("p_quality_fav")
+    p_quality_stress = state.get("fire", {}).get("p_quality_stress")
     p_quality_proxy = state.get("fire", {}).get("p_quality_proxy")
     p_quality_full = state.get("fire", {}).get("p_quality_full")
     p_quality_aspiracional = state.get("fire", {}).get("p_quality_aspiracional")
@@ -4965,6 +4967,8 @@ def main():
         "plano_status":        macro.get("plano_status") if macro else None,
         "swr_current":              swr_current,
         "p_quality":                p_quality,
+        "p_quality_fav":            p_quality_fav,
+        "p_quality_stress":         p_quality_stress,
         "p_quality_proxy":          p_quality_proxy,
         "p_quality_full":           p_quality_full,
         "p_quality_aspiracional":   p_quality_aspiracional,
