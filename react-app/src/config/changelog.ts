@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — IifptRadar defaultOpen=true ──
+  { datetime: '2026-04-30T22:00:00.000Z', type: 'visual', component: 'IifptRadar', tab: 'now', anchor: 'section-iifpt-radar', de: 'colapsado por padrão (oculto)', para: 'aberto por padrão — seção Cobertura IIFPT visível ao acessar NOW tab' },
   // ── 2026-04-30 — fix changelog NOW tab links ──
   { datetime: '2026-04-30T21:00:00.000Z', type: 'fix', component: 'Changelog links (NOW tab)', tab: 'assumptions', anchor: '', de: 'links NOW tab apontando para #anchor (erro — âncora na página assumptions)', para: 'links NOW tab apontando corretamente para /#anchor' },
   // ── 2026-04-30 — BRFireSim polish ──

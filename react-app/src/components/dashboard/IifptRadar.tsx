@@ -145,7 +145,7 @@ export function IifptRadar({ domainCoverage, priorityWeights }: IifptRadarProps)
     <CollapsibleSection
       id="section-iifpt-radar"
       title="Cobertura IIFPT"
-      defaultOpen={false}
+      defaultOpen={true}
       summary={
         gapDomains.length > 0 ? (
           <span style={{ fontSize: 'var(--text-xs)', color: EC.red, fontWeight: 600 }}>
