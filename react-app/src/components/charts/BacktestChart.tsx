@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -8,12 +9,6 @@ import { DashboardData } from '@/types/dashboard';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 export interface BacktestChartProps {
   data: DashboardData;
@@ -92,9 +87,9 @@ export function BacktestChart({ data, period, height = 300, dataset }: BacktestC
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
+        formatter: (params: CallbackDataParams[]) => {
           if (!Array.isArray(params)) return '';
-          let r = `${params[0].axisValueLabel}<br/>`;
+          let r = `${(params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string })).axisValueLabel}<br/>`;
           params.forEach((p: any) => {
             const v = p.value?.toFixed(1);
             r += `${p.marker} ${p.seriesName}: ${v}<br/>`;

@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -8,12 +9,6 @@ import { DashboardData } from '@/types/dashboard';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 export interface TrackingFireChartProps {
   data: DashboardData;
@@ -151,10 +146,10 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
+        formatter: (params: CallbackDataParams[]) => {
           if (!Array.isArray(params)) return '';
           const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-          const rawYm: string = params[0]?.axisValue ?? '';
+          const rawYm: string = (params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string }))?.axisValue ?? '';
           const [y, m] = rawYm.split('-');
           const label = m ? MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2) : rawYm;
           let html = `<div style="padding:8px 10px"><strong>${label}</strong><br/>`;

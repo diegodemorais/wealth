@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import React from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -68,8 +69,8 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
       borderColor: '#334155',
       borderWidth: 1,
       textStyle: { color: '#94a3b8', fontSize: 12 },
-      formatter: (params: any[]) => {
-        const date = params[0].axisValue;
+      formatter: (params: CallbackDataParams[]) => {
+        const date = (params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string })).axisValue;
         const lines = params.map((p: any) => {
           const val = p.value == null ? '—' : p.value.toFixed(2) + cfg.suffix;
           return `<div style="display:flex;justify-content:space-between;gap:16px">

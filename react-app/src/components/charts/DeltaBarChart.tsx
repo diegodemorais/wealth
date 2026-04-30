@@ -3,15 +3,10 @@
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 import { createDeltaBarChartOption } from '@/utils/chartSetup';
 
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 export interface DeltaBarChartProps {
   data: DashboardData;
@@ -22,6 +17,7 @@ export interface DeltaBarChartProps {
 
 export function DeltaBarChart({ data, chartType, height = 260 }: DeltaBarChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(
     () => createDeltaBarChartOption({ data, privacyMode, theme, chartType }),
@@ -29,6 +25,6 @@ export function DeltaBarChart({ data, chartType, height = 260 }: DeltaBarChartPr
   );
 
   return (
-    <EChart option={option} style={{ height, width: '100%' }} />
+    <EChart ref={chartRef} option={option} style={{ height, width: '100%' }} />
   );
 }

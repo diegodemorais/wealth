@@ -1,25 +1,18 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { EC, EC_SPLIT_LINE, EC_AXIS_LINE } from '@/utils/echarts-theme';
 
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
+// privacy-ok: percentage-only chart, no monetary values displayed
 export function GuardrailsMechanismChart() {
   const { theme } = useEChartsPrivacy();
   const chartRef = useChartResize();
 
-  useEffect(() => {
-    handleChartResize(chartRef);
-  }, [chartRef]);
 
   const option = useMemo(() => {
     const drawdownPcts = Array.from({ length: 51 }, (_, i) => i);
@@ -40,10 +33,11 @@ export function GuardrailsMechanismChart() {
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: { color: theme.tooltip.textStyle.color },
-        formatter: (params: any) => {
+        formatter: (params: CallbackDataParams[]) => {
           if (!params[0]) return '';
-          const dd = params[0].value[0];
-          const cut = params[0].value[1];
+          const val = params[0].value as [number, number];
+          const dd = val[0];
+          const cut = val[1];
           return `Drawdown: ${dd}%<br/>Gasto cortado: ${cut}%`;
         },
       },

@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 /**
  * StressTestSection + StressChart — Stress Test Monte Carlo (bear market interactive)
@@ -77,7 +78,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
         backgroundColor: EC.card,
         borderColor: EC.border2,
         textStyle: { color: EC.text, fontSize: 11 },
-        formatter: (params: any[]) => {
+        formatter: (params: CallbackDataParams[]) => {
           const yr = params[0].dataIndex;
           const p = pcts[yr];
           return `${labels[yr]}<br/>P90: ${fmtM(p.p90)}<br/>P50: ${fmtM(p.p50)}<br/>P10: ${fmtM(p.p10)}`;

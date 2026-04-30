@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -9,12 +10,6 @@ import { DashboardData } from '@/types/dashboard';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 export interface GuardrailsChartProps {
   data: DashboardData;
@@ -81,10 +76,10 @@ export function GuardrailsChart({ data, gastoOverride }: GuardrailsChartProps) {
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
+        formatter: (params: CallbackDataParams[]) => {
           if (!Array.isArray(params)) return '';
           const hidden = new Set(['_zoneFloor', '_zoneGap']);
-          const label = params[0]?.axisValue ?? '';
+          const label = (params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string }))?.axisValue ?? '';
           let html = `<div style="padding:8px 10px"><strong>${label}</strong><br/>`;
           params.forEach((p: any) => {
             if (hidden.has(p.seriesName) || p.value == null) return;

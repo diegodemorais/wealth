@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -7,12 +8,6 @@ import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 export interface InformationRatioChartProps {
   data: DashboardData;
@@ -55,12 +50,13 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
+        formatter: (params: CallbackDataParams[]) => {
           if (!Array.isArray(params) || !params[0]) return '';
           const p = params[0];
-          const val = p.value?.toFixed(2) ?? '-';
-          const color = p.value >= 0 ? EC.green : EC.red;
-          return `<div style="padding:8px"><strong>${p.axisValueLabel}</strong><br/>
+          const v = p.value as number;
+          const val = v != null ? v.toFixed(2) : '-';
+          const color = v >= 0 ? EC.green : EC.red;
+          return `<div style="padding:8px"><strong>${(p as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string })).axisValueLabel}</strong><br/>
             ${p.marker} IR 36m: <strong style="color:${color}">${val}</strong></div>`;
         },
       },

@@ -10,17 +10,13 @@
 
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
+import { useChartResize } from '@/hooks/useChartResize';
 import { useUiStore } from '@/store/uiStore';
 import { useConfig } from '@/hooks/useConfig';
 import type { EChartsOption } from 'echarts-for-react';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 interface SurplusGapChartProps {
   data: any;
@@ -58,6 +54,7 @@ function spendingSmile(year: number, fireYear: number): number {
 export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
   const { config } = useConfig();
+  const chartRef = useChartResize();
 
   const { years, surplusP10, surplusP50, surplusP90 } = useMemo(() => {
     const trilha = data?.fire_trilha;
@@ -153,7 +150,7 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
     backgroundColor: 'transparent',
     tooltip: {
       trigger: 'axis',
-      formatter: (params: any) => {
+      formatter: (params: CallbackDataParams[]) => {
         const yr = params[0]?.name ?? '';
         // fmtK already handles privacy transform
         return [
@@ -226,7 +223,7 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
 
   return (
     <div>
-      <EChart option={option} style={{ height: 280 }} />
+      <EChart ref={chartRef} option={option} style={{ height: 280 }} />
       <p style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: 4 }}>
         Superávit = (Patrimônio × SWR) + INSS − Gasto anual (spending smile Go-Go/Slow-Go/No-Go).
         P10/P50/P90 = fan chart Monte Carlo. Extrapolação pós-2040 via modelo de depleção (r real = 4,85%).

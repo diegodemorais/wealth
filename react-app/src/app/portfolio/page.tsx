@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
@@ -274,9 +275,10 @@ export default function PortfolioPage() {
             backgroundColor: EC.card,
             borderColor: EC.border2,
             textStyle: { color: EC.text, fontSize: 11 },
-            formatter: (params: any[]) => {
+            formatter: (params: CallbackDataParams[]) => {
               const p = params[0];
-              const val = privacyMode ? '••pp' : `${p.value >= 0 ? '+' : ''}${p.value}pp`;
+              const v = p.value as number ?? 0;
+              const val = privacyMode ? '••pp' : `${v >= 0 ? '+' : ''}${v}pp`;
               return `${p.name}<br/>Excess: <b>${val}</b>`;
             },
           },

@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { useState, useMemo } from 'react';
 import { usePageData } from '@/hooks/usePageData';
@@ -289,13 +290,15 @@ export function ReverseFire() {
     tooltip: {
       ...EC_TOOLTIP,
       trigger: 'axis',
-      formatter: (params: any) => {
-        if (!Array.isArray(params) || params.length === 0) return '';
-        const age = params[0].axisValue;
+      formatter: (params: CallbackDataParams | CallbackDataParams[]) => {
+        const ps = Array.isArray(params) ? params : [params];
+        if (ps.length === 0) return '';
+        const p0 = ps[0] as CallbackDataParams & { axisValue: string };
+        const age = p0.axisValue;
         // axisValue é a label formatada "53a/41", extraímos a idade do dado original
-        const ageNum = growthData[params[0].dataIndex]?.idade ?? age;
+        const ageNum = growthData[p0.dataIndex]?.idade ?? age;
         const ano = anoAtual + (ageNum - idadeAtual);
-        return params.map((p: any) => {
+        return ps.map((p) => {
           const v = typeof p.value === 'number' ? p.value : 0;
           const label = privacyMode ? pvLabel(v) : fmtM(v);
           return `${p.marker}${p.seriesName}: ${label}`;

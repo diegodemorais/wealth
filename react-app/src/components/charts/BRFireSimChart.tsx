@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -37,7 +38,7 @@ const SWR_COLORS: Record<string, string> = {
 };
 
 export function BRFireSimChart({ cycles }: Props) {
-  const { theme } = useEChartsPrivacy();
+  const { theme, privacyMode } = useEChartsPrivacy();
   const chartRef = useChartResize();
 
   const option = useMemo(() => {
@@ -122,8 +123,8 @@ export function BRFireSimChart({ cycles }: Props) {
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: theme.tooltip.textStyle,
-        formatter: (params: any[]) => {
-          const ano = params[0]?.axisValue;
+        formatter: (params: CallbackDataParams[]) => {
+          const ano = (params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string }))?.axisValue;
           const cycle = cycles.find(c => String(c.ano_inicio) === ano);
           if (!cycle) return '';
           let html = `<b>Ciclo ${ano}–${Number(ano) + cycle.duracao_anos - 1}</b><br/>`;
@@ -132,7 +133,8 @@ export function BRFireSimChart({ cycles }: Props) {
             if (!key) continue;
             const r = cycle.resultados_swr?.[key];
             if (!r) continue;
-            const status = r.sucesso ? `✓ R$${(r.saldo_final / 1e6).toFixed(1)}M` : '✗ Falhou';
+            const bal = privacyMode ? '••••' : `R$${(r.saldo_final / 1e6).toFixed(1)}M`;
+            const status = r.sucesso ? `✓ ${bal}` : '✗ Falhou';
             html += `<span style="color:${SWR_COLORS[key]}">${p.marker}${p.seriesName}: ${status}</span><br/>`;
           }
           return html;
@@ -140,7 +142,7 @@ export function BRFireSimChart({ cycles }: Props) {
       },
       series,
     };
-  }, [cycles, theme]);
+  }, [cycles, theme, privacyMode]);
 
   return (
     <EChart

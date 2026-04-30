@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { useMemo, useState } from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -47,9 +48,9 @@ export function DrawdownExtendedChart({ periods, summary }: Props) {
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
+        formatter: (params: CallbackDataParams[]) => {
           if (!Array.isArray(params)) return '';
-          const dt = params[0]?.axisValue ?? '';
+          const dt = (params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string }))?.axisValue ?? '';
           let html = `<div style="padding:6px 10px"><strong>${dt}</strong><br/>`;
           params.forEach((p: any) => {
             if (p.value != null) {

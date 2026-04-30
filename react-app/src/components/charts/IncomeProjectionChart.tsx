@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -9,12 +10,6 @@ import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { ChartCard } from '@/components/primitives/ChartCard';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
-// Handle hidden container resize: check offsetWidth > 0 and retry with setTimeout
-const handleChartResize = (containerRef: any) => {
-  if (containerRef?.current?.offsetWidth > 0) {
-    setTimeout(() => containerRef.current?.getEchartsInstance?.()?.resize?.(), 100);
-  }
-};
 
 export interface IncomeProjectionChartProps {
   data: DashboardData;
@@ -70,9 +65,9 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
+        formatter: (params: CallbackDataParams[]) => {
           if (!Array.isArray(params)) return '';
-          let html = `<div style="padding:8px"><strong>${params[0]?.axisValueLabel}</strong><br/>`;
+          let html = `<div style="padding:8px"><strong>${(params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string }))?.axisValueLabel}</strong><br/>`;
           params.forEach((p: any) => {
             if (p.value != null && p.value > 0) {
               const val = `${fmtPrivacy(p.value, privacyMode)}/ano`;

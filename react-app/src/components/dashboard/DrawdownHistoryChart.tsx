@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import React, { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
@@ -33,7 +34,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
         backgroundColor: EC.card,
         borderColor: EC.border2,
         textStyle: { color: EC.text, fontSize: 12 },
-        formatter: (params: any) => {
+        formatter: (params: CallbackDataParams[]) => {
           const p = Array.isArray(params) ? params[0] : params;
           return `${p.name}<br/>Drawdown: ${(p.value as number).toFixed(2)}%`;
         },

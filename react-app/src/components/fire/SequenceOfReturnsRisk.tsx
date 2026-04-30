@@ -1,4 +1,5 @@
 'use client';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 /**
  * SequenceOfReturnsRisk — SoRR Narrative + P(FIRE) ↔ Guardrails Interaction
@@ -146,10 +147,11 @@ export function SequenceOfReturnsRisk({
         backgroundColor: theme.tooltip.backgroundColor,
         borderColor: theme.tooltip.borderColor,
         textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
-          const v = params.value[2];
-          const xi = params.value[0];
-          const yi = params.value[1];
+        formatter: (params: CallbackDataParams) => {
+          const val = params.value as [number, number, number];
+          const v = val[2];
+          const xi = val[0];
+          const yi = val[1];
           const pfireLabel = yData[yi];
           const bandLabel = xData[xi];
           const pct = ((v / custoVida) * 100).toFixed(0);
@@ -198,10 +200,10 @@ export function SequenceOfReturnsRisk({
           data: values,
           label: {
             show: true,
-            formatter: (params: any) => {
-              const v = params.value[2];
+            formatter: (params: CallbackDataParams) => {
+              const val = params.value as [number, number, number];
               if (privacyMode) return '••••';
-              return `R$${Math.round(v / 1000)}k`;
+              return `R$${Math.round(val[2] / 1000)}k`;
             },
             color: '#fff',
             fontSize: 11,
@@ -279,11 +281,12 @@ export function SequenceOfReturnsRisk({
               backgroundColor: theme.tooltip.backgroundColor,
               borderColor: theme.tooltip.borderColor,
               textStyle: theme.tooltip.textStyle,
-              formatter: (params: any) => {
+              formatter: (params: CallbackDataParams[]) => {
                 if (!params.length) return '';
                 const p = params[0];
-                const dd = p.value[0];
-                const cut = p.value[1];
+                const pv = p.value as [number, number];
+                const dd = pv[0];
+                const cut = pv[1];
                 const spendingResult = custoVida * (1 - cut / 100);
                 return `
                   <div style="padding:8px 10px">

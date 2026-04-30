@@ -9,6 +9,7 @@
  * CHART_COLORS is kept as a legacy alias pointing to the same values.
  */
 
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 import { DashboardData } from '@/types/dashboard';
 import { EC } from '@/utils/echarts-theme';
 import { fmtPrivacy, pvMoney } from '@/utils/privacyTransform';
@@ -97,9 +98,9 @@ export function createAttributionChartOption(options: BaseChartOptions) {
       backgroundColor: theme.tooltip.backgroundColor,
       borderColor: theme.tooltip.borderColor,
       textStyle: theme.tooltip.textStyle,
-      formatter: (params: any[]) => {
+      formatter: (params: CallbackDataParams[]) => {
         if (!Array.isArray(params)) return '';
-        let r = `${params[0].axisValueLabel}<br/>`;
+        let r = `${(params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string })).axisValueLabel}<br/>`;
         params.forEach((p: any) => {
           r += `${p.marker} ${p.seriesName}: ${fmtTip(p.value ?? 0)}<br/>`;
         });
@@ -209,9 +210,9 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
       backgroundColor: theme.tooltip.backgroundColor,
       borderColor: theme.tooltip.borderColor,
       textStyle: theme.tooltip.textStyle,
-      formatter: (params: any) => {
+      formatter: (params: CallbackDataParams[]) => {
         if (!Array.isArray(params)) return '';
-        let result = `Idade ${params[0].axisValueLabel}<br/>`;
+        let result = `Idade ${(params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string })).axisValueLabel}<br/>`;
         params.forEach((p: any) => {
           if (p.value != null) result += `${p.marker} ${p.seriesName}: ${Number(p.value).toFixed(1)}%<br/>`;
         });
@@ -286,9 +287,10 @@ export function createSankeyChartOption(options: BaseChartOptions) {
       backgroundColor: theme.tooltip.backgroundColor,
       borderColor: theme.tooltip.borderColor,
       textStyle: theme.tooltip.textStyle,
-      formatter: (params: any) => {
-        if (params.dataType === 'edge') {
-          return `${params.data.source} → ${params.data.target}<br/><strong>${fmtK(params.data.value)}/mês</strong>`;
+      formatter: (params: CallbackDataParams) => {
+        if ((params as CallbackDataParams & { dataType?: string }).dataType === 'edge') {
+          const d = params.data as { source: string; target: string; value: number };
+          return `${d.source} → ${d.target}<br/><strong>${fmtK(d.value)}/mês</strong>`;
         }
         return `<strong>${params.name}</strong>`;
       },
@@ -309,7 +311,7 @@ export function createSankeyChartOption(options: BaseChartOptions) {
           show: !privacyMode,
           fontSize: 10,
           color: CHART_COLORS.muted,
-          formatter: (params: any) => fmtK(params.data.value),
+          formatter: (params: CallbackDataParams) => fmtK((params.data as { value: number }).value),
         },
         lineStyle: {
           color: 'gradient' as const,
@@ -496,9 +498,9 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
       backgroundColor: theme.tooltip.backgroundColor,
       borderColor: theme.tooltip.borderColor,
       textStyle: theme.tooltip.textStyle,
-      formatter: (params: any) => {
+      formatter: (params: CallbackDataParams[]) => {
         if (!Array.isArray(params)) return '';
-        const label = allDates[params[0]?.dataIndex] ?? params[0]?.axisValueLabel ?? '';
+        const label = allDates[params[0]?.dataIndex] ?? (params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string }))?.axisValueLabel ?? '';
         let result = `<b>${label}</b><br/>`;
         params.forEach((p: any) => {
           if (p.value == null || p.seriesName?.startsWith('_')) return;
@@ -710,11 +712,12 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
       backgroundColor: theme.tooltip.backgroundColor,
       borderColor: theme.tooltip.borderColor,
       textStyle: theme.tooltip.textStyle,
-      formatter: (params: any) => {
+      formatter: (params: CallbackDataParams[]) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const p = params[0];
-        const sign = p.value >= 0 ? '+' : '';
-        return `<strong>${p.name}</strong><br/>Alpha: <strong>${sign}${p.value.toFixed(2)}pp</strong> vs VWRA`;
+        const v = p.value as number;
+        const sign = v >= 0 ? '+' : '';
+        return `<strong>${p.name}</strong><br/>Alpha: <strong>${sign}${v.toFixed(2)}pp</strong> vs VWRA`;
       },
       axisPointer: { type: 'shadow' as const },
     },
@@ -801,7 +804,7 @@ export function createDualLineChartOption(options: {
       textStyle: theme.tooltip.textStyle,
       formatter: tooltipFormatter || ((params: any) => {
         if (!Array.isArray(params)) return '';
-        let result = params[0].axisValueLabel + '<br/>';
+        let result = (params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string })).axisValueLabel + '<br/>';
         params.forEach((p: any) => {
           result += `${p.marker} ${p.seriesName}: ${p.value.toFixed(2)}<br/>`;
         });
@@ -867,9 +870,9 @@ export function createBondPoolProbabilisticOption(options: {
       backgroundColor: theme.tooltip.backgroundColor,
       borderColor: theme.tooltip.borderColor,
       textStyle: theme.tooltip.textStyle,
-      formatter: (params: any) => {
+      formatter: (params: CallbackDataParams[]) => {
         if (!Array.isArray(params) || params.length === 0) return '';
-        let html = `<div style="padding:4px 8px;"><strong>${params[0].axisValue}</strong>`;
+        let html = `<div style="padding:4px 8px;"><strong>${(params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string })).axisValue}</strong>`;
         params.forEach((p: any) => {
           if (p.value != null && !p.seriesName.startsWith('_')) {
             html += `<div>${p.seriesName}: <strong>${p.value.toFixed(1)} anos</strong></div>`;
@@ -917,9 +920,9 @@ export function createBondPoolDeterministicOption(options: {
       backgroundColor: theme.tooltip.backgroundColor,
       borderColor: theme.tooltip.borderColor,
       textStyle: theme.tooltip.textStyle,
-      formatter: (params: any) => {
+      formatter: (params: CallbackDataParams[]) => {
         if (!Array.isArray(params) || params.length === 0) return '';
-        let html = `<div style="padding:4px 8px;"><strong>${params[0].axisValue}</strong>`;
+        let html = `<div style="padding:4px 8px;"><strong>${(params[0] as (CallbackDataParams & { axisValue?: string; axisValueLabel?: string })).axisValue}</strong>`;
         params.forEach((p: any) => {
           if (p.value != null && !p.seriesName.startsWith('_')) {
             const val = p.value as number;

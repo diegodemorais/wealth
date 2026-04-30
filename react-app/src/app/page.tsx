@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
-import { useDashboardStore } from '@/store/dashboardStore';
-import { useUiStore } from '@/store/uiStore';
+import { useMemo } from 'react';
+import { usePageData } from '@/hooks/usePageData';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import DecisaoDoMes from '@/components/dashboard/DecisaoDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
@@ -25,19 +24,7 @@ import { EC } from '@/utils/echarts-theme';
 import { IifptRadar } from '@/components/dashboard/IifptRadar';
 
 export default function HomePage() {
-  // Portfolio dashboard - main entry point
-  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
-  const data = useDashboardStore(s => s.data);
-  const derived = useDashboardStore(s => s.derived);
-  const isLoading = useDashboardStore(s => s.isLoadingData);
-  const dataError = useDashboardStore(s => s.dataLoadError);
-  const { privacyMode } = useUiStore();
-
-  useEffect(() => {
-    loadDataOnce().catch(e => {
-      console.error('NOW page: Failed to load data:', e);
-    });
-  }, [loadDataOnce]);
+  const { data, derived, isLoading, dataError, privacyMode } = usePageData();
 
   // Pre-compute wellness score for collapsed header summary.
   // Must be before conditional returns (Rules of Hooks — useMemo must be unconditional).
