@@ -111,10 +111,10 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   // concentracao_brasil. A discrepância de ~R$64k entre este total e o histórico CSV é
   // esperada: CSV = snapshot congelado (reconstruct_history.py); aqui = preços live (yfinance).
   const rfBrl =
-    (data.rf.ipca2029?.valor ?? 0) +
-    (data.rf.ipca2040?.valor ?? 0) +
-    (data.rf.ipca2050?.valor ?? 0) +
-    (data.rf.renda2065?.valor ?? 0);
+    (data.rf?.ipca2029?.valor ?? 0) +
+    (data.rf?.ipca2040?.valor ?? 0) +
+    (data.rf?.ipca2050?.valor ?? 0) +
+    (data.rf?.renda2065?.valor ?? 0);
 
   const cryptoLegado = data.cryptoLegado ?? data.crypto_legado_brl ?? 4000;
   const cryptoBrl = (data.hodl11?.valor ?? 0) + cryptoLegado;
@@ -124,9 +124,9 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
   // IPCA total
   const ipcaTotalBrl =
-    (data.rf.ipca2029?.valor ?? 0) +
-    (data.rf.ipca2040?.valor ?? 0) +
-    (data.rf.ipca2050?.valor ?? 0);
+    (data.rf?.ipca2029?.valor ?? 0) +
+    (data.rf?.ipca2040?.valor ?? 0) +
+    (data.rf?.ipca2050?.valor ?? 0);
 
   // Bucket values USD
   const bucketUsd: Record<string, number> = { SWRD: 0, AVGS: 0, AVEM: 0, JPGL: 0 };

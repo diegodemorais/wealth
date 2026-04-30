@@ -103,7 +103,7 @@ export interface RfPosition {
   total_aplicado_brl?: number;
   total_resgatado_brl?: number;
   n_aplicacoes?: number;
-  [key: string]: unknown;
+  [key: string]: any; // Additional fields e.g. distancia_gatilho, valor_brl
 }
 
 /** Fixed-income positions — one entry per bond slug */
@@ -119,7 +119,7 @@ export interface RfData {
 export interface DriftBucket {
   atual: number;
   alvo: number;
-  [key: string]: unknown;
+  [key: string]: any; // Additional drift fields
 }
 
 /** Portfolio drift by allocation bucket */
@@ -158,7 +158,7 @@ export interface Hodl11Data {
       bull?: { btc_target_usd: number; upside_factor: number; valor_fire_brl: number };
     };
   };
-  [key: string]: unknown;
+  [key: string]: any; // Additional hodl11 fields
 }
 
 /** Bond pool readiness summary */
@@ -209,15 +209,15 @@ export interface DashboardData {
   fire?: FireModuleData;
   macro?: Macro;
   attribution?: Attribution;
-  premissas: Record<string, unknown>;
-  timeline?: unknown;
+  premissas: Record<string, any>;
+  timeline?: any;
   backtest?: any; // backtest has complex nested structure — typed per-consumer in backtest/page.tsx
   drift?: DriftData;
   rf?: RfData;
   hodl11?: Hodl11Data;
   realized_pnl?: unknown; // ibkr/realized_pnl.json — DARF obligations data
   non_financial_assets?: NonFinancialAssets; // Gap V — projeção de venda imóvel + terreno
-  [key: string]: unknown; // Allow for additional fields from Python generation
+  [key: string]: any; // Allow for additional fields from Python generation (e.g. backtest_r7, wellness_config)
 }
 
 export interface DerivedValues {
