@@ -17,6 +17,9 @@ export function HoldingsTable() {
     if (!data?.posicoes) return { positions: [], totals: { usd: 0, brl: 0 } };
     const cambio = data.cambio ?? 1;
     const bucketOrder: Record<string, number> = { SWRD: 0, AVGS: 1, AVEM: 2 };
+    // G10+G11: TER and AUM from etf_composition.etfs (pipeline-injected) or posicoes[ticker].ter
+    const etfComp = (data as Record<string, unknown>)?.etf_composition as Record<string, unknown> | null ?? null;
+    const etfs = (etfComp?.etfs as Record<string, Record<string, unknown>> | null) ?? null;
 
     const positions = Object.entries(data.posicoes as Record<string, any>)
       .map(([ticker, p]) => {
@@ -25,7 +28,12 @@ export function HoldingsTable() {
         const ganho_pct = pm > 0 ? (preco / pm - 1) * 100 : 0;
         const valor_usd = p.qty * preco;
         const valor_brl = valor_usd * cambio;
-        return { ticker, bucket: p.bucket, status: p.status, pm, preco, ganho_pct, valor_usd, valor_brl };
+        // G10: ter from posicoes[ticker].ter first, fallback to etf_composition.etfs[ticker].ter
+        const ter: number | null = (p.ter as number | null) ?? (etfs?.[ticker]?.ter as number | null) ?? null;
+        // G11: AUM from etf_composition.etfs[ticker]
+        const aumEur: number | null = (etfs?.[ticker]?.aum_eur as number | null) ?? null;
+        const aumStatus: string | null = (etfs?.[ticker]?.aum_status as string | null) ?? null;
+        return { ticker, bucket: p.bucket, status: p.status, pm, preco, ganho_pct, valor_usd, valor_brl, ter, aumEur, aumStatus };
       })
       .sort((a, b) => {
         const aOrd = bucketOrder[a.bucket] ?? 99;
@@ -89,6 +97,8 @@ export function HoldingsTable() {
               <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Ganho %</th>
               <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Valor USD</th>
               <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }} className="pv">Valor BRL</th>
+              <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }} className="hide-mobile">TER</th>
+              <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }} className="hide-mobile">AUM</th>
             </tr>
           </thead>
           <tbody>
@@ -107,6 +117,23 @@ export function HoldingsTable() {
                 <td style={{ textAlign: 'right', padding: '7px 8px', color: p.ganho_pct >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}>{fmtPct(p.ganho_pct)}</td>
                 <td style={{ textAlign: 'right', padding: '7px 8px' }} className="pv">{fmtUsd(p.valor_usd)}</td>
                 <td style={{ textAlign: 'right', padding: '7px 8px' }} className="pv">{fmtBrl(p.valor_brl)}</td>
+                {/* G10: TER — only for equity ETFs */}
+                <td style={{ textAlign: 'right', padding: '7px 8px', color: 'var(--muted)', fontSize: 'var(--text-xs)' }} className="hide-mobile">
+                  {['SWRD', 'AVGS', 'AVEM'].includes(p.bucket) && p.ter != null
+                    ? `${p.ter.toFixed(2)}%`
+                    : '—'}
+                </td>
+                {/* G11: AUM — only for equity ETFs, colored by status */}
+                <td style={{ textAlign: 'right', padding: '7px 8px', fontSize: 'var(--text-xs)' }} className="hide-mobile">
+                  {['SWRD', 'AVGS', 'AVEM'].includes(p.bucket) && p.aumEur != null ? (
+                    <span style={{
+                      color: p.aumStatus === 'verde' ? 'var(--green)' : p.aumStatus === 'amarelo' ? 'var(--yellow)' : p.aumStatus === 'vermelho' ? 'var(--red)' : 'var(--muted)',
+                      fontWeight: p.aumStatus === 'amarelo' || p.aumStatus === 'vermelho' ? 700 : 400,
+                    }}>
+                      {`€${Math.round(p.aumEur / 1_000_000)}M`}
+                    </span>
+                  ) : '—'}
+                </td>
               </tr>
             ))}
           </tbody>

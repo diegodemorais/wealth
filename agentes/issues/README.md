@@ -39,8 +39,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
-| FR-audit-p0-bugs | P0 Bugs — 11 bugs críticos (no-sell, E[R] USD, hardcoded literals, etc.) | Dev | 🔴 P0 — Atacar imediato | HD-visual-audit-playwright concluída |
-| FR-audit-p1-missing | P1 Info Crítica Faltando — 13 gaps (AVEM AUM, bond pool projection, P(FIRE) cenários, etc.) | Dev + especialistas | 🟠 P1 — Alta | HD-visual-audit-playwright concluída |
 | FR-audit-p2-improvements | P2 Melhorias — 40 itens em 3 clusters (labels, métricas analíticas, UX) | Dev | 🟡 P2 — Backlog | HD-visual-audit-playwright concluída |
 | DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | Dev | 🟡 Média | ARCH-audit concluída |
 | DEV-qa-improvements | Implementar Melhorias QA-test-plan-audit (CR/MD/BX) | Dev | 🟡 Média | QA-test-plan-audit concluída |
@@ -51,6 +49,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| FR-audit-p1-missing | P1 Info Crítica — 12/13 gaps implementados (G4 spending smile aguarda spec) | 2026-04-30 | G1-G3, G5-G13: AUM alert, P(FIRE) cenários, NTN-B history, bond pool progress, TER+AUM HoldingsTable, guardrail strip, IPCA+ slider. G4 (spending smile) → aguarda spec FIRE. |
+| FR-audit-p0-bugs | P0 Bugs — 10 bugs corrigidos, B8 reclassificado | 2026-04-30 | B1-B11 resolvidos: no-sell, E[R] USD, targets clarity, age/aporte/year dinâmicos, DCA badge, alpha geométrico, haircut dinâmico, pfire_by_profile stub. B8 → spending smile (G4/P1). |
 | HD-visual-audit-playwright | Auditoria Visual Playwright — 64 findings, P0/P1/P2 priorizados, 10 issues P0 abertas | 2026-04-30 | 64 findings (11 P0 bugs, 13 P1 faltando, 40 P2 melhorias). P0: rebalancing no-sell, E[R] BRL, equity targets, age hardcoded, FIRE labels, coast aporte, renda floor Katia, piso RF, DCA renda, alpha annualization, fee literal. 10 issues FR- sugeridas. |
 | HD-aposenteaos40-ui-gaps-v2 | Análise UI aposenteaos40.org — 4 gaps implementados | 2026-04-30 | Gap 1: ETA mês/ano. Gap 2: taxa de poupança KPI. Gap 3: fan chart P10/P90 (já existia). Gap 4: Marcos FIRE (Barista/Lean/FIRE) + notas acadêmico vs comunidade. Dashboard v1.224.0. |
 | DEV-iifpt-dashboard | Dashboard IIFPT: Radar, Regime Badge, Gap Note, Pipeline | 2026-04-30 | CC1: priority_matrix + domain_coverage + regime_vida em data.json. DC1: IifptRadar (ECharts Radar 6 eixos, RM/Est em vermelho). DC2: badge "Acumulação · r3 ~2034" no NOW tab. DC3: nota "RM ❌ Est ⏳ não modelados" no KpiHero. 664 testes ✅. Dashboard v1.202.2. |

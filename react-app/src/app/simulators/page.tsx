@@ -97,6 +97,8 @@ function FireSimuladorSection() {
   const [retorno, setRetorno] = useState<number | undefined>(undefined);
   const [custo, setCusto] = useState<number | undefined>(undefined);
   const [custom, setCustom] = useState(false);
+  // G12: IPCA+ rate slider — default from dca_status.ipca_longo (current) or 6.5%
+  const [ipcaTaxa, setIpcaTaxa] = useState<number>(6.5);
   const dataInitialized = useRef(false);
 
   // Derive values from data once loaded (only if user hasn't interacted)
@@ -107,6 +109,9 @@ function FireSimuladorSection() {
       if (premissas.retorno_equity_base != null) setRetorno(fracToPct(premissas.retorno_equity_base));
       const custoInicial = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
       if (custoInicial != null) setCusto(custoInicial);
+      // G12: init IPCA+ slider from current rate or dca_status
+      const taxaAtual: number | null = (data as any)?.rf?.ipca2040?.taxa ?? (data as any)?.dca_status?.ipca_longo?.taxa_atual ?? null;
+      if (taxaAtual != null) setIpcaTaxa(Math.round(taxaAtual * 10) / 10);
     }
   }, [data, custom]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -538,6 +543,60 @@ function FireSimuladorSection() {
           </div>
         </div>
       </div>
+
+      {/* G12: IPCA+ Taxa slider — sensibilidade estimada via pfire_sensitivity */}
+      {(() => {
+        const sens: Array<Record<string, unknown>> = (data as any)?.pfire_sensitivity ?? [];
+        const rfRow = sens.find(r => String(r.variable ?? '').toLowerCase().includes('taxa rf') || String(r.variable ?? '').toLowerCase().includes('ipca'));
+        // Linear interpolation: use sensitivity delta if available, else ~2pp per 0.5pp change
+        const baseRfTaxa: number = (data as any)?.rf?.ipca2040?.taxa ?? 6.5;
+        const pfireBaseVal: number = (data as any)?.pfire_base?.base ?? 0;
+        // Delta per pp from sensitivity row — stress = base - stressado (negative); fallback 2pp/0.5pp
+        const deltaPerPp: number = rfRow?.delta_pp != null
+          ? -(rfRow.delta_pp as number) / ((parseFloat(String(rfRow.base_value)) - parseFloat(String(rfRow.stressed_value))) || 1)
+          : -4;  // conservative: -4pp P(FIRE) per -1pp taxa RF
+        const taxaDelta = ipcaTaxa - baseRfTaxa;
+        const pfireEstimado = pfireBaseVal > 0 ? pfireBaseVal + taxaDelta * deltaPerPp : null;
+        const pfireColor = pfireEstimado == null ? 'var(--muted)'
+          : pfireEstimado >= 85 ? 'var(--green)'
+          : pfireEstimado >= 75 ? 'var(--yellow)'
+          : 'var(--red)';
+        const gatilho: number = (data as any)?.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+        return (
+          <div style={{ marginTop: 12, padding: '12px 14px', background: 'var(--card2)', borderRadius: 8, border: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.4px' }}>
+                IPCA+ Taxa Atual (RF)
+              </span>
+              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: ipcaTaxa >= gatilho ? 'var(--green)' : 'var(--yellow)' }}>
+                {ipcaTaxa.toFixed(1)}%
+                {ipcaTaxa >= gatilho
+                  ? <span style={{ fontWeight: 400, color: 'var(--green)', marginLeft: 6, fontSize: 'var(--text-xs)' }}>✓ acima do gatilho DCA ({gatilho}%)</span>
+                  : <span style={{ fontWeight: 400, color: 'var(--yellow)', marginLeft: 6, fontSize: 'var(--text-xs)' }}>⚠ abaixo do gatilho DCA ({gatilho}%)</span>
+                }
+              </span>
+            </div>
+            <input
+              type="range" min="4.0" max="8.0" step="0.1"
+              value={ipcaTaxa}
+              style={{ width: '100%' }}
+              onChange={e => setIpcaTaxa(parseFloat(e.target.value))}
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8 }}>
+              <span>4.0%</span><span>8.0%</span>
+            </div>
+            {pfireEstimado != null && !privacyMode && (
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', display: 'flex', gap: 12 }}>
+                <span>P(FIRE) estimado: <strong style={{ color: pfireColor }}>{pfireEstimado.toFixed(1)}%</strong></span>
+                {taxaDelta !== 0 && (
+                  <span>Δ taxa: <strong style={{ color: taxaDelta > 0 ? 'var(--green)' : 'var(--yellow)' }}>{taxaDelta >= 0 ? '+' : ''}{taxaDelta.toFixed(1)}pp</strong></span>
+                )}
+                <span style={{ opacity: 0.7 }}>* heurístico (Pfau 2012)</span>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       <div className="src">
         {isPresetMode

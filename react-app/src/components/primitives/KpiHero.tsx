@@ -4,6 +4,7 @@ import { useUiStore } from '@/store/uiStore';
 import { fmtPct, fmtBrlCompact } from '@/utils/formatters';
 import { fmtPrivacy, fmtPrivacyUsd } from '@/utils/privacyTransform';
 import { decimalYearsToYearsMonths } from '@/utils/time';
+import { canonicalizePFire } from '@/utils/pfire-canonical';
 
 // Compact USD formatter for hero display (e.g. $695k)
 function fmtUsdCompact(val: number): string {
@@ -18,6 +19,8 @@ export interface KpiHeroProps {
   fireProgress: number; // 0-1
   yearsToFire: number;
   pfire: number; // 0-1, probability of FIRE
+  pfireFav?: number | null;   // G3: fav scenario % (e.g. 91.1)
+  pfireStress?: number | null; // G3: stress scenario % (e.g. 78.7)
   cambio?: number;
   fireStatus?: 'on-track' | 'warning' | 'critical';
   fireYearBase?: number;
@@ -37,6 +40,8 @@ export function KpiHero({
   fireProgress,
   yearsToFire,
   pfire,
+  pfireFav = null,
+  pfireStress = null,
   cambio = 5.156,
   fireStatus = 'on-track',
   fireYearBase,
@@ -137,6 +142,34 @@ export function KpiHero({
           </div>
         )}
       </div>
+
+      {/* Card 4: P(FIRE) base — G3: mostra fav/stress como contexto */}
+      {pfire > 0 && (
+        <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--green)' }} data-testid="pfire-base-hero">
+          <div className="kpi-label">P(FIRE)</div>
+          <div
+            className="kpi-value font-black mt-1 mb-0.5"
+            style={{
+              fontSize: '2rem',
+              color: pfire >= 0.9 ? 'var(--green)' : pfire >= 0.8 ? 'var(--yellow)' : 'var(--red)',
+            }}
+            data-testid="pfire-base-value"
+          >
+            {privacyMode ? '••%' : canonicalizePFire(pfire, 'mc').percentStr}
+          </div>
+          {(pfireFav != null || pfireStress != null) && !privacyMode && (
+            <div
+              className="kpi-sub"
+              data-testid="pfire-fav-stress"
+              style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.4 }}
+            >
+              {pfireFav != null && `fav ${pfireFav.toFixed(1)}%`}
+              {pfireFav != null && pfireStress != null && ' · '}
+              {pfireStress != null && `stress ${pfireStress.toFixed(1)}%`}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

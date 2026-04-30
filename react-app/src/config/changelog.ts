@@ -15,6 +15,14 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T18:00:00', type: 'dado', component: 'FireSimuladorSection', tab: 'simulators', anchor: '', de: 'Sem contexto de taxa RF no simulador', para: 'G12: slider IPCA+ taxa (4–8%) com P(FIRE) estimado por sensibilidade (Pfau 2012 heurístico)' },
+  { datetime: '2026-04-30T18:00:00', type: 'gráfico', component: 'BacktestPage', tab: 'backtest', anchor: 'section-ntnb-history', de: 'Sem histórico de taxas IPCA+2040', para: 'G9: chart ECharts com taxa indicativa ANBIMA mensal desde Jan/2020, linha gatilho DCA 6%' },
+  { datetime: '2026-04-30T18:00:00', type: 'visual', component: 'AlphaVsSWRDChart', tab: 'performance', anchor: 'section-alpha-swrd', de: 'Fallback silencioso com valores hardcoded quando backtest.metrics_by_period ausente', para: 'G8: banner "* Dados estimados" visível quando metrics_by_period indisponível' },
+  { datetime: '2026-04-30T18:00:00', type: 'dado', component: 'HoldingsTable', tab: 'portfolio', anchor: '', de: 'Sem colunas TER e AUM na tabela de posições', para: 'G10+G11: colunas TER (%/ano) e AUM (€M) com semáforo verde/amarelo/vermelho por threshold IPS' },
+  { datetime: '2026-04-30T18:00:00', type: 'dado', component: 'WithdrawPage', tab: 'withdraw', anchor: '', de: 'Sem card de status do bond pool', para: 'G7+G6: Bond Pool Status card — progresso atual + projeção 2040 com barra de progresso' },
+  { datetime: '2026-04-30T18:00:00', type: 'dado', component: 'NowPage strip', tab: 'now', anchor: '', de: 'Sem indicadores de guardrail zone, factor signal ou AUM alert na tela principal', para: 'G13+G2+G1: strip compact — zona guardrail + SWR P50 + AVGS/SWRD YTD excess + alertas AUM' },
+  { datetime: '2026-04-30T18:00:00', type: 'dado', component: 'KpiHero', tab: 'now', anchor: '', de: 'Sem card P(FIRE) base com fav/stress no hero', para: 'G3: card P(FIRE) com sub-linha fav X% · stress Y%' },
+  { datetime: '2026-04-30T18:00:00', type: 'visual', component: 'SensitividadePFire', tab: 'fire', anchor: 'section-pfire-sensitivity', de: 'Sensitivity tornado colapsado por padrão', para: 'G5: defaultOpen=true — análise de sensibilidade visível imediatamente' },
   { datetime: '2026-04-30T13:00:00', type: 'fix', component: 'DecisaoDoMes', tab: 'now', anchor: 'section-decisao-mes', de: 'Coluna "E[R]" sem unidade/contexto', para: '"E[R] USD" com tooltip explicando retorno em USD real (não BRL)' },
   { datetime: '2026-04-30T12:00:00', type: 'fix', component: 'RebalancingStatus', tab: 'now', anchor: 'section-rebalancing', de: '"Vender {ticker}" quando drift > 0 — viola regra no-sell da IPS', para: '"Aguardar — X acima do alvo, aportar nos deficitários". Footer sem menção de IR em vendas.' },
   { datetime: '2026-04-30T12:00:00', type: 'fix', component: 'PFireHeroBanner', tab: 'fire', anchor: '', de: 'Label "P(FIRE 2040)" hardcoded', para: 'Label dinâmico usa premissas.fire_year_base do pipeline' },

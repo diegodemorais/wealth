@@ -374,6 +374,81 @@ export default function WithdrawPage() {
         </span>
       </div>
 
+      {/* G7: Bond Pool Status Card — progresso atual + G6: projeção 2040 */}
+      {(() => {
+        const bp = (safeData as any)?.bond_pool;
+        if (!bp?.atual_brl) return null;
+        const atual: number = bp.atual_brl;
+        const meta: number = bp.meta_brl;
+        const pctMeta: number = bp.pct_meta ?? (meta > 0 ? (atual / meta) * 100 : 0);
+        const cobertura: number = bp.cobertura_anos ?? 0;
+        const metaAnos: number = bp.meta_anos ?? 7;
+        const comp = bp.composicao ?? {};
+        const ipca2040: number = comp.ipca2040 ?? 0;
+        const ipca2050: number = comp.ipca2050 ?? 0;
+        // G6: projeção 2040 from bond_pool_runway
+        const runway = (safeData as any)?.bond_pool_runway;
+        const projecao2040: number | null = (() => {
+          if (!runway?.pool_total_brl || !Array.isArray(runway.pool_total_brl)) return null;
+          const arr = runway.pool_total_brl as number[];
+          return arr[arr.length - 1] ?? null;
+        })();
+        const alvo2040: number | null = runway?.alvo_pool_brl_2040 ?? null;
+        const proj2040Pct: number | null = (projecao2040 != null && alvo2040 != null && alvo2040 > 0)
+          ? (projecao2040 / alvo2040) * 100
+          : null;
+        const proj2040Color = proj2040Pct == null ? 'var(--muted)' : proj2040Pct >= 90 ? 'var(--green)' : 'var(--yellow)';
+        const barWidth = Math.min(100, pctMeta);
+        return (
+          <div
+            data-testid="bond-pool-status-card"
+            style={{
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: 8,
+              padding: '12px 14px',
+              marginBottom: 12,
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.4px' }}>
+                Bond Pool — Reserva de Aposentadoria
+              </span>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                meta: {metaAnos} anos de gastos
+              </span>
+            </div>
+            {/* Progress bar */}
+            <div style={{ background: 'var(--card2)', borderRadius: 4, height: 8, marginBottom: 8, overflow: 'hidden' }}>
+              <div style={{ height: '100%', borderRadius: 4, width: `${barWidth}%`, background: pctMeta >= 90 ? 'var(--green)' : 'var(--yellow)', transition: 'width .4s' }} />
+            </div>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center', fontSize: 'var(--text-xs)' }}>
+              <span>
+                <span style={{ fontWeight: 700, color: 'var(--text)' }}>{fmtPrivacy(atual, privacyMode)}</span>
+                <span style={{ color: 'var(--muted)' }}> / {fmtPrivacy(meta, privacyMode)} ({pctMeta.toFixed(1)}%)</span>
+              </span>
+              <span style={{ color: 'var(--muted)' }}>cobertura: {cobertura.toFixed(1)}a</span>
+              {(ipca2040 > 0 || ipca2050 > 0) && (
+                <span style={{ color: 'var(--muted)' }}>
+                  IPCA+2040 {fmtPrivacy(ipca2040, privacyMode)} · IPCA+2050 {fmtPrivacy(ipca2050, privacyMode)}
+                </span>
+              )}
+            </div>
+            {/* G6: Projeção 2040 */}
+            {projecao2040 != null && alvo2040 != null && (
+              <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)', fontSize: 'var(--text-xs)' }}>
+                <span style={{ color: 'var(--muted)' }}>Projeção 2040: </span>
+                <span style={{ fontWeight: 700, color: proj2040Color }}>
+                  {fmtPrivacy(projecao2040, privacyMode)} / {fmtPrivacy(alvo2040, privacyMode)}
+                  {proj2040Pct != null && ` (${proj2040Pct.toFixed(0)}%)`}
+                </span>
+                <span style={{ color: 'var(--muted)', marginLeft: 6 }}>— ritmo DCA atual</span>
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
       <SectionDivider label="Posso me aposentar?" />
 
       {/* 0. SWR Dashboard — tabs: Acumulação vs FIRE Day (P10/P50/P90) */}

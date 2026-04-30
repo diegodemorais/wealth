@@ -1140,7 +1140,7 @@ export default function FirePage() {
           <CollapsibleSection
             id="section-pfire-sensitivity"
             title={secTitle('fire', 'pfire-sensitivity', 'Sensibilidade P(FIRE) — Análise de Variáveis')}
-            defaultOpen={secOpen('fire', 'pfire-sensitivity', false)}
+            defaultOpen={secOpen('fire', 'pfire-sensitivity', true)}
           >
             <div style={{ padding: '14px 16px' }}>
               <div style={{ overflowX: 'auto' }}>

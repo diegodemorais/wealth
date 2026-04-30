@@ -16,6 +16,8 @@ import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { DrawdownExtendedChart } from '@/components/charts/DrawdownExtendedChart';
 import { TrendingDown } from 'lucide-react';
 import { BRFireSimSection } from './BRFireSimSection';
+import { EChart } from '@/components/primitives/EChart';
+import { EC } from '@/utils/echarts-theme';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -751,6 +753,78 @@ export default function BacktestPage() {
           )}
         </div>
       </CollapsibleSection>
+
+      {/* G9: Histórico Taxa IPCA+2040 */}
+      {(() => {
+        const ntnb = (data as any)?.ntnb_history;
+        if (!ntnb?.dates || !ntnb?.rates_pct || ntnb.dates.length === 0) return null;
+        const dates: string[] = ntnb.dates;
+        const rates: number[] = ntnb.rates_pct;
+        const gatilho: number = ntnb.gatilho_pct ?? 6.0;
+        const option = {
+          backgroundColor: 'transparent',
+          grid: { left: 48, right: 20, top: 28, bottom: 48 },
+          tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(15,23,42,.95)',
+            borderColor: '#334155',
+            textStyle: { color: '#94a3b8', fontSize: 12 },
+            formatter: (params: { axisValue: string; value: number }[]) => {
+              const p = params[0];
+              return `<b>${p.axisValue}</b><br/>IPCA+2040: <b style="color:#e2e8f0">${p.value.toFixed(2)}%</b>`;
+            },
+          },
+          xAxis: {
+            type: 'category',
+            data: dates,
+            axisLabel: { color: EC.muted, fontSize: 10, rotate: 30, interval: Math.floor(dates.length / 12) },
+            axisLine: { lineStyle: { color: EC.border } },
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel: { color: EC.muted, fontSize: 10, formatter: (v: number) => `${v.toFixed(1)}%` },
+            splitLine: { lineStyle: { color: EC.border } },
+          },
+          series: [
+            {
+              name: 'IPCA+2040',
+              type: 'line',
+              data: rates,
+              smooth: true,
+              lineStyle: { color: EC.accent, width: 2 },
+              itemStyle: { color: EC.accent },
+              areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: `${EC.accent}30` }, { offset: 1, color: 'transparent' }] } },
+              symbol: 'none',
+            },
+            {
+              name: `Gatilho DCA ${gatilho}%`,
+              type: 'line',
+              markLine: {
+                silent: true,
+                data: [{ yAxis: gatilho, lineStyle: { color: EC.green, width: 1.5, type: 'dashed' }, label: { formatter: `Gatilho ${gatilho}%`, color: EC.green, fontSize: 10 } }],
+              },
+              data: [],
+            },
+          ],
+        };
+        return (
+          <>
+            <SectionDivider label="Taxas Históricas" />
+            <CollapsibleSection
+              id="section-ntnb-history"
+              title={secTitle('backtest', 'ntnb-history', 'Histórico Taxa IPCA+2040')}
+              defaultOpen={secOpen('backtest', 'ntnb-history', false)}
+            >
+              <div style={{ padding: '14px 16px' }}>
+                <EChart option={option} style={{ height: 260 }} />
+                <div className="src">
+                  IPCA+2040 · taxa indicativa ANBIMA · linha tracejada = gatilho DCA ({gatilho}%)
+                </div>
+              </div>
+            </CollapsibleSection>
+          </>
+        );
+      })()}
 
       {/* Historical Cycle Simulation — HD-gaps-aposenteaos40-spec Feature 3 */}
       <SectionDivider label="Historical Cycle Simulation" />

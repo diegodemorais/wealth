@@ -173,11 +173,85 @@ export default function HomePage() {
         fireProgress={d.firePercentage}
         yearsToFire={d.fireMonthsAway / 12}
         pfire={d.pfire}
+        pfireFav={(data as Record<string, unknown>)?.pfire_base != null ? ((data as any).pfire_base.fav as number | null) : null}
+        pfireStress={(data as Record<string, unknown>)?.pfire_base != null ? ((data as any).pfire_base.stress as number | null) : null}
         cambio={d.CAMBIO}
         fireDateFormatted={(d as any).fireDateFormatted}
         domainCoverageRm={domainCoverage.rm ?? null}
         domainCoverageEst={domainCoverage.est ?? null}
       />
+
+      {/* G13: Guardrail zone mini-indicator + G2: Factor signal strip + G1: AUM alert */}
+      {(() => {
+        const sg = (data as any)?.spending_guardrails;
+        const fs = (data as any)?.factor_signal;
+        const swrP50Pct = (data as any)?.fire_swr_percentis?.swr_p50_pct as number | null ?? null;
+        const zonaColor = sg?.zona === 'verde' ? 'var(--green)' : sg?.zona === 'amarelo' ? 'var(--yellow)' : sg?.zona === 'vermelho' ? 'var(--red)' : 'var(--muted)';
+        const zonaLabel = sg?.zona === 'verde' ? 'Zona Verde' : sg?.zona === 'amarelo' ? 'Zona Amarela' : sg?.zona === 'vermelho' ? 'Zona Vermelha' : null;
+        const showGuardrail = sg?.zona != null;
+        const showFactor = fs?.avgs_ytd_pct != null && fs?.swrd_ytd_pct != null;
+        // G1: AUM alerts — show only if any ETF has amarelo or vermelho
+        const etfs = (data as any)?.etf_composition?.etfs as Record<string, Record<string, unknown>> | null ?? null;
+        const aumAlerts: Array<{ ticker: string; aumEur: number; status: string }> = etfs
+          ? Object.entries(etfs)
+              .filter(([, e]) => e?.aum_status === 'amarelo' || e?.aum_status === 'vermelho')
+              .map(([ticker, e]) => ({ ticker, aumEur: e.aum_eur as number, status: e.aum_status as string }))
+          : [];
+        if (!showGuardrail && !showFactor && aumAlerts.length === 0) return null;
+        return (
+          <div
+            data-testid="guardrail-factor-strip"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 16,
+              flexWrap: 'wrap',
+              padding: '7px 12px',
+              marginBottom: 10,
+              background: 'var(--card2)',
+              borderRadius: 6,
+              border: '1px solid var(--border)',
+              fontSize: 'var(--text-xs)',
+            }}
+          >
+            {showGuardrail && (
+              <span data-testid="guardrail-zona" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: zonaColor, display: 'inline-block', flexShrink: 0 }} />
+                <span style={{ color: zonaColor, fontWeight: 700 }}>{zonaLabel}</span>
+                {swrP50Pct != null && (
+                  <span style={{ color: 'var(--muted)' }}>· SWR P50 {privacyMode ? '••%' : `${swrP50Pct.toFixed(2)}%`}</span>
+                )}
+              </span>
+            )}
+            {showGuardrail && showFactor && (
+              <span style={{ color: 'var(--border)', userSelect: 'none' }}>|</span>
+            )}
+            {showFactor && !privacyMode && (
+              <span data-testid="factor-signal-strip" style={{ color: 'var(--muted)' }}>
+                <span style={{ color: 'var(--green)', fontWeight: 600 }}>AVGS {fs.avgs_ytd_pct >= 0 ? '+' : ''}{fs.avgs_ytd_pct.toFixed(1)}%</span>
+                {' YTD · '}
+                <span>SWRD {fs.swrd_ytd_pct >= 0 ? '+' : ''}{fs.swrd_ytd_pct.toFixed(1)}%</span>
+                {fs.excess_ytd_pp != null && (
+                  <span style={{ color: 'var(--green)' }}>{` · excess +${fs.excess_ytd_pp.toFixed(1)}pp`}</span>
+                )}
+              </span>
+            )}
+            {/* G1: AUM alerts */}
+            {aumAlerts.length > 0 && (showGuardrail || showFactor) && (
+              <span style={{ color: 'var(--border)', userSelect: 'none' }}>|</span>
+            )}
+            {aumAlerts.map(alert => (
+              <span
+                key={alert.ticker}
+                data-testid={`aum-alert-${alert.ticker.toLowerCase()}`}
+                style={{ color: alert.status === 'vermelho' ? 'var(--red)' : 'var(--yellow)', fontWeight: 600 }}
+              >
+                ⚠ {alert.ticker} AUM €{Math.round(alert.aumEur / 1_000_000)}M
+              </span>
+            ))}
+          </div>
+        );
+      })()}
 
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Retorno Real, Aporte Mês */}
       <SectionLabel>Indicadores Primários</SectionLabel>

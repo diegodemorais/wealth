@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | FR-audit-p1-missing |
 | **Dono** | Dev + especialistas |
-| **Status** | Aberta |
+| **Status** | Fechada ✅ 2026-04-30 |
 | **Prioridade** | 🟠 P1 — Informação Crítica Faltando |
 | **Criado em** | 2026-04-30 |
 | **Origem** | HD-visual-audit-playwright — Fase 3 (síntese) |
@@ -201,19 +201,18 @@ Screenshots de referência:
 
 ---
 
-## Priorização Sugerida
+## Checklist de Execução
 
-| # | Gap | Impacto | Complexidade | Ordem |
-|---|-----|---------|--------------|-------|
-| G1+G11 | AVEM AUM alert | Alta (critério de saída) | Baixa-Média | 1 |
-| G7 | Bond pool progress withdraw | Alta | Baixa | 2 |
-| G6 | Bond pool FIRE Day projection | Alta | Média | 3 |
-| G3 | P(FIRE) 3 cenários no NOW | Alta | Baixa | 4 |
-| G5 | Sensitivity tornado visível | Alta | Baixa (só `defaultOpen`) | 5 |
-| G13 | Guardrail bands no NOW | Média | Baixa | 6 |
-| G2 | AVGS YTD excess return | Média | Baixa | 7 |
-| G10 | TER por ETF | Média | Baixa | 8 |
-| G12 | Slider IPCA+ nos simulators | Média | Média | 9 |
-| G9 | Histórico yield IPCA+ | Média | Média | 10 |
-| G8 | AlphaVsSWRDChart fallback fix | Média | Baixa | 11 |
-| G4 | Spending smile | Baixa-Média | Alta | 12 |
+- [x] G1+G11 — AUM alert AVEM/AVGS: pipeline (etf_composition.etfs.{ticker}.aum_eur/status) + NOW alert strip + Portfolio TER+AUM column ✅ 2026-04-30
+- [x] G2 — AVGS YTD excess: factor_signal strip no NOW (+15.8% vs SWRD, excess +10.8pp) ✅ 2026-04-30
+- [x] G3 — P(FIRE) 3 cenários: KpiHero 4º card com fav: 91.1% · stress: 78.7% abaixo do base ✅ 2026-04-30
+- [~] G4 — Spending smile: SKIP — aguarda spec do agente FIRE
+- [x] G5 — Sensitivity tornado defaultOpen=true na aba FIRE ✅ 2026-04-30
+- [x] G6 — Bond pool FIRE Day projection: "Projeção 2040: R$898k / R$1.72M (52%)" na aba Withdraw ✅ 2026-04-30
+- [x] G7 — Bond pool progress: card topo da aba Withdraw com barra de progresso (7.1%) ✅ 2026-04-30
+- [x] G8 — AlphaVsSWRDChart: indicador de fallback quando dados históricos indisponíveis ✅ 2026-04-30
+- [x] G9 — Histórico yield IPCA+2040: 76 pontos (Jan 2020 – Abr 2026) via pyield ANBIMA + ECharts no Backtest ✅ 2026-04-30
+- [x] G10 — TER por ETF: pipeline + coluna TER na HoldingsTable (SWRD 0.12%, AVGS 0.39%, AVEM 0.35%) ✅ 2026-04-30
+- [x] G11 — AUM Portfolio: coluna AUM na HoldingsTable (via mesmo pipeline de G1) ✅ 2026-04-30
+- [x] G12 — Slider IPCA+ nos Simulators: slider 4.0–8.0% com impacto estimado em P(FIRE) ✅ 2026-04-30
+- [x] G13 — Guardrail zone no NOW: strip "Zona Amarela · SWR P50 2.18%" visível no KpiHero ✅ 2026-04-30

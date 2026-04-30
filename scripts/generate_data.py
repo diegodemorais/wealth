@@ -3834,6 +3834,88 @@ def get_factor_value_spread() -> dict | None:
         return None
 
 
+# ─── G9: Historical IPCA+2040 yield (NTN-B) ─────────────────────────────────
+
+def build_ntnb_history(cache_path: str = "dados/ntnb_history_cache.json") -> dict | None:
+    """Fetch monthly IPCA+2040 indicative yield from ANBIMA via pyield.
+    Caches results in dados/ntnb_history_cache.json for speed.
+    Returns {dates, rates_pct, maturity, gatilho_pct, _source} or None on failure.
+    """
+    import json as _json
+    from pathlib import Path as _Path
+    import datetime as _dt
+    try:
+        import pyield as _yd
+    except ImportError:
+        return None
+
+    _cache_p = _Path(cache_path)
+    cache: dict = {}
+    if _cache_p.exists():
+        try:
+            cache = _json.loads(_cache_p.read_text())
+        except Exception:
+            cache = {}
+
+    # Generate first-business-day-of-month dates from 2020-01 to today
+    start = _dt.date(2020, 1, 1)
+    today = _dt.date.today()
+    months_to_fetch: list[_dt.date] = []
+    d = start
+    while d <= today:
+        key = d.strftime("%Y-%m")
+        if key not in cache:
+            months_to_fetch.append(d)
+        # Advance to first of next month
+        if d.month == 12:
+            d = _dt.date(d.year + 1, 1, 1)
+        else:
+            d = _dt.date(d.year, d.month + 1, 1)
+
+    for fetch_date in months_to_fetch:
+        key = fetch_date.strftime("%Y-%m")
+        # Try up to 5 business days if ANBIMA has no data for day 1
+        for day_offset in range(5):
+            try_date = fetch_date + _dt.timedelta(days=day_offset)
+            # Skip weekends
+            if try_date.weekday() >= 5:
+                continue
+            try:
+                df = _yd.anbima.tpf(try_date, "NTN-B")
+                if df is None or len(df) == 0:
+                    continue
+                # Filter for IPCA+2040 (data_vencimento year = 2040)
+                rows_2040 = df.filter(df["data_vencimento"].dt.year() == 2040)
+                if len(rows_2040) == 0:
+                    break  # No 2040 bond on this date — try next month
+                rate = rows_2040["taxa_indicativa"][0]
+                if rate is not None:
+                    cache[key] = round(float(rate) * 100, 2)
+                break
+            except Exception:
+                break  # ANBIMA unavailable for this date
+
+    # Persist cache
+    try:
+        _cache_p.parent.mkdir(parents=True, exist_ok=True)
+        _cache_p.write_text(_json.dumps(cache, ensure_ascii=False, sort_keys=True))
+    except Exception:
+        pass
+
+    if not cache:
+        return None
+
+    sorted_items = sorted(cache.items())
+    gatilho = float(PISO_TAXA_IPCA_LONGO)  # from config.py (6.0%)
+    return {
+        "dates": [k for k, _ in sorted_items],
+        "rates_pct": [v for _, v in sorted_items],
+        "maturity": "IPCA+2040",
+        "gatilho_pct": gatilho,
+        "_source": "pyield ANBIMA NTN-B · cache dados/ntnb_history_cache.json",
+    }
+
+
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
 def main():
     print("📊 generate_data.py — iniciando")
@@ -5178,6 +5260,40 @@ def main():
     if drawdown_hist_data and drawdown_evts_data and drawdown_evts_data.get("events"):
         drawdown_hist_data["events"] = drawdown_evts_data["events"]
     etf_comp_data       = _load_json_safe(ETF_COMP_PATH,         "etf_composition")
+    # G10+G11: inject TER and AUM into etf_composition.etfs
+    if etf_comp_data and isinstance(etf_comp_data.get("etfs"), dict):
+        for _tk, _etf in etf_comp_data["etfs"].items():
+            if "ter" not in _etf:
+                _etf["ter"] = ETF_TER.get(_tk)
+        # G11: fetch AUM from yfinance — €300M IPS comfort threshold
+        _AUM_THRESHOLD_EUR = 300_000_000
+        _AUM_USD_TO_EUR = 0.92  # fixed rate (EUR PTAX unavailable)
+        try:
+            import yfinance as yf
+            _ticker_map = [("SWRD.L", "SWRD"), ("AVGS.L", "AVGS"), ("AVEM.L", "AVEM")]
+            for _yf_ticker, _tk_key in _ticker_map:
+                if _tk_key not in etf_comp_data["etfs"]:
+                    continue
+                _etf_entry = etf_comp_data["etfs"][_tk_key]
+                try:
+                    _info = yf.Ticker(_yf_ticker).info
+                    _aum_usd = _info.get("totalAssets")
+                    _aum_eur = round(_aum_usd * _AUM_USD_TO_EUR) if _aum_usd else None
+                    _etf_entry["aum_eur"] = _aum_eur
+                    _etf_entry["aum_threshold_eur"] = _AUM_THRESHOLD_EUR
+                    if _aum_eur is not None:
+                        if _aum_eur < 150_000_000:
+                            _etf_entry["aum_status"] = "vermelho"
+                        elif _aum_eur < _AUM_THRESHOLD_EUR:
+                            _etf_entry["aum_status"] = "amarelo"
+                        else:
+                            _etf_entry["aum_status"] = "verde"
+                    else:
+                        _etf_entry["aum_status"] = "desconhecido"
+                except Exception:
+                    _etf_entry.setdefault("aum_status", "desconhecido")
+        except ImportError:
+            pass  # yfinance not available — AUM fields omitted
     bond_pool_rwy_data  = _load_json_safe(BOND_POOL_RUNWAY_PATH, "bond_pool_runway")
     lumpy_data          = _load_json_safe(LUMPY_EVENTS_PATH,     "lumpy_events")
 
@@ -5443,6 +5559,7 @@ def main():
         "etf_composition":         etf_comp_data,
         "bond_pool_runway":        bond_pool_rwy_data,
         "lumpy_events":            lumpy_data,
+        "ntnb_history":            build_ntnb_history(),
 
         # Bond pool runway por perfil familiar (pós-FIRE depletion com INSS Katia + retorno real)
         "bond_pool_runway_by_profile": _compute_bond_pool_runway_by_profile(

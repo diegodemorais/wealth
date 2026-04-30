@@ -233,26 +233,43 @@ export default function PerformancePage() {
         {alphaTab === 'vwra' && <DeltaBarChart data={safeData} height={200} />}
         {alphaTab === 'swrd' && (() => {
           const backtest = (data as any)?.backtest ?? {};
+          // G8: detect if data is from fallback (metrics_by_period absent)
+          const hasPeriodData = backtest.metrics_by_period != null;
+          const hasAnyPeriod = hasPeriodData && (
+            backtest.metrics_by_period?.since2020 != null ||
+            backtest.metrics_by_period?.since2013 != null ||
+            backtest.metrics_by_period?.since2009 != null ||
+            backtest.metrics_by_period?.all != null
+          );
+          const isFallback = !hasAnyPeriod;
           return (
-            <AlphaVsSWRDChart
-              oneYear={{
-                targetReturn: backtest.metrics_by_period?.since2020?.target?.cagr ?? backtest.metrics_by_period?.['5y']?.target?.cagr ?? 14.89,
-                swrdReturn: backtest.metrics_by_period?.since2020?.shadowA?.cagr ?? backtest.metrics_by_period?.['5y']?.shadowA?.cagr ?? 13.7,
-              }}
-              threeYear={{
-                targetReturn: backtest.metrics_by_period?.since2013?.target?.cagr ?? 14.89,
-                swrdReturn: backtest.metrics_by_period?.since2013?.shadowA?.cagr ?? 13.7,
-              }}
-              fiveYear={{
-                targetReturn: backtest.metrics_by_period?.since2009?.target?.cagr ?? 14.89,
-                swrdReturn: backtest.metrics_by_period?.since2009?.shadowA?.cagr ?? 13.7,
-              }}
-              tenYear={{
-                targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? backtest.metrics?.target?.cagr ?? 14.14,
-                swrdReturn: backtest.metrics_by_period?.all?.shadowA?.cagr ?? backtest.metrics?.shadowA?.cagr ?? 12.96,
-              }}
-              alphaLiquidoPctYear={((data as any)?.premissas?.haircut_alpha_liquido ?? 0.0016) * 100}
-            />
+            <>
+              {isFallback && (
+                <div style={{ padding: '10px 0 6px', fontSize: 'var(--text-xs)', color: 'var(--yellow)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span>⚠</span>
+                  <span>* Dados estimados (série histórica backtest.metrics_by_period indisponível)</span>
+                </div>
+              )}
+              <AlphaVsSWRDChart
+                oneYear={{
+                  targetReturn: backtest.metrics_by_period?.since2020?.target?.cagr ?? backtest.metrics_by_period?.['5y']?.target?.cagr ?? 14.89,
+                  swrdReturn: backtest.metrics_by_period?.since2020?.shadowA?.cagr ?? backtest.metrics_by_period?.['5y']?.shadowA?.cagr ?? 13.7,
+                }}
+                threeYear={{
+                  targetReturn: backtest.metrics_by_period?.since2013?.target?.cagr ?? 14.89,
+                  swrdReturn: backtest.metrics_by_period?.since2013?.shadowA?.cagr ?? 13.7,
+                }}
+                fiveYear={{
+                  targetReturn: backtest.metrics_by_period?.since2009?.target?.cagr ?? 14.89,
+                  swrdReturn: backtest.metrics_by_period?.since2009?.shadowA?.cagr ?? 13.7,
+                }}
+                tenYear={{
+                  targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? backtest.metrics?.target?.cagr ?? 14.14,
+                  swrdReturn: backtest.metrics_by_period?.all?.shadowA?.cagr ?? backtest.metrics?.shadowA?.cagr ?? 12.96,
+                }}
+                alphaLiquidoPctYear={((data as any)?.premissas?.haircut_alpha_liquido ?? 0.0016) * 100}
+              />
+            </>
           );
         })()}
         {/* KPI cards alinhados ao contexto de alpha */}
