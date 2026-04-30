@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { KpiHero } from '@/components/primitives/KpiHero';
@@ -38,6 +38,45 @@ export default function HomePage() {
     });
   }, [loadDataOnce]);
 
+  // Pre-compute wellness score for collapsed header summary.
+  // Must be before conditional returns (Rules of Hooks — useMemo must be unconditional).
+  // Uses `data` and `derived` which are safe here (may be null; handled inside).
+  const wellnessSummary = useMemo(() => {
+    const wc = data?.wellness_config;
+    if (!wc?.metrics) return null;
+    const aporteMensalVal = data?.premissas?.aporte_mensal ?? 0;
+    const custoMensal = (data?.premissas?.custo_vida_base ?? 0) / 12;
+    const savingsRate = aporteMensalVal > 0 ? (aporteMensalVal / (aporteMensalVal + custoMensal)) * 100 : 0;
+    const maxDriftVal = maxDriftPp(data?.drift as Record<string, any> ?? {}, ['Custo']);
+    const ipcaGapPp = data?.dca_status?.ipca_longo?.gap_alvo_pp ?? null;
+    const dcaAtivo = data?.dca_status?.ipca_longo?.ativo ?? false;
+    const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
+    const terAtual = data?.drift?.['Custo']?.atual ?? (terCfg?.current_ter ?? 0.247);
+    const humanStatus = wc.metrics.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
+    const pfireBase = derived?.pfireBase ?? null;
+    const pts = (id: string, val: number | null, thresholds: any[], key: string) =>
+      (thresholds ?? []).find((t: any) => val != null && val >= (t[key] ?? -Infinity))?.pts ?? 0;
+    const pfirePts = pts('pfire', pfireBase, wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [], 'min');
+    const srPts = pts('sr', savingsRate, wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? [], 'min_pct');
+    const driftThresh = wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [];
+    const driftPts = driftThresh.find((t: any) => maxDriftVal <= t.max_pp)?.pts ?? 0;
+    const ipcaThresh = wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [];
+    const ipcaPts = ipcaGapPp == null ? 5 : ipcaThresh.find((t: any) => ipcaGapPp <= t.max_pp)?.pts ?? (dcaAtivo ? 5 : 3);
+    const reservaBrl = data?.rf?.ipca2029?.valor ?? 0;
+    const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
+    const emergThresh = wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? [];
+    const emergPts = emergThresh.find((t: any) => months >= t.min_months)?.pts ?? 0;
+    const terDelta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22);
+    const terThresh = terCfg?.thresholds ?? [];
+    const terPts = terThresh.find((t: any) => terDelta <= t.max_delta_pp)?.pts ?? 0;
+    const humanPts = (wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? []).find((t: any) => t.status === humanStatus)?.pts ?? 5;
+    const total = pfirePts + srPts + driftPts + ipcaPts + 7 + emergPts + terPts + humanPts;
+    const maxScores = [35, 15, 15, 10, 10, 5, 5, 5];
+    const allPts = [pfirePts, srPts, driftPts, ipcaPts, 7, emergPts, terPts, humanPts];
+    const badCount = allPts.filter((p, i) => p / maxScores[i] < 0.85).length;
+    return { total, badCount };
+  }, [data, derived]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const stateEl = pageStateElement({
     isLoading,
     dataError,
@@ -69,42 +108,6 @@ export default function HomePage() {
 
   // Compute max drift
   const maxDrift = maxDriftPp(data?.drift as Record<string, any> ?? {});
-
-  // Pre-compute wellness score for collapsed header summary
-  const wellnessSummary = (() => {
-    const wc = data?.wellness_config;
-    if (!wc?.metrics) return null;
-    const aporteMensalVal = data?.premissas?.aporte_mensal ?? 0;
-    const custoMensal = (data?.premissas?.custo_vida_base ?? 0) / 12;
-    const savingsRate = aporteMensalVal > 0 ? (aporteMensalVal / (aporteMensalVal + custoMensal)) * 100 : 0;
-    const maxDriftVal = maxDriftPp(data?.drift as Record<string, any> ?? {}, ['Custo']);
-    const ipcaGapPp = data?.dca_status?.ipca_longo?.gap_alvo_pp ?? null;
-    const dcaAtivo = data?.dca_status?.ipca_longo?.ativo ?? false;
-    const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
-    const terAtual = data?.drift?.['Custo']?.atual ?? (terCfg?.current_ter ?? 0.247);
-    const humanStatus = wc.metrics.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
-    const pts = (id: string, val: number | null, thresholds: any[], key: string) =>
-      (thresholds ?? []).find((t: any) => val != null && val >= (t[key] ?? -Infinity))?.pts ?? 0;
-    const pfirePts = pts('pfire', d.pfireBase, wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [], 'min');
-    const srPts = pts('sr', savingsRate, wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? [], 'min_pct');
-    const driftThresh = wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [];
-    const driftPts = driftThresh.find((t: any) => maxDriftVal <= t.max_pp)?.pts ?? 0;
-    const ipcaThresh = wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [];
-    const ipcaPts = ipcaGapPp == null ? 5 : ipcaThresh.find((t: any) => ipcaGapPp <= t.max_pp)?.pts ?? (dcaAtivo ? 5 : 3);
-    const reservaBrl = data?.rf?.ipca2029?.valor ?? 0;
-    const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
-    const emergThresh = wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? [];
-    const emergPts = emergThresh.find((t: any) => months >= t.min_months)?.pts ?? 0;
-    const terDelta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22);
-    const terThresh = terCfg?.thresholds ?? [];
-    const terPts = terThresh.find((t: any) => terDelta <= t.max_delta_pp)?.pts ?? 0;
-    const humanPts = (wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? []).find((t: any) => t.status === humanStatus)?.pts ?? 5;
-    const total = pfirePts + srPts + driftPts + ipcaPts + 7 + emergPts + terPts + humanPts;
-    const maxScores = [35, 15, 15, 10, 10, 5, 5, 5];
-    const allPts = [pfirePts, srPts, driftPts, ipcaPts, 7, emergPts, terPts, humanPts];
-    const badCount = allPts.filter((p, i) => p / maxScores[i] < 0.85).length;
-    return { total, badCount };
-  })();
 
   // Get IPCA and Renda+ semaforo taxa from rf
   const ipcaTaxa = data?.rf?.ipca2040?.taxa ?? null;
