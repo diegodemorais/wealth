@@ -394,12 +394,21 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const p50End = (rawTrilhaBrl[rawDates.length - 1] ?? 0) as number;
   const p90End = rawP90Brl.at(-1) ?? 0;
 
-  // Spending smile: Read from data, fallback to conservative defaults
-  const smileData = (data as any)?.spendingSmile ?? {
-    go_go: { gasto: 242_000 },
-    slow_go: { gasto: 200_000 },
-    no_go: { gasto: 187_000 },
-  };
+  // Spending smile: canonical spending_smile (lifestyle + saúde por fase).
+  // Legacy spendingSmile removed from pipeline; spending_smile.*.gasto_lifestyle is the lifestyle component.
+  // getSpendingByYear adds healthcare separately via ANS multipliers.
+  const smileRich = (data as any)?.spending_smile;
+  const smileData = smileRich
+    ? {
+        go_go:   { gasto: smileRich.go_go?.gasto_lifestyle   ?? 242_000 },
+        slow_go: { gasto: smileRich.slow_go?.gasto_lifestyle ?? 200_000 },
+        no_go:   { gasto: smileRich.no_go?.gasto_lifestyle   ?? 187_000 },
+      }
+    : {
+        go_go:   { gasto: 242_000 },
+        slow_go: { gasto: 200_000 },
+        no_go:   { gasto: 187_000 },
+      };
 
   // Healthcare costs: VCMH grows 5.0%/year real, ANS age-bracket multipliers (FR-healthcare-recalibracao 2026-04-23)
   const saudeBase = (data as any)?.saude_base ?? 24_000;

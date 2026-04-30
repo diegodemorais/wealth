@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T23:00:00', type: 'dado', component: 'BondTentAnalysisSection', tab: 'backtest', anchor: 'bond-tent-analysis', de: 'Sem análise de Bond Tent no backtest', para: 'B9: seção colapsável com tent size (39% patrimônio), bond pool atual vs necessário, glide path 2026–2040 e gap RF' },
+  { datetime: '2026-04-30T23:00:00', type: 'dado', component: 'RendaVsIpcaDuracaoSection', tab: 'simulators', anchor: 'sim-renda-vs-ipca-duracao', de: 'Sem comparação de duração Renda+2065 vs IPCA+2050', para: 'B13: seção colapsável com taxa, duration, spread, tradeoff longevidade/flexibilidade e impacto no bond pool' },
   { datetime: '2026-04-30T21:30:00', type: 'dado', component: 'CascadeSection', tab: 'simuladores', anchor: '', de: 'Cascade sem taxa de mercado por instrumento', para: 'B14: linha "Taxa: IPCA+X% · piso Y% · gap ±Zpp" em IPCA+Longo e Renda+' },
   { datetime: '2026-04-30T21:00:00', type: 'layout', component: 'ETFRegionComposition', tab: 'portfolio', anchor: '', de: 'Tab default SWRD', para: 'C2: tab default mudado para AVGS (mais diferenciado — mix EM/DM, não só global)' },
   { datetime: '2026-04-30T21:00:00', type: 'layout', component: 'ExpectedReturnWaterfall', tab: 'performance', anchor: 'section-expected-return-waterfall', de: 'CollapsibleSection collapsed por default', para: 'C1: defaultOpen=true — waterfall aberto por default na aba Performance' },
