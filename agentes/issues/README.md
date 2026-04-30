@@ -29,6 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
+| HD-visual-audit-playwright | Auditoria Visual Aba por Aba — Screenshots + Especialistas | Head | 🔴 Alta |
 | ARCH-audit | Auditoria de Arquitetura do Dashboard React | Arquiteto / Dev | 🔴 Alta |
 | QA-test-plan-audit | Auditoria e Melhoria dos Planos de Teste | QA | 🔴 Alta |
 
