@@ -667,6 +667,29 @@ test.describe('Tier1 gaps — NOW tab', () => {
     const el = page.locator('[data-testid="ips-summary"]');
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
+
+  // C8: Mini card Capital Humano Katia
+  test('c8-capital-humano-katia card is visible', async ({ page }) => {
+    const el = page.locator('[data-testid="c8-capital-humano-katia"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('c8-inss-katia-anual shows value', async ({ page }) => {
+    const el = page.locator('[data-testid="c8-inss-katia-anual"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+    const text = await el.textContent();
+    expect(text).toMatch(/INSS/);
+  });
+
+  test('c8-pgbl-katia shows value', async ({ page }) => {
+    const el = page.locator('[data-testid="c8-pgbl-katia"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  test('c8-gasto-katia-solo shows value', async ({ page }) => {
+    const el = page.locator('[data-testid="c8-gasto-katia-solo"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
 });
 
 test.describe('Tier1 gaps — FIRE tab', () => {

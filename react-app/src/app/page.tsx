@@ -450,6 +450,70 @@ export default function HomePage() {
         )}
       </div>
 
+      {/* C8: Mini card — Capital Humano Katia (planejamento; independente de tem_conjuge) */}
+      {(() => {
+        const prem = (data as any)?.premissas as {
+          inss_katia_anual?: number;
+          inss_katia_inicio_ano?: number | null;
+          pgbl_katia_saldo_fire?: number;
+          gasto_katia_solo?: number;
+          nome_conjuge?: string;
+        } | undefined;
+        const inssAnual = prem?.inss_katia_anual ?? 0;
+        if (inssAnual <= 0) return null;
+        const nomeKatia = prem?.nome_conjuge ?? 'Katia';
+        const inicioAno = prem?.inss_katia_inicio_ano ?? 2049;
+        const pgblFire = prem?.pgbl_katia_saldo_fire ?? 0;
+        const gastoSolo = prem?.gasto_katia_solo ?? 0;
+        return (
+          <div
+            data-testid="c8-capital-humano-katia"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 16,
+              flexWrap: 'wrap',
+              padding: '8px 14px',
+              marginBottom: 10,
+              background: 'var(--card2)',
+              borderRadius: 6,
+              border: '1px solid var(--border)',
+              fontSize: 'var(--text-xs)',
+            }}
+          >
+            <span style={{ fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', flexShrink: 0 }}>
+              Cap. Humano {nomeKatia}
+            </span>
+            <span style={{ color: 'var(--border)', userSelect: 'none' }}>|</span>
+            <span data-testid="c8-inss-katia-anual" style={{ color: 'var(--text)' }}>
+              INSS:{' '}
+              <span style={{ fontWeight: 700 }}>{fmtPrivacy(inssAnual, privacyMode)}/ano</span>
+              {inicioAno != null && (
+                <span style={{ color: 'var(--muted)', marginLeft: 4 }}>a partir de {inicioAno}</span>
+              )}
+            </span>
+            {pgblFire > 0 && (
+              <>
+                <span style={{ color: 'var(--border)', userSelect: 'none' }}>·</span>
+                <span data-testid="c8-pgbl-katia" style={{ color: 'var(--text)' }}>
+                  PGBL FIRE:{' '}
+                  <span style={{ fontWeight: 700 }}>{fmtPrivacy(pgblFire, privacyMode)}</span>
+                </span>
+              </>
+            )}
+            {gastoSolo > 0 && (
+              <>
+                <span style={{ color: 'var(--border)', userSelect: 'none' }}>·</span>
+                <span data-testid="c8-gasto-katia-solo" style={{ color: 'var(--muted)' }}>
+                  Custo solo:{' '}
+                  <span style={{ fontWeight: 600, color: 'var(--text)' }}>{fmtPrivacy(gastoSolo, privacyMode)}/ano</span>
+                </span>
+              </>
+            )}
+          </div>
+        );
+      })()}
+
       {/* ── CAMADA 2: Decisão do Mês ── */}
       <SectionDivider label="Decisão do Mês" />
 
