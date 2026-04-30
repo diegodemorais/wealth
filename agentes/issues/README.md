@@ -30,6 +30,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 | ARCH-audit | Auditoria de Arquitetura do Dashboard React | Arquiteto / Dev | 🔴 Alta |
+| QA-test-plan-audit | Auditoria e Melhoria dos Planos de Teste | QA | 🔴 Alta |
 
 ### Blocked
 > Issues aguardando dependências externas
