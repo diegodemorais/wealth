@@ -523,6 +523,8 @@ export default function HomePage() {
         <IifptRadar
           domainCoverage={domainCoverage}
           priorityWeights={priorityWeights}
+          bondPoolCoverageAnos={(data as any)?.bond_pool?.cobertura_anos ?? null}
+          bondPoolMetaAnos={(data as any)?.bond_pool?.meta_anos ?? 7}
         />
       )}
 

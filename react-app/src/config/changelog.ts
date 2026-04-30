@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — IifptPanel completo ──
+  { datetime: '2026-04-30T23:30:00.000Z', type: 'dado', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'radar simples com cobertura', para: 'Modelo IIFPT completo: score integrado, tabela de domínios com acionáveis, coupling table, callout RM' },
   // ── 2026-04-30 — radar IIFPT nomes completos + colapsado + remove regime badge ──
   { datetime: '2026-04-30T23:00:00.000Z', type: 'visual', component: 'IifptRadar / RegimeBadge', tab: 'now', anchor: 'section-iifpt-radar', de: 'regime badge inline + siglas no radar + defaultOpen=true', para: 'badge removido, radar colapsado por padrão, nomes completos (Investment/Retirement/Cash Flow/Risk Mgmt/Estate)' },
   // ── 2026-04-30 — IifptRadar defaultOpen=true ──
