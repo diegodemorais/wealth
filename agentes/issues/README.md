@@ -45,12 +45,12 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|----------|
 | DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | Head + Dev | 🟡 Média | — |
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
-| HD-aposenteaos40-ui-gaps-v2 | Análise UI aposenteaos40.org — Gaps Acionáveis | Head | 🟡 Média | — |
 
 ### Done — Últimas Issues Concluídas
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| HD-aposenteaos40-ui-gaps-v2 | ETA mês/ano + taxa poupança (/now) | 2026-04-30 | Gap 1: "Abr/2040" em KpiHero. Gap 2: MetricCard "Taxa de Poupança" 55.6%. Gaps 3+4 em backlog. |
 | HD-gaps-aposenteaos40-spec | Coast FIRE + FIRE Spectrum + brFIRESim | 2026-04-30 | 3 features implementadas: CoastFireCard (R$5.15M coast number, ano 2029), FireSpectrumWidget (4 bandas Fat/FIRE/Lean/Barista, Diego em Barista 167x), BRFireSimSection (4 ciclos 20a, SWR 3-6% → 4/4, SWR 8% → 2/4). Quant validated. Build ✅ |
 | HD-benchmark-aposenteaos40 | Benchmark vs lab.aposenteaos40.org | 2026-04-30 | Mapeamento completo das 7 ferramentas (brFIRESim, MC, Coast FIRE, Backtest multi-carteira, Meu IPCA, Fronteira Eficiente, PIP) e conteúdo educacional (TSR BR, Termômetro FIRE 4 bandas, Anuário FIRE). Top gaps: Meu IPCA pessoal, brFIRESim por ciclos históricos, Thermometer bands, heatmap retornos anuais, Coast FIRE calculator. |
 | FR-mc-bond-pool-partial-isolation | Bond Pool Partial Isolation no MC FIRE | 2026-04-29 | Isolation gradual/proporcional: vol e guardrails proporcionais à fração de cobertura do bucket (atual: 24%). enabled=True sempre que posição > 0. Badge distingue partial/full/zero. P(quality) mais preciso durante acumulação. 18 testes. Dashboard v1.161.0. |

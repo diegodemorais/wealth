@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-aposenteaos40-ui-gaps-v2 |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Concluído (Gaps 1+2) |
 | **Prioridade** | 🟡 Média |
 | **Criado em** | 2026-04-30 |
 | **Origem** | Screenshot do dashboard aposenteaos40.org enviado por Diego |
@@ -144,7 +144,7 @@ Esta issue é de **análise e triagem**. Os gaps identificados devem ser convert
 
 ## Próximos Passos
 
-- [ ] Dev: verificar se pipeline já calcula mês projetado do FIRE Day → criar issue dedicada se sim
-- [ ] Dev: verificar se taxa de poupança está em data.json → se sim, criar card em /now
-- [ ] Head: revisar lista de gaps na próxima revisão mensal
+- [x] Dev: ETA com mês/ano — `fireDateFormatted: "Abr/2040"` em dataWiring.ts + KpiHero subtitle
+- [x] Dev: Taxa de poupança — `taxaPoupanca: 55.6%` em dataWiring.ts + MetricCard em /now
+- [ ] Head: Gaps 3+4 (fan chart, Marcos FIRE) — revisar na próxima revisão mensal
 
