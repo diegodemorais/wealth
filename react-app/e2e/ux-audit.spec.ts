@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
+import { expandAll } from './helpers';
 
 test.describe('UX/UI Visual Audit — Dashboard Fidelity', () => {
   
   test('NOW tab — Full page visual inspection', async ({ page }) => {
     await page.goto('/wealth');
     await page.waitForLoadState('networkidle');
-    
+    await expandAll(page);
+
     // Take full screenshot
     await page.screenshot({ path: 'audit-screenshots/01-now-tab.png', fullPage: true });
     
@@ -23,6 +25,7 @@ test.describe('UX/UI Visual Audit — Dashboard Fidelity', () => {
   test('PORTFOLIO tab — Grid, ETF, tables', async ({ page }) => {
     await page.goto('/wealth/portfolio');
     await page.waitForLoadState('networkidle');
+    await expandAll(page);
     await page.screenshot({ path: 'audit-screenshots/02-portfolio-tab.png', fullPage: true });
     console.log('✓ PORTFOLIO tab screenshotted');
   });
@@ -30,6 +33,7 @@ test.describe('UX/UI Visual Audit — Dashboard Fidelity', () => {
   test('PERFORMANCE tab — Tables, charts', async ({ page }) => {
     await page.goto('/wealth/performance');
     await page.waitForLoadState('networkidle');
+    await expandAll(page);
     await page.screenshot({ path: 'audit-screenshots/03-performance-tab.png', fullPage: true });
     console.log('✓ PERFORMANCE tab screenshotted');
   });
@@ -37,6 +41,7 @@ test.describe('UX/UI Visual Audit — Dashboard Fidelity', () => {
   test('FIRE tab — FIRE matrix, tracking', async ({ page }) => {
     await page.goto('/wealth/fire');
     await page.waitForLoadState('networkidle');
+    await expandAll(page);
     await page.screenshot({ path: 'audit-screenshots/04-fire-tab.png', fullPage: true });
     console.log('✓ FIRE tab screenshotted');
   });
@@ -44,6 +49,7 @@ test.describe('UX/UI Visual Audit — Dashboard Fidelity', () => {
   test('WITHDRAW tab — Bond pool, guardrails', async ({ page }) => {
     await page.goto('/wealth/withdraw');
     await page.waitForLoadState('networkidle');
+    await expandAll(page);
     await page.screenshot({ path: 'audit-screenshots/05-withdraw-tab.png', fullPage: true });
     console.log('✓ WITHDRAW tab screenshotted');
   });
@@ -51,6 +57,7 @@ test.describe('UX/UI Visual Audit — Dashboard Fidelity', () => {
   test('SIMULADORES tab — Forms, simulator', async ({ page }) => {
     await page.goto('/wealth/simulators');
     await page.waitForLoadState('networkidle');
+    await expandAll(page);
     await page.screenshot({ path: 'audit-screenshots/06-simuladores-tab.png', fullPage: true });
     console.log('✓ SIMULADORES tab screenshotted');
   });
@@ -58,6 +65,7 @@ test.describe('UX/UI Visual Audit — Dashboard Fidelity', () => {
   test('BACKTEST tab — Period selection, results', async ({ page }) => {
     await page.goto('/wealth/backtest');
     await page.waitForLoadState('networkidle');
+    await expandAll(page);
     await page.screenshot({ path: 'audit-screenshots/07-backtest-tab.png', fullPage: true });
     console.log('✓ BACKTEST tab screenshotted');
   });
