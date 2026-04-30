@@ -6,9 +6,9 @@
 |-------|-------|
 | **ID** | HD-aposenteaos40-ui-gaps-v2 |
 | **Dono** | Head |
-| **Status** | Em andamento — Gaps 1+2 concluídos, Gaps 3+4 pendentes |
+| **Status** | Concluído |
 | **Prioridade** | 🟢 Baixa |
-| **Retomar em** | Próxima sessão — continuar pelos Gaps 3+4 |
+| **Concluído em** | 2026-04-30 |
 | **Criado em** | 2026-04-30 |
 | **Origem** | Screenshot do dashboard aposenteaos40.org enviado por Diego |
 | **Relacionado** | HD-benchmark-aposenteaos40 (benchmark anterior, 2026-04-30) |
@@ -147,5 +147,6 @@ Esta issue é de **análise e triagem**. Os gaps identificados devem ser convert
 
 - [x] Dev: ETA com mês/ano — `fireDateFormatted: "Abr/2040"` em dataWiring.ts + KpiHero subtitle
 - [x] Dev: Taxa de poupança — `taxaPoupanca: 55.6%` em dataWiring.ts + MetricCard em /now
-- [ ] Head: Gaps 3+4 (fan chart, Marcos FIRE) — revisar na próxima revisão mensal
+- [x] Gap 3: Fan chart P10/P90 — dados já existiam em `fire_trilha.trilha_p10_brl`/`trilha_p90_brl`; componente já renderizava o cone
+- [x] Gap 4: Marcos FIRE — thresholds Barista/Lean/FIRE como markLines + crossover markers no TrackingFireChart; notas de contexto (acadêmico vs convenção) abaixo do gráfico. Dashboard v1.224.0.
 

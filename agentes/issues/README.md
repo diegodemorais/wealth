@@ -30,7 +30,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 | HD-visual-audit-playwright | Auditoria Visual Aba por Aba — Screenshots + Especialistas | Head | 🔴 Alta |
-| HD-aposenteaos40-ui-gaps-v2 | Análise UI aposenteaos40.org — Gaps 3+4 pendentes | Head | 🟢 Baixa |
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -51,6 +50,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| HD-aposenteaos40-ui-gaps-v2 | Análise UI aposenteaos40.org — 4 gaps implementados | 2026-04-30 | Gap 1: ETA mês/ano. Gap 2: taxa de poupança KPI. Gap 3: fan chart P10/P90 (já existia). Gap 4: Marcos FIRE (Barista/Lean/FIRE) + notas acadêmico vs comunidade. Dashboard v1.224.0. |
 | DEV-iifpt-dashboard | Dashboard IIFPT: Radar, Regime Badge, Gap Note, Pipeline | 2026-04-30 | CC1: priority_matrix + domain_coverage + regime_vida em data.json. DC1: IifptRadar (ECharts Radar 6 eixos, RM/Est em vermelho). DC2: badge "Acumulação · r3 ~2034" no NOW tab. DC3: nota "RM ❌ Est ⏳ não modelados" no KpiHero. 664 testes ✅. Dashboard v1.202.2. |
 | HD-iifpt-integration | Aplicação do Framework IIFPT à Carteira de Diego | 2026-04-30 | Λ calibrado: Inv 0.35/Ret 0.25/Tax 0.18/CF 0.10/RM 0.07/Est 0.05. Driver Tax↔Inv (46.8%). Gap RM confirmado. Regime r2, trigger r3 ~2034. CC2 config.py. Coupling reference. Integration premium ~7.8% NW midpoint. Spec Dev → DEV-iifpt-dashboard. |
 | QA-test-plan-audit | Auditoria e Melhoria dos Planos de Teste | 2026-04-30 | Auditoria completa: 3 gaps críticos (CR-1 ••% masking, CR-2 assertions falsas, CR-3 E2E ineficaz), 4 médios, 3 baixos. Plano 3 fases documentado. Backlog implementação → DEV-qa-improvements. |
