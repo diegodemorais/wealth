@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-iifpt-integration |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Em andamento (Dim 1 ✅, Dim 2-5 pendentes) |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head (coordenação), FIRE, Tax, RF, Risco, Quant |
 | **Criado em** | 2026-04-30 |
@@ -40,9 +40,15 @@ Seis domínios: Cash Flow (CF), Retirement (Ret), Tax, Estate (Est), Risk Manage
 
 ---
 
-## Dimensão 1 — Entrevista / Elicitação do Priority Matrix Λ
+## Dimensão 1 — Priority Matrix Λ ✅ CONCLUÍDA (2026-04-30)
 
-### Objetivo
+**Resultado:** `agentes/contexto/priority_matrix.json` criado. Λ calibrado: Ret 0.35 / Inv 0.25 / Tax 0.18 / CF 0.10 / RM 0.07 / Est 0.05.
+**Método:** Blended RP + AHP (4 comparações forçadas + 2 clarificações). Tax = piso defensivo. RM = risco disability (quasi-CLT, sem cobertura). Est = deferral intencional pré-casamento.
+**Regime:** r2_mid_career. Transição r3 ~2034. Trigger: patrimônio ≥ R$9M ou P(FIRE) ≥ 90% por 2 anos.
+
+---
+
+### Objetivo original
 Calibrar os pesos w_k formalmente a partir de Diego, usando os métodos do paper (§9.4).
 
 ### Roteiro de entrevista (a conduzir com Diego)
@@ -254,7 +260,7 @@ Inv: ✅ ativo (factor investing, SWRD/AVGS/AVEM)
 
 ### CC1 — `priority_matrix.json` no pipeline
 
-**Ação:** Criar `dados/priority_matrix.json` com estrutura de D1. Incluir no snapshot de `generate_data.py` e expor em `data.json` como campo `priority_matrix`.
+**Ação:** `agentes/contexto/priority_matrix.json` criado (config manual, não gerado). Incluir no snapshot de `generate_data.py` e expor em `data.json` como campo `priority_matrix`.
 
 **Invariante:** Λ é dado elicitado de Diego — nunca inferido pelo pipeline, nunca sobrescrito automaticamente.
 

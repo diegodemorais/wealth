@@ -1,0 +1,30 @@
+{
+  "priority_matrix": {
+    "version": "2026-04-30",
+    "method": "blended_rp_ahp",
+    "method_detail": "50% Revealed Preference (historico de issues) + 50% AHP estimado (4 comparacoes forcadas). Clarificacoes: Tax = piso defensivo (nao ofensivo); RM = risco disability nao emprego (quasi-CLT, alta empregabilidade). Ref: HD-iifpt-integration Dimensao 1.",
+    "weights": {
+      "ret": 0.35,
+      "inv": 0.25,
+      "tax": 0.18,
+      "cf": 0.10,
+      "rm": 0.07,
+      "est": 0.05
+    },
+    "domains": {
+      "ret": "Retirement — FIRE-50, P(FIRE), Monte Carlo",
+      "inv": "Investment — SWRD/AVGS/AVEM, factor tilt",
+      "tax": "Tax — Lei 14.754, DARF, TLH, Lombard (defensivo: nao perder)",
+      "cf": "Cash Flow — gastos, aportes, renda empresa",
+      "rm": "Risk Management — disability/saude (sem cobertura atual)",
+      "est": "Estate — testamento, holding (deferral intencional pre-casamento)"
+    },
+    "flags": {
+      "rm_gap": "Diego sem cobertura disability. INSS cobre ~R$1.5-2k/mes vs renda ~R$55k/mes. HD-holding-e-seguro pendente.",
+      "est_deferral": "w_est = 0.05 intencional — revisar apos casamento (~2026-2027). PT-planejamento-patrimonial em Discovery.",
+      "tax_framing": "Tax = piso defensivo, nao oportunidade ofensiva. Elicitado em sessao 2026-04-30.",
+      "rm_employment": "Risco emprego baixo (quasi-CLT, alta empregabilidade). Risco residual = disability/saude."
+    },
+    "when_to_update": "Apos eventos sistemicos: casamento, filho, saude, mudanca de empresa, FIRE Day"
+  }
+}

@@ -25,6 +25,16 @@
 
 ---
 
+## Regime de Vida (IIFPT)
+
+- **Regime atual**: `r2_mid_career` — acumulação acelerada, empresa sólida (quasi-CLT)
+- **Transição para r3 (Pre-retirement)**: estimada ~2034 (47 anos) — β_Ret ↑, glide path ativo, β_CF ↑
+- **Trigger formal r3**: patrimônio ≥ R$9M ou P(FIRE) ≥ 90% sustentado por 2 anos
+- **Última revisão**: 2026-04-30 (HD-iifpt-integration Dimensão 1)
+- **Priority Matrix Λ**: `agentes/contexto/priority_matrix.json` (Ret 0.35 / Inv 0.25 / Tax 0.18 / CF 0.10 / RM 0.07 / Est 0.05) — revisão obrigatória pós-casamento e pós-FIRE
+
+---
+
 ## Investidor
 
 - **Nome**: Diego Morais
