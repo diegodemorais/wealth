@@ -210,20 +210,20 @@ export default function PortfolioPage() {
           xAxis: {
             type: 'category',
             data: dates,
-            axisLabel: { color: 'var(--muted)', fontSize: 10, rotate: 45 },
-            axisLine: { lineStyle: { color: 'var(--border)' } },
+            axisLabel: { ...EC_AXIS_LABEL, rotate: 45 },
+            axisLine: { lineStyle: { color: EC.border2 } },
           },
           yAxis: {
             type: 'value',
-            axisLabel: { color: 'var(--muted)', fontSize: 10, formatter: (v: number) => `${v}pp` },
-            splitLine: { lineStyle: { color: 'var(--border)', opacity: 0.4 } },
+            axisLabel: { ...EC_AXIS_LABEL, formatter: (v: number) => `${v}pp` },
+            splitLine: { lineStyle: { color: EC.border3, opacity: 0.4 } },
           },
           visualMap: {
             show: false,
             pieces: [
-              { lte: thresholdRed,    color: 'var(--red)'    },
-              { gt: thresholdRed, lte: thresholdYellow, color: 'var(--yellow)' },
-              { gt: thresholdYellow,  color: 'var(--green)'  },
+              { lte: thresholdRed,                    color: EC.red    },
+              { gt: thresholdRed, lte: thresholdYellow, color: EC.yellow },
+              { gt: thresholdYellow,                  color: EC.green  },
             ],
           },
           series: [
@@ -237,9 +237,9 @@ export default function PortfolioPage() {
               markLine: {
                 silent: true,
                 data: [
-                  { yAxis: 0,              lineStyle: { color: 'var(--border)',  type: 'dashed', width: 1 } },
-                  { yAxis: thresholdYellow, lineStyle: { color: 'var(--yellow)', type: 'dashed', width: 1 } },
-                  { yAxis: thresholdRed,    lineStyle: { color: 'var(--red)',    type: 'dashed', width: 1 } },
+                  { yAxis: 0,               lineStyle: { color: EC.border2, type: 'dashed', width: 1 } },
+                  { yAxis: thresholdYellow, lineStyle: { color: EC.yellow,  type: 'dashed', width: 1 } },
+                  { yAxis: thresholdRed,    lineStyle: { color: EC.red,     type: 'dashed', width: 1 } },
                 ],
                 label: { show: false },
               },
@@ -247,6 +247,9 @@ export default function PortfolioPage() {
           ],
           tooltip: {
             trigger: 'axis',
+            backgroundColor: EC.card,
+            borderColor: EC.border2,
+            textStyle: { color: EC.text, fontSize: 11 },
             formatter: (params: any[]) => {
               const p = params[0];
               return `${p.name}<br/>Excess: <b>${p.value >= 0 ? '+' : ''}${p.value}pp</b>`;
