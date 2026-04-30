@@ -39,6 +39,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
+| FR-audit-p0-bugs | P0 Bugs — 11 bugs críticos (no-sell, E[R] USD, hardcoded literals, etc.) | Dev | 🔴 P0 — Atacar imediato | HD-visual-audit-playwright concluída |
+| FR-audit-p1-missing | P1 Info Crítica Faltando — 13 gaps (AVEM AUM, bond pool projection, P(FIRE) cenários, etc.) | Dev + especialistas | 🟠 P1 — Alta | HD-visual-audit-playwright concluída |
+| FR-audit-p2-improvements | P2 Melhorias — 40 itens em 3 clusters (labels, métricas analíticas, UX) | Dev | 🟡 P2 — Backlog | HD-visual-audit-playwright concluída |
 | DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | Dev | 🟡 Média | ARCH-audit concluída |
 | DEV-qa-improvements | Implementar Melhorias QA-test-plan-audit (CR/MD/BX) | Dev | 🟡 Média | QA-test-plan-audit concluída |
 | DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | Head + Dev | 🟡 Média | — |
