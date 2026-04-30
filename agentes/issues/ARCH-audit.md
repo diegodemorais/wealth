@@ -6,12 +6,12 @@
 |-------|-------|
 | **ID** | ARCH-audit |
 | **Dono** | Arquiteto / Dev |
-| **Status** | Em Execução |
+| **Status** | Concluído |
 | **Prioridade** | Alta |
 | **Participantes** | Arquiteto (auditoria), Dev (implementação) |
 | **Criado em** | 2026-04-30 |
 | **Origem** | Solicitação pós-auditoria privacy |
-| **Concluído em** | — |
+| **Concluído em** | 2026-04-30 |
 
 ---
 

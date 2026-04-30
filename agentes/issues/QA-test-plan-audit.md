@@ -6,12 +6,12 @@
 |-------|-------|
 | **ID** | QA-test-plan-audit |
 | **Dono** | QA |
-| **Status** | Em Execução |
+| **Status** | Concluído |
 | **Prioridade** | Alta |
 | **Participantes** | QA (auditoria), Dev (implementação) |
 | **Criado em** | 2026-04-30 |
 | **Origem** | Auditoria sistemática solicitada após privacy audit (25 leaks corrigidos em DEV-privacy-audit-react) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-30 |
 
 ---
 
