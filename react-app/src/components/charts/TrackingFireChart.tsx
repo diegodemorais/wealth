@@ -374,6 +374,14 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
   }, [data, privacyMode, theme]);
 
   return (
-    <EChart ref={chartRef} option={option} style={{ height: 380, width: '100%' }} />
+    <div>
+      <EChart ref={chartRef} option={option} style={{ height: 380, width: '100%' }} />
+      <div style={{ marginTop: 8, fontSize: 10, color: 'var(--muted)', opacity: 0.7, lineHeight: 1.6 }}>
+        <div><span style={{ color: 'rgba(148,163,184,0.5)' }}>●</span> Barista FIRE 8% · convenção de comunidade — pressupõe renda parcial complementar (portfólio cobre parcialmente)</div>
+        <div><span style={{ color: 'rgba(148,163,184,0.65)' }}>●</span> Lean FIRE 6% · convenção de comunidade — gastos reduzidos ou horizonte mais curto</div>
+        <div><span style={{ color: 'rgba(148,163,184,0.8)' }}>●</span> FIRE 4% · Trinity Study (1998) / Bengen (1994) — referência acadêmica clássica, horizonte 30 anos</div>
+        <div><span style={{ color: 'var(--yellow)' }}>●</span> Fat FIRE 3% · derivação conservadora — horizonte 50+ anos; meta de Diego</div>
+      </div>
+    </div>
   );
 }
