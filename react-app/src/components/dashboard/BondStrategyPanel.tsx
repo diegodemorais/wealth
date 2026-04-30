@@ -7,6 +7,28 @@ import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { useConfig } from '@/hooks/useConfig';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
+interface RfAsset {
+  valor_brl?: number;
+  taxa?: number;
+  [key: string]: unknown;
+}
+
+interface BondStrategyRf {
+  ipca2029?: RfAsset;
+  ipca2040?: RfAsset;
+  ipca2050?: RfAsset;
+  renda2065?: RfAsset;
+  [key: string]: RfAsset | undefined;
+}
+
+interface RunwayByScenario {
+  pool_disponivel?: number[];
+  pool_inicial?: number;
+  anos_pos_fire?: number[];
+  runway_anos?: number;
+  [key: string]: unknown;
+}
+
 export interface BondStrategyPanelProps {
   // Pré-FIRE (SoRR)
   idadeAtual: number;
@@ -14,13 +36,24 @@ export interface BondStrategyPanelProps {
   rfPctAtual: number | undefined;
 
   // Pós-FIRE (Bond Pool)
-  bondPoolReadiness: any;
-  bondPoolRunway: any;
-  bondPoolRunwayByProfile: any;
+  /** Bond pool readiness data — shape mirrors BondPoolReadinessData from BondPoolReadiness.tsx */
+  bondPoolReadiness: {
+    anos_gastos: number;
+    meta_anos: number;
+    valor_atual_brl: number;
+    meta_brl?: number;
+    status: string;
+    composicao: { ativo: string; valor: number; pct_meta: number }[] | Record<string, number | undefined>;
+    estrategia_a?: { label: string; descricao: string; status: string };
+    estrategia_b?: { label: string; descricao: string; status: string };
+    [key: string]: unknown;
+  } | null | undefined;
+  bondPoolRunway: { anos_pre_fire?: number[]; [key: string]: unknown } | null | undefined;
+  bondPoolRunwayByProfile: Record<string, RunwayByScenario> | null | undefined;
   withdrawScenario: string;
   withdrawCenarios: Record<string, { label: string; custo_vida_base: number }>;
   custo_vida_base: number;
-  rf: any;
+  rf: BondStrategyRf | null | undefined;
   privacyMode: boolean;
   /** Alvos de alocação vindos de data.drift (substituem hardcodes) */
   ipcaAlvo?: number;
@@ -92,9 +125,9 @@ export default function BondStrategyPanel({
   const composicaoItems = useMemo(() => {
     const items = [];
     const metaBrl = custo_vida_base * (bondPoolReadiness?.meta_anos ?? 7);
-    if (rf?.ipca2029?.valor_brl > 0) items.push({ ativo: 'IPCA+2029', valor: rf.ipca2029.valor_brl, pct_meta: metaBrl > 0 ? (rf.ipca2029.valor_brl / metaBrl) * 100 : 0 });
-    if (rf?.ipca2040?.valor_brl > 0) items.push({ ativo: 'IPCA+2040', valor: rf.ipca2040.valor_brl, pct_meta: metaBrl > 0 ? (rf.ipca2040.valor_brl / metaBrl) * 100 : 0 });
-    if (rf?.ipca2050?.valor_brl > 0) items.push({ ativo: 'IPCA+2050', valor: rf.ipca2050.valor_brl, pct_meta: metaBrl > 0 ? (rf.ipca2050.valor_brl / metaBrl) * 100 : 0 });
+    const v2029 = rf?.ipca2029?.valor_brl; if (v2029 != null && v2029 > 0) items.push({ ativo: 'IPCA+2029', valor: v2029, pct_meta: metaBrl > 0 ? (v2029 / metaBrl) * 100 : 0 });
+    const v2040 = rf?.ipca2040?.valor_brl; if (v2040 != null && v2040 > 0) items.push({ ativo: 'IPCA+2040', valor: v2040, pct_meta: metaBrl > 0 ? (v2040 / metaBrl) * 100 : 0 });
+    const v2050 = rf?.ipca2050?.valor_brl; if (v2050 != null && v2050 > 0) items.push({ ativo: 'IPCA+2050', valor: v2050, pct_meta: metaBrl > 0 ? (v2050 / metaBrl) * 100 : 0 });
     return items;
   }, [rf, custo_vida_base, bondPoolReadiness]);
 

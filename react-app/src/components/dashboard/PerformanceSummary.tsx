@@ -31,8 +31,55 @@ interface AnnualReturn {
   alpha_vs_vwra?: number;
 }
 
+interface DrawdownEvent {
+  depth_pct?: number;
+  trough?: string;
+  recovery_months?: number;
+}
+
+interface RetornosMensais {
+  twr_real_brl_pct?: number | null;
+  twr_nominal_brl_cagr?: number | null;
+  twr_usd_cagr?: number | null;
+  vwra_usd_cagr?: number | null;
+  cdi_cagr?: number | null;
+  annual_returns?: AnnualReturn[];
+  ipca_cagr_periodo_pct?: number | null;
+  periodo_anos?: number | null;
+}
+
+interface InformationRatioItd {
+  active_return_anual_pct?: number | null;
+}
+
+interface PerformanceSummaryData {
+  retornos_mensais?: RetornosMensais;
+  rolling_sharpe?: {
+    information_ratio?: {
+      itd?: InformationRatioItd;
+    };
+  };
+  drawdown_extended?: {
+    summary?: {
+      real_max_dd_target?: number | null;
+    };
+  };
+  premissas?: {
+    retorno_equity_base?: number;
+    [key: string]: unknown;
+  };
+  premissas_vs_realizado?: {
+    retorno_equity?: {
+      premissa_real_brl_pct?: number | null;
+    };
+  };
+  drawdown_history?: {
+    events?: DrawdownEvent[];
+  };
+}
+
 interface PerformanceSummaryProps {
-  data: any;
+  data: PerformanceSummaryData;
 }
 
 /** Semaphore color for CAGR real: green >= 4.5%, yellow 3-4.5%, red < 3% */
@@ -132,9 +179,9 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
   const periodoAnos: number | null = rm.periodo_anos ?? null;
 
   // Max DD trough date
-  const ddEvents: any[] = data?.drawdown_history?.events ?? [];
+  const ddEvents: DrawdownEvent[] = data?.drawdown_history?.events ?? [];
   const worstEvent = ddEvents.length > 0
-    ? ddEvents.reduce((a: any, b: any) => (b.depth_pct ?? 0) < (a.depth_pct ?? 0) ? b : a, ddEvents[0])
+    ? ddEvents.reduce((a, b) => (b.depth_pct ?? 0) < (a.depth_pct ?? 0) ? b : a, ddEvents[0])
     : null;
   const maxDdDate: string | null = worstEvent?.trough ?? null;
   const maxDdRecoveryMonths: number | null = worstEvent?.recovery_months ?? null;
