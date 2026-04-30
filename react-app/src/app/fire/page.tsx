@@ -173,7 +173,7 @@ function FloorUpsideFire({
                   color: cobFireDay != null && cobFireDay >= 100 ? '#22c55e' : '#ef4444',
                 }}
               >
-                {cobFireDay != null ? `${cobFireDay.toFixed(0)}%` : '—'}
+                {cobFireDay != null ? (privacyMode ? '••%' : `${cobFireDay.toFixed(0)}%`) : '—'}
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@ function FloorUpsideFire({
                   color: cobPosInss != null && cobPosInss >= 100 ? '#22c55e' : '#ef4444',
                 }}
               >
-                {cobPosInss != null ? `${cobPosInss.toFixed(0)}%` : '—'}
+                {cobPosInss != null ? (privacyMode ? '••%' : `${cobPosInss.toFixed(0)}%`) : '—'}
               </div>
             </div>
           </div>
@@ -646,7 +646,7 @@ export default function FirePage() {
         <div style={{ textAlign: 'center', minWidth: 100 }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>P(FIRE 2040)</div>
           <div style={{ fontSize: '2.5rem', fontWeight: 900, color: pfireHeroColor, lineHeight: 1 }} data-testid="pfire-hero">
-            {pfireHero != null ? `${pfireHero.toFixed(1)}%` : '—'}
+            {pfireHero != null ? (privacyMode ? '••%' : `${pfireHero.toFixed(1)}%`) : '—'}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: pfireHeroColor, fontWeight: 600, marginTop: 4 }}>
             {pfireHero != null ? (pfireHero >= 90 ? <><CheckCircle size={14} className="inline mr-1" />ON TRACK</> : pfireHero >= 85 ? <><AlertCircle size={14} className="inline mr-1" />ADEQUADO</> : <><XCircle size={14} className="inline mr-1" />ATENÇÃO</>) : ''}
@@ -663,7 +663,7 @@ export default function FirePage() {
         <div style={{ textAlign: 'center', minWidth: 140 }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>P(quality)</div>
           <div data-testid="pquality-hero" style={{ fontSize: '2.5rem', fontWeight: 900, color: pqualityColor(pqualityDisplay), lineHeight: 1 }}>
-            {pqualityDisplay != null ? `${pqualityDisplay.toFixed(1)}%` : '—'}
+            {pqualityDisplay != null ? (privacyMode ? '••%' : `${pqualityDisplay.toFixed(1)}%`) : '—'}
           </div>
           {/* Seletores proxy / partial / full */}
           <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginTop: 6 }}>
@@ -690,7 +690,7 @@ export default function FirePage() {
                   }}
                 >
                   <div>{label}</div>
-                  <div style={{ fontWeight: 700 }}>{val.toFixed(1)}%</div>
+                  <div style={{ fontWeight: 700 }}>{privacyMode ? '••%' : `${val.toFixed(1)}%`}</div>
                 </button>
               );
             })}
@@ -804,12 +804,12 @@ export default function FirePage() {
               <div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio Atual</div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 800, color: progressoColor }}>{fmtPrivacy(patrimonioAtual, privacyMode)}</div>
-                <div style={{ fontSize: 'var(--text-xs)', color: progressoColor }}>{progressoPct.toFixed(1)}% da meta</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: progressoColor }}>{privacyMode ? '••%' : `${progressoPct.toFixed(1)}%`} da meta</div>
               </div>
               <div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gap Restante</div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--red)' }}>{fmtPrivacy(gap, privacyMode)}</div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{(100 - progressoPct).toFixed(1)}% a acumular</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{privacyMode ? '••%' : `${(100 - progressoPct).toFixed(1)}%`} a acumular</div>
               </div>
             </div>
             {/* Barra de progresso */}

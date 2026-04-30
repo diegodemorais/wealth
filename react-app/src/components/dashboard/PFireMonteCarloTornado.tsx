@@ -115,7 +115,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                   </span>
                 )}
                 <span style={{ color: getBadgeColor(pfireBase), fontWeight: 700 }}>
-                  {`${patrimonioProgressPct.toFixed(1)}%`}
+                  {privacyMode ? '••%' : `${patrimonioProgressPct.toFixed(1)}%`}
                 </span>
               </div>
             </div>

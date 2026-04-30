@@ -82,7 +82,7 @@ export function TimelineChart({ data, period = 'all' }: TimelineChartProps) {
     });
 
     const metrics = bt.metrics ?? {};
-    const cagr = metrics.cagr != null ? ` (CAGR: ${(metrics.cagr * 100).toFixed(1)}%)` : '';
+    const cagr = metrics.cagr != null && !privacyMode ? ` (CAGR: ${(metrics.cagr * 100).toFixed(1)}%)` : '';
 
     if (filtShadow.length > 0) {
       return createDualLineChartOption({

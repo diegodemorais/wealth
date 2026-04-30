@@ -15,6 +15,7 @@
 import React from 'react';
 import { KpiCard } from '@/components/primitives/KpiCard';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { useUiStore } from '@/store/uiStore';
 
 interface AnnualReturn {
   year: number;
@@ -41,8 +42,9 @@ function cagrSemaphore(v: number): string {
   return 'var(--red)';
 }
 
-function fmtPct(v: number | null | undefined, decimals = 1): string {
+function fmtPct(v: number | null | undefined, privacyMode: boolean, decimals = 1): string {
   if (v == null) return '--';
+  if (privacyMode) return '••%';
   const sign = v > 0 ? '+' : '';
   return `${sign}${v.toFixed(decimals)}%`;
 }
@@ -109,6 +111,8 @@ function MiniCompare({
 // Componente principal
 // ────────────────────────────────────────────────────────────────
 export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
+  const { privacyMode } = useUiStore();
+  const pm = privacyMode;
   const rm = data?.retornos_mensais ?? {};
   const ir = data?.rolling_sharpe?.information_ratio?.itd ?? {};
   const ddSummary = data?.drawdown_extended?.summary ?? {};
@@ -161,12 +165,12 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" style={{ marginBottom: 18 }}>
         <KpiCard
           label="CAGR Real BRL"
-          value={cagrReal != null ? `${cagrReal.toFixed(1)}%` : '--'}
+          value={cagrReal != null ? (pm ? '••%' : `${cagrReal.toFixed(1)}%`) : '--'}
           accent={cagrReal != null ? cagrSemaphore(cagrReal) : 'var(--muted)'}
-          delta={alphaAnual != null ? {
+          delta={!pm && alphaAnual != null ? {
             text: `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(2)}pp vs VWRA`,
             positive: alphaAnual >= 0,
-          } : cagrRealDelta != null ? {
+          } : !pm && cagrRealDelta != null ? {
             text: `${cagrRealDelta >= 0 ? '+' : ''}${cagrRealDelta.toFixed(1)}pp vs premissa`,
             positive: cagrRealDelta >= 0,
           } : undefined}
@@ -177,15 +181,15 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
         />
         <KpiCard
           label="CAGR Nominal BRL"
-          value={cagrNominal != null ? `${cagrNominal.toFixed(1)}%` : '--'}
+          value={cagrNominal != null ? (pm ? '••%' : `${cagrNominal.toFixed(1)}%`) : '--'}
           accent="var(--accent)"
-          sub={ipcaCagr != null ? `IPCA ${ipcaCagr.toFixed(1)}% no período` : 'nominal anualizado'}
+          sub={ipcaCagr != null ? `IPCA ${pm ? '••%' : `${ipcaCagr.toFixed(1)}%`} no período` : 'nominal anualizado'}
         />
         <KpiCard
           label="Alpha vs VWRA"
-          value={alphaAnual != null ? `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(2)}%` : '--'}
+          value={alphaAnual != null ? (pm ? '••%' : `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(2)}%`) : '--'}
           accent={alphaAnual != null ? (alphaAnual >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--muted)'}
-          delta={alphaAnual != null ? {
+          delta={!pm && alphaAnual != null ? {
             text: '/ano',
             positive: alphaAnual >= 0,
           } : undefined}
@@ -193,7 +197,7 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
         />
         <KpiCard
           label="Max Drawdown"
-          value={maxDd != null ? `${maxDd.toFixed(1)}%` : '--'}
+          value={maxDd != null ? (pm ? '••%' : `${maxDd.toFixed(1)}%`) : '--'}
           accent="var(--red)"
           sub={
             maxDdDate
@@ -287,10 +291,10 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                         )}
                       </td>
                       <td style={{ ...tdR, color: returnColor(row.twr_nominal_brl) }}>
-                        {fmtPct(row.twr_nominal_brl)}
+                        {fmtPct(row.twr_nominal_brl, pm)}
                       </td>
                       <td style={{ ...tdR, color: returnColor(row.twr_real_brl), fontWeight: 700 }}>
-                        {fmtPct(row.twr_real_brl)}
+                        {fmtPct(row.twr_real_brl, pm)}
                       </td>
                       <td style={{ ...tdC, padding: '4px 8px' }}>
                         <MiniCompare
@@ -300,16 +304,16 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                         />
                       </td>
                       <td style={{ ...tdR, color: returnColor(row.twr_usd) }}>
-                        {fmtPct(row.twr_usd)}
+                        {fmtPct(row.twr_usd, pm)}
                       </td>
                       <td style={{ ...tdR, color: 'var(--muted)' }}>
-                        {row.vwra_usd != null ? fmtPct(row.vwra_usd) : '--'}
+                        {row.vwra_usd != null ? fmtPct(row.vwra_usd, pm) : '--'}
                       </td>
                       <td style={{ ...tdR, color: returnColor(row.alpha_pp), fontWeight: 700 }}>
-                        {row.alpha_pp != null ? `${row.alpha_pp >= 0 ? '+' : ''}${row.alpha_pp.toFixed(1)}pp` : '--'}
+                        {row.alpha_pp != null ? (pm ? '••pp' : `${row.alpha_pp >= 0 ? '+' : ''}${row.alpha_pp.toFixed(1)}pp`) : '--'}
                       </td>
-                      <td style={{ ...tdR, color: 'var(--muted)' }}>{row.ipca.toFixed(1)}%</td>
-                      <td style={{ ...tdR, color: 'var(--muted)' }}>{row.cdi.toFixed(1)}%</td>
+                      <td style={{ ...tdR, color: 'var(--muted)' }}>{pm ? '••%' : `${row.ipca.toFixed(1)}%`}</td>
+                      <td style={{ ...tdR, color: 'var(--muted)' }}>{pm ? '••%' : `${row.cdi.toFixed(1)}%`}</td>
                     </tr>
                   );
                 })}
@@ -325,7 +329,7 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                     CAGR
                   </td>
                   <td style={{ ...tdR, fontWeight: 800, color: returnColor(cagrNominal) }}>
-                    {cagrNominal != null ? `${cagrNominal.toFixed(1)}%` : '--'}
+                    {cagrNominal != null ? (pm ? '••%' : `${cagrNominal.toFixed(1)}%`) : '--'}
                   </td>
                   <td
                     style={{
@@ -334,14 +338,14 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                       color: cagrReal != null ? cagrSemaphore(cagrReal) : 'var(--muted)',
                     }}
                   >
-                    {cagrReal != null ? `${cagrReal.toFixed(1)}%` : '--'}
+                    {cagrReal != null ? (pm ? '••%' : `${cagrReal.toFixed(1)}%`) : '--'}
                   </td>
                   <td style={tdC} />
                   <td style={{ ...tdR, fontWeight: 800, color: returnColor(cagrUsd) }}>
-                    {cagrUsd != null ? `${cagrUsd.toFixed(1)}%` : '—'}
+                    {cagrUsd != null ? (pm ? '••%' : `${cagrUsd.toFixed(1)}%`) : '—'}
                   </td>
                   <td style={{ ...tdR, fontWeight: 800, color: returnColor(cagrVwra) }}>
-                    {cagrVwra != null ? `${cagrVwra.toFixed(1)}%` : '—'}
+                    {cagrVwra != null ? (pm ? '••%' : `${cagrVwra.toFixed(1)}%`) : '—'}
                   </td>
                   <td
                     style={{
@@ -352,13 +356,13 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                         : 'var(--muted)',
                     }}
                   >
-                    {alphaAnual != null ? `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(1)}pp` : '--'}
+                    {alphaAnual != null ? (pm ? '••pp' : `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(1)}pp`) : '--'}
                   </td>
                   <td style={{ ...tdR, fontWeight: 700, color: 'var(--muted)' }}>
-                    {ipcaCagr != null ? `${ipcaCagr.toFixed(1)}%` : '--'}
+                    {ipcaCagr != null ? (pm ? '••%' : `${ipcaCagr.toFixed(1)}%`) : '--'}
                   </td>
                   <td style={{ ...tdR, fontWeight: 700, color: 'var(--muted)' }}>
-                    {cagrCdi != null ? `${cagrCdi.toFixed(1)}%` : '—'}
+                    {cagrCdi != null ? (pm ? '••%' : `${cagrCdi.toFixed(1)}%`) : '—'}
                   </td>
                 </tr>
               </tfoot>

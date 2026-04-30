@@ -35,9 +35,11 @@ function corrColor(pct: number): string {
 function CorrelationChart({
   current,
   series,
+  privacyMode,
 }: {
   current: number;
   series: Array<{ date: string; value: number }> | null;
+  privacyMode: boolean;
 }) {
   const chartRef = useRef<{ getEchartsInstance?: () => { resize?: () => void } } | null>(null);
   const currentPct = Math.round(current * 100);
@@ -79,7 +81,8 @@ function CorrelationChart({
       formatter: (params: { name: string; value: number }[]) => {
         const p = params[0];
         const c = corrColor(p.value);
-        return `<span style="color:${EC.muted}">${p.name}</span><br/><span style="color:${c};font-weight:600">${p.value}%</span>`;
+        const val = privacyMode ? '••%' : `${p.value}%`;
+        return `<span style="color:${EC.muted}">${p.name}</span><br/><span style="color:${c};font-weight:600">${val}</span>`;
       },
     },
     xAxis: {
@@ -264,6 +267,7 @@ export default function HODL11PositionPanel({ hodl11 }: HODL11PositionPanelProps
           <CorrelationChart
             current={btcData.correlation_90d}
             series={btcData.correlation_series ?? null}
+            privacyMode={privacyMode}
           />
         </div>
       )}

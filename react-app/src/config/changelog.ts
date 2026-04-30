@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  // ── 2026-04-30 — Privacy audit: mask financeiro em 11 componentes ──
+  { datetime: '2026-04-30T10:00:00.000Z', type: 'visual', component: 'Privacy (global)', tab: 'now', anchor: '', de: '24 leaks: CAGR, delta, vol, VaR, drift %, P(FIRE), P(qual), allocation % visíveis em privacy mode', para: 'v1.180.0 — Todos os valores financeiros mascarados (••%) em privacy mode: PerformanceSummary, PFireMonteCarloTornado, HODL11PositionPanel, BRLPurchasingPowerTimeline, DecisaoDoMes, TimelineChart, ReverseFire, fire/page, withdraw/page, portfolio/page, page' },
   // ── 2026-04-30 — P(quality) nos cards Base/Favorável/Stress do PFireMonteCarloTornado ──
   { datetime: '2026-04-30T02:00:00.000Z', type: 'dado', component: 'PFireMonteCarloTornado', tab: 'now', anchor: '', de: 'Cards BASE/FAVORÁVEL/STRESS mostrando apenas P(FIRE)', para: 'v1.172.0 — Cards mostram P(qual) por cenário: base=79.0%, fav=84.8%, stress=74.5%' },
   // ── 2026-04-30 — Simulador ReverseFire: seletor Sem bucket / Atual 24% / Full 100% em P(qualidade) ──

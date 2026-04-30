@@ -259,16 +259,16 @@ export default function DecisaoDoMes({
                     <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 11 }}>{e.ticker}</div>
                   </td>
                   <td style={{ padding: '5px 6px', textAlign: 'right', color: 'var(--muted)', fontSize: 10 }}>
-                    {e.atual.toFixed(1)}%
+                    {privacyMode ? '••%' : `${e.atual.toFixed(1)}%`}
                   </td>
                   <td style={{ padding: '5px 6px', textAlign: 'right', color: 'var(--muted)', fontSize: 10 }}>
-                    {e.alvo.toFixed(1)}%
+                    {privacyMode ? '••%' : `${e.alvo.toFixed(1)}%`}
                   </td>
                   <td style={{ padding: '5px 6px', textAlign: 'right', fontWeight: 600, color: gapColor(e.gap) }}>
-                    {`${e.gap >= 0 ? '+' : ''}${e.gap.toFixed(1)}pp`}
+                    {privacyMode ? '••pp' : `${e.gap >= 0 ? '+' : ''}${e.gap.toFixed(1)}pp`}
                   </td>
                   <td style={{ padding: '5px 6px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
-                    {e.expectedReturn.toFixed(1)}%
+                    {privacyMode ? '••%' : `${e.expectedReturn.toFixed(1)}%`}
                   </td>
                 </tr>
               ))}
