@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T00:01:00', type: 'fix', component: 'WellnessScore', tab: 'now', anchor: 'section-wellness', de: 'Coluna detail estreita; replaceAll faltando em humanCapitalStatus', para: 'Coluna w-28; solteiro sem dependentes exibe correto' },
+  { datetime: '2026-04-30T00:01:00', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'Título "Modelo IIFPT"; "——/100" com dashes', para: 'Nome completo IIFPT; "/100" sem dashes' },
   { datetime: '2026-04-30T00:00:00', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'Siglas na tabela de interação (CF, RM)', para: 'Nomes completos (Cash Flow, Risk Mgmt)' },
   { datetime: '2026-04-30T23:45:00.000Z', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'acionáveis sem prazo e sem prefixo Issue', para: 'CF mostra prazo até FIRE (~14a), RM e Estate prefixados com "Issue"' },
   // ── 2026-04-30 — IifptPanel completo ──

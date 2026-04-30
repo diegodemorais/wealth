@@ -423,7 +423,7 @@ export default function HomePage() {
               { id: 'execution_fidelity', label: 'Exec. aportes', pts: execPts, max: 10, detail: 'dados insuf.', description: wc.metrics.find((m: any) => m.id === 'execution_fidelity')?.description ?? '' },
               { id: 'emergency_fund', label: 'Fundo emergência', pts: emergencyPts, max: 5, detail: `${(data.rf?.ipca2029?.valor ?? 0) > 0 ? (((data.rf?.ipca2029?.valor ?? 0) / custoMensal)).toFixed(1) : '?'}m`, description: wc.metrics.find((m: any) => m.id === 'emergency_fund')?.description ?? '' },
               { id: 'ter', label: 'TER vs VWRA', pts: terPts, max: 5, detail: (() => { const terCfg = wc.metrics.find((m: any) => m.id === 'ter'); const delta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22); return `${delta >= 0 ? '+' : ''}${(delta * 100).toFixed(1)}bp`; })(), description: wc.metrics.find((m: any) => m.id === 'ter')?.description ?? '' },
-              { id: 'human_capital', label: 'Capital humano', pts: humanPts, max: 5, detail: humanCapitalStatus.replace('_', ' '), description: wc.metrics.find((m: any) => m.id === 'human_capital')?.description ?? '' },
+              { id: 'human_capital', label: 'Capital humano', pts: humanPts, max: 5, detail: humanCapitalStatus.replaceAll('_', ' '), description: wc.metrics.find((m: any) => m.id === 'human_capital')?.description ?? '' },
             ].map(m => ({ ...m, isOk: m.pts / m.max >= 0.85 }));
 
             const totalScore = allMetrics.reduce((sum, m) => sum + m.pts, 0);
@@ -461,7 +461,7 @@ export default function HomePage() {
                 <div className="text-xs w-4 flex-shrink-0">{m.isOk ? <CheckCircle size={14} className="text-green" /> : <AlertCircle size={14} className="text-yellow" />}</div>
                 <div className="text-xs text-muted w-36 flex-shrink-0 truncate">{m.label}</div>
                 {renderBar(m.pts, m.max)}
-                <div className="text-xs text-muted w-14 flex-shrink-0 text-right">{m.detail}</div>
+                <div className="text-xs text-muted w-28 flex-shrink-0 text-right">{m.detail}</div>
                 <div className="text-xs text-muted w-10 flex-shrink-0 text-right">{m.pts}/{m.max}</div>
               </div>
             );

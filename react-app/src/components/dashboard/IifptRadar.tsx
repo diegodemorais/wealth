@@ -240,7 +240,7 @@ export function IifptRadar({
   return (
     <CollapsibleSection
       id="section-iifpt-radar"
-      title="Modelo IIFPT"
+      title="Interdependent Integrative Financial Planning Theory"
       defaultOpen={false}
       summary={summaryEl}
     >
@@ -260,7 +260,7 @@ export function IifptRadar({
               {privacyMode ? '••' : score}
             </div>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
-              ──/100
+              /100
             </div>
             <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4, textAlign: 'center' }}>
               score de planejamento
