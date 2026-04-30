@@ -239,7 +239,7 @@ describe('Schema Validation — Spec-Driven Contract', () => {
       expect(typeof coastFire?.coast_number_base).toBe('number');
       expect(typeof coastFire?.coast_number_fav).toBe('number');
       expect(typeof coastFire?.coast_number_stress).toBe('number');
-      expect(typeof coastFire?.passed_base ?? coastFire?.passou_base).toBe('boolean');
+      expect(typeof coastFire?.passou_base).toBe('boolean');
       expect(typeof coastFire?.gap_base).toBe('number');
       expect(typeof coastFire?.ano_projetado_base).toBe('number');
       expect(typeof coastFire?.fire_number).toBe('number');

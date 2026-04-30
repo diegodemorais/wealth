@@ -73,6 +73,7 @@ from config import (
     GASTO_PISO, SAUDE_BASE,
     CENARIOS_ESTENDIDOS,
     PFIRE_CANONICAL_BASE, PFIRE_CANONICAL_FAV, PFIRE_CANONICAL_STRESS,
+    FIRE_NUMBER_TARGET, N_ANOS_FIRE,
     update_dashboard_state,
 )
 
@@ -4958,6 +4959,94 @@ def main():
     except Exception as _e_bp:
         print(f"  ⚠️ bond_pool_status: falhou ao importar fire_montecarlo ({_e_bp})")
 
+    # ─── Coast FIRE Calculator (HD-gaps-aposenteaos40-spec Feature 1) ───────────
+    def compute_coast_fire(premissas: dict) -> dict:
+        """CoastNumber = FIRE_Number / (1 + r_real)^n.
+        Uses FIRE_NUMBER_TARGET from config.py; patrimônio from live total_brl.
+        """
+        from datetime import date as _date
+        fire_number = FIRE_NUMBER_TARGET  # R$10M — defined in config.py
+        patrimonio = premissas.get("patrimonio_atual", 3_472_335.0)
+        r_base = premissas.get("retorno_equity_base", RETORNO_EQUITY_BASE)
+        r_fav  = r_base + premissas.get("adj_favoravel", ADJ_FAVORAVEL)
+        r_str  = r_base + premissas.get("adj_stress",   ADJ_STRESS)
+        n      = premissas.get("n_anos_fire", N_ANOS_FIRE)
+        ano_atual = _date.today().year
+        aporte_anual = premissas.get("aporte_mensal", APORTE_MENSAL) * 12
+
+        def coast(r: float) -> float:
+            return fire_number / (1 + r) ** n
+
+        def ano_projetado(cn: float) -> int:
+            if patrimonio >= cn:
+                return ano_atual
+            for yr in range(0, 21):
+                proj = patrimonio * (1 + r_base) ** yr + aporte_anual * ((1 + r_base) ** yr - 1) / r_base
+                if proj >= cn:
+                    return ano_atual + yr
+            return ano_atual + 20
+
+        cn_base = coast(r_base)
+        cn_fav  = coast(r_fav)
+        cn_str  = coast(r_str)
+        return {
+            "coast_number_base":   round(cn_base, 0),
+            "coast_number_fav":    round(cn_fav, 0),
+            "coast_number_stress": round(cn_str, 0),
+            "gap_base":            round(cn_base - patrimonio, 0),
+            "passou_base":         patrimonio >= cn_base,
+            "passed_base":         patrimonio >= cn_base,  # English alias for QA schema tests
+            "ano_projetado_base":  ano_projetado(cn_base),
+            "r_real_base":         r_base,
+            "r_real_fav":          r_fav,
+            "r_real_stress":       r_str,
+            "n_anos":              n,
+            "fire_number":         fire_number,
+            "_metodo":             "coast_fire_formula",
+        }
+
+    # ─── FIRE Spectrum Widget (HD-gaps-aposenteaos40-spec Feature 2) ─────────────
+    def compute_fire_spectrum(premissas: dict) -> dict:
+        """4 FIRE bands by monthly-expense multiple. Custo = R$250k/ano = R$20.833/mês."""
+        custo_anual  = premissas.get("custo_vida_base", CUSTO_VIDA_BASE)
+        custo_mensal = custo_anual / 12
+        patrimonio   = premissas.get("patrimonio_atual", 3_472_335.0)
+
+        BANDAS = [
+            ("Fat FIRE",     400, 3.0),
+            ("FIRE",         300, 4.0),
+            ("Lean FIRE",    200, 6.0),
+            ("Barista FIRE", 150, 8.0),
+        ]
+
+        bandas_out = []
+        banda_atual = "below_barista"
+        for nome, mult, swr in BANDAS:
+            alvo = custo_mensal * mult
+            atingido = patrimonio >= alvo
+            pct = min(100.0, round(patrimonio / alvo * 100, 1))
+            bandas_out.append({
+                "nome": nome, "multiplo": mult, "swr_pct": swr,
+                "alvo_brl": round(alvo, 0), "atingido": atingido, "pct_atual": pct,
+            })
+            if atingido:
+                banda_atual = nome.lower().replace(" ", "_")
+
+        return {
+            "custo_mensal":     round(custo_mensal, 0),
+            "patrimonio_atual": patrimonio,
+            "bandas":           bandas_out,
+            "banda_atual":      banda_atual,
+            "_metodo":          "multiplo_gastos_mensais",
+        }
+
+    # ─── Coast FIRE + Spectrum (HD-gaps-aposenteaos40-spec) ─────────────────────
+    _premissas_for_coast = {**premissas_raw, "patrimonio_atual": total_brl}
+    coast_fire_data = compute_coast_fire(_premissas_for_coast)
+    fire_spectrum_data = compute_fire_spectrum(_premissas_for_coast)
+    print(f"  -> coast_fire: passou_base={coast_fire_data['passou_base']} | coast_number_base=R${coast_fire_data['coast_number_base']:,.0f} | gap=R${coast_fire_data['gap_base']:,.0f}")
+    print(f"  -> fire_spectrum: banda_atual={fire_spectrum_data['banda_atual']} | patrimônio={fire_spectrum_data['patrimonio_atual']:,.0f}")
+
     # ─── FIRE aggregate ─────────────────────────────────────────────────
     fire_section = {
         "bond_pool_readiness": bond_pool_readiness,
@@ -4977,7 +5066,15 @@ def main():
         "bond_pool_completion_pct":       _bp_status.get("completion_pct", 0.0) if _bp_status else 0.0,
         "bond_pool_fully_enabled":        (_bp_status.get("fully_enabled", False) if _bp_status else False),
         "bond_pool_completion_fraction":  (_bp_status.get("completion_fraction", 0.0) if _bp_status else 0.0),
+        "coast_fire":     coast_fire_data,
+        "fire_spectrum":  fire_spectrum_data,
     }
+
+    # Schema assertions — HD-gaps-aposenteaos40-spec
+    assert fire_section.get("coast_fire") is not None, "coast_fire missing"
+    assert isinstance(fire_section["coast_fire"]["coast_number_base"], float), "coast_number_base type"
+    assert fire_section.get("fire_spectrum") is not None, "fire_spectrum missing"
+    assert len(fire_section["fire_spectrum"]["bandas"]) == 4, "fire_spectrum bandas"
 
     # Earliest FIRE date
     earliest_fire = compute_earliest_fire(pfire_aspiracional, pfire_base, premissas_raw)

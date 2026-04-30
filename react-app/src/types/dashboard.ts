@@ -171,6 +171,42 @@ export interface BondPoolReadiness {
   [key: string]: unknown;
 }
 
+/** Coast FIRE Calculator — HD-gaps-aposenteaos40-spec Feature 1 */
+export interface CoastFireData {
+  coast_number_base: number;
+  coast_number_fav: number;
+  coast_number_stress: number;
+  gap_base: number;
+  passou_base: boolean;
+  passed_base?: boolean;  // English alias for QA schema tests
+  ano_projetado_base: number;
+  r_real_base: number;
+  r_real_fav: number;
+  r_real_stress: number;
+  n_anos: number;
+  fire_number: number;
+  _metodo: string;
+}
+
+/** Single band in the FIRE Spectrum — HD-gaps-aposenteaos40-spec Feature 2 */
+export interface FireSpectrumBand {
+  nome: string;
+  multiplo: number;
+  swr_pct: number;
+  alvo_brl: number;
+  atingido: boolean;
+  pct_atual: number;
+}
+
+/** FIRE Spectrum — 4 bands by monthly-expense multiple */
+export interface FireSpectrumData {
+  custo_mensal: number;
+  patrimonio_atual: number;
+  bandas: FireSpectrumBand[];
+  banda_atual: string;
+  _metodo: string;
+}
+
 /** FIRE module — Monte Carlo results + bond pool status */
 export interface FireModuleData {
   bond_pool_readiness?: BondPoolReadiness;
@@ -194,6 +230,8 @@ export interface FireModuleData {
   bond_pool_fully_enabled?: boolean;
   bond_pool_completion_pct?: number;
   bond_pool_completion_fraction?: number;
+  coast_fire?: CoastFireData;
+  fire_spectrum?: FireSpectrumData;
   [key: string]: unknown;
 }
 
