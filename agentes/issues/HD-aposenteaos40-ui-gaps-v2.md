@@ -6,8 +6,9 @@
 |-------|-------|
 | **ID** | HD-aposenteaos40-ui-gaps-v2 |
 | **Dono** | Head |
-| **Status** | Concluído (Gaps 1+2) |
-| **Prioridade** | 🟡 Média |
+| **Status** | Em andamento — Gaps 1+2 concluídos, Gaps 3+4 pendentes |
+| **Prioridade** | 🟢 Baixa |
+| **Retomar em** | Próxima sessão — continuar pelos Gaps 3+4 |
 | **Criado em** | 2026-04-30 |
 | **Origem** | Screenshot do dashboard aposenteaos40.org enviado por Diego |
 | **Relacionado** | HD-benchmark-aposenteaos40 (benchmark anterior, 2026-04-30) |
