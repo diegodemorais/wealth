@@ -465,6 +465,7 @@ export default function FirePage() {
                 coast={coastFire}
                 patrimonioAtual={patrimonioAtual}
                 privacyMode={privacyMode}
+                aporteAnual={((data as any)?.premissas?.aporte_mensal ?? 25_000) * 12}
               />
             </div>
           </CollapsibleSection>

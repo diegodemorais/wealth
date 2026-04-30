@@ -8,6 +8,7 @@ interface CoastFireCardProps {
   coast: CoastFireData;
   patrimonioAtual: number;
   privacyMode: boolean;
+  aporteAnual?: number;       // from premissas.aporte_mensal * 12
 }
 
 type Scenario = {
@@ -18,14 +19,14 @@ type Scenario = {
   ano: number;
 };
 
-function buildScenarios(coast: CoastFireData, patrimonioAtual: number): Scenario[] {
+function buildScenarios(coast: CoastFireData, patrimonioAtual: number, aporteAnual: number): Scenario[] {
   const ano = (cn: number, r: number): number => {
     if (patrimonioAtual >= cn) return new Date().getFullYear();
     // binary search same logic as pipeline
     for (let yr = 0; yr <= 20; yr++) {
       const proj =
         patrimonioAtual * (1 + r) ** yr +
-        (300_000 * ((1 + r) ** yr - 1)) / r;
+        (aporteAnual * ((1 + r) ** yr - 1)) / r;
       if (proj >= cn) return new Date().getFullYear() + yr;
     }
     return new Date().getFullYear() + 20;
@@ -56,7 +57,7 @@ function buildScenarios(coast: CoastFireData, patrimonioAtual: number): Scenario
   ];
 }
 
-export function CoastFireCard({ coast, patrimonioAtual, privacyMode }: CoastFireCardProps) {
+export function CoastFireCard({ coast, patrimonioAtual, privacyMode, aporteAnual = 300_000 }: CoastFireCardProps) {
   const progressPct = Math.min(100, (patrimonioAtual / coast.coast_number_base) * 100);
   const progressColor = coast.passou_base
     ? 'var(--green)'
@@ -64,7 +65,7 @@ export function CoastFireCard({ coast, patrimonioAtual, privacyMode }: CoastFire
       ? 'var(--yellow)'
       : 'var(--red)';
 
-  const scenarios = buildScenarios(coast, patrimonioAtual);
+  const scenarios = buildScenarios(coast, patrimonioAtual, aporteAnual);
 
   return (
     <div

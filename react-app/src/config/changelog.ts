@@ -15,6 +15,8 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'TimeToFireProgressBar', tab: 'now', anchor: '', de: 'idade 39 hardcoded', para: 'usa premissas.idade_atual dinâmico' },
+  { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'CoastFireCard', tab: 'fire', anchor: 'section-coast-fire', de: 'aporte R$300k hardcoded', para: 'usa premissas.aporte_mensal × 12 dinâmico' },
   { datetime: '2026-04-30T00:04:00', type: 'visual', component: 'TrackingFireChart', tab: 'fire', anchor: 'section-fire-trilha', de: 'Sem contexto de origem das bandas FIRE', para: 'Notas compactas: origem acadêmica vs convenção de comunidade por banda' },
   { datetime: '2026-04-30T00:03:00', type: 'gráfico', component: 'TrackingFireChart', tab: 'fire', anchor: 'section-fire-trilha', de: 'Sem marcos de milestone FIRE', para: 'Marcos Barista/Lean/FIRE como linhas horizontais + markers no cruzamento do P50' },
   { datetime: '2026-04-30T00:02:00', type: 'visual', component: 'IifptPanel', tab: 'now', anchor: 'section-iifpt-radar', de: 'Score hero sem label "SCORE", /100 em linha separada', para: 'Score hero com label SCORE + /100 · planejamento alinhado ao WellnessScore' },

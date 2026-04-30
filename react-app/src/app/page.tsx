@@ -291,6 +291,7 @@ export default function HomePage() {
           patrimonioAtual={d.firePatrimonioAtual}
           patrimonioGatilho={d.firePatrimonioGatilho}
           swrFireDay={d.swrFireDay}
+          idadeAtual={(data as any)?.premissas?.idade_atual ?? 39}
         />
       </div>
 

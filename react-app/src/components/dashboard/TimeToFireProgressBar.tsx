@@ -10,6 +10,7 @@ export interface TimeToFireProgressBarProps {
   patrimonioAtual?: number;
   patrimonioGatilho?: number;
   swrFireDay?: number;        // decimal (e.g., 0.0281)
+  idadeAtual?: number;        // from premissas.idade_atual
 }
 
 export function TimeToFireProgressBar({
@@ -18,13 +19,14 @@ export function TimeToFireProgressBar({
   patrimonioAtual,
   patrimonioGatilho,
   swrFireDay,
+  idadeAtual = 39,
 }: TimeToFireProgressBarProps) {
   const { privacyMode } = useUiStore();
 
   const yearsLabel = decimalYearsToYearsMonths(yearsToFire).long;
   const currentYear = new Date().getFullYear();
   const targetYear = currentYear + Math.ceil(yearsToFire);
-  const targetAge = 39 + Math.ceil(yearsToFire); // Diego: 39 anos em 2026
+  const targetAge = idadeAtual + Math.ceil(yearsToFire);
 
   const progressPct = Math.min(Math.max(fireProgress, 0), 1) * 100;
 

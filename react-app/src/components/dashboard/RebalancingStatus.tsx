@@ -85,7 +85,8 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
 
         {/* Drift bars */}
         <div>
-          <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>Desvios por Ativo</div>
+          <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>Desvios por Ativo</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '12px' }}>% do portfolio total</div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             {driftItems.map(item => {
@@ -239,7 +240,9 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
             <ul style={{ margin: 0, paddingLeft: '20px', fontSize: 'var(--text-sm)', color: 'var(--text)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {itemsOutOfTolerance.map(item => (
                 <li key={item.ticker}>
-                  {item.driftPp > 0 ? 'Vender' : 'Comprar'} {item.ticker} ({Math.abs(item.driftPp).toFixed(1)}pp acima do alvo)
+                  {item.driftPp > 0
+                    ? `Aguardar — ${item.ticker} ${item.driftPp.toFixed(1)}pp acima do alvo · aportar nos deficitários`
+                    : `Comprar ${item.ticker} (${Math.abs(item.driftPp).toFixed(1)}pp subpeso)`}
                 </li>
               ))}
             </ul>
@@ -248,7 +251,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
 
         {/* Footer note */}
         <div style={{ padding: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
-          <strong>📌 Nota:</strong> Rebalanceamento recomendado quando qualquer ativo desviar &gt;{driftThresholdPp}pp do alvo. Realizar trimestralmente ou quando gatilho disparar. Tax-aware: considerar IR ao executar vendas.
+          <strong>📌 Nota:</strong> Rebalanceamento via aporte — comprar o deficitário, nunca vender o excedente. Revisar trimestralmente ou quando desvio superar {driftThresholdPp}pp.
         </div>
       </div>
     </div>
