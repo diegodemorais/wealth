@@ -251,7 +251,7 @@ export default function PerformancePage() {
                 targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? backtest.metrics?.target?.cagr ?? 14.14,
                 swrdReturn: backtest.metrics_by_period?.all?.shadowA?.cagr ?? backtest.metrics?.shadowA?.cagr ?? 12.96,
               }}
-              alphaLiquidoPctYear={0.16}
+              alphaLiquidoPctYear={((data as any)?.premissas?.haircut_alpha_liquido ?? 0.0016) * 100}
             />
           );
         })()}

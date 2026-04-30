@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | FR-audit-p0-bugs |
 | **Dono** | Dev |
-| **Status** | Aberta |
+| **Status** | Fechada ✅ 2026-04-30 |
 | **Prioridade** | 🔴 P0 — Bugs / Violações / Dados Errados |
 | **Criado em** | 2026-04-30 |
 | **Origem** | HD-visual-audit-playwright — Fase 3 (síntese) |
@@ -273,13 +273,13 @@ Verificar se `haircut_alpha_liquido` está em decimal ou % no pipeline para ajus
 ## Checklist de Execução
 
 - [x] B1 — RebalancingStatus: trocar "Vender" por lógica no-sell + remover menção IR vendas ✅ 2026-04-30
-- [ ] B2 — E[R] column: renomear coluna para "E[R] USD" + tooltip (fix rápido) ou converter BRL (fix completo)
+- [x] B2 — E[R] column: renomear coluna para "E[R] USD" + tooltip ✅ 2026-04-30
 - [x] B3 — RebalancingStatus targets: adicionar clareza "% total portfolio" + remover menção de vendas no footer ✅ 2026-04-30
 - [x] B4 — TimeToFireProgressBar: substituir `39` por `premissas.idade_atual` ✅ 2026-04-30
-- [ ] B5 — Hero FIRE: substituir "2040" hardcoded por `premissas.fire_year_base` dinâmico — campo ausente no pipeline, aguarda extensão
+- [x] B5 — Hero FIRE: substituir "2040" hardcoded por `premissas.fire_year_base` dinâmico ✅ 2026-04-30 (pipeline extendido: fire_year_base = ano_atual + FIRE_AGE_BASE - idade_atual)
 - [x] B6 — CoastFireCard: substituir `300_000` por `premissas.aporte_mensal * 12` ✅ 2026-04-30
-- [ ] B7 — Renda Floor Katia: trocar `pfire_aspiracional` por `pfire_by_profile.casado` — `pfire_by_profile` vazio no pipeline, aguarda extensão
+- [x] B7 — Renda Floor Katia: trocar `pfire_aspiracional` por `pfire_by_profile.casado` ✅ 2026-04-30 (stub: casado=null até MC per-profile implementado)
 - [~] B8 — Piso gasto: reclassificado — não é P0. Depende de spending smile (FR-audit-p1-missing/G4)
 - [x] B9 — DCA Renda+ badge vs recomendação: adicionar check posição vs alvo em `getAcaoRecomendada` ✅ 2026-04-30
 - [x] B10 — Alpha annualização: fórmula geométrica ✅ 2026-04-30
-- [ ] B11 — Fee Analysis: usar `premissas.haircut_alpha_liquido` dinâmico — campo ausente no pipeline, aguarda extensão
+- [x] B11 — Fee Analysis: usar `premissas.haircut_alpha_liquido` dinâmico ✅ 2026-04-30 (pipeline extendido: haircut_alpha_liquido = 0.0016 de McLean & Pontiff 2016)

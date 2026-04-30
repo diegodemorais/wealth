@@ -255,6 +255,12 @@ PFIRE_CANONICAL_BASE   = _P.get("pfire_canonical_base",   84.1)
 PFIRE_CANONICAL_FAV    = _P.get("pfire_canonical_fav",    91.4)
 PFIRE_CANONICAL_STRESS = _P.get("pfire_canonical_stress", 79.0)
 
+# FIRE cenário base — idade alvo (fonte: carteira.md §Meta FIRE 2026-04-30)
+FIRE_AGE_BASE = _P.get("fire_age_base", 53)
+
+# Alpha líquido fatorial pós-haircut (fonte: McLean & Pontiff 2016, QUANT-006 2026-04-29)
+HAIRCUT_ALPHA_LIQUIDO = _P.get("haircut_alpha_liquido", 0.0016)
+
 # Withdrawal Engine — VPW / Guyton-Klinger constants (fonte: withdrawal_engine.py)
 GASTO_TETO_PCT        = _P.get("gasto_teto_pct",        400_000)
 GASTO_TETO_VPW        = _P.get("gasto_teto_vpw",        500_000)

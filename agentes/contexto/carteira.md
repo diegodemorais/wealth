@@ -454,3 +454,5 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | pfire_canonical_base   | 83.7   | P(FIRE) base canônico (MC 10k, VCMH 3.5%, SAUDE_DECAY 15%, RF 5.34%) |
 | pfire_canonical_fav    | 91.0   | P(FIRE) favorável canônico |
 | pfire_canonical_stress | 78.9   | P(FIRE) stress canônico |
+| fire_age_base | 53 | Cenário Base — idade alvo FIRE (2040 = 39+14 anos); carteira.md §Meta FIRE 2026-04-30 |
+| haircut_alpha_liquido | 0.0016 | McLean & Pontiff 2016 — alpha líquido pós-haircut 58%: 0.20% bruto × 0.42 = 0.16%/ano; QUANT-006 validado 2026-04-29 |

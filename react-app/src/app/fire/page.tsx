@@ -155,7 +155,7 @@ export default function FirePage() {
       }}>
         {/* P(FIRE) */}
         <div style={{ textAlign: 'center', minWidth: 100 }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>P(FIRE 2040)</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>{`P(FIRE ${(data as any)?.premissas?.fire_year_base ?? 2040})`}</div>
           <div style={{ fontSize: '2.5rem', fontWeight: 900, color: pfireHeroColor, lineHeight: 1 }} data-testid="pfire-hero">
             {pfireHero != null ? (privacyMode ? '••%' : `${pfireHero.toFixed(1)}%`) : '—'}
           </div>
@@ -494,7 +494,7 @@ export default function FirePage() {
       {/* Gap F: Renda Floor Katia — nota conservadora no modelo MC */}
       {(() => {
         const inssKatiaAnual: number = prem.inss_katia_anual ?? 0;
-        const pfireCasal: number | null = (data as any)?.pfire_aspiracional?.base ?? null; // proxy: aspiracional inclui Katia
+        const pfireCasal: number | null = (data as any)?.pfire_by_profile?.casado?.base ?? null;
         if (!inssKatiaAnual) return null;
         return (
           <div

@@ -222,7 +222,7 @@ export default function DecisaoDoMes({
             marginBottom: 12,
           }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--green)' }}>
-              ETF PRIORITÁRIO: {top.ticker} &nbsp;+{top.gap.toFixed(1)}pp subpeso · E[R] {top.expectedReturn.toFixed(1)}%
+              ETF PRIORITÁRIO: {top.ticker} &nbsp;+{top.gap.toFixed(1)}pp subpeso · E[R] USD {top.expectedReturn.toFixed(1)}%
             </div>
             <div style={{ fontSize: 10, color: 'var(--muted)' }}>
               comprar no próximo aporte
@@ -240,7 +240,10 @@ export default function DecisaoDoMes({
                 <th style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--muted)', fontWeight: 500 }}>Atual%</th>
                 <th style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--muted)', fontWeight: 500 }}>Alvo%</th>
                 <th style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--muted)', fontWeight: 500 }}>Gap</th>
-                <th style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--muted)', fontWeight: 500 }}>E[R]</th>
+                <th style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--muted)', fontWeight: 500 }}
+                  title="Retorno esperado real em USD (não inclui efeito câmbio BRL/USD)">
+                  E[R] USD
+                </th>
               </tr>
             </thead>
             <tbody>

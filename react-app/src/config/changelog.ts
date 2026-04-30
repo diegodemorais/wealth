@@ -15,6 +15,11 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-04-30T13:00:00', type: 'fix', component: 'DecisaoDoMes', tab: 'now', anchor: 'section-decisao-mes', de: 'Coluna "E[R]" sem unidade/contexto', para: '"E[R] USD" com tooltip explicando retorno em USD real (não BRL)' },
+  { datetime: '2026-04-30T12:00:00', type: 'fix', component: 'RebalancingStatus', tab: 'now', anchor: 'section-rebalancing', de: '"Vender {ticker}" quando drift > 0 — viola regra no-sell da IPS', para: '"Aguardar — X acima do alvo, aportar nos deficitários". Footer sem menção de IR em vendas.' },
+  { datetime: '2026-04-30T12:00:00', type: 'fix', component: 'PFireHeroBanner', tab: 'fire', anchor: '', de: 'Label "P(FIRE 2040)" hardcoded', para: 'Label dinâmico usa premissas.fire_year_base do pipeline' },
+  { datetime: '2026-04-30T12:00:00', type: 'fix', component: 'RendaFloorKatia', tab: 'fire', anchor: '', de: 'pfireCasal usa pfire_aspiracional como proxy incorreto', para: 'pfireCasal usa pfire_by_profile.casado.base (campo correto, null enquanto MC casal não rodou)' },
+  { datetime: '2026-04-30T12:00:00', type: 'fix', component: 'FeeAnalysisCard', tab: 'performance', anchor: 'section-alpha-swrd', de: 'alphaLiquidoPctYear=0.16 hardcoded', para: 'Usa premissas.haircut_alpha_liquido × 100 do pipeline (McLean & Pontiff 2016)' },
   { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'RFStatusPanel', tab: 'now', anchor: 'section-dca-status', de: 'DCA badge contradiz recomendação quando posição >= alvo', para: 'recomendação verifica posição antes de checar taxa' },
   { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'AlphaVsSWRDChart', tab: 'performance', anchor: 'section-alpha-swrd', de: 'annualização alpha por média aritmética', para: 'média geométrica (compounding correto)' },
   { datetime: '2026-04-30T00:00:00', type: 'fix', component: 'TimeToFireProgressBar', tab: 'now', anchor: '', de: 'idade 39 hardcoded', para: 'usa premissas.idade_atual dinâmico' },

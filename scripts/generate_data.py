@@ -75,6 +75,7 @@ from config import (
     PFIRE_CANONICAL_BASE, PFIRE_CANONICAL_FAV, PFIRE_CANONICAL_STRESS,
     FIRE_NUMBER_TARGET, N_ANOS_FIRE,
     IIFPT_COVERAGE,
+    FIRE_AGE_BASE, HAIRCUT_ALPHA_LIQUIDO,
     update_dashboard_state,
 )
 
@@ -4321,6 +4322,11 @@ def main():
             "AVGS": {"retorno_usd_real": RETORNO_AVGS_USD_REAL, "fonte": "Mediana multi-fonte + haircut 58% (McLean & Pontiff 2016)"},
             "AVEM": {"retorno_usd_real": RETORNO_AVEM_USD_REAL, "fonte": "Média 4 fontes: AQR/JPM/GMO/RA arredondado conserv."},
         },
+        # FIRE year base — derivado de idade_atual + delta até fire_age_base
+        "fire_age_base":       FIRE_AGE_BASE,
+        "fire_year_base":      int(datetime.now().year) + (FIRE_AGE_BASE - int(premissas_raw.get("idade_atual", IDADE_ATUAL))),
+        # Alpha líquido fatorial pós-haircut 58% McLean & Pontiff 2016 (QUANT-006 2026-04-29)
+        "haircut_alpha_liquido": HAIRCUT_ALPHA_LIQUIDO,
     }
 
     # Último aporte mensal + COE net — lidos da última linha do CSV historico_carteira.csv
@@ -5335,6 +5341,15 @@ def main():
         "pfire_aspiracional":       pfire_aspiracional,
         "pfire_base":              pfire_base,
         "pfire_cenarios_estendidos": pfire_cenarios_estendidos,
+        # pfire_by_profile: P(FIRE) por perfil familiar (atual/casado/filho).
+        # atual = pfire_base (solteiro, cenário base idêntico).
+        # casado/filho: TODO — MC por perfil (fire_montecarlo --by-profile).
+        # Stub atual permite React usar campo sem fallback incorreto.
+        "pfire_by_profile": {
+            "atual":  {"base": pfire_base.get("base"),  "fav": pfire_base.get("fav"),  "stress": pfire_base.get("stress")},
+            "casado": {"base": None, "fav": None, "stress": None},  # TODO: MC com tem_conjuge=True, custo_vida_casado
+            "filho":  {"base": None, "fav": None, "stress": None},  # TODO: MC com tem_conjuge=True, custo_vida_filho
+        },
         "premissas":  premissas,
         "guardrails": guardrails,
         "gasto_piso": gasto_piso,
@@ -5548,6 +5563,14 @@ def main():
     data["pfire_sensitivity"] = pfire_sensitivity
     assert data.get("pfire_sensitivity") is not None, "pfire_sensitivity missing"
     print(f"  ✓ Gap N pfire_sensitivity: {len(pfire_sensitivity)} cenários (analítico)")
+
+    # Schema assertions for the 3 new fields added 2026-04-30
+    assert data["premissas"].get("fire_year_base") is not None, "premissas.fire_year_base ausente"
+    assert isinstance(data["premissas"]["fire_year_base"], int), "premissas.fire_year_base deve ser int"
+    assert data["premissas"].get("haircut_alpha_liquido") is not None, "premissas.haircut_alpha_liquido ausente"
+    assert data.get("pfire_by_profile") is not None, "pfire_by_profile ausente"
+    assert "atual" in data["pfire_by_profile"], "pfire_by_profile.atual ausente"
+    print(f"  ✓ premissas.fire_year_base={data['premissas']['fire_year_base']} | haircut_alpha_liquido={data['premissas']['haircut_alpha_liquido']} | pfire_by_profile.atual.base={data['pfire_by_profile']['atual']['base']}")
 
     # Percentis de P(FIRE) derivados da análise de sensibilidade (não bootstrap).
     # Bootstrap com n=10k dá spread de ~0.9pp — precisão estatística, não incerteza real.
