@@ -23,7 +23,9 @@
       "Bash(echo \"Exit code: $?\")",
       "Bash(git add:*)",
       "Bash(git commit -m ':*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(rm /home/user/wealth/.git/index.lock)",
+      "Bash(git commit -m ' *)"
     ],
     "deny": [
       "mcp__openspace__execute_task",
