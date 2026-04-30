@@ -15,11 +15,14 @@ const ETF_NAMES: Record<string, string> = {
   AVGS: 'AVGS — Global Small Cap Value',
   AVEM: 'AVEM — Emerging Markets Value',
 };
+// A2: Separar RMW (Profitability) e CMA (Investment) em vez de colapsar em "Quality"
 const FACTOR_LABELS: Record<string, string> = {
   market: 'Market',
-  value: 'Value',
-  size: 'Size',
-  quality: 'Quality',
+  value: 'Value (HML)',
+  size: 'Size (SMB)',
+  rmw: 'Profitability (RMW)',
+  cma: 'Investment (CMA)',
+  quality: 'Quality (legacy)',
 };
 
 type Tab = 'SWRD' | 'AVGS' | 'AVEM' | 'todos';
@@ -64,18 +67,54 @@ const ETFFactorComposition: React.FC = () => {
 
   const etfData = useMemo(() => {
     const etfs = (data as any)?.etf_composition?.etfs ?? {};
+    // A2: Use factor_loadings (FF5 regression) when available; fallback to etf_composition.fatores
+    const factorLoadings = (data as any)?.factor_loadings ?? {};
+    // Map ETF tickers to factor_loadings keys (AVGS = proxy via AVUV+AVDV, not in loadings directly)
+    const loadingKeyMap: Record<string, string> = { SWRD: 'SWRD' };
     const result: Record<string, { label: string; fatores: Array<{ name: string; pct: number }> }> = {};
     for (const key of ['SWRD', 'AVGS', 'AVEM']) {
       const etf = etfs[key] ?? {};
-      const fatores = etf.fatores ?? {};
-      result[key] = {
-        label: ETF_NAMES[key] ?? key,
-        fatores: Object.entries(FACTOR_LABELS)
-          .map(([fKey, fLabel]) => ({
-            name: fLabel,
-            pct: Math.round(((fatores[fKey] as number) ?? 0) * 100),
-          })),
-      };
+      const legacyFatores = etf.fatores ?? {};
+      const loadingKey = loadingKeyMap[key];
+      const ff5 = loadingKey ? (factorLoadings[loadingKey] ?? null) : null;
+
+      // If FF5 loadings available: use them (abs value scaled to %); otherwise legacy fatores
+      let fatores: Array<{ name: string; pct: number }>;
+      if (ff5 && (ff5.smb != null || ff5.hml != null)) {
+        // Normalize FF5 loadings: show absolute values, scale for display (loading × 50 for visual range)
+        const toDisplayPct = (v: number) => Math.min(100, Math.max(0, Math.round(Math.abs(v) * 50)));
+        fatores = [
+          { name: 'Market (Mkt-RF)', pct: Math.min(100, Math.round(Math.abs(ff5.mkt_rf ?? 1) * 80)) },
+          { name: 'Value (HML)', pct: toDisplayPct(ff5.hml ?? 0) },
+          { name: 'Size (SMB)', pct: toDisplayPct(ff5.smb ?? 0) },
+          { name: 'Profitability (RMW)', pct: toDisplayPct(ff5.rmw ?? 0) },
+          { name: 'Investment (CMA)', pct: toDisplayPct(ff5.cma ?? 0) },
+        ].filter(f => f.pct > 0);
+      } else {
+        // Legacy fatores: use separate rmw/cma if available, otherwise split quality
+        const hasRmwCma = legacyFatores.rmw != null || legacyFatores.cma != null;
+        if (hasRmwCma) {
+          fatores = [
+            { name: 'Market', pct: Math.round((legacyFatores.market ?? 0) * 100) },
+            { name: 'Value (HML)', pct: Math.round((legacyFatores.value ?? 0) * 100) },
+            { name: 'Size (SMB)', pct: Math.round((legacyFatores.size ?? 0) * 100) },
+            { name: 'Profitability (RMW)', pct: Math.round((legacyFatores.rmw ?? 0) * 100) },
+            { name: 'Investment (CMA)', pct: Math.round((legacyFatores.cma ?? 0) * 100) },
+          ].filter(f => f.pct > 0);
+        } else {
+          // Legacy: split "quality" into RMW+CMA estimate (60/40)
+          const qualityRaw: number = legacyFatores.quality ?? 0;
+          fatores = [
+            { name: 'Market', pct: Math.round((legacyFatores.market ?? 0) * 100) },
+            { name: 'Value (HML)', pct: Math.round((legacyFatores.value ?? 0) * 100) },
+            { name: 'Size (SMB)', pct: Math.round((legacyFatores.size ?? 0) * 100) },
+            { name: 'Profitability (RMW)', pct: Math.round(qualityRaw * 0.6 * 100) },
+            { name: 'Investment (CMA)', pct: Math.round(qualityRaw * 0.4 * 100) },
+          ].filter(f => f.pct > 0);
+        }
+      }
+
+      result[key] = { label: ETF_NAMES[key] ?? key, fatores };
     }
     return result;
   }, [data]);
@@ -132,6 +171,10 @@ const ETFFactorComposition: React.FC = () => {
           <FactorBars fatores={etfData[selectedTab]?.fatores ?? []} />
         </div>
       )}
+      {/* A2: FF5 legend — RMW (Profitability) vs CMA (Investment) distinction */}
+      <div style={{ marginTop: 10, fontSize: 9, color: 'var(--muted)', lineHeight: 1.5 }}>
+        FF5: HML = value (book-to-market) · SMB = size · RMW = profitability · CMA = investment (asset growth)
+      </div>
     </div>
   );
 };

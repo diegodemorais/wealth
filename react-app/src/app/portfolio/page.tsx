@@ -130,21 +130,25 @@ export default function PortfolioPage() {
 
       <SectionDivider label="Alocação & Drift" />
 
-      {/* Gap H: Factor Drought Counter — badge AVGS vs SWRD */}
+      {/* Gap H: Factor Drought Counter — badge AVGS vs SWRD + AVEM vs SWRD (B7: pipeline data, B8: AVEM) */}
       {(() => {
         const fs = (data as any)?.factor_signal;
-        if (!fs) return null;
-        const excessYtd: number = fs.excess_ytd_pp ?? 0;
-        const excessSinceLaunch: number = fs.excess_since_launch_pp ?? 0;
-        const mesesDesde: number = Math.round(fs.meses_desde_launch ?? 0);
-        const avgsLaunchDate: string = fs.avgs_launch_date ?? '';
-        // Drought = meses de underperformance consecutiva. Se excess > 0 atualmente, drought = 0.
-        // Use backtest_r7.factor_drought for historical context (max drought = 153m).
-        const maxMesesHistorico: number = (data as any)?.backtest_r7?.factor_drought?.max_meses ?? 153;
-        // Current drought: approximation — if excess_since_launch >= 0, AVGS is ahead; no drought right now.
-        const droughtAtual = excessSinceLaunch >= 0 ? 0 : mesesDesde;
+        const fr = (data as any)?.factor_rolling;
+        if (!fs && !fr) return null;
+        const excessYtd: number = fs?.excess_ytd_pp ?? 0;
+        const excessSinceLaunch: number = fs?.excess_since_launch_pp ?? 0;
+        const mesesDesde: number = Math.round(fs?.meses_desde_launch ?? 0);
+        const avgsLaunchDate: string = fs?.avgs_launch_date ?? '';
+        // B7: Use pipeline value directly — factor_rolling.drought_months is the canonical source
+        const droughtAtual: number = fr?.drought_months ?? 0;
         const droughtStatus = droughtAtual === 0 ? 'verde' : droughtAtual < 12 ? 'verde' : droughtAtual < 24 ? 'amarelo' : 'vermelho';
         const droughtColor = droughtStatus === 'verde' ? 'var(--green)' : droughtStatus === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+        const maxMesesHistorico: number = (data as any)?.backtest_r7?.factor_drought?.max_meses ?? 153;
+        // B8: AVEM factor signal — from factor_signal.avem_ytd_pct or factor_rolling.avem_vs_swrd_12m if present
+        const avemYtd: number | null = fs?.avem_ytd_pct ?? null;
+        const avemExcess: number | null = avemYtd != null && fs?.swrd_ytd_pct != null ? avemYtd - fs.swrd_ytd_pct : null;
+        const avemDroughtMonths: number = fr?.avem_drought_months ?? 0;
+        const avemDroughtColor = avemDroughtMonths === 0 ? 'var(--green)' : avemDroughtMonths < 12 ? 'var(--green)' : avemDroughtMonths < 24 ? 'var(--yellow)' : 'var(--red)';
         return (
           <div
             data-testid="factor-drought-counter"
@@ -155,34 +159,54 @@ export default function PortfolioPage() {
               borderRadius: 'var(--radius-sm)',
               padding: '10px 16px',
               marginBottom: 12,
-              display: 'flex',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 16,
             }}
           >
-            <div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Factor Drought — AVGS vs SWRD</div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 800, color: droughtColor }}>
-                {droughtAtual === 0 ? 'Sem drought' : `${droughtAtual}m underperformance`}
+            {/* AVGS row */}
+            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 8 }}>
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Factor Drought — AVGS vs SWRD</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: droughtColor }}>
+                  {droughtAtual === 0 ? 'Sem drought' : `${droughtAtual}m underperformance`}
+                </div>
+              </div>
+              <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Excess YTD</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: excessYtd >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                  {excessYtd >= 0 ? '+' : ''}{excessYtd.toFixed(2)}pp
+                </div>
+              </div>
+              <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+              <div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Excess Desde Lançamento</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: excessSinceLaunch >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                  {excessSinceLaunch >= 0 ? '+' : ''}{excessSinceLaunch.toFixed(2)}pp · {mesesDesde}m
+                </div>
               </div>
             </div>
-            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
-            <div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Excess YTD</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: excessYtd >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                {excessYtd >= 0 ? '+' : ''}{excessYtd.toFixed(2)}pp
+            {/* B8: AVEM row — monitoring em mercados emergentes */}
+            {avemExcess != null && (
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginTop: 6, paddingTop: 6, borderTop: '1px solid var(--border)' }}>
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Factor Drought — AVEM vs SWRD</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: avemDroughtColor }}>
+                    {avemDroughtMonths === 0 ? 'Sem drought' : `${avemDroughtMonths}m underperformance`}
+                  </div>
+                </div>
+                <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+                <div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Excess YTD (AVEM−SWRD)</div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: avemExcess >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                    {avemExcess >= 0 ? '+' : ''}{avemExcess.toFixed(2)}pp
+                  </div>
+                </div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
+                  AVEM = EM value tilt (AVEM ytd: {avemYtd != null ? `${avemYtd.toFixed(1)}%` : '—'})
+                </div>
               </div>
-            </div>
-            <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
-            <div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Excess Desde Lançamento</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: excessSinceLaunch >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                {excessSinceLaunch >= 0 ? '+' : ''}{excessSinceLaunch.toFixed(2)}pp · {mesesDesde}m
-              </div>
-            </div>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', width: '100%', marginTop: -4 }}>
-              Desde {avgsLaunchDate} · Pior drought histórico: {maxMesesHistorico}m · Threshold: verde &lt;12m · amarelo 12–24m · vermelho &gt;24m
+            )}
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 6 }}>
+              AVGS desde {avgsLaunchDate} · Drought = pipeline: factor_rolling.drought_months · Pior histórico: {maxMesesHistorico}m
             </div>
           </div>
         );
@@ -359,9 +383,132 @@ export default function PortfolioPage() {
                 {svPct >= 0 ? '+' : ''}{svPct.toFixed(2)}%
               </div>
             </div>
+            {/* B5: Percentil RMW (Profitability spread) — via factor_loadings SWRD regression */}
+            {(() => {
+              const pctRmw: number | null = fvs.percentile_rmw ?? null;
+              const rmwLoading: number | null = (data as any)?.factor_loadings?.SWRD?.rmw ?? null;
+              if (pctRmw != null) {
+                const rmwColor = pctRmw > 75 ? 'var(--green)' : pctRmw > 25 ? 'var(--text)' : 'var(--red)';
+                return (
+                  <>
+                    <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+                    <div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Percentil RMW</div>
+                      <div style={{ fontSize: '1rem', fontWeight: 700, color: rmwColor }}>
+                        P{Math.round(pctRmw)}
+                      </div>
+                    </div>
+                  </>
+                );
+              }
+              // Fallback: show SWRD RMW loading as indicative
+              if (rmwLoading != null) {
+                const rmwLoadingColor = rmwLoading > 0.1 ? 'var(--green)' : rmwLoading < -0.1 ? 'var(--red)' : 'var(--muted)';
+                return (
+                  <>
+                    <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+                    <div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>RMW Loading (SWRD)</div>
+                      <div style={{ fontSize: '1rem', fontWeight: 700, color: rmwLoadingColor }}>
+                        {rmwLoading.toFixed(3)}
+                      </div>
+                    </div>
+                  </>
+                );
+              }
+              return null;
+            })()}
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', width: '100%', marginTop: -4 }}>
-              AVGS · AQR HML Devil + KF SMB · Pesos 58/42 · {lastUpdated} · wide &gt;P75 · compressed &lt;P25
+              AVGS · HML (value) · SV · RMW (profitability) · {lastUpdated} · wide &gt;P75 · compressed &lt;P25
             </div>
+          </div>
+        );
+      })()}
+
+      {/* B6: Factor Loadings Panel — FF5 por ETF com barra visual e threshold neutro */}
+      {(() => {
+        const factorLoadings = (data as any)?.factor_loadings ?? {};
+        const etfKeys = ['SWRD', 'AVUV', 'AVDV', 'DGS'].filter(k => factorLoadings[k] != null);
+        if (!etfKeys.length) return null;
+        const factors = ['smb', 'hml', 'rmw', 'cma'];
+        const factorColors: Record<string, string> = {
+          smb: 'var(--accent)',
+          hml: 'var(--green)',
+          rmw: 'var(--yellow)',
+          cma: 'var(--purple)',
+        };
+        const factorLabels: Record<string, string> = {
+          smb: 'SMB (Size)',
+          hml: 'HML (Value)',
+          rmw: 'RMW (Profitability)',
+          cma: 'CMA (Investment)',
+        };
+        return (
+          <div data-testid="factor-loadings-panel">
+          <CollapsibleSection id="section-factor-loadings" title="Factor Loadings FF5 — por ETF (vs neutro=0)" defaultOpen={secOpen('portfolio', 'factor-loadings', false)}>
+            <div style={{ padding: '0 16px 16px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 12 }}>
+                Loadings FF5 (Fama-French 5-factor) por regressão mensal. Barra acima de 0 = tilt positivo (desejável para SMB/HML/RMW). Abaixo = tilt negativo vs mercado.
+              </div>
+              {etfKeys.map(etfKey => {
+                const fl = factorLoadings[etfKey];
+                if (!fl) return null;
+                const n: number = fl.n_months ?? 0;
+                return (
+                  <div key={etfKey} style={{ marginBottom: 14, background: 'var(--card2)', borderRadius: 6, padding: '10px 12px', border: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text)', marginBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
+                      <span>{etfKey}</span>
+                      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 400 }}>R²={fl.r2?.toFixed(2)} · {n}m</span>
+                    </div>
+                    {factors.map(fk => {
+                      const loading: number = fl[fk] ?? 0;
+                      const tStat: number = fl.t_stats?.[fk] ?? 0;
+                      const isSignificant = Math.abs(tStat) >= 1.96;
+                      const color = factorColors[fk];
+                      // Scale: [-1, +1] range → bar width
+                      const maxRange = 0.8;
+                      const clipped = Math.max(-maxRange, Math.min(maxRange, loading));
+                      const pct50 = 50; // center = 0
+                      const barPct = Math.abs(clipped) / maxRange * 50; // max 50% from center
+                      const isPositive = clipped >= 0;
+                      return (
+                        <div key={fk} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
+                          <div style={{ flexShrink: 0, width: 120, fontSize: 9, color: 'var(--muted)' }}>
+                            {factorLabels[fk]}
+                          </div>
+                          <div style={{ flex: 1, height: 14, background: 'var(--bg)', borderRadius: 3, overflow: 'hidden', position: 'relative' }}>
+                            {/* Center line */}
+                            <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1, background: 'var(--border)', opacity: 0.7 }} />
+                            {/* Loading bar */}
+                            <div style={{
+                              position: 'absolute',
+                              top: 0, bottom: 0,
+                              left: isPositive ? `${pct50}%` : `${pct50 - barPct}%`,
+                              width: `${barPct}%`,
+                              background: `${color}${isSignificant ? 'cc' : '66'}`,
+                              borderRadius: 2,
+                            }} />
+                          </div>
+                          <div style={{
+                            flexShrink: 0, width: 48, textAlign: 'right',
+                            fontSize: 9, fontWeight: isSignificant ? 700 : 400,
+                            color: isSignificant ? color : 'var(--muted)',
+                            fontFamily: 'monospace',
+                          }}>
+                            {loading >= 0 ? '+' : ''}{loading.toFixed(3)}
+                            {isSignificant && <span style={{ color: 'var(--green)', fontSize: 7 }}>*</span>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+              <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 4 }}>
+                * = t-stat ≥ 1.96 (95% conf.) · Barras mais opacas = significativo · Neutro = 0 (linha central)
+              </div>
+            </div>
+          </CollapsibleSection>
           </div>
         );
       })()}

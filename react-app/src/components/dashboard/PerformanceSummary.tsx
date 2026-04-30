@@ -299,8 +299,9 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                   <th style={thR}>Real BRL</th>
                   <th style={thC} aria-label="comparação nominal vs real" />
                   <th style={thR}>USD</th>
-                  <th style={thR}>VWRA</th>
-                  <th style={thR}>Alpha</th>
+                  {/* B3: SWRD é o benchmark primário; VWRA = secundário (cap-weighted global) */}
+                  <th style={thR} title="VWRA = benchmark secundário (FTSE All-World, cap-weighted). SWRD = benchmark primário (MSCI World, ver aba Alpha vs SWRD).">VWRA¹</th>
+                  <th style={thR} title="Alpha vs VWRA = retorno carteira USD − retorno VWRA USD">Alpha</th>
                   <th style={thR}>IPCA</th>
                   <th style={thR}>CDI</th>
                 </tr>
@@ -451,6 +452,10 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
             <span>
               <span style={{ color: 'var(--text)' }}>▮</span> barras comparam nominal (topo) vs real (base)
             </span>
+          </div>
+          {/* B3: SWRD = benchmark primário nota */}
+          <div style={{ padding: '6px 16px 10px', fontSize: 'var(--text-xs)', color: 'var(--muted)', borderTop: '1px solid var(--border)' }}>
+            ¹ VWRA = benchmark secundário (FTSE All-World, cap-weighted). Benchmark primário = SWRD (MSCI World) — ver "Alpha vs SWRD" acima para análise por período.
           </div>
         </div>
       )}

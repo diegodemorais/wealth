@@ -253,6 +253,107 @@ export default function HomePage() {
         );
       })()}
 
+      {/* C4: Factor Drought Semáforo + C5: Loadings Agregados — compact strip */}
+      {(() => {
+        const fr = (data as any)?.factor_rolling;
+        const fl = (data as any)?.factor_loadings;
+        if (!fr && !fl) return null;
+
+        // C4: semáforo drought
+        const droughtMonths: number = fr?.drought_months ?? 0;
+        const factorStatus: string = fr?.status ?? 'green';
+        const droughtColor = factorStatus === 'red' || droughtMonths >= 18 ? 'var(--red)'
+          : factorStatus === 'amber' || droughtMonths >= 9 ? 'var(--yellow)'
+          : 'var(--green)';
+        const droughtLabel = droughtMonths >= 18 ? '🔴' : droughtMonths >= 9 ? '🟡' : '🟢';
+
+        // C5: portfolio-weighted aggregate loadings (SWRD 50% + AVGS proxy 30% + AVEM 20%)
+        // Use pesosTarget if available for exact weights; fallback to IPS targets
+        const pesos = (data as any)?.pesosTarget ?? {};
+        const wSwrd = pesos.SWRD ?? 0.50;
+        const wAvgs = pesos.AVGS ?? 0.30;
+        const wAvem = pesos.AVEM ?? 0.20;
+        const equityTotal = wSwrd + wAvgs + wAvem;
+        // AVGS proxy: 58% AVUV + 42% AVDV
+        const flSwrd = fl?.SWRD ?? {};
+        const flAvuv = fl?.AVUV ?? {};
+        const flAvdv = fl?.AVDV ?? {};
+        const flEimi = fl?.EIMI ?? {};
+        const avgsProxy: Record<string, number> = {};
+        for (const k of ['smb', 'hml', 'rmw', 'cma']) {
+          if (flAvuv[k] != null && flAvdv[k] != null) {
+            avgsProxy[k] = 0.58 * flAvuv[k] + 0.42 * flAvdv[k];
+          }
+        }
+        const hasProxy = Object.keys(avgsProxy).length > 0;
+        const aggLoading = (fKey: string): number | null => {
+          const s = flSwrd[fKey];
+          const ag = avgsProxy[fKey];
+          const em = flEimi[fKey];
+          if (s == null) return null;
+          // Weight: SWRD always; AVGS if proxy exists; AVEM if EIMI exists
+          let total = 0; let covered = 0;
+          if (s != null) { total += (wSwrd / equityTotal) * s; covered += wSwrd / equityTotal; }
+          if (ag != null && hasProxy) { total += (wAvgs / equityTotal) * ag; covered += wAvgs / equityTotal; }
+          if (em != null) { total += (wAvem / equityTotal) * em; covered += wAvem / equityTotal; }
+          return covered > 0.3 ? total / covered : null;
+        };
+        const aggSmb = aggLoading('smb');
+        const aggHml = aggLoading('hml');
+        const aggRmw = aggLoading('rmw');
+        const fmtLoading = (v: number | null) => v != null ? (v >= 0 ? '+' : '') + v.toFixed(2) : '—';
+        const loadingColor = (v: number | null, positive = true) =>
+          v == null ? 'var(--muted)' : (positive ? v > 0.1 : v < -0.1) ? 'var(--green)'
+          : (positive ? v < -0.05 : v > 0.05) ? 'var(--red)' : 'var(--text)';
+
+        return (
+          <div
+            data-testid="factor-drought-loadings-strip"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              flexWrap: 'wrap',
+              padding: '7px 12px',
+              marginBottom: 10,
+              background: 'var(--card)',
+              borderRadius: 6,
+              border: '1px solid var(--border)',
+              fontSize: 'var(--text-xs)',
+            }}
+          >
+            {/* C4: drought semáforo */}
+            {fr && (
+              <span data-testid="factor-drought-semaforo" style={{ display: 'flex', alignItems: 'center', gap: 5, fontWeight: 600 }}>
+                <span>{droughtLabel}</span>
+                <span style={{ color: droughtColor }}>Drought: {droughtMonths}m</span>
+                <span style={{ color: 'var(--muted)', fontWeight: 400 }}>
+                  {droughtMonths === 0 ? '· fator ativo' : `· ${droughtMonths >= 18 ? 'revisar tese' : droughtMonths >= 9 ? 'monitorar' : 'ok'}`}
+                </span>
+              </span>
+            )}
+            {fr && (aggSmb != null || aggHml != null) && (
+              <span style={{ color: 'var(--border)', userSelect: 'none' }}>|</span>
+            )}
+            {/* C5: aggregate FF5 loadings */}
+            {(aggSmb != null || aggHml != null || aggRmw != null) && (
+              <span data-testid="factor-loadings-aggregate" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--muted)' }}>
+                <span style={{ color: 'var(--muted)', fontWeight: 500 }}>Portfolio β:</span>
+                {aggSmb != null && (
+                  <span style={{ color: loadingColor(aggSmb, true), fontWeight: 600 }}>SMB {fmtLoading(aggSmb)}</span>
+                )}
+                {aggHml != null && (
+                  <span style={{ color: loadingColor(aggHml, true), fontWeight: 600 }}>HML {fmtLoading(aggHml)}</span>
+                )}
+                {aggRmw != null && (
+                  <span style={{ color: loadingColor(aggRmw, true), fontWeight: 600 }}>RMW {fmtLoading(aggRmw)}</span>
+                )}
+              </span>
+            )}
+          </div>
+        );
+      })()}
+
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Retorno Real, Aporte Mês */}
       <SectionLabel>Indicadores Primários</SectionLabel>
       <div data-testid="kpi-grid-primario" className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5">

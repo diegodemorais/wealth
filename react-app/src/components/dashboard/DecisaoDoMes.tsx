@@ -227,6 +227,10 @@ export default function DecisaoDoMes({
             <div style={{ fontSize: 10, color: 'var(--muted)' }}>
               comprar no próximo aporte
             </div>
+            {/* C6: fatorial context — SWRD market neutral; AVGS/AVEM = tilt value+profitability */}
+            <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 4, borderTop: '1px solid rgba(100,116,139,0.2)', paddingTop: 4 }}>
+              SWRD = market neutral · AVGS/AVEM = tilt value (HML) + profitability (RMW) via Avantis
+            </div>
           </div>
         )}
 

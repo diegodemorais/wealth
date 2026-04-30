@@ -100,6 +100,93 @@ export default function PerformancePage() {
         <PerformanceSummary data={safeData} />
       </section>
 
+      {/* B1: Tracking Error + Information Ratio cards — logo após o resumo de performance */}
+      {(() => {
+        const backtest = (safeData as any)?.backtest ?? {};
+        const btTarget: number[] = backtest.target ?? [];
+        const btShadow: number[] = backtest.shadowA ?? [];
+        const btDates: string[] = backtest.dates ?? [];
+
+        if (btTarget.length < 13 || btShadow.length < 13) return null;
+
+        // Compute monthly active returns (Target − VWRA proxy) in %
+        const activeReturns: number[] = [];
+        for (let i = 1; i < Math.min(btTarget.length, btShadow.length); i++) {
+          const rTarget = (btTarget[i] / btTarget[i - 1] - 1) * 100;
+          const rShadow = (btShadow[i] / btShadow[i - 1] - 1) * 100;
+          activeReturns.push(rTarget - rShadow);
+        }
+        // TE = std dev of monthly active returns × sqrt(12)
+        const n = activeReturns.length;
+        const mean = activeReturns.reduce((s, v) => s + v, 0) / n;
+        const variance = activeReturns.reduce((s, v) => s + (v - mean) ** 2, 0) / (n - 1);
+        const teAnnual = Math.sqrt(variance * 12);
+
+        // Alpha anualizado = mean monthly active return × 12
+        const alphaAnnual = mean * 12;
+
+        // IR = alpha / TE
+        const ir = teAnnual > 0 ? alphaAnnual / teAnnual : null;
+
+        const irColor = ir == null ? 'var(--muted)'
+          : ir > 0.5 ? 'var(--green)'
+          : ir > 0 ? 'var(--yellow)'
+          : 'var(--red)';
+        const teColor = teAnnual < 3 ? 'var(--green)'
+          : teAnnual < 6 ? 'var(--yellow)'
+          : 'var(--red)';
+
+        const anos = btDates.length > 1 ? (() => {
+          const [y0, m0] = btDates[0].split('-').map(Number);
+          const [y1, m1] = btDates[btDates.length - 1].split('-').map(Number);
+          return ((y1 - y0) * 12 + (m1 - m0)) / 12;
+        })() : n / 12;
+
+        return (
+          <div
+            data-testid="te-ir-cards"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-2"
+            style={{ marginBottom: 12 }}
+          >
+            <div style={{ background: 'var(--card)', border: `1px solid var(--border)`, borderLeft: `3px solid ${teColor}`, borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}
+                title="TE = desvio-padrão anualizado dos retornos ativos mensais (Target − VWRA). Mede quanto a carteira se desvia do benchmark.">
+                Tracking Error (TE)
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: teColor, lineHeight: 1.1 }}>
+                {teAnnual.toFixed(2)}%
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
+                vs VWRA · anualizado
+              </div>
+            </div>
+            <div style={{ background: 'var(--card)', border: `1px solid var(--border)`, borderLeft: `3px solid ${irColor}`, borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}
+                title="IR = Alpha anualizado / Tracking Error. Mede eficiência do alpha gerado por unidade de risco ativo. IR > 0.5 = bom.">
+                Information Ratio (IR)
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: irColor, lineHeight: 1.1 }}>
+                {ir != null ? ir.toFixed(2) : '—'}
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
+                alpha / TE · {ir != null && ir > 0.5 ? 'bom' : ir != null && ir > 0 ? 'neutro' : 'negativo'}
+              </div>
+            </div>
+            <div style={{ background: 'var(--card)', border: `1px solid var(--border)`, borderLeft: `3px solid var(--accent)`, borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}>
+                Alpha Anualizado
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaAnnual >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
+                {alphaAnnual >= 0 ? '+' : ''}{alphaAnnual.toFixed(2)}%
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
+                {anos.toFixed(1)} anos · {n} obs
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* 8. Retornos Mensais — Heatmap (logo após tabela anual para contexto temporal) */}
       <div data-testid="heatmap-retornos">
       <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>

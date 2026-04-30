@@ -735,6 +735,25 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
           fontSize: 10,
         },
         barMaxWidth: 60,
+        // B2: Add +5pp target premium markLine for factor-rolling chart
+        ...(options.chartType === 'factor-rolling' ? {
+          markLine: {
+            silent: true,
+            symbol: 'none',
+            data: [
+              {
+                yAxis: 5,
+                lineStyle: { color: CHART_COLORS.green, type: 'dashed', width: 1.5, opacity: 0.7 },
+                label: { show: true, position: 'insideEndTop', formatter: 'target +5pp', fontSize: 9, color: CHART_COLORS.green },
+              },
+              {
+                yAxis: -5,
+                lineStyle: { color: CHART_COLORS.red, type: 'dashed', width: 1.5, opacity: 0.7 },
+                label: { show: true, position: 'insideEndBottom', formatter: 'revisão −5pp', fontSize: 9, color: CHART_COLORS.red },
+              },
+            ],
+          },
+        } : {}),
       },
     ],
   };
