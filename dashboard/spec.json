@@ -1519,11 +1519,12 @@
       "tab": "portfolio",
       "label": "Overlap Detection ETFs — Posições Compartilhadas",
       "type": "chart",
-      "purpose": "Horizontal stacked bar: top holdings compartilhados entre SWRD/AVGS/AVEM com peso consolidado na carteira (equivalente ao Morningstar X-Ray Stock Intersection).",
+      "purpose": "Horizontal stacked bar: top holdings compartilhados entre SWRD/AVGS/AVEM com peso consolidado na carteira (equivalente ao Morningstar X-Ray Stock Intersection). Top-5 concentrações com benchmark MSCI World inline (DEV-top5-msci-benchmark 2026-05-02).",
       "data_fields": [
         "overlap_detection.total_overlap_pct",
         "overlap_detection.unique_coverage_pct",
-        "overlap_detection.top_overlaps"
+        "overlap_detection.top_overlaps",
+        "overlap_detection.top_concentrations"
       ],
       "optional": true,
       "_optional_reason": "Dados proxy sintéticos — não bloqueia pipeline se ausente. CSVs reais dos emissores pendentes.",

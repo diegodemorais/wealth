@@ -6455,7 +6455,42 @@ def main():
         consolidated.sort(key=lambda x: x["weight_combined_pct"], reverse=True)
         all_consolidated.sort(key=lambda x: x["weight_combined_pct"], reverse=True)
         top_overlaps = consolidated[:15]
-        top_concentrations = all_consolidated[:5]  # Top-5 posições agregadas
+        top_concentrations = [dict(e) for e in all_consolidated[:5]]  # Top-5 posições agregadas (cópia rasa p/ enriquecer)
+
+        # ─── Benchmark MSCI World inline (DEV-top5-msci-benchmark 2026-05-02) ──
+        # Pesos por ISIN no MSCI World — snapshot de factsheet abr/2026 (proxy estável,
+        # mesmo padrão de overlap/sector_exposure). Fonte: factsheet iShares Core MSCI
+        # World UCITS (URTH/IWDA top holdings) + composição interna do SWRD usada acima.
+        # Samsung 005930 NÃO está no MSCI World (apenas no MSCI ACWI/EM) — null + nota.
+        # URL: https://www.ishares.com/uk/individual/en/products/251881/ishares-msci-world-ucits-etf-acc-fund
+        # Validar trimestralmente — divergências >0.5pp justificam atualização.
+        msci_world_weights: dict = {
+            "US0378331005": 5.30,   # AAPL  — Apple Inc
+            "US5949181045": 4.20,   # MSFT  — Microsoft Corp
+            "US67066G1040": 5.10,   # NVDA  — NVIDIA Corp
+            "US0231351067": 2.40,   # AMZN  — Amazon.com Inc
+            "US02079K3059": 1.50,   # GOOGL — Alphabet Inc (A)
+            "US30303M1027": 1.50,   # META  — Meta Platforms
+            "US88160R1014": 1.05,   # TSLA  — Tesla Inc
+            "NL0010273215": 0.55,   # ASML  — ASML Holding
+            "FR0000131104": 0.30,   # LVMH
+            "JP3633400001": 0.30,   # Toyota Motor
+            "GB0031215088": 0.35,   # AstraZeneca
+            "CH0012221716": 0.05,   # ABB Ltd
+            "US4781601046": 0.55,   # Johnson & Johnson
+            "US4592001014": 0.20,   # IBM Corp
+            # Samsung 005930 (KR7005930003): NÃO está no MSCI World (Coreia = MSCI EM/ACWI).
+        }
+        msci_excluded_note = "fora do MSCI World (Coreia — apenas MSCI EM/ACWI)"
+        for entry in top_concentrations:
+            isin = entry["isin"]
+            if isin in msci_world_weights:
+                entry["msci_world_pct"] = round(msci_world_weights[isin], 4)
+                entry["msci_world_note"] = None
+            else:
+                entry["msci_world_pct"] = None
+                entry["msci_world_note"] = msci_excluded_note
+
         total_overlap_pct = round(sum(x["weight_combined_pct"] for x in consolidated), 2)
         unique_coverage_pct = round(100.0 - total_overlap_pct, 2)
 

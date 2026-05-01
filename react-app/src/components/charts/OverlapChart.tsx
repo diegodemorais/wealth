@@ -24,6 +24,10 @@ export interface OverlapEntry {
   etfs: string[];
   weight_combined_pct: number;
   weight_per_etf: Record<string, number>;
+  /** Peso no MSCI World (factsheet abr/2026). null = fora do MSCI World (ex.: Samsung 005930, coreana). */
+  msci_world_pct?: number | null;
+  /** Nota opcional quando msci_world_pct é null (DEV-top5-msci-benchmark 2026-05-02). */
+  msci_world_note?: string | null;
 }
 
 export interface OverlapData {
@@ -78,9 +82,11 @@ interface BarsProps {
   stacked: boolean;
   privacyMode: boolean;
   ariaLabel: string;
+  /** Se true, renderiza marcador amarelo do MSCI World inline + Δ no tooltip (DEV-top5-msci-benchmark). */
+  showMsciBenchmark?: boolean;
 }
 
-function StackedEtfBars({ entries, stacked, privacyMode, ariaLabel }: BarsProps) {
+function StackedEtfBars({ entries, stacked, privacyMode, ariaLabel, showMsciBenchmark = false }: BarsProps) {
   const chartRef = useChartResize();
 
   const option = useMemo(() => {
@@ -90,7 +96,7 @@ function StackedEtfBars({ entries, stacked, privacyMode, ariaLabel }: BarsProps)
     const reversed = [...entries].reverse();
     const labels = reversed.map(e => formatYLabel(e.name, e.ticker));
 
-    const series = ETF_ORDER.map(etf => ({
+    const series: Array<Record<string, unknown>> = ETF_ORDER.map(etf => ({
       name: etf,
       type: 'bar' as const,
       stack: stacked ? 'overlap' : undefined,
@@ -115,6 +121,25 @@ function StackedEtfBars({ entries, stacked, privacyMode, ariaLabel }: BarsProps)
         },
       },
     }));
+
+    // MSCI World benchmark — marcador amarelo inline (mesmo padrão do SectorExposureChart).
+    // Suprime symbol quando msci_world_pct é null (Samsung 005930, fora do MSCI World).
+    if (showMsciBenchmark) {
+      series.push({
+        name: 'MSCI World',
+        type: 'scatter' as const,
+        data: reversed.map((e, i) => {
+          const v = e.msci_world_pct;
+          // ECharts: usar null para suprimir o symbol no índice (Samsung)
+          return v == null ? [null, i] : [parseFloat(v.toFixed(4)), i];
+        }) as Array<[number | null, number]>,
+        symbol: 'rect',
+        symbolSize: [3, 18],
+        itemStyle: { color: EC.yellow },
+        z: 10,
+        tooltip: { show: false },
+      });
+    }
 
     return {
       backgroundColor: 'transparent',
@@ -168,6 +193,38 @@ function StackedEtfBars({ entries, stacked, privacyMode, ariaLabel }: BarsProps)
           const tickerLine = entry.ticker
             ? `<div style="font-size:9px;color:${EC.muted};margin-bottom:2px">${entry.ticker} · ${entry.isin}</div>`
             : `<div style="font-size:9px;color:${EC.muted};margin-bottom:6px">${entry.isin}</div>`;
+
+          // Bloco benchmark MSCI World — só no Top-5 (DEV-top5-msci-benchmark 2026-05-02).
+          // Mesmo padrão do SectorExposureChart: linha "MSCI World" + Δ vs benchmark.
+          let benchBlock = '';
+          if (showMsciBenchmark) {
+            const mw = entry.msci_world_pct;
+            if (mw != null) {
+              const mwLabel = privacyMode ? '••%' : `${mw.toFixed(2)}%`;
+              const delta = entry.weight_combined_pct - mw;
+              const sign = delta >= 0 ? '+' : '';
+              const dColor = Math.abs(delta) < 0.5 ? EC.muted : (delta > 0 ? EC.green : EC.red);
+              const dLabel = privacyMode ? '••pp' : `${sign}${delta.toFixed(2)}pp`;
+              benchBlock = `
+                <div style="border-top:1px solid ${EC.border2};margin-top:6px;padding-top:4px;display:flex;justify-content:space-between">
+                  <span style="color:${EC.yellow}">▮ MSCI World</span>
+                  <span style="font-weight:600;color:${EC.yellow}">${mwLabel}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;gap:12px;font-size:10px">
+                  <span style="color:${EC.muted}">Δ vs benchmark</span>
+                  <span style="color:${dColor};font-weight:600">${dLabel}</span>
+                </div>`;
+            } else {
+              const note = entry.msci_world_note ?? 'fora do MSCI World';
+              benchBlock = `
+                <div style="border-top:1px solid ${EC.border2};margin-top:6px;padding-top:4px;display:flex;justify-content:space-between;gap:12px">
+                  <span style="color:${EC.yellow}">▮ MSCI World</span>
+                  <span style="font-weight:600;color:${EC.muted}">n/a</span>
+                </div>
+                <div style="font-size:10px;color:${EC.muted};margin-top:2px">${note}</div>`;
+            }
+          }
+
           return `<div style="padding:6px 10px;min-width:210px" aria-label="${ariaLabel}">
             <div style="font-weight:700;margin-bottom:4px;color:${EC.text}">${entry.name}</div>
             ${tickerLine}
@@ -176,12 +233,13 @@ function StackedEtfBars({ entries, stacked, privacyMode, ariaLabel }: BarsProps)
               <span style="color:${EC.muted}">Peso combinado</span>
               <span style="font-weight:700;color:${EC.text}">${combined}</span>
             </div>
+            ${benchBlock}
           </div>`;
         },
       },
       series,
     };
-  }, [entries, stacked, privacyMode, ariaLabel]);
+  }, [entries, stacked, privacyMode, ariaLabel, showMsciBenchmark]);
 
   if (!entries.length) {
     return (
@@ -283,14 +341,30 @@ export function OverlapChart({ data }: { data: OverlapData | null | undefined })
           />
         </div>
         <div data-testid="overlap-chart-top-concentrations">
-          <div style={{ fontSize: 11, color: EC.muted, marginBottom: 4 }}>
-            Top-5 concentrações totais (peso agregado)
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+            <div style={{ fontSize: 11, color: EC.muted }}>
+              Top-5 concentrações totais (peso agregado)
+            </div>
+            <span style={{ display: 'flex', alignItems: 'center', color: EC.muted, fontSize: 10 }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: 3,
+                  height: 12,
+                  background: EC.yellow,
+                  marginRight: 6,
+                  flexShrink: 0,
+                }}
+              />
+              MSCI World (benchmark)
+            </span>
           </div>
           <StackedEtfBars
             entries={concentrationEntries}
             stacked
             privacyMode={privacyMode}
             ariaLabel="Top-5 maiores concentrações da carteira"
+            showMsciBenchmark
           />
         </div>
       </div>
