@@ -170,13 +170,13 @@ test.describe('Local render — no critical JS errors', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 test.describe('Local render — structural sanity', () => {
-  test('Dashboard root has navigation tabs', async ({ page }) => {
-    await page.goto('/index.html', { waitUntil: 'networkidle', timeout: 30_000 });
-
-    // Navigation must exist
-    const nav = page.locator('nav, [role="navigation"]');
-    await expect(nav.first()).toBeVisible({ timeout: 10_000 });
-  });
+  // NOTE: removido teste 'Dashboard root has navigation tabs' — o projeto `local`
+  // serve dash/ em http://localhost:3001 sem basePath, mas o build Next.js usa
+  // basePath /wealth (assets em /wealth/_next/...). Como playwright.config.ts
+  // documenta: "JavaScript does NOT fully hydrate here". Sem hydration, AuthGuard
+  // mantém output null (return null pré-mount) e <nav> nunca aparece. Cobertura
+  // de nav está em e2e/semantic-smoke.spec.ts (que usa Next dev server com
+  // basePath correto e auth bypass implícito).
 
   test('Dashboard root loads data (not stuck on loading state)', async ({ page }) => {
     await page.goto('/index.html', { waitUntil: 'networkidle', timeout: 30_000 });

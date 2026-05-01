@@ -70,8 +70,11 @@ echo "✅ TypeScript OK (src/ limpo)"
 echo ""
 
 # 1. Rebuild
-echo "1️⃣  Rebuilding dashboard..."
-python3 scripts/build_dashboard.py > /tmp/build.log 2>&1
+# Pipeline antigo (Python build_dashboard.py) foi removido em df64a1e1.
+# Build canônico agora é `npm run build` em react-app/ (Next.js + post-build.js
+# que move output pra ../dash/ — pré-requisito dos steps 1b/1c).
+echo "1️⃣  Rebuilding dashboard (npm run build)..."
+(cd react-app && npm run build) > /tmp/build.log 2>&1
 if [ $? -ne 0 ]; then
   echo "❌ Build failed"
   cat /tmp/build.log
@@ -115,9 +118,11 @@ fi
 echo "✅ Pipeline E2E OK"
 echo ""
 
-# 2. Run master test suite
-echo "2️⃣  Running complete test suite (5 níveis)..."
-python3 scripts/run_all_dashboard_tests.py "$@"
+# 2. Vitest unit/component tests (substitui o antigo run_all_dashboard_tests.py
+# orquestrador, removido em 13d77d49 — os 6 níveis dele já são cobertos por
+# 1b/1c/1d acima + Vitest aqui).
+echo "2️⃣  Running Vitest unit/component tests..."
+(cd react-app && npm run test -- --run) 2>&1
 TESTS_RESULT=$?
 
 echo ""
@@ -134,6 +139,5 @@ else
   echo "================================================"
   echo ""
   echo "See output above for details"
-  echo "Results: dashboard/tests/full_test_run.json"
   exit 1
 fi

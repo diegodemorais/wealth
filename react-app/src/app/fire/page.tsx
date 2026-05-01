@@ -85,6 +85,13 @@ export default function FirePage() {
     });
   }, [data]);
 
+  // Hook DEVE vir antes do early-return abaixo (Rules of Hooks).
+  // Bug histórico: useState estava após `if (stateEl) return stateEl;` —
+  // primeira render (loading) retornava sem chamar useState; segunda render
+  // (dados carregados) chamava useState → React: "Rendered more hooks than
+  // during the previous render". Quebrava 28 testes de semantic-smoke.
+  const [pqSelector, setPqSelector] = useState<'proxy' | 'partial' | 'full'>('partial');
+
   const stateEl = pageStateElement({
     isLoading,
     dataError,
@@ -111,7 +118,6 @@ export default function FirePage() {
   const pqualityHero: number | null = (data as any)?.fire?.p_quality ?? null;
   const pqualityProxy: number | null = (data as any)?.fire?.p_quality_proxy ?? null;
   const pqualityFull: number | null = (data as any)?.fire?.p_quality_full ?? null;
-  const [pqSelector, setPqSelector] = useState<'proxy' | 'partial' | 'full'>('partial');
   const pqualityDisplay: number | null =
     pqSelector === 'proxy'  ? pqualityProxy :
     pqSelector === 'full'   ? pqualityFull :
