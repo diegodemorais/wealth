@@ -12,11 +12,11 @@ const CashFlowSankey: React.FC = () => {
 
   if (!data) return null;
 
-  // Derive display values for footer note
+  // All values from data.json — zero hardcoded fallbacks
   const ss = (data as any)?.spending_breakdown ?? (data as any)?.spending_summary ?? {};
-  const rendaMensal = (data as any)?.premissas?.renda_mensal_liquida ?? (data as any)?.premissas?.renda_estimada ?? 45000;
-  const aporteMensal = (data as any)?.premissas?.aporte_mensal ?? 25000;
-  const gastoTotal = ss.total_anual ?? 236647;
+  const rendaMensal: number = (data as any)?.premissas?.renda_mensal_liquida ?? (data as any)?.premissas?.renda_estimada ?? 0;
+  const aporteMensal: number = (data as any)?.premissas?.aporte_mensal ?? 0;
+  const gastoTotal: number = ss.total_anual ?? 0;
   const investimentos = aporteMensal * 12;
   const renda = Math.max(rendaMensal * 12, gastoTotal + investimentos);
   const savingsRate = renda > 0 ? Math.round((investimentos / renda) * 100) : 0;
@@ -36,9 +36,8 @@ const CashFlowSankey: React.FC = () => {
         color: 'var(--muted)',
         lineHeight: 1.5,
       }}>
-        ⚠ Valores estimados: renda = aporte mensal × 12 + gastos anuais auditados.
-        Impostos = ~18% estimado (IR + INSS). Taxas &amp; Fees = ~2% estimado.
-        {' '}Note: Savings Rate ≈ {savingsRate}%
+        ⚠ Impostos = ~10% estimado dos gastos totais. Taxas &amp; Fees = ~2% estimado.
+        {' '}Savings Rate ≈ {savingsRate}%
         {' | '}Renda: {fmtK(renda)}/ano
         {' | '}Gastos: {fmtK(gastoTotal)}
         {' | '}Investimentos: {fmtK(investimentos)}

@@ -256,16 +256,16 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
 export function createSankeyChartOption(options: BaseChartOptions) {
   const { data, privacyMode, theme } = options;
 
-  // Spending data from spending_breakdown — converted to MONTHLY averages
+  // Spending data from spending_breakdown (data.json) — monthly averages, no hardcoded fallbacks
   const ss = (data as any)?.spending_breakdown ?? (data as any)?.spending_summary ?? {};
-  const gastoEssencial = Math.round((ss.must_spend_anual ?? 180887) / 12);
-  const gastoDisc = Math.round((ss.like_spend_anual ?? 51403) / 12);
-  const gastoImprevistos = Math.round((ss.imprevistos_anual ?? 4357) / 12);
+  const gastoEssencial = Math.round((ss.must_spend_anual ?? 0) / 12);
+  const gastoDisc = Math.round((ss.like_spend_anual ?? 0) / 12);
+  const gastoImprevistos = Math.round((ss.imprevistos_anual ?? 0) / 12);
   const gastoTotal = gastoEssencial + gastoDisc + gastoImprevistos;
 
-  // Income monthly
-  const rendaMensal = (data as any)?.premissas?.renda_mensal_liquida ?? (data as any)?.premissas?.renda_estimada ?? 45000;
-  const aporteMensal = (data as any)?.premissas?.aporte_mensal ?? 25000;
+  // Income monthly — from premissas (data.json)
+  const rendaMensal = (data as any)?.premissas?.renda_mensal_liquida ?? (data as any)?.premissas?.renda_estimada ?? 0;
+  const aporteMensal = (data as any)?.premissas?.aporte_mensal ?? 0;
   const investimentos = aporteMensal;
   const renda = Math.max(rendaMensal, gastoTotal + investimentos);
 

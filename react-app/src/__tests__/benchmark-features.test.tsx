@@ -1,9 +1,8 @@
 /**
- * benchmark-features.test.tsx — unit tests for the 3 benchmark feature components.
+ * benchmark-features.test.tsx — unit tests for benchmark feature components.
  *
  * Feature 1: RollingReturnsHeatmap — CAGR calculation + graceful handling
  * Feature 2: ScenarioCompareCards — badge logic + privacy mode
- * Feature 3: CashFlowBar — arithmetic + privacy mode
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -183,63 +182,3 @@ describe('ScenarioCompareCards', () => {
   });
 });
 
-// ─── Feature 3: CashFlowBar ──────────────────────────────────────────────────
-
-describe('CashFlowBar', () => {
-  it('saldo = renda - gasto - aporte (error < 1%)', () => {
-    const renda = 45_000;
-    const aporte = 25_000;
-    const custoAnual = 250_000;
-    const gasto = custoAnual / 12; // ~20833
-    const expected = renda - gasto - aporte; // ~-833
-
-    // Verify the arithmetic logic directly
-    expect(Math.abs(expected - (renda - gasto - aporte))).toBeLessThan(renda * 0.01);
-  });
-
-  it('renders without crashing with valid premissas', async () => {
-    const { CashFlowBar } = await import('@/components/charts/CashFlowBar');
-    expect(() => {
-      render(
-        React.createElement(CashFlowBar, {
-          rendaMensal: 45_000,
-          aporteMensal: 25_000,
-          custoVidaAnual: 250_000,
-          privacyMode: false,
-        })
-      );
-    }).not.toThrow();
-    expect(screen.getByTestId('cashflow-bar')).toBeDefined();
-  });
-
-  it('privacy mode shows % instead of BRL', async () => {
-    const { CashFlowBar } = await import('@/components/charts/CashFlowBar');
-    render(
-      React.createElement(CashFlowBar, {
-        rendaMensal: 45_000,
-        aporteMensal: 25_000,
-        custoVidaAnual: 250_000,
-        privacyMode: true,
-      })
-    );
-    // In privacy mode, summary cards show % not BRL values
-    const rendaCard = screen.getByTestId('cashflow-renda');
-    // Should show a percentage (e.g. "100%") not BRL "R$ 45.000"
-    expect(rendaCard.textContent).toMatch(/\d+%/);
-    expect(rendaCard.textContent).not.toMatch(/R\$/);
-  });
-
-  it('renders gracefully with undefined premissas', async () => {
-    const { CashFlowBar } = await import('@/components/charts/CashFlowBar');
-    expect(() => {
-      render(
-        React.createElement(CashFlowBar, {
-          rendaMensal: undefined,
-          aporteMensal: undefined,
-          custoVidaAnual: undefined,
-          privacyMode: false,
-        })
-      );
-    }).not.toThrow();
-  });
-});

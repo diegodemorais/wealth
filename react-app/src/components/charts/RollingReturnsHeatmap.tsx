@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useUiStore } from '@/store/uiStore';
 import { EC, EC_AXIS_LABEL, EC_TOOLTIP } from '@/utils/echarts-theme';
+import { useChartResize } from '@/hooks/useChartResize';
 
 interface RollingReturnsHeatmapProps {
   dates: string[] | undefined;
@@ -49,6 +50,8 @@ function computeRollingReturns(dates: string[], target: number[]): HeatmapPoint[
 
 export function RollingReturnsHeatmap({ dates, target }: RollingReturnsHeatmapProps) {
   const { privacyMode } = useUiStore();
+  // Hidden-tab handling: ResizeObserver fires when section becomes visible — see useChartResize hook
+  const chartRef = useChartResize();
 
   const { points, xDates, negativeCounts } = useMemo(() => {
     if (!dates?.length || !target?.length) {
@@ -177,7 +180,7 @@ export function RollingReturnsHeatmap({ dates, target }: RollingReturnsHeatmapPr
       </div>
 
       <div data-testid="rolling-returns-heatmap" style={{ padding: '0 16px' }}>
-        <EChart option={option} style={{ height: 160 }} />
+        <EChart ref={chartRef} option={option} style={{ height: 160 }} />
       </div>
 
       <div className="src" style={{ padding: '0 16px' }}>

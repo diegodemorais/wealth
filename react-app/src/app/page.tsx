@@ -20,7 +20,7 @@ import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Trophy, Target, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { EChart } from '@/components/primitives/EChart';
-import { CashFlowBar } from '@/components/charts/CashFlowBar';
+import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { EC } from '@/utils/echarts-theme';
 import { IifptRadar } from '@/components/dashboard/IifptRadar';
 
@@ -502,7 +502,7 @@ export default function HomePage() {
         );
       })()}
 
-      {/* Fluxo de Caixa Mensal — Renda · Gasto · Aporte */}
+      {/* Fluxo de Caixa Mensal — Sankey: Renda → Impostos → Gastos → Investimentos */}
       {data?.premissas && (
         <CollapsibleSection
           id="section-cashflow-mensal"
@@ -510,11 +510,7 @@ export default function HomePage() {
           defaultOpen={secOpen('now', 'cashflow-mensal', false)}
         >
           <div style={{ padding: '0 16px 16px' }}>
-            <CashFlowBar
-              rendaMensal={(data as any).premissas.renda_estimada}
-              aporteMensal={(data as any).premissas.aporte_mensal}
-              custoVidaAnual={(data as any).premissas.custo_vida_base}
-            />
+            <CashFlowSankey />
           </div>
         </CollapsibleSection>
       )}
