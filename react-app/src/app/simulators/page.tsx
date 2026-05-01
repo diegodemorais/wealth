@@ -126,7 +126,8 @@ function FireSimuladorSection() {
 
       if (preset === 'aspiracional') {
         presetApplied.current = true;
-        if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
+        const aspiracionalAporte = premissas.aporte_mensal_aspiracional ?? premissas.aporte_mensal;
+        if (aspiracionalAporte != null) setAporte(aspiracionalAporte);
         const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
         if (favRetorno != null) setRetorno(+((favRetorno * 100).toFixed(2)));
         const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
