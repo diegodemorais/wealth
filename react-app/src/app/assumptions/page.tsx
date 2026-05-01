@@ -102,7 +102,11 @@ const TAB_LABELS: Record<string, string> = {
   backtest: 'Backtest',
   portfolio: 'Portfolio',
   withdraw: 'Retirada',
-  assumptions: 'Checklist',
+  assumptions: 'Tools',
+  // legacy keys — entradas pré-reorg 8→7 com tab 'simulators'/'simuladores'
+  // ainda existem no changelog histórico; apontam para o label novo (Tools)
+  simulators: 'Tools',
+  simuladores: 'Tools',
 };
 
 function fmtDatetime(iso: string): string {
