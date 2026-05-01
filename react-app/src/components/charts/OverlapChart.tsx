@@ -6,6 +6,7 @@
  * Equivalente ao Stock Intersection do Morningstar X-Ray.
  *
  * Feature: DEV-overlap-detection (2026-05-01)
+ * v2: ticker no Y-axis + % inline + Top-5 concentrações (DEV-overlap-chart-v2 2026-05-01)
  */
 
 import { useMemo } from 'react';
@@ -18,6 +19,7 @@ import { EC, EC_TOOLTIP, EC_AXIS_LABEL, EC_SPLIT_LINE } from '@/utils/echarts-th
 
 export interface OverlapEntry {
   name: string;
+  ticker?: string;
   isin: string;
   etfs: string[];
   weight_combined_pct: number;
@@ -28,6 +30,7 @@ export interface OverlapData {
   total_overlap_pct: number;
   unique_coverage_pct: number;
   top_overlaps: OverlapEntry[];
+  top_concentrations?: OverlapEntry[];
   last_updated?: string;
   data_source?: string;
 }
@@ -42,6 +45,7 @@ const ETF_COLORS: Record<string, string> = {
 
 const ETF_ORDER = ['SWRD', 'AVGS', 'AVEM'];
 const MAX_ENTRIES = 12;
+const INLINE_LABEL_THRESHOLD = 0.05; // % — segmentos abaixo disso não recebem label inline
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -57,41 +61,65 @@ function badgeStyle(color: string): React.CSSProperties {
   };
 }
 
-// ── Componente ────────────────────────────────────────────────────────────────
+/** Label "(TICKER) Nome…" truncada para o eixo Y. */
+function formatYLabel(name: string, ticker?: string): string {
+  const maxLen = 22;
+  const tickerPart = ticker ? `(${ticker}) ` : '';
+  const room = Math.max(8, maxLen - tickerPart.length);
+  const trimmed = name.length > room ? name.slice(0, room - 1) + '…' : name;
+  return `${tickerPart}${trimmed}`;
+}
 
-export function OverlapChart({ data }: { data: OverlapData | null | undefined }) {
-  const { privacyMode } = useEChartsPrivacy();
+// ── Sub-chart genérico ────────────────────────────────────────────────────────
+
+interface BarsProps {
+  entries: OverlapEntry[];
+  /** Se true, fundo da barra é stack ETF; se false, mostra um único segmento por ETF dominante. */
+  stacked: boolean;
+  privacyMode: boolean;
+  ariaLabel: string;
+}
+
+function StackedEtfBars({ entries, stacked, privacyMode, ariaLabel }: BarsProps) {
   const chartRef = useChartResize();
-
-  const entries = useMemo(
-    () => (data?.top_overlaps ?? []).slice(0, MAX_ENTRIES),
-    [data],
-  );
 
   const option = useMemo(() => {
     if (!entries.length) return {};
 
-    // Y-axis: reversed so largest weight is at top
-    const names = [...entries].reverse().map(e => e.name);
+    // Y-axis labels: "(TICKER) Nome…"; reverse para maior peso no topo.
+    const reversed = [...entries].reverse();
+    const labels = reversed.map(e => formatYLabel(e.name, e.ticker));
 
     const series = ETF_ORDER.map(etf => ({
       name: etf,
       type: 'bar' as const,
-      stack: 'overlap',
-      data: [...entries].reverse().map(e => {
+      stack: stacked ? 'overlap' : undefined,
+      data: reversed.map(e => {
         const w = e.weight_per_etf[etf];
-        // Use null (not 0) for ETFs not in this holding — keeps stack clean
         return e.etfs.includes(etf) && w != null ? parseFloat(w.toFixed(4)) : null;
       }),
       itemStyle: { color: ETF_COLORS[etf] ?? EC.muted },
       barMaxWidth: 18,
       emphasis: { itemStyle: { opacity: 0.85 } },
+      // % inline em cada segmento (omitir se < threshold ou em privacy)
+      label: {
+        show: !privacyMode,
+        position: 'inside' as const,
+        color: '#fff',
+        fontSize: 9,
+        fontWeight: 600,
+        formatter: (p: any) => {
+          const v = typeof p.value === 'number' ? p.value : null;
+          if (v == null || v < INLINE_LABEL_THRESHOLD) return '';
+          return `${v.toFixed(2)}%`;
+        },
+      },
     }));
 
     return {
       backgroundColor: 'transparent',
       animation: false,
-      grid: { left: 110, right: 60, top: 16, bottom: 36 },
+      grid: { left: 140, right: 30, top: 16, bottom: 36 },
       xAxis: {
         type: 'value' as const,
         name: 'Peso na carteira (%)',
@@ -107,14 +135,12 @@ export function OverlapChart({ data }: { data: OverlapData | null | undefined })
       },
       yAxis: {
         type: 'category' as const,
-        data: names,
+        data: labels,
         axisLabel: {
           ...EC_AXIS_LABEL,
           fontSize: 10,
-          // Truncate long company names
-          formatter: (v: string) => v.length > 18 ? v.slice(0, 17) + '…' : v,
+          width: 130,
           overflow: 'truncate' as const,
-          width: 100,
         },
         axisLine: { show: false },
         axisTick: { show: false },
@@ -139,10 +165,13 @@ export function OverlapChart({ data }: { data: OverlapData | null | undefined })
               </div>`;
             }).join('');
           const combined = privacyMode ? '••%' : `${entry.weight_combined_pct.toFixed(3)}%`;
-          return `<div style="padding:6px 10px;min-width:210px">
-            <div style="font-weight:700;margin-bottom:6px;color:${EC.text}">${entry.name}</div>
-            <div style="font-size:9px;color:${EC.muted};margin-bottom:6px">${entry.isin}</div>
-            ${rows}
+          const tickerLine = entry.ticker
+            ? `<div style="font-size:9px;color:${EC.muted};margin-bottom:2px">${entry.ticker} · ${entry.isin}</div>`
+            : `<div style="font-size:9px;color:${EC.muted};margin-bottom:6px">${entry.isin}</div>`;
+          return `<div style="padding:6px 10px;min-width:210px" aria-label="${ariaLabel}">
+            <div style="font-weight:700;margin-bottom:4px;color:${EC.text}">${entry.name}</div>
+            ${tickerLine}
+            <div style="margin-top:4px">${rows}</div>
             <div style="border-top:1px solid ${EC.border2};margin-top:6px;padding-top:4px;display:flex;justify-content:space-between">
               <span style="color:${EC.muted}">Peso combinado</span>
               <span style="font-weight:700;color:${EC.text}">${combined}</span>
@@ -152,7 +181,38 @@ export function OverlapChart({ data }: { data: OverlapData | null | undefined })
       },
       series,
     };
-  }, [entries, privacyMode]);
+  }, [entries, stacked, privacyMode, ariaLabel]);
+
+  if (!entries.length) {
+    return (
+      <div style={{ color: EC.muted, fontSize: 13, padding: '12px 0' }}>
+        Sem dados.
+      </div>
+    );
+  }
+
+  return (
+    <EChart
+      ref={chartRef}
+      option={option}
+      style={{ height: Math.max(260, entries.length * 28 + 60) }}
+    />
+  );
+}
+
+// ── Componente principal ──────────────────────────────────────────────────────
+
+export function OverlapChart({ data }: { data: OverlapData | null | undefined }) {
+  const { privacyMode } = useEChartsPrivacy();
+
+  const overlapEntries = useMemo(
+    () => (data?.top_overlaps ?? []).slice(0, MAX_ENTRIES),
+    [data],
+  );
+  const concentrationEntries = useMemo(
+    () => (data?.top_concentrations ?? []).slice(0, 5),
+    [data],
+  );
 
   if (!data) {
     return (
@@ -199,7 +259,7 @@ export function OverlapChart({ data }: { data: OverlapData | null | undefined })
         </div>
       </div>
 
-      {/* Legenda (JSX, não ECharts legend) */}
+      {/* Legenda compartilhada */}
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 10, fontSize: 11 }}>
         {ETF_ORDER.map(etf => (
           <span key={etf} style={{ display: 'flex', alignItems: 'center', color: EC.muted }}>
@@ -209,18 +269,31 @@ export function OverlapChart({ data }: { data: OverlapData | null | undefined })
         ))}
       </div>
 
-      {/* Gráfico */}
-      {entries.length > 0 ? (
-        <EChart
-          ref={chartRef}
-          option={option}
-          style={{ height: Math.max(260, entries.length * 28 + 60) }}
-        />
-      ) : (
-        <div style={{ color: EC.muted, fontSize: 13, padding: '12px 0' }}>
-          Nenhum overlap detectado.
+      {/* Grid: overlap (esq) + top concentrações (dir) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div data-testid="overlap-chart-overlaps">
+          <div style={{ fontSize: 11, color: EC.muted, marginBottom: 4 }}>
+            Top holdings compartilhados (≥2 ETFs)
+          </div>
+          <StackedEtfBars
+            entries={overlapEntries}
+            stacked
+            privacyMode={privacyMode}
+            ariaLabel="Top holdings compartilhados entre ETFs"
+          />
         </div>
-      )}
+        <div data-testid="overlap-chart-top-concentrations">
+          <div style={{ fontSize: 11, color: EC.muted, marginBottom: 4 }}>
+            Top-5 concentrações totais (peso agregado)
+          </div>
+          <StackedEtfBars
+            entries={concentrationEntries}
+            stacked
+            privacyMode={privacyMode}
+            ariaLabel="Top-5 maiores concentrações da carteira"
+          />
+        </div>
+      </div>
 
       {/* Fonte dos dados */}
       {data.data_source && (

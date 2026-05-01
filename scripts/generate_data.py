@@ -6241,73 +6241,74 @@ def main():
         w_avgs = EQUITY_WEIGHTS.get("AVGS", 0.30)
         w_avem = EQUITY_WEIGHTS.get("AVEM", 0.20)
 
-        # Holdings proxy por ETF: {isin: {name, weight_pct_in_etf}}
+        # Holdings proxy por ETF: {isin: {name, ticker, weight_pct_in_etf}}
+        # ticker: símbolo de exchange compacto (DEV-overlap-chart-v2 2026-05-01)
         # SWRD = MSCI World UCITS (SSGA): top holdings dez 2024 (fonte: MSCI World factsheet)
         swrd_holdings = {
-            "US0378331005": {"name": "Apple Inc",           "w": 4.89},
-            "US5949181045": {"name": "Microsoft Corp",      "w": 4.32},
-            "US67066G1040": {"name": "NVIDIA Corp",         "w": 3.91},
-            "US0231351067": {"name": "Amazon.com Inc",      "w": 2.34},
-            "US02079K3059": {"name": "Alphabet Inc (A)",    "w": 1.42},
-            "US30303M1027": {"name": "Meta Platforms",      "w": 1.38},
-            "US88160R1014": {"name": "Tesla Inc",           "w": 0.92},
-            "US4592001014": {"name": "IBM Corp",            "w": 0.24},
-            "NL0010273215": {"name": "ASML Holding",        "w": 0.89},
-            "FR0000131104": {"name": "LVMH",                "w": 0.51},
-            "KR7005930003": {"name": "Samsung Electronics", "w": 0.85},
-            "JP3633400001": {"name": "Toyota Motor",        "w": 0.53},
-            "GB0031215088": {"name": "AstraZeneca",         "w": 0.57},
-            "CH0012221716": {"name": "ABB Ltd",             "w": 0.18},
-            "US4781601046": {"name": "Johnson & Johnson",   "w": 0.68},
+            "US0378331005": {"name": "Apple Inc",           "ticker": "AAPL",   "w": 4.89},
+            "US5949181045": {"name": "Microsoft Corp",      "ticker": "MSFT",   "w": 4.32},
+            "US67066G1040": {"name": "NVIDIA Corp",         "ticker": "NVDA",   "w": 3.91},
+            "US0231351067": {"name": "Amazon.com Inc",      "ticker": "AMZN",   "w": 2.34},
+            "US02079K3059": {"name": "Alphabet Inc (A)",    "ticker": "GOOGL",  "w": 1.42},
+            "US30303M1027": {"name": "Meta Platforms",      "ticker": "META",   "w": 1.38},
+            "US88160R1014": {"name": "Tesla Inc",           "ticker": "TSLA",   "w": 0.92},
+            "US4592001014": {"name": "IBM Corp",            "ticker": "IBM",    "w": 0.24},
+            "NL0010273215": {"name": "ASML Holding",        "ticker": "ASML",   "w": 0.89},
+            "FR0000131104": {"name": "LVMH",                "ticker": "MC.PA",  "w": 0.51},
+            "KR7005930003": {"name": "Samsung Electronics", "ticker": "005930", "w": 0.85},
+            "JP3633400001": {"name": "Toyota Motor",        "ticker": "7203",   "w": 0.53},
+            "GB0031215088": {"name": "AstraZeneca",         "ticker": "AZN",    "w": 0.57},
+            "CH0012221716": {"name": "ABB Ltd",             "ticker": "ABBN",   "w": 0.18},
+            "US4781601046": {"name": "Johnson & Johnson",   "ticker": "JNJ",    "w": 0.68},
         }
 
         # AVGS = Avantis Global Small Cap Value: value/small tilt
         # Pequeno overlap com SWRD (small cap value vs large cap market)
         # Holdings proxy: small/mid value internacionais
         avgs_holdings = {
-            "NL0010273215": {"name": "ASML Holding",        "w": 0.38},  # overlap com SWRD
-            "KR7005930003": {"name": "Samsung Electronics", "w": 0.31},  # overlap com SWRD
-            "GB0031215088": {"name": "AstraZeneca",         "w": 0.22},  # overlap com SWRD
-            "CH0012221716": {"name": "ABB Ltd",             "w": 0.85},  # overlap (maior peso em small)
-            "JP3633400001": {"name": "Toyota Motor",        "w": 0.21},  # overlap com SWRD
-            "JP3261600006": {"name": "Mitsui & Co",         "w": 0.72},  # exclusivo AVGS
-            "SE0000115446": {"name": "Alfa Laval AB",       "w": 0.64},  # exclusivo AVGS
-            "DE0005140008": {"name": "Deutsche Bank",       "w": 0.58},  # exclusivo AVGS
-            "IT0003128367": {"name": "Intesa Sanpaolo",     "w": 0.55},  # exclusivo AVGS
-            "GB00B7T77214": {"name": "Rentokil Initial",    "w": 0.49},  # exclusivo AVGS
+            "NL0010273215": {"name": "ASML Holding",        "ticker": "ASML",   "w": 0.38},  # overlap com SWRD
+            "KR7005930003": {"name": "Samsung Electronics", "ticker": "005930", "w": 0.31},  # overlap com SWRD
+            "GB0031215088": {"name": "AstraZeneca",         "ticker": "AZN",    "w": 0.22},  # overlap com SWRD
+            "CH0012221716": {"name": "ABB Ltd",             "ticker": "ABBN",   "w": 0.85},  # overlap (maior peso em small)
+            "JP3633400001": {"name": "Toyota Motor",        "ticker": "7203",   "w": 0.21},  # overlap com SWRD
+            "JP3261600006": {"name": "Mitsui & Co",         "ticker": "8031",   "w": 0.72},  # exclusivo AVGS
+            "SE0000115446": {"name": "Alfa Laval AB",       "ticker": "ALFA",   "w": 0.64},  # exclusivo AVGS
+            "DE0005140008": {"name": "Deutsche Bank",       "ticker": "DBK",    "w": 0.58},  # exclusivo AVGS
+            "IT0003128367": {"name": "Intesa Sanpaolo",     "ticker": "ISP",    "w": 0.55},  # exclusivo AVGS
+            "GB00B7T77214": {"name": "Rentokil Initial",    "ticker": "RTO",    "w": 0.49},  # exclusivo AVGS
         }
 
         # AVEM = Avantis Emerging Markets Value: EM value tilt
         # Pequeno overlap com SWRD (EM vs DM), algum overlap com AVGS (Korea/Taiwan)
         avem_holdings = {
-            "KR7005930003": {"name": "Samsung Electronics", "w": 2.10},  # overlap SWRD+AVGS
-            "TW0002330008": {"name": "TSMC",                "w": 1.85},  # exclusivo AVEM
-            "IN9HAM0021B6": {"name": "HDFC Bank",           "w": 0.72},  # exclusivo AVEM
-            "CNE1000002H1": {"name": "China Construction Bank", "w": 0.68},  # exclusivo AVEM
-            "CNE000001R84": {"name": "PetroChina",          "w": 0.61},  # exclusivo AVEM
-            "KR7000660001": {"name": "SK Hynix",            "w": 0.58},  # exclusivo AVEM
-            "INE040A01034": {"name": "HDFC Ltd",            "w": 0.54},  # exclusivo AVEM
-            "BRVALEACNOR0": {"name": "Vale SA",             "w": 0.48},  # exclusivo AVEM
-            "BRBBASACNOR7": {"name": "Banco do Brasil",     "w": 0.38},  # exclusivo AVEM
+            "KR7005930003": {"name": "Samsung Electronics", "ticker": "005930", "w": 2.10},  # overlap SWRD+AVGS
+            "TW0002330008": {"name": "TSMC",                "ticker": "2330",   "w": 1.85},  # exclusivo AVEM
+            "IN9HAM0021B6": {"name": "HDFC Bank",           "ticker": "HDFCBANK","w": 0.72},  # exclusivo AVEM
+            "CNE1000002H1": {"name": "China Construction Bank", "ticker": "0939","w": 0.68},  # exclusivo AVEM
+            "CNE000001R84": {"name": "PetroChina",          "ticker": "0857",   "w": 0.61},  # exclusivo AVEM
+            "KR7000660001": {"name": "SK Hynix",            "ticker": "000660", "w": 0.58},  # exclusivo AVEM
+            "INE040A01034": {"name": "HDFC Ltd",            "ticker": "HDFC",   "w": 0.54},  # exclusivo AVEM
+            "BRVALEACNOR0": {"name": "Vale SA",             "ticker": "VALE3",  "w": 0.48},  # exclusivo AVEM
+            "BRBBASACNOR7": {"name": "Banco do Brasil",     "ticker": "BBAS3",  "w": 0.38},  # exclusivo AVEM
         }
 
         # Merge por ISIN: calcular peso consolidado na carteira equity
+        # all_holdings = união de TODOS holdings (incluindo singletons) para top_concentrations
         all_isins: set = set(swrd_holdings) | set(avgs_holdings) | set(avem_holdings)
-        consolidated = []
+        consolidated = []     # somente overlaps (≥2 ETFs) — alimenta top_overlaps
+        all_consolidated = [] # TODAS as posições — alimenta top_concentrations
         for isin in all_isins:
             in_swrd = isin in swrd_holdings
             in_avgs = isin in avgs_holdings
             in_avem = isin in avem_holdings
             etfs = [e for e, flag in [("SWRD", in_swrd), ("AVGS", in_avgs), ("AVEM", in_avem)] if flag]
-            if len(etfs) < 2:
-                continue  # apenas overlaps reais (≥2 ETFs)
             # Peso consolidado = Σ(peso_etf_na_carteira × peso_holding_no_etf / 100)
             w_swrd_h = swrd_holdings[isin]["w"] if in_swrd else 0.0
             w_avgs_h = avgs_holdings[isin]["w"] if in_avgs else 0.0
             w_avem_h = avem_holdings[isin]["w"] if in_avem else 0.0
-            name = (
-                swrd_holdings.get(isin) or avgs_holdings.get(isin) or avem_holdings.get(isin)
-            )["name"]
+            src = swrd_holdings.get(isin) or avgs_holdings.get(isin) or avem_holdings.get(isin)
+            name = src["name"]
+            ticker = src.get("ticker", "")
             weight_combined = (
                 w_swrd * w_swrd_h / 100 +
                 w_avgs * w_avgs_h / 100 +
@@ -6322,17 +6323,23 @@ def main():
                 ]
                 if etf in etfs
             }
-            consolidated.append({
+            entry = {
                 "name": name,
+                "ticker": ticker,
                 "isin": isin,
                 "etfs": etfs,
                 "weight_combined_pct": round(weight_combined, 4),
                 "weight_per_etf": weight_per_etf,
-            })
+            }
+            all_consolidated.append(entry)
+            if len(etfs) >= 2:
+                consolidated.append(entry)
 
         # Ordenar por peso combinado decrescente
         consolidated.sort(key=lambda x: x["weight_combined_pct"], reverse=True)
+        all_consolidated.sort(key=lambda x: x["weight_combined_pct"], reverse=True)
         top_overlaps = consolidated[:15]
+        top_concentrations = all_consolidated[:5]  # Top-5 posições agregadas
         total_overlap_pct = round(sum(x["weight_combined_pct"] for x in consolidated), 2)
         unique_coverage_pct = round(100.0 - total_overlap_pct, 2)
 
@@ -6340,6 +6347,7 @@ def main():
             "total_overlap_pct": total_overlap_pct,
             "unique_coverage_pct": max(0.0, unique_coverage_pct),
             "top_overlaps": top_overlaps,
+            "top_concentrations": top_concentrations,
             "last_updated": str(date.today()),
             "data_source": "synthetic_proxy",
         }
