@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 """
-reconstruct_efficient_frontier.py — Fronteira Eficiente Markowitz dual (Histórica + Forward)
+reconstruct_efficient_frontier.py — Fronteira Eficiente Markowitz dual (Histórica + Black-Litterman)
 
-DEV-efficient-frontier (Head + Quant decisões 2026-05-01):
+DEV-efficient-frontier-v2 (Head + Quant + Tax 2026-05-02):
+- v2 substitui "Forward" por Black-Litterman (Idzorek 2005): prior π via
+  reverse-optimization a partir de pesos MSCI ACWI, views Q via AQR/Research
+  Affiliates, posterior μ_BL combinado bayesianamente.
+- Adiciona `sharpe_net`: Sharpe líquido (custos 0.05% spread + IR 15%).
+- Adiciona `rebalance_delta`: tabela R$ + IR para Max Sharpe e Min Vol.
+
+DEV-efficient-frontier v1 (Head + Quant decisões 2026-05-01):
 
 Universo (6 ativos, base portfolio TOTAL — não bloco equity):
   SWRD   max 50%   (acomoda alvo atual 39.5% + folga)
@@ -115,6 +122,58 @@ FORWARD_RETURNS_USD_NOMINAL = {
 
 # Ledoit-Wolf default; OAS opcional via --cov-method=oas
 COV_METHODS = ("ledoit_wolf", "oas")
+
+# ─── BLACK-LITTERMAN (Idzorek 2005) ──────────────────────────────────────────
+# DEV-efficient-frontier-v2 — Quant validou calibração 2026-05-02.
+#
+# Prior π via reverse-optimization: π = λ · Σ · w_mkt
+#   λ (risk aversion): calibrado p/ premium ~5% real BRL ⇒ λ ≈ 2.5-3.0 (Idzorek default)
+#   Σ: covariância histórica 10y (Ledoit-Wolf shrinkage)
+#   w_mkt: pesos de equilíbrio (MSCI ACWI para equity + atual Diego para RF/HODL11)
+#
+# τ (uncertainty no prior): 0.05 (Idzorek 2005 §3 — "small number")
+# Ω (uncertainty nas views): diagonal `τ · diag(P · Σ · P')` (Idzorek 2005 §4.1)
+# Posterior: μ_BL = [(τΣ)^-1 + P'Ω^-1 P]^-1 [(τΣ)^-1 π + P'Ω^-1 Q]
+#
+# Pesos de equilíbrio MSCI ACWI bloco equity (snapshot abr/2026):
+#   USA 60% / DM ex-US 30% / EM 10%
+#   → SWRD aproxima USA+DM ex-US, AVGS small-cap value DM, AVEM EM
+#   Mapeamento: equity bloco ponderado pela alocação atual do Diego
+#               (50% SWRD + 30% AVGS + 20% AVEM dentro do equity).
+BL_LAMBDA = 2.5            # risk aversion (Idzorek default 2.5-3.0)
+BL_TAU = 0.05              # prior uncertainty (Idzorek 2005)
+
+# Pesos de equilíbrio do mercado (w_mkt) por ativo — base da reverse-optimization.
+# Equity: USA 60% / DM ex-US 30% / EM 10% mapeado p/ SWRD/AVGS/AVEM via composição
+# do FI-equity-redistribuicao (50/30/20). RF e HODL11 = pesos atuais.
+# Total deve somar 1.0 — normalizado.
+BL_MKT_WEIGHTS = {
+    "SWRD":   0.395,   # USA 60% + parte DM ex-US (broad market) — alvo atual Diego
+    "AVGS":   0.237,   # DM small-cap value — alvo atual Diego
+    "AVEM":   0.158,   # EM — alvo atual Diego
+    "RF_EST": 0.150,   # IPCA+ longo HTM — atual Diego (não há benchmark global)
+    "RF_TAT": 0.030,   # Renda+ 2065 — atual Diego
+    "HODL11": 0.030,   # Cripto — atual Diego
+}
+
+# ─── CUSTOS DE TRANSAÇÃO + IR (Tax validou 2026-05-02) ───────────────────────
+# Lei 14.754/2023 + carteira Diego:
+#   ETF exterior IBKR (SWRD/AVGS/AVEM): 15% sobre ganho de capital (Lei 14.754)
+#   Tesouro IPCA+ 2040 PF HTM (RF_EST): isento no resgate (Tesouro Direto PF)
+#   Renda+ 2065 (RF_TAT): come-cotas semestral 15% (regime de fundo, não TD direto)
+#   HODL11 (ETF cripto B3): 15% sobre ganho de capital
+# IOF: irrelevante em janela > 30 dias. Spread bid-ask 0.05% padrão para ETFs líquidos.
+# IR aplicado APENAS sobre delta de venda (Δ negativo). Premissa conservadora:
+# 100% do valor vendido é ganho (worst case, sem cost basis por ativo no JSON).
+TRANSACTION_SPREAD = 0.0005  # 0.05% por R$ negociado (compra ou venda)
+TAX_RATES = {
+    "SWRD":   0.15,   # ETF exterior — Lei 14.754
+    "AVGS":   0.15,   # ETF exterior — Lei 14.754
+    "AVEM":   0.15,   # ETF exterior — Lei 14.754
+    "RF_EST": 0.00,   # Tesouro IPCA+ HTM PF — isento no resgate
+    "RF_TAT": 0.15,   # Renda+ 2065 — come-cotas semestral
+    "HODL11": 0.15,   # ETF cripto BR — Lei 14.754 (mesma regra)
+}
 
 # ─── INPUT: per-asset monthly returns (10y) ──────────────────────────────────
 
@@ -571,26 +630,253 @@ def evaluate_current(w_current: np.ndarray, mu: np.ndarray, cov: np.ndarray,
     }
 
 
+# ─── BLACK-LITTERMAN (Idzorek 2005) ──────────────────────────────────────────
+
+
+def black_litterman_prior(cov: np.ndarray, w_mkt: np.ndarray,
+                          lam: float = BL_LAMBDA) -> np.ndarray:
+    """Reverse-optimization: π = λ · Σ · w_mkt.
+
+    Retorna prior μ implícito no equilíbrio (vetor 6).
+    """
+    return lam * (cov @ w_mkt)
+
+
+def _build_bl_views(mu_views_brl_real: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Constrói matriz P (views) e vetor Q (retornos das views).
+
+    Diego usa **absolute views** (uma view por ativo de equity + cripto, RF deixa
+    o prior falar). Isso simplifica a calibração e mantém auditabilidade.
+
+    P: identidade nas linhas dos ativos com view (SWRD/AVGS/AVEM/HODL11).
+       RF_EST e RF_TAT recebem o prior puro (sem view explícita).
+    Q: vetor de retornos esperados nesses ativos (já em BRL real).
+    """
+    view_assets = ["SWRD", "AVGS", "AVEM", "HODL11"]
+    n_assets = len(ASSETS)
+    P = np.zeros((len(view_assets), n_assets))
+    Q = np.zeros(len(view_assets))
+    for i, a in enumerate(view_assets):
+        P[i, ASSETS.index(a)] = 1.0
+        Q[i] = mu_views_brl_real[ASSETS.index(a)]
+    return P, Q
+
+
+def black_litterman_posterior(prior_pi: np.ndarray, cov: np.ndarray,
+                              P: np.ndarray, Q: np.ndarray,
+                              tau: float = BL_TAU) -> tuple[np.ndarray, dict]:
+    """Posterior Black-Litterman: μ_BL = [(τΣ)^-1 + P'Ω^-1P]^-1 [(τΣ)^-1 π + P'Ω^-1 Q].
+
+    Ω diagonal proporcional à incerteza das views (Idzorek 2005 §4.1):
+       Ω = τ · diag(P · Σ · P')
+
+    Retorna (μ_BL, meta dict com Ω, λ, τ).
+    """
+    n = len(prior_pi)
+    # Ω = τ · diag(P · Σ · P')  (Idzorek default — confiança média nas views)
+    PSP = P @ cov @ P.T  # k×k
+    omega = np.diag(np.diag(PSP)) * tau  # diagonal proporcional
+
+    # Para evitar singularidade quando RF_EST tem cov=0 (linha/coluna zerada),
+    # adicionamos pequeno regularizador na diagonal de τΣ.
+    tau_sigma = tau * cov
+    eps = 1e-8
+    tau_sigma_reg = tau_sigma + np.eye(n) * eps
+
+    inv_tau_sigma = np.linalg.inv(tau_sigma_reg)
+    inv_omega = np.linalg.inv(omega + np.eye(omega.shape[0]) * eps)
+
+    A = inv_tau_sigma + P.T @ inv_omega @ P
+    b = inv_tau_sigma @ prior_pi + P.T @ inv_omega @ Q
+    mu_bl = np.linalg.solve(A, b)
+
+    meta = {
+        "lambda": BL_LAMBDA,
+        "tau": tau,
+        "omega_diag": [round(float(x), 8) for x in np.diag(omega)],
+        "view_assets": ["SWRD", "AVGS", "AVEM", "HODL11"],
+        "Q_views_brl_real": [round(float(q), 6) for q in Q],
+        "prior_pi_brl_real": [round(float(p), 6) for p in prior_pi],
+        "posterior_mu_brl_real": [round(float(m), 6) for m in mu_bl],
+        "w_mkt": dict(BL_MKT_WEIGHTS),
+        "method": "Idzorek 2005 — diagonal Ω = τ · diag(P·Σ·P')",
+    }
+    return mu_bl, meta
+
+
+def expected_returns_bl(cov: np.ndarray) -> tuple[np.ndarray, dict]:
+    """Compõe prior π (reverse-optimization) + views Q (AQR/RA) → posterior μ_BL.
+
+    Views = mesmos retornos do `expected_returns_forward()` (BRL real),
+    aplicados como views absolutas em SWRD/AVGS/AVEM/HODL11. RF_* deixa o prior.
+    """
+    w_mkt = np.array([BL_MKT_WEIGHTS[a] for a in ASSETS])
+    w_mkt = w_mkt / w_mkt.sum()  # normalização defensiva
+
+    # Prior: π = λ · Σ · w_mkt (mas com cov RF_EST=0, prior_pi[RF_EST]=0)
+    # Substituímos no prior os retornos das classes "ancora real" pelo target real.
+    prior_pi = black_litterman_prior(cov, w_mkt, lam=BL_LAMBDA)
+    # Ancorar RF_EST e RF_TAT no retorno real respectivo (prior π=0 para RF_EST
+    # porque cov é zero; manualmente fixamos para o IPCA+ longo HTM real).
+    prior_pi[ASSETS.index("RF_EST")] = RISK_FREE_REAL_BRL
+    prior_pi[ASSETS.index("RF_TAT")] = 0.07  # carry real Renda+ 2065
+
+    mu_views = expected_returns_forward()  # já em BRL real
+    P, Q = _build_bl_views(mu_views)
+    mu_bl, bl_meta = black_litterman_posterior(prior_pi, cov, P, Q, tau=BL_TAU)
+    bl_meta["sanity_check"] = _bl_sanity_check(bl_meta, mu_bl)
+    return mu_bl, bl_meta
+
+
+# ─── SHARPE LÍQUIDO (custos + IR) ────────────────────────────────────────────
+
+
+def _compute_rebalance_costs(w_target: np.ndarray, w_current: np.ndarray,
+                             patrimonio_total: float) -> dict:
+    """Custo de rebalance: spread em todo |Δ| + IR 15% sobre vendas (Δ<0).
+
+    Premissa conservadora: 100% do valor vendido é ganho realizado (sem cost
+    basis por ativo no JSON — Diego prefere worst-case, Tax-validado).
+    """
+    delta_pp = w_target - w_current
+    delta_brl = delta_pp * patrimonio_total
+    # Spread sobre |Δ| (compra OU venda paga)
+    spread_total = float(np.sum(np.abs(delta_brl)) * TRANSACTION_SPREAD)
+    # IR 15% sobre vendas (Δ<0). Premissa: 100% ganho.
+    tax_rates = np.array([TAX_RATES[a] for a in ASSETS])
+    ir_per_asset = np.where(delta_brl < 0, -delta_brl * tax_rates, 0.0)
+    ir_total = float(ir_per_asset.sum())
+    return {
+        "delta_brl": [round(float(x), 2) for x in delta_brl],
+        "delta_pp":  [round(float(x), 6) for x in delta_pp],
+        "spread_total_brl": round(spread_total, 2),
+        "ir_total_brl": round(ir_total, 2),
+        "ir_per_asset_brl": [round(float(x), 2) for x in ir_per_asset],
+        "total_cost_brl": round(spread_total + ir_total, 2),
+    }
+
+
+def _annualize_one_off_cost(cost_brl: float, patrimonio_total: float,
+                            horizon_years: float = 10.0) -> float:
+    """Converte custo one-off em haircut anual sobre o retorno (amortizado).
+
+    Premissa: rebalance é evento único; custo dilui ao longo de `horizon_years`.
+    Diego planeja FIRE em ~10 anos → horizonte default 10y.
+    """
+    if patrimonio_total <= 0:
+        return 0.0
+    return (cost_brl / patrimonio_total) / horizon_years
+
+
+def compute_sharpe_net(point_weights: dict, ret_gross: float, vol: float, rf: float,
+                       w_current: np.ndarray, patrimonio_total: float,
+                       horizon_years: float = 10.0) -> dict:
+    """Sharpe líquido = (ret_gross − annualized_cost − rf) / vol.
+
+    annualized_cost: (spread + IR) / patrimônio_total / horizon_years.
+    Retorna dict com sharpe_net, ret_net, costs.
+    """
+    w_target = np.array([point_weights[a] for a in ASSETS])
+    costs = _compute_rebalance_costs(w_target, w_current, patrimonio_total)
+    haircut = _annualize_one_off_cost(costs["total_cost_brl"], patrimonio_total,
+                                      horizon_years)
+    ret_net = ret_gross - haircut
+    sharpe_net = (ret_net - rf) / vol if vol > 0 else 0.0
+    return {
+        "ret_net": round(float(ret_net), 6),
+        "sharpe_net": round(float(sharpe_net), 4),
+        "haircut_anual": round(float(haircut), 6),
+        "costs": costs,
+        "horizon_years": horizon_years,
+    }
+
+
+def attach_sharpe_net(front: dict, w_current: np.ndarray, rf: float,
+                      patrimonio_total: float) -> None:
+    """Attach `sharpe_net` + `costs` em cada ponto da fronteira (mutates in place)."""
+    for p in front["points"]:
+        net = compute_sharpe_net(p["weights"], p["ret"], p["vol"], rf,
+                                 w_current, patrimonio_total)
+        p["sharpe_net"] = net["sharpe_net"]
+        p["ret_net"] = net["ret_net"]
+        p["haircut_anual"] = net["haircut_anual"]
+    for key in ("max_sharpe", "min_vol"):
+        pt = front[key]
+        net = compute_sharpe_net(pt["weights"], pt["ret"], pt["vol"], rf,
+                                 w_current, patrimonio_total)
+        pt["sharpe_net"] = net["sharpe_net"]
+        pt["ret_net"] = net["ret_net"]
+        pt["haircut_anual"] = net["haircut_anual"]
+        pt["rebalance_delta"] = net["costs"]
+    # Carteira atual: rebalance = 0 ⇒ sharpe_net == sharpe_gross
+    cur = front.get("current")
+    if cur is not None:
+        net = compute_sharpe_net(cur["weights"], cur["ret"], cur["vol"], rf,
+                                 w_current, patrimonio_total)
+        cur["sharpe_net"] = net["sharpe_net"]
+        cur["ret_net"] = net["ret_net"]
+        cur["haircut_anual"] = net["haircut_anual"]
+
+
 # ─── BUILD COMPLETE PAYLOAD ──────────────────────────────────────────────────
+
+def _load_patrimonio_total() -> float:
+    """Lê patrimônio total real para cálculo de Sharpe líquido.
+
+    Fonte: dados/data.json `premissas.patrimonio_atual` (gerado pelo pipeline
+    a partir da carteira). Em modo standalone (build_payload chamado fora do
+    pipeline), usa fallback de carteira_params.json. Documenta origem para
+    auditoria.
+    """
+    candidates = [
+        Path(_HERE).parent / "react-app" / "public" / "data.json",
+        Path(_HERE).parent / "dashboard" / "data.json",
+        Path(_HERE).parent / "dash" / "data.json",
+    ]
+    for p in candidates:
+        if p.exists():
+            try:
+                d = json.loads(p.read_text())
+                pat = d.get("premissas", {}).get("patrimonio_atual")
+                if isinstance(pat, (int, float)) and pat > 0:
+                    return float(pat)
+            except Exception:
+                continue
+    # Fallback: carteira_params.json
+    cp = Path(_HERE).parent / "dados" / "carteira_params.json"
+    if cp.exists():
+        try:
+            d = json.loads(cp.read_text())
+            pat = d.get("patrimonio_atual") or d.get("PATRIMONIO_ATUAL")
+            if isinstance(pat, (int, float)) and pat > 0:
+                return float(pat)
+        except Exception:
+            pass
+    # Último fallback (memória 2026-04: R$3.685M)
+    return 3_685_261.0
+
 
 def build_payload(cov_method: str = "ledoit_wolf", n_portfolios: int = 60) -> dict:
     df, panel_meta = load_returns_panel(years=10)
     cov = covariance_matrix(df, method=cov_method)
     mu_hist = expected_returns_historica(df)
-    mu_fwd = expected_returns_forward()
+    mu_bl, bl_meta = expected_returns_bl(cov)
     rf = RISK_FREE_REAL_BRL
     w_current = current_portfolio_weights()
+    patrimonio_total = _load_patrimonio_total()
 
     payload = {}
-    for label, mu, with_disclaimer in [
-        ("historica", mu_hist, False),
-        ("forward",  mu_fwd,  True),
-    ]:
+    scenarios = [
+        ("historica", mu_hist, None),
+        ("bl",        mu_bl,   bl_meta),
+    ]
+    for label, mu, scen_meta in scenarios:
         scen = {}
         for tag, crypto_on in [("crypto_on", True), ("crypto_off", False)]:
             front = compute_efficient_frontier(mu, cov, rf, n_portfolios=n_portfolios,
                                                crypto_on=crypto_on)
             front["current"] = evaluate_current(w_current, mu, cov, rf, crypto_on)
+            attach_sharpe_net(front, w_current, rf, patrimonio_total)
             scen[tag] = front
         scen["rf"] = rf
         scen["cov_method"] = cov_method
@@ -604,17 +890,76 @@ def build_payload(cov_method: str = "ledoit_wolf", n_portfolios: int = 60) -> di
             "rf_bounds": list(RF_BOUNDS),
         }
         scen["as_of"] = datetime.today().date().isoformat()
-        scen["metodologia_version"] = f"ef-{label}-v1"
+        scen["metodologia_version"] = f"ef-{label}-v2" if label == "bl" else f"ef-{label}-v1"
         scen["panel"] = panel_meta
-        if with_disclaimer:
+        scen["patrimonio_total_brl"] = patrimonio_total
+        scen["transaction_spread"] = TRANSACTION_SPREAD
+        scen["tax_rates"] = dict(TAX_RATES)
+        if label == "bl":
             scen["disclaimer"] = (
-                "Cov histórica 10y; ret forward AQR/Research Affiliates; "
-                "Black-Litterman fica para v2 — covariância coerente com views "
-                "exigiria Bayes update sobre prior de mercado."
+                "Black-Litterman incorpora views (AQR/RA) sobre equilibrium "
+                "implícito (MSCI ACWI weights). Sensível a calibração de τ/Ω. "
+                "Idzorek 2005."
             )
+            scen["bl_meta"] = scen_meta
         payload[label] = scen
 
     return payload
+
+
+def _bl_sanity_check(bl_meta: dict, mu_bl: np.ndarray) -> dict:
+    """Sanity Black-Litterman:
+    1. Posterior finito e plausível (entre -10% e 30% real BRL).
+    2. Posterior médio do bloco com views ∈ [min, max] das views (±2pp).
+       Versão portfolio-weighted (não per-asset) — Idzorek com Σ off-diagonal
+       permite posterior individual sair do range, mas o agregado não deve.
+    3. Posterior não pode flippar sinal de view forte (>5%).
+    """
+    view_assets = bl_meta["view_assets"]
+    prior = bl_meta["prior_pi_brl_real"]
+    Q = bl_meta["Q_views_brl_real"]
+    violations = []
+
+    # 1. Plausibilidade per-asset
+    for a in ASSETS:
+        idx = ASSETS.index(a)
+        post = float(mu_bl[idx])
+        if not (-0.10 <= post <= 0.30):
+            violations.append({
+                "rule": "plausible_range", "asset": a, "posterior": post,
+            })
+
+    # 2. Posterior médio dos ativos com view dentro do range das views (±2pp)
+    view_idx = [ASSETS.index(a) for a in view_assets]
+    post_avg = float(np.mean([mu_bl[i] for i in view_idx]))
+    view_avg = float(np.mean(Q))
+    prior_avg = float(np.mean([prior[i] for i in view_idx]))
+    bound_lo = min(prior_avg, view_avg) - 0.02
+    bound_hi = max(prior_avg, view_avg) + 0.02
+    if not (bound_lo <= post_avg <= bound_hi):
+        violations.append({
+            "rule": "weighted_avg_in_range",
+            "post_avg": post_avg, "prior_avg": prior_avg, "view_avg": view_avg,
+        })
+
+    # 3. Sign-flip check: views fortes (>5pp) devem manter sinal no posterior
+    for i, a in enumerate(view_assets):
+        idx = ASSETS.index(a)
+        if abs(Q[i]) > 0.05 and np.sign(mu_bl[idx]) != np.sign(Q[i]):
+            violations.append({
+                "rule": "sign_flip", "asset": a, "view": Q[i],
+                "posterior": float(mu_bl[idx]),
+            })
+
+    return {
+        "passed": len(violations) == 0,
+        "violations": violations,
+        "rules": [
+            "plausible_range: -10% ≤ posterior ≤ 30%",
+            "weighted_avg_in_range: avg(posterior_views) ∈ [min(prior,view), max(prior,view)] ± 2pp",
+            "sign_flip: views >5pp não invertem sinal no posterior",
+        ],
+    }
 
 
 # ─── MAIN ────────────────────────────────────────────────────────────────────

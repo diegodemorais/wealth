@@ -436,6 +436,17 @@ test.describe('Portfolio — DARF panel', () => {
     const el = page.locator('[data-testid="efficient-frontier-chart"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
+
+  // DEV-efficient-frontier-v2 (2026-05-02): banner + regime + delta table visíveis
+  test('efficient-frontier v2 banner, regime label, delta table visible', async ({ page }) => {
+    const header = page.locator('[data-test="section-header-section-efficient-frontier"]');
+    if (await header.count() === 0) test.skip();
+    await header.scrollIntoViewIfNeeded();
+    await header.click();
+    await expect(page.locator('[data-testid="ef-diagnostic-banner"]')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('[data-testid="ef-regime-label"]')).toBeVisible();
+    await expect(page.locator('[data-testid="ef-rebalance-delta-table"]')).toBeVisible();
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

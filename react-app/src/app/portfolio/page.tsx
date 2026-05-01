@@ -566,14 +566,17 @@ export default function PortfolioPage() {
         </CollapsibleSection>
       )}
 
-      {/* 2a-sexies. Efficient Frontier — Markowitz dual (DEV-efficient-frontier 2026-05-01) */}
+      {/* 2a-sexies. Efficient Frontier — Markowitz dual (v1 2026-05-01 + v2 2026-05-02 BL) */}
       {(data as any)?.efficient_frontier && (
         <CollapsibleSection
           id="section-efficient-frontier"
-          title={secTitle('portfolio', 'efficient-frontier', 'Fronteira Eficiente — Markowitz (Histórica + Forward)')}
+          title={secTitle('portfolio', 'efficient-frontier', 'Fronteira Eficiente — Markowitz (Histórica + Black-Litterman)')}
           defaultOpen={secOpen('portfolio', 'efficient-frontier', false)}
         >
-          <EfficientFrontierChart data={(data as any).efficient_frontier} />
+          <EfficientFrontierChart
+            data={(data as any).efficient_frontier}
+            valueSpread={(data as any)?.factor?.value_spread}
+          />
         </CollapsibleSection>
       )}
 

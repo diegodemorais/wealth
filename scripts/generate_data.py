@@ -6646,9 +6646,11 @@ def main():
         data["efficient_frontier"] = _ef_build(cov_method="ledoit_wolf", n_portfolios=60)
         _ef = data["efficient_frontier"]
         _ms_h = _ef["historica"]["crypto_on"]["max_sharpe"]
-        _ms_f = _ef["forward"]["crypto_on"]["max_sharpe"]
-        print(f"  ✓ efficient_frontier: hist max_sharpe={_ms_h['sharpe']:.3f} ret={_ms_h['ret']:.3f} | "
-              f"fwd max_sharpe={_ms_f['sharpe']:.3f} ret={_ms_f['ret']:.3f}")
+        _ms_b = _ef["bl"]["crypto_on"]["max_sharpe"]
+        # v2: sharpe_net agora disponível em todos os pontos
+        print(f"  ✓ efficient_frontier (v2): hist max_sharpe={_ms_h['sharpe']:.3f} (net {_ms_h.get('sharpe_net', 0):.3f}) "
+              f"ret={_ms_h['ret']:.3f} | bl max_sharpe={_ms_b['sharpe']:.3f} (net {_ms_b.get('sharpe_net', 0):.3f}) "
+              f"ret={_ms_b['ret']:.3f}")
     except Exception as _ef_e:
         # Fail-fast: relate erro mas não derruba pipeline (chart é optional na spec)
         print(f"  ⚠️ efficient_frontier: falhou ({_ef_e}) — continuando sem fronteira")
