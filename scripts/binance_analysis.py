@@ -49,13 +49,24 @@ def get_cambio() -> float:
         pass
     try:
         import requests
-        r = requests.get(
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from fetch_utils import fetch_with_retry
+        url = (
             "https://olinda.bcb.gov.br/olinda/servio/PTAX/versao/v1/odata/"
             "CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao=%27"
-            f"{date.today().strftime('%m-%d-%Y')}%27&$format=json",
-            timeout=5,
+            f"{date.today().strftime('%m-%d-%Y')}%27&$format=json"
         )
-        v = r.json()["value"][0]["cotacaoVenda"]
+        def _fetch_ptax():
+            resp = requests.get(url, timeout=5)
+            resp.raise_for_status()
+            return resp.json()
+        payload = fetch_with_retry(
+            fn=_fetch_ptax,
+            cache_key=f"binance_ptax_{date.today().isoformat()}",
+            cache_ttl_h=4,
+            retries=3,
+        )
+        v = payload["value"][0]["cotacaoVenda"]
         return float(v)
     except Exception:
         return 5.80  # fallback conservador
@@ -69,7 +80,12 @@ def fetch_prices(coins: list[str]) -> dict[str, float]:
         return prices
     try:
         import yfinance as yf
-        data = yf.download(tickers_needed, period="1d", auto_adjust=True, progress=False)
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from fetch_utils import fetch_with_retry
+        data = fetch_with_retry(
+            fn=lambda: yf.download(tickers_needed, period="1d", auto_adjust=True, progress=False),
+            retries=3,
+        )
         close = data["Close"] if "Close" in data else data
         for coin in coins:
             tkr = TICKERS.get(coin)

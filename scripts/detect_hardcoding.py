@@ -364,6 +364,18 @@ class NakedIntegrationDetector:
                 continue
             # Strip inline comments before matching
             code_part = stripped.split("#")[0]
+            # DEV-pipeline-gaps-p2 Gap 3: chamadas dentro de fetch_with_retry(...) são wrappers
+            # canônicos. O padrão pode aparecer na mesma linha (lambda inline) OU em uma linha
+            # posterior dentro do bloco do fetch_with_retry (max 4 linhas atrás para o `fn=`).
+            if "fetch_with_retry" in code_part or "lambda" in code_part:
+                continue
+            # Olhar 6 linhas em ambas as direções: chamada pode estar dentro de um
+            # `def _fetch()` aninhado que é passado a fetch_with_retry alguns linhas depois.
+            window_start = max(0, line_num - 7)
+            window_end = min(len(self.lines), line_num + 6)
+            window = "\n".join(self.lines[window_start:window_end])
+            if "fetch_with_retry" in window:
+                continue
             for integration_type, patterns in self.NAKED_PATTERNS.items():
                 for pattern in patterns:
                     if re.search(pattern, code_part):

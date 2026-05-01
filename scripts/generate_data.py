@@ -815,6 +815,53 @@ def get_pfire_tornado():
     return pf_aspiracional, pf_base, tornado
 
 
+# ─── 2b. SPENDING SCENARIOS (DEV-pipeline-gaps-p2 Gap 1) ─────────────────────
+def compute_spending_scenarios() -> list[dict]:
+    """
+    Calcula P(FIRE) para 3 cenários de gasto familiar (sensibilidade ao custo de vida).
+
+    Roda MC com `custo_vida_base` ajustado em cada cenário (mantém demais premissas).
+    Usado para popular state.spending.scenarios → spendingSensibilidade no dashboard.
+
+    Returns:
+        [{label, custo, base, fav, stress}, ...] — base/fav/stress em % (0-100).
+        Lista vazia se MC falhar para algum cenário.
+    """
+    print("  ▶ compute_spending_scenarios — sensibilidade ao gasto (3 cenários) ...")
+    cenarios_spending = [
+        {"label": "Solteiro/FIRE Day", "custo": 250_000},
+        {"label": "Pós-casamento",     "custo": 270_000},
+        {"label": "Casamento+filho",   "custo": 300_000},
+    ]
+    results: list[dict] = []
+    try:
+        import fire_montecarlo as fm
+        from pfire_transformer import canonicalize_pfire
+    except Exception as e:
+        print(f"  ⚠️ compute_spending_scenarios: import falhou ({e})")
+        return []
+
+    for cfg in cenarios_spending:
+        try:
+            premissas_cv = dict(fm.PREMISSAS)
+            premissas_cv["custo_vida_base"] = cfg["custo"]
+            row = {"label": cfg["label"], "custo": cfg["custo"]}
+            for cenario_mc in ("base", "favoravel", "stress"):
+                r = fm.rodar_monte_carlo(premissas_cv, n_sim=10_000, cenario=cenario_mc,
+                                          seed=42, strategy="guardrails")
+                pct = canonicalize_pfire(r["p_sucesso"], source="mc").percentage
+                # mapear nomes: favoravel→fav, stress→stress
+                key = "fav" if cenario_mc == "favoravel" else cenario_mc
+                row[key] = round(pct, 1)
+            results.append(row)
+            print(f"  ✓ scenario {cfg['label']} (R${cfg['custo']/1000:.0f}k): "
+                  f"base={row['base']}% fav={row['fav']}% stress={row['stress']}%")
+        except Exception as e:
+            print(f"  ⚠️ compute_spending_scenarios[{cfg['label']}]: {e}")
+            return []  # falha em qualquer cenário invalida o conjunto
+    return results
+
+
 # ─── 3. BACKTEST ──────────────────────────────────────────────────────────────
 def get_backtest():
     print("  ▶ backtest_portfolio.py ...")
@@ -4144,6 +4191,19 @@ def main():
     # P(FIRE) + Tornado
     pfire_aspiracional, pfire_base, tornado = get_pfire_tornado()
 
+    # Spending scenarios (DEV-pipeline-gaps-p2 Gap 1)
+    # Persiste P(FIRE) base/fav/stress para 3 níveis de gasto (250k/270k/300k)
+    # em state.spending.scenarios → consumido por spendingSensibilidade no dashboard.
+    try:
+        _spending_scen = compute_spending_scenarios()
+        if _spending_scen:
+            _state_spending = load_state().get("spending", {}) or {}
+            _state_spending["scenarios"] = _spending_scen
+            update_dashboard_state("spending", _state_spending, generator="generate_data.py")
+            print(f"  ✓ state.spending.scenarios: {len(_spending_scen)} cenários persistidos")
+    except Exception as _e_ss:
+        print(f"  ⚠️ spending scenarios: {_e_ss}")
+
     # RF-2: Adicionar percentis reais de MC
     try:
         print("  ▶ RF-2: Computando percentis reais de P(FIRE) via MC múltiplo ...")
@@ -4671,9 +4731,11 @@ def main():
     #   Fix futuro: calcular P(FIRE) para 3 níveis de gasto (R$250k, R$270k, R$300k) usando
     #   PFireEngine e persistir em state.spending.scenarios via update_dashboard_state().
     #   Estimativa: ~3 chamadas adicionais ao PFireEngine por run (rápido, <5s).
-    _sens_raw = state.get("spending", {}).get("scenarios", [])
+    # DEV-pipeline-gaps-p2 Gap 1: state.spending.scenarios é populado por
+    # compute_spending_scenarios() em main(). Re-ler state aqui para pegar a versão fresca.
+    _sens_raw = load_state().get("spending", {}).get("scenarios", [])
     if not _sens_raw:
-        print("  ⚠️ spendingSensibilidade: state.spending.scenarios vazio — nenhum script popula este campo (GAP documentado em RUNBOOK.md)")
+        print("  ⚠️ spendingSensibilidade: state.spending.scenarios vazio — compute_spending_scenarios falhou ou foi pulado")
     spending_sens = []
     _custo_map = {"R$250k": 250_000, "R$270k": 270_000, "R$300k": 300_000,
                   "Solteiro/FIRE Day": 250_000, "Pós-casamento": 270_000, "Casamento+filho": 300_000}
@@ -4686,9 +4748,21 @@ def main():
         label = s.get("label", "")
         custo = s.get("custo", _custo_map.get(label, 0))
         base  = s.get("pfire", s.get("base"))
-        # Area A: Recalculate fav/stress using current deltas to ensure consistency with pfire_base
-        fav    = round(min(99.9, max(0, base + _delta_fav)), 1) if (base is not None and _delta_fav is not None) else None
-        stress = round(min(99.9, max(0, base + _delta_stress)), 1) if (base is not None and _delta_stress is not None) else None
+        # Preferir fav/stress vindos de MC real (compute_spending_scenarios), senão derivar via delta de pfire_base
+        fav_raw    = s.get("fav")
+        stress_raw = s.get("stress")
+        if fav_raw is not None:
+            fav = round(fav_raw, 1)
+        elif base is not None and _delta_fav is not None:
+            fav = round(min(99.9, max(0, base + _delta_fav)), 1)
+        else:
+            fav = None
+        if stress_raw is not None:
+            stress = round(stress_raw, 1)
+        elif base is not None and _delta_stress is not None:
+            stress = round(min(99.9, max(0, base + _delta_stress)), 1)
+        else:
+            stress = None
         spending_sens.append({
             "label": label, "custo": custo,
             "base": base, "fav": fav, "stress": stress,

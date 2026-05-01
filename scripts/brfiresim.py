@@ -29,6 +29,7 @@ import requests
 # Add scripts dir to sys.path so config is importable when run as a script
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from config import REGIME7_CONFIG
+from fetch_utils import fetch_with_retry  # DEV-pipeline-gaps-p2 Gap 3
 
 # ─── Config ──────────────────────────────────────────────────────────────────────
 PATRIMONIO_INICIAL = 10_000_000   # R$10M — FIRE Number = starting capital at retirement
@@ -61,9 +62,17 @@ def _bcb_fetch(serie: int, start: str, end: str) -> list[dict]:
         f"?formato=json&dataInicial={start}&dataFinal={end}"
     )
     try:
-        r = requests.get(url, timeout=20)
-        r.raise_for_status()
-        return r.json()
+        def _fetch():
+            r = requests.get(url, timeout=20)
+            r.raise_for_status()
+            return r.json()
+        return fetch_with_retry(
+            fn=_fetch,
+            cache_key=f"bcb_sgs_{serie}_{start}_{end}",
+            cache_ttl_h=24,
+            retries=3,
+            fallback=[],
+        )
     except Exception as e:
         print(f"  ⚠ BCB SGS {serie} fetch failed: {e}", file=sys.stderr)
         return []
@@ -108,7 +117,10 @@ def fetch_equity_brl_monthly(start_year: int = 2003, end_year: int = 2025) -> di
         end   = f"{end_year + 1}-01-01"
 
         def _monthly_close(ticker: str) -> pd.Series:
-            raw = yf.download(ticker, start=start, end=end, auto_adjust=True, progress=False)
+            raw = fetch_with_retry(
+                fn=lambda: yf.download(ticker, start=start, end=end, auto_adjust=True, progress=False),
+                retries=3,
+            )
             if raw.empty:
                 raise ValueError(f"{ticker} returned empty data")
             close = raw["Close"].squeeze() if isinstance(raw.columns, pd.MultiIndex) else raw["Close"]

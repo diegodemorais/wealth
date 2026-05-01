@@ -48,6 +48,13 @@ import numpy as np
 
 import sys as _sys
 from pathlib import Path as _Path
+
+# DEV-pipeline-gaps-p2 Gap 3: yfinance calls go through fetch_with_retry
+_sys.path.insert(0, str(_Path(__file__).parent))
+from fetch_utils import fetch_with_retry  # noqa: E402
+
+# Default cache TTL para chamadas de preços (yfinance)
+_YF_CACHE_TTL_H = 6
 _sys.path.insert(0, str(_Path(__file__).parent))
 from config import (
     EQUITY_WEIGHTS, TICKERS_YF, REGIME7_CONFIG,
@@ -173,8 +180,11 @@ def baixar_dados(tickers: list, inicio: str, fim: str = None) -> pd.DataFrame:
 
     import sys as _sys
     print(f"  Baixando preços ({inicio} → {fim})...", file=_sys.stderr)
-    raw = yf.download(tickers, start=inicio, end=fim,
-                      auto_adjust=True, progress=False)
+    raw = fetch_with_retry(
+        fn=lambda: yf.download(tickers, start=inicio, end=fim,
+                                auto_adjust=True, progress=False),
+        retries=3,
+    )
 
     if isinstance(raw.columns, pd.MultiIndex):
         close = raw[COLUMN_CLOSE]
@@ -190,8 +200,11 @@ def baixar_cambio(inicio: str, fim: str = None) -> pd.Series:
     """Retorna câmbio USD/BRL (fim de mês)."""
     if fim is None:
         fim = datetime.today().strftime(DATE_FORMAT_YMD)
-    raw = yf.download("USDBRL=X", start=inicio, end=fim,
-                      auto_adjust=True, progress=False)
+    raw = fetch_with_retry(
+        fn=lambda: yf.download("USDBRL=X", start=inicio, end=fim,
+                                auto_adjust=True, progress=False),
+        retries=3,
+    )
     if isinstance(raw.columns, pd.MultiIndex):
         close = raw[COLUMN_CLOSE].squeeze()
     else:
@@ -426,7 +439,10 @@ def _get_french_world_returns(start: str) -> pd.Series:
     # Mas o MSCI World total é melhor via yfinance MSCI World NR
     # Aqui retornamos via yfinance para consistência
     swrd_proxy = REGIME7_CONFIG["proxies"]["SWRD"][0]["ticker"]
-    raw = yf.download(swrd_proxy, start=start, auto_adjust=True, progress=False)
+    raw = fetch_with_retry(
+        fn=lambda: yf.download(swrd_proxy, start=start, auto_adjust=True, progress=False),
+        retries=3,
+    )
     if isinstance(raw.columns, pd.MultiIndex):
         close = raw["Close"].squeeze()
     else:
@@ -439,7 +455,10 @@ def _get_french_world_returns(start: str) -> pd.Series:
 def _download_monthly_returns(ticker: str, start: str, end: str = None) -> pd.Series:
     """Baixa série de retornos mensais para um ticker via yfinance."""
     fim = end or datetime.today().strftime(DATE_FORMAT_YMD)
-    raw = yf.download(ticker, start=start, end=fim, auto_adjust=True, progress=False)
+    raw = fetch_with_retry(
+        fn=lambda: yf.download(ticker, start=start, end=fim, auto_adjust=True, progress=False),
+        retries=3,
+    )
     if raw.empty:
         return pd.Series(dtype=float, name=ticker)
     if isinstance(raw.columns, pd.MultiIndex):
@@ -915,7 +934,10 @@ def verify_regime7_data():
     }
     all_ok = True
     for name, ticker in checks.items():
-        d = yf.download(ticker, start="2020-01-01", progress=False, auto_adjust=True)
+        d = fetch_with_retry(
+            fn=lambda t=ticker: yf.download(t, start="2020-01-01", progress=False, auto_adjust=True),
+            retries=3,
+        )
         ok = len(d) > 100
         status = "OK" if ok else "ERRO"
         if not ok:

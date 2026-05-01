@@ -23,6 +23,10 @@ import urllib.request
 from datetime import date, datetime
 from pathlib import Path
 
+# DEV-pipeline-gaps-p2 Gap 3: chamadas externas via fetch_with_retry
+sys.path.insert(0, str(Path(__file__).parent))
+from fetch_utils import fetch_with_retry  # noqa: E402
+
 ROOT       = Path(__file__).parent.parent
 OUT        = ROOT / "dados" / "macro_snapshot.json"
 STATE_PATH = ROOT / "dados" / "dashboard_state.json"
@@ -76,8 +80,16 @@ def _get_fed_funds(cache: dict, state: dict) -> float | None:
     # 1. FRED CSV
     try:
         url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=FEDFUNDS"
-        with urllib.request.urlopen(url, timeout=8) as resp:
-            lines = resp.read().decode("utf-8").strip().splitlines()
+        def _fetch_fred():
+            with urllib.request.urlopen(url, timeout=8) as resp:
+                return resp.read().decode("utf-8")
+        text = fetch_with_retry(
+            fn=_fetch_fred,
+            cache_key="fred_fedfunds_csv",
+            cache_ttl_h=12,
+            retries=3,
+        )
+        lines = text.strip().splitlines()
         for line in reversed(lines):
             line = line.strip()
             if line and not line.startswith("DATE"):
@@ -111,7 +123,10 @@ def _get_fed_funds(cache: dict, state: dict) -> float | None:
 def _get_bitcoin(cache: dict) -> float | None:
     try:
         import yfinance as yf
-        btc_data = yf.download("BTC-USD", period="2d", progress=False, auto_adjust=True)
+        btc_data = fetch_with_retry(
+            fn=lambda: yf.download("BTC-USD", period="2d", progress=False, auto_adjust=True),
+            retries=3,
+        )
         if btc_data is not None and not btc_data.empty:
             close = btc_data[COLUMN_CLOSE] if COLUMN_CLOSE in btc_data.columns else btc_data.iloc[:, 0]
             last = close.dropna()
