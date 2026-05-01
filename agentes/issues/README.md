@@ -41,8 +41,7 @@
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-
-(vazio)
+| DEV-pipeline-fail-fast | Pipeline fail-fast — eliminar fallbacks silenciosos | Dev | 🟢 Baixa |
 
 ### Blocked
 > Issues aguardando dependências externas
