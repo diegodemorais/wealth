@@ -30,6 +30,19 @@ except ImportError:
 
 import pandas as pd
 
+# fetch_with_retry — retry exponencial + cache (XX-system-audit Item 2)
+try:
+    sys.path.insert(0, str(Path(__file__).parent))
+    from fetch_utils import fetch_with_retry as _fetch_with_retry
+except ImportError:
+    def _fetch_with_retry(fn, fallback=None, retries=3, cache_key=None, cache_ttl_h=4):
+        try:
+            return fn()
+        except Exception:
+            if fallback is not None:
+                return fallback
+            raise
+
 SEP = "─" * 62
 
 
@@ -55,12 +68,18 @@ def get_ptax(reference_date: date | None = None) -> float:
     # Busca 5 dias antes para garantir que temos ao menos 1 dia útil
     start = (reference_date - timedelta(days=7)).isoformat()
     end = reference_date.isoformat()
-    try:
+
+    def _bcb_fetch() -> float:
         series = get_ptax_series(start, end)
         return float(series.iloc[-1])
-    except Exception:
-        # Fallback: valor fixo de referência
-        return 5.20
+
+    return _fetch_with_retry(
+        fn=_bcb_fetch,
+        fallback=5.20,
+        retries=3,
+        cache_key=f"ptax_{end}",
+        cache_ttl_h=4,
+    )
 
 
 def to_brl(usd_value: float, reference_date: date | None = None) -> float:

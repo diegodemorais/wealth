@@ -38,6 +38,18 @@ from swr_engine import SWREngine, SWRRequest
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
+# fetch_with_retry — retry exponencial + cache (XX-system-audit Item 2)
+try:
+    from fetch_utils import fetch_with_retry as _fetch_with_retry
+except ImportError:
+    def _fetch_with_retry(fn, fallback=None, retries=3, cache_key=None, cache_ttl_h=4):
+        try:
+            return fn()
+        except Exception:
+            if fallback is not None:
+                return fallback
+            raise
+
 # Import PFireEngine for centralized P(FIRE) calculations
 from pfire_engine import PFireEngine, PFireRequest
 from pfire_transformer import canonicalize_pfire
@@ -1657,8 +1669,18 @@ def get_posicoes_precos(state):
             import yfinance as yf
             tickers_yf = {tk: yf_sym for tk, yf_sym in TICKERS_YF.items() if tk in posicoes or tk in ("USD_BRL", "HODL11")}
             syms = list(set(tickers_yf.values()))
-            data = yf.download(syms, period="2d", progress=False, auto_adjust=True)
-            if hasattr(data, 'columns') and COLUMN_CLOSE in data:
+
+            def _yf_download():
+                return yf.download(syms, period="2d", progress=False, auto_adjust=True)
+
+            data = _fetch_with_retry(
+                fn=_yf_download,
+                fallback=None,
+                retries=3,
+                cache_key="yf_prices_usdbrl",
+                cache_ttl_h=4,
+            )
+            if data is not None and hasattr(data, 'columns') and COLUMN_CLOSE in data:
                 close = data[COLUMN_CLOSE]
                 for tk, yf_sym in tickers_yf.items():
                     if yf_sym in close.columns:
@@ -4078,6 +4100,20 @@ def main():
 
     timeline_attribution = get_timeline_attribution()
 
+    # TTL staleness check — ntnb_history_cache.json (TTL=24h) e factor_cache.json (TTL=7d)
+    # (XX-system-audit Item 3)
+    import os as _os
+    _ntnb_cache_p = ROOT / "dados" / "ntnb_history_cache.json"
+    if _ntnb_cache_p.exists():
+        _ntnb_age_h = (datetime.utcnow().timestamp() - _os.path.getmtime(_ntnb_cache_p)) / 3600
+        if _ntnb_age_h > 24:
+            print(f"  ⚠️ ntnb_history_cache.json: cache com mais de 24h — considere rodar market_data.py --tesouro")
+    _factor_cache_p = FACTOR_CACHE
+    if _factor_cache_p.exists():
+        _fc_age_h = (datetime.utcnow().timestamp() - _os.path.getmtime(_factor_cache_p)) / 3600
+        if _fc_age_h > 7 * 24:
+            print(f"  ⚠️ factor_cache.json: cache com mais de 7 dias — considere rodar reconstruct_factor.py")
+
     # Factor data — lê factor_snapshot.json (gerado por reconstruct_factor.py)
     # Fallback: factor_cache.json legado, depois inline (--skip-scripts=False)
     _factor_snap = {}
@@ -4501,9 +4537,38 @@ def main():
                 "desc":     g.get("desc", ""),
             })
 
+    # Spending sensibilidade — calcular inline via PFireEngine se state vazio (XX-system-audit Item 1)
+    _spending_cenarios_config = [
+        ("Solteiro/FIRE Day",  CUSTO_VIDA_BASE),
+        ("Pós-casamento",      CUSTO_VIDA_BASE_CASADO),
+        ("Casamento+filho",    CUSTO_VIDA_BASE_FILHO),
+    ]
+    if not state.get("spending", {}).get("scenarios"):
+        _scenarios_computed = []
+        try:
+            for _label, _custo in _spending_cenarios_config:
+                premissas_mod = {**premissas, "custo_vida_base": _custo}
+                req_spending = build_pfire_request("base", premissas_mod)
+                result_spending = PFireEngine.calculate(req_spending)
+                _canon = result_spending.canonical
+                _scenarios_computed.append({
+                    "label":  _label,
+                    "custo":  _custo,
+                    "base":   round(_canon.percentage, 1),
+                    "fav":    round(min(99.9, _canon.percentage + 3.0), 1),
+                    "stress": round(max(0.0,  _canon.percentage - 8.0), 1),
+                })
+            update_dashboard_state("spending", {"scenarios": _scenarios_computed}, generator="generate_data.py")
+            print(f"  ✓ spendingSensibilidade: {len(_scenarios_computed)} cenários calculados via PFireEngine")
+        except Exception as _e:
+            print(f"  ⚠️ spendingSensibilidade: PFireEngine falhou ({_e}) — spending_sens ficará []")
+
     # Spending sensibilidade — state usa {label, pfire}; template espera {label, custo, base, fav, stress}
     # Area A fix: SEMPRE recalcular fav/stress usando deltas atuais para evitar inconsistência com pfire_base
     _sens_raw = state.get("spending", {}).get("scenarios", [])
+    # Recarregar state após possível gravação inline acima
+    if not _sens_raw:
+        _sens_raw = load_state().get("spending", {}).get("scenarios", [])
     spending_sens = []
     _custo_map = {"R$250k": 250_000, "R$270k": 270_000, "R$300k": 300_000,
                   "Solteiro/FIRE Day": 250_000, "Pós-casamento": 270_000, "Casamento+filho": 300_000}
@@ -4767,11 +4832,35 @@ def main():
     else:
         print("  ⚠️ B11 attribution_by_period: timeline_attribution insuficiente")
 
-    # Shadows — ler do state e adicionar campos flat no nível raiz
+    # Shadows — ler do state; reconstruir via reconstruct_shadows.py se q1_2026 ausente (XX-system-audit Item 4)
     _shadows_raw = state.get("shadows", {})
+    if not _shadows_raw.get("q1_2026") and not args.skip_scripts:
+        try:
+            import reconstruct_shadows as _rs
+            _reconstructed = _rs.reconstruct_shadows()
+            if _reconstructed:
+                _shadows_raw = {**_shadows_raw, **_reconstructed}
+                update_dashboard_state("shadows", _shadows_raw, generator="generate_data.py")
+                print(f"  ✓ shadows reconstruídos inline: {list(_reconstructed.keys())}")
+        except Exception as _rs_e:
+            print(f"  ⚠️ reconstruct_shadows falhou: {_rs_e}")
+
     # Campos flat esperados pelo template: delta_vwra, delta_ipca, delta_shadow_c
     # shadow A = VWRA, shadow B = IPCA+, shadow C = 60/40 (não disponível ainda)
-    _q1 = _shadows_raw.get("q1_2026", {})
+    # Fallback para checkin_mensal flat se não tiver chave trimestral
+    _today = date.today()
+    _cur_q = f"q{(_today.month - 1) // 3 + 1}_{_today.year}"
+    _q1 = _shadows_raw.get("q1_2026") or _shadows_raw.get(_cur_q, {})
+    # Se ainda sem chave trimestral, tentar flat do checkin_mensal
+    if not _q1 and _shadows_raw.get("delta_a") is not None:
+        _q1 = {
+            "delta_a":  _shadows_raw.get("delta_a"),
+            "delta_b":  _shadows_raw.get("delta_b"),
+            "delta_c":  _shadows_raw.get("delta_c"),
+            "periodo":  _shadows_raw.get("periodo", ""),
+            "atual":    _shadows_raw.get("atual"),
+            "target":   _shadows_raw.get("target"),
+        }
     shadows = {
         **_shadows_raw,  # mantém estrutura original
         "delta_vwra":     _q1.get("delta_a"),       # shadow A = VWRA benchmark primário
