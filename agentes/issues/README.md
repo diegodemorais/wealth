@@ -42,6 +42,8 @@
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 
+(vazio)
+
 ### Blocked
 > Issues aguardando dependências externas
 
@@ -62,6 +64,7 @@
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DEV-spec-contract-fix | Spec contract fix — factor.value_spread | 2026-05-01 | Spec contract estava 344/345 porque rodadas via `python3` (system) não tinham `getfactormodels`, e `get_factor_value_spread()` falhava silenciosamente exportando None. HODL11 (pnl_brl/pnl_pct) e fire_montecarlo_liquido — campos previstos no spec original — já estavam corretos; o único campo divergente era `factor.value_spread`. Regenerado via venv canônico (`~/claude/finance-tools/.venv/bin/python3`). 345/345 OK. Suite full verde. |
 | DEV-pipeline-append-only | Pipeline append-only — séries históricas determinísticas | 2026-05-01 | 6 artefatos com `_meta.metodologia_version` + merge append-only (P1-P5). Lote A (retornos/historico/rolling) + Lote B (drawdown/fire_trilha) + Lote C (tlh_lotes com realizados append + open_lots snapshot, validado pela Tax) + R7 versionado. Teste E2E `test_pipeline_idempotency.py` — 6/6 PASS em 2× consecutivas. |
 | DEV-pipeline-gaps-p2 | Pipeline Gaps P2 — spendingSensibilidade, p_quality_aspiracional, fetch_with_retry | 2026-05-01 | Gap 1: state.spending.scenarios populado via MC real (3 cenários R$250k/270k/300k). Gap 2: p_quality_aspiracional confirmado funcionando (55.0%). Gap 3: 11 NAKED_INTEGRATION → 0; fetch_with_retry uniforme em yfinance/BCB/FRED. |
 | DEV-overlap-chart-v2 | Overlap Chart v2 — ticker + labels inline + top-5 concentração | 2026-05-01 | Grid 2 colunas (overlaps + top-5 totais), ticker no eixo Y, % inline com threshold 0.05%, privacy preservada. |
