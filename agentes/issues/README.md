@@ -54,7 +54,6 @@
 | ID | Titulo | Dono | Prioridade | Dependências |
 |----|--------|------|------------|--------------|
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
-| DEV-pipeline-gaps-p2 | Pipeline Gaps P2 — spendingSensibilidade, p_quality_aspiracional, fetch_with_retry | Dev | 🟡 Média | — |
 | DEV-sector-exposure | Sector Exposure Bottom-Up — GICS por ETF | Dev | 🟢 Baixa | Mesma fonte que overlap |
 | DEV-efficient-frontier | Fronteira Eficiente de Markowitz | Dev | 🟢 Baixa | scipy disponível |
 | DEV-data-dedup | Deduplicação de Séries — drawdown_extended, .values legado, cache yfinance | Dev | 🟢 Baixa | — |
@@ -64,6 +63,7 @@
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DEV-pipeline-gaps-p2 | Pipeline Gaps P2 — spendingSensibilidade, p_quality_aspiracional, fetch_with_retry | 2026-05-01 | Gap 1: state.spending.scenarios populado via MC real (3 cenários R$250k/270k/300k). Gap 2: p_quality_aspiracional confirmado funcionando (55.0%). Gap 3: 11 NAKED_INTEGRATION → 0; fetch_with_retry uniforme em yfinance/BCB/FRED. |
 | DEV-overlap-chart-v2 | Overlap Chart v2 — ticker + labels inline + top-5 concentração | 2026-05-01 | Grid 2 colunas (overlaps + top-5 totais), ticker no eixo Y, % inline com threshold 0.05%, privacy preservada. |
 | DEV-overlap-detection | Overlap Detection ETFs — SWRD/AVGS/AVEM | 2026-05-01 | OverlapChart implementado. Dados proxy sintéticos. Pipeline inline em generate_data.py. |
 | XX-system-audit | Auditoria Sistêmica Completa | 2026-05-01 | 12+ problemas estruturais corrigidos. Backlog documentado em DEV-pipeline-gaps-p2. |
