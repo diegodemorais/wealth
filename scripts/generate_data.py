@@ -3924,96 +3924,95 @@ def main():
 
     # RF-2: Adicionar percentis reais de MC
     try:
-            print("  ▶ RF-2: Computando percentis reais de P(FIRE) via MC múltiplo ...")
-            import fire_montecarlo as fm
-            import numpy as np
+        print("  ▶ RF-2: Computando percentis reais de P(FIRE) via MC múltiplo ...")
+        import fire_montecarlo as fm
+        import numpy as np
 
-            # Construir PREMISSAS dict para RF-2
-            pat_atual = float(state.get("patrimonio", {}).get("total_brl", 3_372_673.0))
-            premissas_rf2 = {
-                "patrimonio_atual": pat_atual,
-                "aporte_mensal": APORTE_MENSAL,
-                "custo_vida_base": CUSTO_VIDA_BASE,
-                "horizonte_vida": HORIZONTE_VIDA,
-                "idade_atual": IDADE_ATUAL,
-                "idade_cenario_base": IDADE_CENARIO_BASE,
-                "idade_cenario_aspiracional": IDADE_CENARIO_ASPIRACIONAL,
-                "idade_fire_alvo": IDADE_CENARIO_BASE,
-                "idade_safe_harbor": IDADE_CENARIO_BASE,
-                "anos_simulacao": HORIZONTE_VIDA - IDADE_CENARIO_BASE,
-                "retorno_equity_base": RETORNO_EQUITY_BASE,
-                "retorno_ipca_plus": RETORNO_IPCA_PLUS,
-                "volatilidade_equity": VOLATILIDADE_EQUITY,
-                "t_dist_df": 5,
-                "dep_brl_base": DEP_BRL_BASE,
-                "dep_brl_favoravel": DEP_BRL_FAVORAVEL,
-                "dep_brl_stress": DEP_BRL_STRESS,
-                "adj_favoravel": ADJ_FAVORAVEL,
-                "adj_stress": ADJ_STRESS,
-                "pct_ipca_longo": IPCA_LONGO_PCT,
-                "pct_ipca_curto": IPCA_CURTO_PCT,
-                "pct_equity": EQUITY_PCT,
-                "pct_cripto": CRIPTO_PCT,
-                "ipca_anual": IPCA_ANUAL,
-                "aplicar_ir_desacumulacao": True,
-                "anos_bond_pool": BOND_TENT_META_ANOS,
-                "aliquota_ir_equity": IR_ALIQUOTA,
-                "inss_anual": INSS_ANUAL,
-                "inss_inicio_ano": INSS_INICIO_ANO_POS_FIRE,
-                "vol_bond_pool": EQUITY_PCT * VOLATILIDADE_EQUITY,
-                "patrimonio_gatilho": PATRIMONIO_GATILHO,
-                "swr_gatilho": SWR_GATILHO,
-            }
+        # Construir PREMISSAS dict para RF-2
+        pat_atual = float(state.get("patrimonio", {}).get("total_brl", 3_372_673.0))
+        premissas_rf2 = {
+            "patrimonio_atual": pat_atual,
+            "aporte_mensal": APORTE_MENSAL,
+            "custo_vida_base": CUSTO_VIDA_BASE,
+            "horizonte_vida": HORIZONTE_VIDA,
+            "idade_atual": IDADE_ATUAL,
+            "idade_cenario_base": IDADE_CENARIO_BASE,
+            "idade_cenario_aspiracional": IDADE_CENARIO_ASPIRACIONAL,
+            "idade_fire_alvo": IDADE_CENARIO_BASE,
+            "idade_safe_harbor": IDADE_CENARIO_BASE,
+            "anos_simulacao": HORIZONTE_VIDA - IDADE_CENARIO_BASE,
+            "retorno_equity_base": RETORNO_EQUITY_BASE,
+            "retorno_ipca_plus": RETORNO_IPCA_PLUS,
+            "volatilidade_equity": VOLATILIDADE_EQUITY,
+            "t_dist_df": 5,
+            "dep_brl_base": DEP_BRL_BASE,
+            "dep_brl_favoravel": DEP_BRL_FAVORAVEL,
+            "dep_brl_stress": DEP_BRL_STRESS,
+            "adj_favoravel": ADJ_FAVORAVEL,
+            "adj_stress": ADJ_STRESS,
+            "pct_ipca_longo": IPCA_LONGO_PCT,
+            "pct_ipca_curto": IPCA_CURTO_PCT,
+            "pct_equity": EQUITY_PCT,
+            "pct_cripto": CRIPTO_PCT,
+            "ipca_anual": IPCA_ANUAL,
+            "aplicar_ir_desacumulacao": True,
+            "anos_bond_pool": BOND_TENT_META_ANOS,
+            "aliquota_ir_equity": IR_ALIQUOTA,
+            "inss_anual": INSS_ANUAL,
+            "inss_inicio_ano": INSS_INICIO_ANO_POS_FIRE,
+            "vol_bond_pool": EQUITY_PCT * VOLATILIDADE_EQUITY,
+            "patrimonio_gatilho": PATRIMONIO_GATILHO,
+            "swr_gatilho": SWR_GATILHO,
+        }
 
-            percentiles = fm.compute_pfire_percentiles(premissas_rf2, n_rodadas=10, n_sim_por_rodada=10_000)
-            pfire_base["percentiles"] = percentiles
-            print(f"  ✓ RF-2: P50={percentiles['p50']:.1f}%, P10={percentiles['p10']:.1f}%, P90={percentiles['p90']:.1f}%")
-        except Exception as e:
-            print(f"  ⚠️ RF-2 falhou ({e}) — usando fallback (componente usa offsets)")
-            pfire_base["percentiles"] = None
+        percentiles = fm.compute_pfire_percentiles(premissas_rf2, n_rodadas=10, n_sim_por_rodada=10_000)
+        pfire_base["percentiles"] = percentiles
+        print(f"  ✓ RF-2: P50={percentiles['p50']:.1f}%, P10={percentiles['p10']:.1f}%, P90={percentiles['p90']:.1f}%")
+    except Exception as e:
+        print(f"  ⚠️ RF-2 falhou ({e}) — usando fallback (componente usa offsets)")
+        pfire_base["percentiles"] = None
 
     # Cenários Estendidos MC (stagflation + hyperinflation)
     pfire_cenarios_estendidos: dict = {}
-    if not args.skip_scripts:
-        print("  ▶ Cenários Estendidos MC (stagflation + hyperinflation) ...")
-        try:
-            import fire_montecarlo as fm
-            pat_atual = float(state.get("patrimonio", {}).get("total_brl", 3_372_673.0))
-            premissas_ext_base = {
-                "patrimonio_atual":    pat_atual,
-                "aporte_mensal":       APORTE_MENSAL,
-                "custo_vida_base":     CUSTO_VIDA_BASE,
-                "horizonte_vida":      HORIZONTE_VIDA,
-                "idade_atual":         IDADE_ATUAL,
-                "idade_fire_alvo":     IDADE_CENARIO_BASE,
-                "idade_safe_harbor":   IDADE_CENARIO_BASE,
-                "anos_simulacao":      HORIZONTE_VIDA - IDADE_CENARIO_BASE,
-                "retorno_equity_base": RETORNO_EQUITY_BASE,
-                "retorno_ipca_plus":   RETORNO_IPCA_PLUS,
-                "volatilidade_equity": VOLATILIDADE_EQUITY,
-                "t_dist_df":           5,
-                "dep_brl_base":        DEP_BRL_BASE,
-                "dep_brl_favoravel":   DEP_BRL_FAVORAVEL,
-                "dep_brl_stress":      DEP_BRL_STRESS,
-                "adj_favoravel":       ADJ_FAVORAVEL,
-                "adj_stress":          ADJ_STRESS,
-                "pct_ipca_longo":      IPCA_LONGO_PCT,
-                "pct_ipca_curto":      IPCA_CURTO_PCT,
-                "pct_equity":          EQUITY_PCT,
-                "pct_cripto":          CRIPTO_PCT,
-                "ipca_anual":          IPCA_ANUAL,
-                "aplicar_ir_desacumulacao": True,
-                "anos_bond_pool":      BOND_TENT_META_ANOS,
-                "aliquota_ir_equity":  IR_ALIQUOTA,
-                "inss_anual":          INSS_ANUAL,
-                "inss_inicio_ano":     INSS_INICIO_ANO_POS_FIRE,
-                "vol_bond_pool":       EQUITY_PCT * VOLATILIDADE_EQUITY,
-                "patrimonio_gatilho":  PATRIMONIO_GATILHO,
-                "swr_gatilho":         SWR_GATILHO,
-            }
-            pfire_cenarios_estendidos = compute_extended_mc_scenarios(premissas_ext_base)
-        except Exception as e:
-            print(f"  ⚠️ cenários estendidos: {e}")
+    print("  ▶ Cenários Estendidos MC (stagflation + hyperinflation) ...")
+    try:
+        import fire_montecarlo as fm
+        pat_atual = float(state.get("patrimonio", {}).get("total_brl", 3_372_673.0))
+        premissas_ext_base = {
+            "patrimonio_atual":    pat_atual,
+            "aporte_mensal":       APORTE_MENSAL,
+            "custo_vida_base":     CUSTO_VIDA_BASE,
+            "horizonte_vida":      HORIZONTE_VIDA,
+            "idade_atual":         IDADE_ATUAL,
+            "idade_fire_alvo":     IDADE_CENARIO_BASE,
+            "idade_safe_harbor":   IDADE_CENARIO_BASE,
+            "anos_simulacao":      HORIZONTE_VIDA - IDADE_CENARIO_BASE,
+            "retorno_equity_base": RETORNO_EQUITY_BASE,
+            "retorno_ipca_plus":   RETORNO_IPCA_PLUS,
+            "volatilidade_equity": VOLATILIDADE_EQUITY,
+            "t_dist_df":           5,
+            "dep_brl_base":        DEP_BRL_BASE,
+            "dep_brl_favoravel":   DEP_BRL_FAVORAVEL,
+            "dep_brl_stress":      DEP_BRL_STRESS,
+            "adj_favoravel":       ADJ_FAVORAVEL,
+            "adj_stress":          ADJ_STRESS,
+            "pct_ipca_longo":      IPCA_LONGO_PCT,
+            "pct_ipca_curto":      IPCA_CURTO_PCT,
+            "pct_equity":          EQUITY_PCT,
+            "pct_cripto":          CRIPTO_PCT,
+            "ipca_anual":          IPCA_ANUAL,
+            "aplicar_ir_desacumulacao": True,
+            "anos_bond_pool":      BOND_TENT_META_ANOS,
+            "aliquota_ir_equity":  IR_ALIQUOTA,
+            "inss_anual":          INSS_ANUAL,
+            "inss_inicio_ano":     INSS_INICIO_ANO_POS_FIRE,
+            "vol_bond_pool":       EQUITY_PCT * VOLATILIDADE_EQUITY,
+            "patrimonio_gatilho":  PATRIMONIO_GATILHO,
+            "swr_gatilho":         SWR_GATILHO,
+        }
+        pfire_cenarios_estendidos = compute_extended_mc_scenarios(premissas_ext_base)
+    except Exception as e:
+        print(f"  ⚠️ cenários estendidos: {e}")
 
     # Backtest
     backtest_data = get_backtest()
@@ -4021,7 +4020,7 @@ def main():
     timeline_attribution = get_timeline_attribution()
 
     # Factor data — lê factor_snapshot.json (gerado por reconstruct_factor.py)
-    # Fallback: factor_cache.json legado, depois inline (--skip-scripts=False)
+    # Fallback: factor_cache.json legado, depois inline
     _factor_snap = {}
     if FACTOR_SNAPSHOT.exists():
         try:
@@ -4037,7 +4036,7 @@ def main():
         factor_signal   = _factor_snap.get("factor_signal") or get_factor_signal()
     else:
         # Fallback: calcular inline (comportamento anterior)
-        if args.skip_scripts and not FACTOR_CACHE.exists():
+        if not FACTOR_CACHE.exists():
             _try_populate_factor_cache()
         factor_rolling  = get_factor_rolling()
         factor_signal   = get_factor_signal()
@@ -4757,7 +4756,7 @@ def main():
             return None
 
     # ─── Backtest R7 (regime longo 1989-2026) → dados/backtest_r7.json ─────────
-    if not args.skip_scripts and not BACKTEST_R7_PATH.exists():
+    if not BACKTEST_R7_PATH.exists():
         print("  ▶ Gerando backtest_r7.json (backtest_portfolio.py --r7) ...")
         _venv_py = Path.home() / "claude" / "finance-tools" / ".venv" / "bin" / "python3"
         _r7_cmd = [str(_venv_py), str(ROOT / "scripts" / "backtest_portfolio.py"), "--r7"]
@@ -4775,7 +4774,7 @@ def main():
             print("  ✗ backtest_r7: sem output JSON")
 
     # ─── Realized PnL (IBKR FIFO) → DARF panel ──────────────────────────────
-    if not args.skip_scripts and not REALIZED_PNL_PATH.exists():
+    if not REALIZED_PNL_PATH.exists():
         print("  ▶ Gerando realized_pnl.json via reconstruct_realized_pnl.py ...")
         _venv_py = Path.home() / "claude" / "finance-tools" / ".venv" / "bin" / "python3"
         _rp_cmd = [str(_venv_py), str(ROOT / "scripts" / "reconstruct_realized_pnl.py")]
@@ -5462,7 +5461,7 @@ def main():
     # Metodologia: Lei 14.754/2023 — IR latente sobre ETFs UCITS é obrigação presente.
     fire_montecarlo_liquido = None
     ir_diferido_val = (tax_data or {}).get("ir_diferido_total_brl", 0.0)
-    if not args.skip_scripts and ir_diferido_val and ir_diferido_val > 0:
+    if ir_diferido_val and ir_diferido_val > 0:
         print(f"  ▶ MC Líquido (IR diferido R${ir_diferido_val:,.0f}) ...")
         try:
             import importlib.util as _ilu
@@ -5479,8 +5478,6 @@ def main():
             )
         except Exception as _e:
             print(f"  ⚠️ MC Líquido failed: {_e}")
-    elif args.skip_scripts:
-        print("  ⊘ MC Líquido (skip-scripts)")
     else:
         print("  ⚠️ MC Líquido: ir_diferido_val=0 ou tax_data ausente — pulando")
 
@@ -5912,58 +5909,55 @@ def main():
         print(f"  ✓ p_quality_full: {_p_quality_full}%")
 
     # P(quality) Matrix — 3 modos: sem_bucket, partial, full (FR-pquality-matrix 2026-04-29)
-    if not args.skip_scripts:
-        print("  ▶ Computando P(quality) Matrix — 3 modos (135 calls × n_sim=1000) ...")
-        try:
-            import importlib.util as _ilu_pqm
-            _spec_pqm = _ilu_pqm.spec_from_file_location("fire_mc_pqm", ROOT / "scripts" / "fire_montecarlo.py")
-            _mod_pqm  = _ilu_pqm.module_from_spec(_spec_pqm)
-            _spec_pqm.loader.exec_module(_mod_pqm)
+    print("  ▶ Computando P(quality) Matrix — 3 modos (135 calls × n_sim=1000) ...")
+    try:
+        import importlib.util as _ilu_pqm
+        _spec_pqm = _ilu_pqm.spec_from_file_location("fire_mc_pqm", ROOT / "scripts" / "fire_montecarlo.py")
+        _mod_pqm  = _ilu_pqm.module_from_spec(_spec_pqm)
+        _spec_pqm.loader.exec_module(_mod_pqm)
 
-            mc_premissas_pqm = getattr(_mod_pqm, 'PREMISSAS', {})
-            if not mc_premissas_pqm:
-                raise ValueError("PREMISSAS não encontrado em fire_montecarlo.py")
+        mc_premissas_pqm = getattr(_mod_pqm, 'PREMISSAS', {})
+        if not mc_premissas_pqm:
+            raise ValueError("PREMISSAS não encontrado em fire_montecarlo.py")
 
-            completion_fraction = mc_premissas_pqm.get("bond_pool_completion_fraction", 0.0)
+        completion_fraction = mc_premissas_pqm.get("bond_pool_completion_fraction", 0.0)
 
-            # Modo 1: sem bucket (proxy legado)
-            matrix_proxy = _mod_pqm.compute_p_quality_matrix(
-                mc_premissas_pqm, n_sim=1000, seed=42,
-                bond_pool_isolation=False,
-            )
-            # Modo 2: partial (canônico — usa completion_fraction atual)
-            p_quality_matrix = _mod_pqm.compute_p_quality_matrix(
-                mc_premissas_pqm, n_sim=1000, seed=42,
-                bond_pool_isolation=True,
-            )
-            # Modo 3: full (potencial com bucket completo)
-            matrix_full = _mod_pqm.compute_p_quality_matrix(
-                mc_premissas_pqm, n_sim=1000, seed=42,
-                bond_pool_isolation=True,
-                bond_pool_completion_fraction=1.0,
-            )
+        # Modo 1: sem bucket (proxy legado)
+        matrix_proxy = _mod_pqm.compute_p_quality_matrix(
+            mc_premissas_pqm, n_sim=1000, seed=42,
+            bond_pool_isolation=False,
+        )
+        # Modo 2: partial (canônico — usa completion_fraction atual)
+        p_quality_matrix = _mod_pqm.compute_p_quality_matrix(
+            mc_premissas_pqm, n_sim=1000, seed=42,
+            bond_pool_isolation=True,
+        )
+        # Modo 3: full (potencial com bucket completo)
+        matrix_full = _mod_pqm.compute_p_quality_matrix(
+            mc_premissas_pqm, n_sim=1000, seed=42,
+            bond_pool_isolation=True,
+            bond_pool_completion_fraction=1.0,
+        )
 
-            data["fire"]["p_quality_matrix"]       = p_quality_matrix
-            data["fire"]["p_quality_matrix_proxy"] = matrix_proxy
-            data["fire"]["p_quality_matrix_full"]  = matrix_full
-            b_atual_base = p_quality_matrix["values"].get("B", {}).get("atual", {}).get("base")
-            print(f"  ✓ P(quality) Matrix 3 modos: B/atual/base={b_atual_base}% (partial), completion={completion_fraction:.1%}")
-        except Exception as _e_pqm:
-            print(f"  ⚠️ P(quality) Matrix failed: {_e_pqm}")
-            data["fire"]["p_quality_matrix"] = None
-            data["fire"]["p_quality_matrix_proxy"] = None
-            data["fire"]["p_quality_matrix_full"]  = None
-    else:
-        print("  ⊘ P(quality) Matrix (skip-scripts)")
+        data["fire"]["p_quality_matrix"]       = p_quality_matrix
+        data["fire"]["p_quality_matrix_proxy"] = matrix_proxy
+        data["fire"]["p_quality_matrix_full"]  = matrix_full
+        b_atual_base = p_quality_matrix["values"].get("B", {}).get("atual", {}).get("base")
+        print(f"  ✓ P(quality) Matrix 3 modos: B/atual/base={b_atual_base}% (partial), completion={completion_fraction:.1%}")
+    except Exception as _e_pqm:
+        print(f"  ⚠️ P(quality) Matrix failed: {_e_pqm}")
+        data["fire"]["p_quality_matrix"] = None
+        data["fire"]["p_quality_matrix_proxy"] = None
+        data["fire"]["p_quality_matrix_full"]  = None
 
-    # Assertions de schema para p_quality_matrix — fallback ao cache quando skip-scripts
+    # Assertions de schema para p_quality_matrix — fallback ao cache quando falhar
     if data["fire"].get("p_quality_matrix") is None and OUT_PATH.exists():
         _cached_pqm = json.load(OUT_PATH.open()).get("fire", {})
         if _cached_pqm.get("p_quality_matrix"):
             data["fire"]["p_quality_matrix"]       = _cached_pqm["p_quality_matrix"]
             data["fire"]["p_quality_matrix_proxy"] = _cached_pqm.get("p_quality_matrix_proxy")
             data["fire"]["p_quality_matrix_full"]  = _cached_pqm.get("p_quality_matrix_full")
-            print(f"  ⚠️ p_quality_matrix: usando fallback cacheado (skip-scripts — rode fire_montecarlo.py --by_profile)")
+            print(f"  ⚠️ p_quality_matrix: usando fallback cacheado — rode fire_montecarlo.py --by_profile")
     assert data["fire"].get("p_quality_matrix") is not None, "p_quality_matrix ausente e sem cache"
     assert set(data["fire"]["p_quality_matrix"]["values"].keys()) == {"A", "B", "C", "D", "E"}, "p_quality_matrix keys"
 
