@@ -6,7 +6,8 @@
 |-------|-------|
 | **ID** | DEV-style-box |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Done ✅ |
+| **Fechado em** | 2026-05-01 |
 | **Prioridade** | P3 — Baixa |
 | **Participantes** | Dev (implementação), Head (decisão design) |
 | **Dependencias** | Holdings públicos ETFs + dados de estilo (valor de mercado, P/B, P/E por ação) |

@@ -6,7 +6,8 @@
 |-------|-------|
 | **ID** | DEV-arch-fixes |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Done ✅ |
+| **Concluido em** | 2026-04-30 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Dev (implementação) |
 | **Criado em** | 2026-04-30 |
