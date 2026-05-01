@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | DEV-risk-return-scatter |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Doing |
 | **Prioridade** | Média |
 | **Participantes** | Dev (implementação), Head (decisão de design), Bookkeeper (validação dados) |
 | **Dependencias** | backtest_portfolio.py (TWR e volatilidade por classe) |
@@ -104,12 +104,12 @@ Dropdown ou segmented control com os períodos disponíveis:
 
 ---
 
-## Decisões Pendentes (Head)
+## Decisões (aprovadas Head, 2026-05-01)
 
-1. **Retorno nominal ou real?** Real (deflacionado IPCA) é mais útil para comparação de poder de compra. Nominal é mais simples de calcular e entender. Sugestão: real.
-2. **Onde no dashboard?** Seção de Portfolio/Backtest, ou painel novo "Análise de Risco"?
-3. **Incluir Carteira Total?** Um ponto adicional mostrando onde a carteira consolidada cai no espaço risco-retorno seria útil.
-4. **Linha de Sharpe?** Visual bonito mas pode poluir — opcional.
+1. **Retorno real** — deflacionado por IPCA
+2. **Localização:** seção Portfolio (existente)
+3. **Incluir Carteira Total** — bubble adicional da carteira consolidada
+4. **Linha de Sharpe** — sim, diagonal tracejada como referência de eficiência
 
 ---
 

@@ -33,6 +33,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 | XX-system-audit | Auditoria Sistêmica Completa — Pipeline, Scripts, Dashboard, Arquitetura | Head + Integrator | 🔴 Alta |
+| DEV-risk-return-scatter | Gráfico Retorno vs. Risco por Classe de Ativos | Dev | 🟡 Média |
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -45,7 +46,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
-| DEV-risk-return-scatter | Gráfico Retorno vs. Risco por Classe de Ativos (TWR × Volatilidade, seletores de período) | Dev | 🟡 Média | Aguarda aprovação Head (decisões de design) |
 
 ### Done — Últimas Issues Concluídas
 
