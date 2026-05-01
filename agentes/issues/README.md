@@ -27,7 +27,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| XX-system-audit | Auditoria Sistêmica Completa — Pipeline, Scripts, Dashboard, Arquitetura | Head + Integrator | 🔴 Alta |
 
 ### Blocked
 > Issues aguardando dependências externas
