@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-05-01T18:35:10",
-  "_window_id": "20260501T183510",
+  "_generated": "2026-05-01T18:59:51",
+  "_window_id": "20260501T185951",
   "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
   "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
   "patrimonios": [

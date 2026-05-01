@@ -1,14 +1,14 @@
 {
-  "periodo": "2025-08 a 2026-03",
-  "meses": 8,
-  "must_spend_mensal": 15074,
-  "like_spend_mensal": 4284,
-  "imprevistos_mensal": 363,
-  "total_mensal": 19721,
-  "must_spend_anual": 180887,
-  "like_spend_anual": 51403,
-  "imprevistos_anual": 4357,
-  "total_anual": 236647,
+  "periodo": "2025-08 a 2026-04",
+  "meses": 9,
+  "must_spend_mensal": 15408,
+  "like_spend_mensal": 4612,
+  "imprevistos_mensal": 345,
+  "total_mensal": 20364,
+  "must_spend_anual": 184899,
+  "like_spend_anual": 55339,
+  "imprevistos_anual": 4140,
+  "total_anual": 244372,
   "modelo_fire_anual": 250000,
   "monthly_breakdown": [
     {
@@ -56,18 +56,32 @@
     {
       "mes": "2026-02",
       "essenciais": 15369,
-      "opcionais": 1287,
+      "opcionais": 1307,
       "imprevistos": 0,
-      "total": 16655
+      "total": 16675
     },
     {
       "mes": "2026-03",
-      "essenciais": 17998,
-      "opcionais": 3980,
+      "essenciais": 18115,
+      "opcionais": 3960,
       "imprevistos": 72,
-      "total": 22050
+      "total": 22146
+    },
+    {
+      "mes": "2026-04",
+      "essenciais": 17966,
+      "opcionais": 7234,
+      "imprevistos": 200,
+      "total": 25399
     }
   ],
   "updated_at": "2026-05-01",
-  "fonte": "All-Accounts_03abril26.csv"
+  "fonte": "All-Accounts-Abril26.csv",
+  "_meta": {
+    "metodologia_version": "spending-actual-v1",
+    "schema_version": "1.0",
+    "last_period_appended": "2026-04",
+    "last_appended_at": "2026-05-01T19:05:45-03:00",
+    "rebuild_reason": null
+  }
 }

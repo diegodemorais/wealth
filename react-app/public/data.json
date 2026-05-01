@@ -1,68 +1,68 @@
 {
-  "_generated": "2026-05-01T18:38:17",
-  "_generated_brt": "2026-05-01T18:38:17-03:00",
+  "_generated": "2026-05-01T19:02:56",
+  "_generated_brt": "2026-05-01T19:02:56-03:00",
   "_ibkr_sync_date": "2026-04-25T16:52:09",
   "_schema_version": "2.0",
-  "_pipeline_run": "20260501T183510",
+  "_pipeline_run": "20260501T185951",
   "_snapshots_metadata": {
     "backtest_r7": {
       "file": "backtest_r7.json",
       "mtime": "2026-05-01T15:50:32",
-      "age_h": 2.8,
+      "age_h": 3.2,
       "_generated": null
     },
     "fire_matrix": {
       "file": "fire_matrix.json",
-      "mtime": "2026-05-01T18:37:04",
+      "mtime": "2026-05-01T19:01:45",
       "age_h": 0.0,
-      "_generated": "2026-05-01T18:35:10"
+      "_generated": "2026-05-01T18:59:51"
     },
     "fire_swr_percentis": {
       "file": "fire_swr_percentis.json",
-      "mtime": "2026-05-01T18:37:32",
+      "mtime": "2026-05-01T18:59:51",
       "age_h": 0.0,
-      "_generated": "2026-05-01T18:37:32"
+      "_generated": "2026-05-01T18:59:51"
     },
     "fire_aporte_sensitivity": {
       "file": "fire_aporte_sensitivity.json",
-      "mtime": "2026-05-01T18:37:37",
+      "mtime": "2026-05-01T18:59:56",
       "age_h": 0.0,
-      "_generated": "2026-05-01T18:37:32"
+      "_generated": "2026-05-01T18:59:51"
     },
     "fire_trilha": {
       "file": "fire_trilha.json",
-      "mtime": "2026-05-01T18:37:32",
+      "mtime": "2026-05-01T18:59:51",
       "age_h": 0.0,
-      "_generated": "2026-05-01T18:37:32"
+      "_generated": "2026-05-01T18:59:51"
     },
     "drawdown_history": {
       "file": "drawdown_history.json",
-      "mtime": "2026-05-01T18:37:32",
+      "mtime": "2026-05-01T18:59:51",
       "age_h": 0.0,
-      "_generated": "2026-05-01T18:37:32"
+      "_generated": "2026-05-01T18:59:51"
     },
     "etf_composition": {
       "file": "etf_composition.json",
-      "mtime": "2026-05-01T18:37:32",
+      "mtime": "2026-05-01T18:59:51",
       "age_h": 0.0,
-      "_generated": "2026-05-01T18:37:32"
+      "_generated": "2026-05-01T18:59:51"
     },
     "bond_pool_runway": {
       "file": "bond_pool_runway.json",
-      "mtime": "2026-05-01T18:37:32",
+      "mtime": "2026-05-01T18:59:51",
       "age_h": 0.0,
-      "_generated": "2026-05-01T18:37:32"
+      "_generated": "2026-05-01T18:59:51"
     },
     "lumpy_events": {
       "file": "lumpy_events.json",
-      "mtime": "2026-05-01T18:37:38",
+      "mtime": "2026-05-01T18:59:58",
       "age_h": 0.0,
-      "_generated": "2026-05-01T18:37:32"
+      "_generated": "2026-05-01T18:59:51"
     },
     "fire_by_profile": {
       "file": "fire_by_profile.json",
       "mtime": "2026-05-01T15:00:04",
-      "age_h": 3.6,
+      "age_h": 4.0,
       "_generated": null
     }
   },
@@ -3122,7 +3122,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -3601,7 +3601,7 @@
     "DGS": {
       "alpha": -0.00126,
       "mkt_rf": 0.8246,
-      "smb": 0.6263,
+      "smb": 0.6262,
       "hml": 0.1524,
       "rmw": 0.2273,
       "cma": 0.1373,
@@ -3753,23 +3753,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 78118.2,
+      "btc_atual_usd": 78238.48,
       "hodl11_brl_atual": 106744,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.02,
-          "valor_fire_brl": 109316
+          "valor_fire_brl": 109148
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.2,
-          "valor_fire_brl": 341612
+          "valor_fire_brl": 341087
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.4,
-          "valor_fire_brl": 683224
+          "upside_factor": 6.39,
+          "valor_fire_brl": 682174
         }
       }
     }
@@ -8847,7 +8847,7 @@
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 88.1,
     "cds_brazil_5y_bps": 124.1,
-    "bitcoin_usd": 78118.2,
+    "bitcoin_usd": 78238.48,
     "plano_status": {
       "status": "REVISAR",
       "gatilho_ativo": "P(FIRE) 54.4% < 80% — REVISAR",
@@ -8866,9 +8866,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.957,
-    "btc_usd": 78118.2,
+    "btc_usd": 78238.48,
     "cambio_mtd_pct": 0.04,
-    "btc_mtd_pct": -0.15,
+    "btc_mtd_pct": 0.01,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": 0.0,
     "ref_mes": "2026-05",
@@ -9521,16 +9521,16 @@
     "nota": "P(FIRE@53) = 54.4% Vermelho (P(FIRE) < 75%). Spending R$250k/ano. Teto de expansão R$275k (+10%) — ativado quando P(FIRE) sustentado acima de 90%. Safe target R$225k (−10%). Piso de emergência R$200k (−20%)."
   },
   "spending_breakdown": {
-    "periodo": "2025-08 a 2026-03",
-    "meses": 8,
-    "must_spend_mensal": 15074,
-    "like_spend_mensal": 4284,
-    "imprevistos_mensal": 363,
-    "total_mensal": 19721,
-    "must_spend_anual": 180887,
-    "like_spend_anual": 51403,
-    "imprevistos_anual": 4357,
-    "total_anual": 236647,
+    "periodo": "2025-08 a 2026-04",
+    "meses": 9,
+    "must_spend_mensal": 15408,
+    "like_spend_mensal": 4612,
+    "imprevistos_mensal": 345,
+    "total_mensal": 20364,
+    "must_spend_anual": 184899,
+    "like_spend_anual": 55339,
+    "imprevistos_anual": 4140,
+    "total_anual": 244372,
     "modelo_fire_anual": 250000,
     "monthly_breakdown": [
       {
@@ -9578,20 +9578,34 @@
       {
         "mes": "2026-02",
         "essenciais": 15369,
-        "opcionais": 1287,
+        "opcionais": 1307,
         "imprevistos": 0,
-        "total": 16655
+        "total": 16675
       },
       {
         "mes": "2026-03",
-        "essenciais": 17998,
-        "opcionais": 3980,
+        "essenciais": 18115,
+        "opcionais": 3960,
         "imprevistos": 72,
-        "total": 22050
+        "total": 22146
+      },
+      {
+        "mes": "2026-04",
+        "essenciais": 17966,
+        "opcionais": 7234,
+        "imprevistos": 200,
+        "total": 25399
       }
     ],
     "updated_at": "2026-05-01",
-    "fonte": "All-Accounts_03abril26.csv"
+    "fonte": "All-Accounts-Abril26.csv",
+    "_meta": {
+      "metodologia_version": "spending-actual-v1",
+      "schema_version": "1.0",
+      "last_period_appended": "2026-04",
+      "last_appended_at": "2026-05-01T18:59:51-03:00",
+      "rebuild_reason": null
+    }
   },
   "head_relay": null,
   "backtest_r7": {
@@ -10832,8 +10846,8 @@
     "_generated": "2026-05-01"
   },
   "fire_matrix": {
-    "_generated": "2026-05-01T18:35:10",
-    "_window_id": "20260501T183510",
+    "_generated": "2026-05-01T18:59:51",
+    "_window_id": "20260501T185951",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -11144,8 +11158,8 @@
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-05-01T18:37:32",
-    "_window_id": "20260501T183732",
+    "_generated": "2026-05-01T18:59:51",
+    "_window_id": "20260501T185951",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
     "patrimonio_p10_2040": 4148858.0,
@@ -11160,8 +11174,8 @@
     "mc_date": "2026-05-01"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-05-01T18:37:32",
-    "_window_id": "20260501T183732",
+    "_generated": "2026-05-01T18:59:51",
+    "_window_id": "20260501T185951",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -11185,8 +11199,8 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-05-01T18:37:32",
-    "_window_id": "20260501T183732",
+    "_generated": "2026-05-01T18:59:51",
+    "_window_id": "20260501T185951",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -12794,13 +12808,13 @@
       "metodologia_version": "trilha-v1",
       "schema_version": "1.0",
       "last_period_appended": "2026-05",
-      "last_appended_at": "2026-05-01T18:37:32-03:00",
+      "last_appended_at": "2026-05-01T18:59:51-03:00",
       "rebuild_reason": null
     }
   },
   "drawdown_history": {
-    "_generated": "2026-05-01T18:37:32",
-    "_window_id": "20260501T183732",
+    "_generated": "2026-05-01T18:59:51",
+    "_window_id": "20260501T185951",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-05",
@@ -12953,7 +12967,7 @@
       "metodologia_version": "dd-peak-trough-v1",
       "schema_version": "1.0",
       "last_period_appended": "2026-05",
-      "last_appended_at": "2026-05-01T18:37:32-03:00",
+      "last_appended_at": "2026-05-01T18:59:51-03:00",
       "rebuild_reason": null
     }
   },
@@ -13156,8 +13170,8 @@
     "_fonte": "generate_data.py: drawdown_history + backtest + backtestR5 + backtest_r7"
   },
   "etf_composition": {
-    "_generated": "2026-05-01T18:37:32",
-    "_window_id": "20260501T183732",
+    "_generated": "2026-05-01T18:59:51",
+    "_window_id": "20260501T185951",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -13229,8 +13243,8 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-05-01T18:37:32",
-    "_window_id": "20260501T183732",
+    "_generated": "2026-05-01T18:59:51",
+    "_window_id": "20260501T185951",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -13364,8 +13378,8 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-05-01T18:37:32",
-    "_window_id": "20260501T183732",
+    "_generated": "2026-05-01T18:59:51",
+    "_window_id": "20260501T185951",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.535,
@@ -16830,8 +16844,8 @@
               "HODL11": 0.05
             },
             "sharpe_net": 0.7742,
-            "ret_net": 0.174249,
-            "haircut_anual": 0.002121
+            "ret_net": 0.17425,
+            "haircut_anual": 0.00212
           },
           {
             "vol": 0.157806,
@@ -17011,12 +17025,12 @@
           "haircut_anual": 0.004485,
           "rebalance_delta": {
             "delta_brl": [
-              386952.4,
-              -873406.86,
-              154780.96,
-              552789.15,
-              -110557.83,
-              -110557.83
+              387055.51,
+              -873639.59,
+              154822.21,
+              552936.45,
+              -110587.29,
+              -110587.29
             ],
             "delta_pp": [
               0.105,
@@ -17026,17 +17040,17 @@
               -0.03,
               -0.03
             ],
-            "spread_total_brl": 1094.52,
-            "ir_total_brl": 164178.38,
+            "spread_total_brl": 1094.81,
+            "ir_total_brl": 164222.13,
             "ir_per_asset_brl": [
               0.0,
-              131011.03,
+              131045.94,
               0.0,
               0.0,
-              16583.67,
-              16583.67
+              16588.09,
+              16588.09
             ],
-            "total_cost_brl": 165272.9
+            "total_cost_brl": 165316.94
           }
         },
         "max_sharpe": {
@@ -17056,12 +17070,12 @@
           "haircut_anual": 0.00267,
           "rebalance_delta": {
             "delta_brl": [
-              135617.6,
-              -357101.79,
-              -294452.35,
-              184263.05,
-              257968.27,
-              73705.22
+              135653.74,
+              -357196.95,
+              -294530.82,
+              184312.15,
+              258037.01,
+              73724.86
             ],
             "delta_pp": [
               0.0368,
@@ -17071,17 +17085,17 @@
               0.07,
               0.02
             ],
-            "spread_total_brl": 651.55,
-            "ir_total_brl": 97733.12,
+            "spread_total_brl": 651.73,
+            "ir_total_brl": 97759.16,
             "ir_per_asset_brl": [
               0.0,
-              53565.27,
-              44167.85,
+              53579.54,
+              44179.62,
               0.0,
               0.0,
               0.0
             ],
-            "total_cost_brl": 98384.68
+            "total_cost_brl": 98410.89
           }
         },
         "n_portfolios": 60,
@@ -17231,8 +17245,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": 0.6114,
-            "ret_net": 0.12214,
-            "haircut_anual": 0.003397
+            "ret_net": 0.122139,
+            "haircut_anual": 0.003398
           },
           {
             "vol": 0.112879,
@@ -17247,8 +17261,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": 0.6144,
-            "ret_net": 0.122754,
-            "haircut_anual": 0.003397
+            "ret_net": 0.122753,
+            "haircut_anual": 0.003398
           },
           {
             "vol": 0.113376,
@@ -17263,8 +17277,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": 0.6171,
-            "ret_net": 0.123368,
-            "haircut_anual": 0.003397
+            "ret_net": 0.123367,
+            "haircut_anual": 0.003398
           },
           {
             "vol": 0.113914,
@@ -17279,8 +17293,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": 0.6196,
-            "ret_net": 0.123982,
-            "haircut_anual": 0.003397
+            "ret_net": 0.123981,
+            "haircut_anual": 0.003398
           },
           {
             "vol": 0.114491,
@@ -17295,8 +17309,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": 0.6219,
-            "ret_net": 0.124597,
-            "haircut_anual": 0.003397
+            "ret_net": 0.124596,
+            "haircut_anual": 0.003398
           },
           {
             "vol": 0.115107,
@@ -17311,8 +17325,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": 0.6239,
-            "ret_net": 0.125211,
-            "haircut_anual": 0.003397
+            "ret_net": 0.12521,
+            "haircut_anual": 0.003398
           },
           {
             "vol": 0.115761,
@@ -17327,8 +17341,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": 0.6256,
-            "ret_net": 0.125825,
-            "haircut_anual": 0.003397
+            "ret_net": 0.125824,
+            "haircut_anual": 0.003398
           },
           {
             "vol": 0.116451,
@@ -18084,12 +18098,12 @@
           "haircut_anual": 0.004485,
           "rebalance_delta": {
             "delta_brl": [
-              386952.4,
-              -873406.86,
-              154780.96,
-              552789.15,
-              -110557.83,
-              -110557.83
+              387055.51,
+              -873639.59,
+              154822.21,
+              552936.45,
+              -110587.29,
+              -110587.29
             ],
             "delta_pp": [
               0.105,
@@ -18099,17 +18113,17 @@
               -0.03,
               -0.03
             ],
-            "spread_total_brl": 1094.52,
-            "ir_total_brl": 164178.38,
+            "spread_total_brl": 1094.81,
+            "ir_total_brl": 164222.13,
             "ir_per_asset_brl": [
               0.0,
-              131011.03,
+              131045.94,
               0.0,
               0.0,
-              16583.67,
-              16583.67
+              16588.09,
+              16588.09
             ],
-            "total_cost_brl": 165272.9
+            "total_cost_brl": 165316.94
           }
         },
         "max_sharpe": {
@@ -18129,12 +18143,12 @@
           "haircut_anual": 0.002839,
           "rebalance_delta": {
             "delta_brl": [
-              211533.98,
-              39063.77,
-              -582271.24,
-              184263.05,
-              257968.27,
-              -110557.83
+              211590.35,
+              39074.18,
+              -582426.39,
+              184312.15,
+              258037.01,
+              -110587.29
             ],
             "delta_pp": [
               0.0574,
@@ -18144,17 +18158,17 @@
               0.07,
               -0.03
             ],
-            "spread_total_brl": 692.83,
-            "ir_total_brl": 103924.36,
+            "spread_total_brl": 693.01,
+            "ir_total_brl": 103952.05,
             "ir_per_asset_brl": [
               0.0,
               0.0,
-              87340.69,
+              87363.96,
               0.0,
               0.0,
-              16583.67
+              16588.09
             ],
-            "total_cost_brl": 104617.19
+            "total_cost_brl": 104645.07
           }
         },
         "n_portfolios": 60,
@@ -18274,7 +18288,7 @@
         },
         "rf_real_brl": 0.0534
       },
-      "patrimonio_total_brl": 3685261.0,
+      "patrimonio_total_brl": 3686243.0,
       "transaction_spread": 0.0005,
       "tax_rates": {
         "SWRD": 0.15,
@@ -19165,8 +19179,8 @@
               "HODL11": 0.0023
             },
             "sharpe_net": -0.0034,
-            "ret_net": 0.05295,
-            "haircut_anual": 0.004907
+            "ret_net": 0.052949,
+            "haircut_anual": 0.004908
           },
           {
             "vol": 0.133929,
@@ -19181,8 +19195,8 @@
               "HODL11": 0.0118
             },
             "sharpe_net": -0.002,
-            "ret_net": 0.053129,
-            "haircut_anual": 0.004907
+            "ret_net": 0.053128,
+            "haircut_anual": 0.004908
           },
           {
             "vol": 0.135404,
@@ -19197,8 +19211,8 @@
               "HODL11": 0.0214
             },
             "sharpe_net": -0.0007,
-            "ret_net": 0.053309,
-            "haircut_anual": 0.004907
+            "ret_net": 0.053308,
+            "haircut_anual": 0.004908
           },
           {
             "vol": 0.137072,
@@ -19266,12 +19280,12 @@
           "haircut_anual": 0.004485,
           "rebalance_delta": {
             "delta_brl": [
-              386952.4,
-              -873406.86,
-              154780.96,
-              552789.15,
-              -110557.83,
-              -110557.83
+              387055.51,
+              -873639.59,
+              154822.21,
+              552936.45,
+              -110587.29,
+              -110587.29
             ],
             "delta_pp": [
               0.105,
@@ -19281,17 +19295,17 @@
               -0.03,
               -0.03
             ],
-            "spread_total_brl": 1094.52,
-            "ir_total_brl": 164178.38,
+            "spread_total_brl": 1094.81,
+            "ir_total_brl": 164222.13,
             "ir_per_asset_brl": [
               0.0,
-              131011.03,
+              131045.94,
               0.0,
               0.0,
-              16583.67,
-              16583.67
+              16588.09,
+              16588.09
             ],
-            "total_cost_brl": 165272.9
+            "total_cost_brl": 165316.94
           }
         },
         "max_sharpe": {
@@ -19307,16 +19321,16 @@
             "HODL11": 0.05
           },
           "sharpe_net": 0.001,
-          "ret_net": 0.053546,
-          "haircut_anual": 0.005209,
+          "ret_net": 0.053545,
+          "haircut_anual": 0.00521,
           "rebalance_delta": {
             "delta_brl": [
-              -1271415.05,
-              416434.49,
-              339044.01,
-              184263.05,
-              257968.27,
-              73705.22
+              -1271753.84,
+              416545.46,
+              339134.36,
+              184312.15,
+              258037.01,
+              73724.86
             ],
             "delta_pp": [
               -0.345,
@@ -19326,17 +19340,17 @@
               0.07,
               0.02
             ],
-            "spread_total_brl": 1271.42,
-            "ir_total_brl": 190712.26,
+            "spread_total_brl": 1271.75,
+            "ir_total_brl": 190763.08,
             "ir_per_asset_brl": [
-              190712.26,
+              190763.08,
               0.0,
               0.0,
               0.0,
               0.0,
               0.0
             ],
-            "total_cost_brl": 191983.67
+            "total_cost_brl": 192034.83
           }
         },
         "n_portfolios": 60,
@@ -20318,8 +20332,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": -0.0037,
-            "ret_net": 0.052905,
-            "haircut_anual": 0.004907
+            "ret_net": 0.052904,
+            "haircut_anual": 0.004908
           }
         ],
         "min_vol": {
@@ -20339,12 +20353,12 @@
           "haircut_anual": 0.004485,
           "rebalance_delta": {
             "delta_brl": [
-              386952.4,
-              -873406.86,
-              154780.96,
-              552789.15,
-              -110557.83,
-              -110557.83
+              387055.51,
+              -873639.59,
+              154822.21,
+              552936.45,
+              -110587.29,
+              -110587.29
             ],
             "delta_pp": [
               0.105,
@@ -20354,17 +20368,17 @@
               -0.03,
               -0.03
             ],
-            "spread_total_brl": 1094.52,
-            "ir_total_brl": 164178.38,
+            "spread_total_brl": 1094.81,
+            "ir_total_brl": 164222.13,
             "ir_per_asset_brl": [
               0.0,
-              131011.03,
+              131045.94,
               0.0,
               0.0,
-              16583.67,
-              16583.67
+              16588.09,
+              16588.09
             ],
-            "total_cost_brl": 165272.9
+            "total_cost_brl": 165316.94
           }
         },
         "max_sharpe": {
@@ -20380,16 +20394,16 @@
             "HODL11": 0.0
           },
           "sharpe_net": -0.0037,
-          "ret_net": 0.052906,
-          "haircut_anual": 0.004907,
+          "ret_net": 0.052905,
+          "haircut_anual": 0.004908,
           "rebalance_delta": {
             "delta_brl": [
-              -1087152.0,
-              416434.49,
-              339044.01,
-              184263.05,
-              257968.27,
-              -110557.83
+              -1087441.69,
+              416545.46,
+              339134.36,
+              184312.15,
+              258037.01,
+              -110587.29
             ],
             "delta_pp": [
               -0.295,
@@ -20399,17 +20413,17 @@
               0.07,
               -0.03
             ],
-            "spread_total_brl": 1197.71,
-            "ir_total_brl": 179656.47,
+            "spread_total_brl": 1198.03,
+            "ir_total_brl": 179704.35,
             "ir_per_asset_brl": [
-              163072.8,
+              163116.25,
               0.0,
               0.0,
               0.0,
               0.0,
-              16583.67
+              16588.09
             ],
-            "total_cost_brl": 180854.18
+            "total_cost_brl": 180902.38
           }
         },
         "n_portfolios": 60,
@@ -20529,7 +20543,7 @@
         },
         "rf_real_brl": 0.0534
       },
-      "patrimonio_total_brl": 3685261.0,
+      "patrimonio_total_brl": 3686243.0,
       "transaction_spread": 0.0005,
       "tax_rates": {
         "SWRD": 0.15,

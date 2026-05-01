@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-05-01T18:37:32",
-  "_window_id": "20260501T183732",
+  "_generated": "2026-05-01T18:59:51",
+  "_window_id": "20260501T185951",
   "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
   "custo_vida_base": 250000,
   "patrimonio_p10_2040": 4148858.0,
