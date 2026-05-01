@@ -33,6 +33,7 @@ import { FeeImpactChart } from '@/components/charts/FeeImpactChart';
 import { FactorProfileChart } from '@/components/charts/FactorProfileChart';
 import { StyleBoxChart } from '@/components/charts/StyleBoxChart';
 import { RollingReturnsHeatmap } from '@/components/charts/RollingReturnsHeatmap';
+import { OverlapChart } from '@/components/charts/OverlapChart';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -539,6 +540,17 @@ export default function PortfolioPage() {
           defaultOpen={secOpen('portfolio', 'style-box', false)}
         >
           <StyleBoxChart data={(data as any).factor_loadings} />
+        </CollapsibleSection>
+      )}
+
+      {/* 2a-quater. Overlap Detection — SWRD / AVGS / AVEM (DEV-overlap-detection 2026-05-01) */}
+      {(data as any)?.overlap_detection && (
+        <CollapsibleSection
+          id="section-overlap"
+          title={secTitle('portfolio', 'overlap', 'Overlap entre ETFs — Posições Compartilhadas')}
+          defaultOpen={secOpen('portfolio', 'overlap', false)}
+        >
+          <OverlapChart data={(data as any).overlap_detection} />
         </CollapsibleSection>
       )}
 

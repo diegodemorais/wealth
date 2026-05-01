@@ -1523,6 +1523,21 @@
       ],
       "optional": true,
       "privacy": false
+    },
+    {
+      "id": "overlap-chart",
+      "tab": "portfolio",
+      "label": "Overlap Detection ETFs — Posições Compartilhadas",
+      "type": "chart",
+      "purpose": "Horizontal stacked bar: top holdings compartilhados entre SWRD/AVGS/AVEM com peso consolidado na carteira (equivalente ao Morningstar X-Ray Stock Intersection).",
+      "data_fields": [
+        "overlap_detection.total_overlap_pct",
+        "overlap_detection.unique_coverage_pct",
+        "overlap_detection.top_overlaps"
+      ],
+      "optional": true,
+      "_optional_reason": "Dados proxy sintéticos — não bloqueia pipeline se ausente. CSVs reais dos emissores pendentes.",
+      "privacy": true
     }
   ]
 }

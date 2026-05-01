@@ -6,11 +6,12 @@
 |-------|-------|
 | **ID** | DEV-overlap-detection |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Done ✅ |
 | **Prioridade** | P2 — Média |
 | **Participantes** | Dev (implementação), Head (decisão design) |
 | **Dependencias** | Holdings públicos iShares/Avantis |
 | **Criado em** | 2026-05-01 |
+| **Concluido em** | 2026-05-01 |
 | **Origem** | Benchmark Morningstar (X-Ray overlap detection) — XX-benchmark-morningstar |
 
 ---

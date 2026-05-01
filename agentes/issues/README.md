@@ -44,7 +44,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|----------|
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
 | DEV-pipeline-gaps-p2 | Pipeline Gaps P2 — spendingSensibilidade, p_quality_aspiracional, fetch_with_retry | Dev | 🟡 Média | — |
-| DEV-overlap-detection | Overlap Detection ETFs — SWRD/AVGS/AVEM holdings CSV | Dev | 🟢 Baixa | iShares/Avantis CSV disponíveis |
 | DEV-sector-exposure | Sector Exposure Bottom-Up — GICS por ETF | Dev | 🟢 Baixa | Mesma fonte que overlap |
 | DEV-efficient-frontier | Fronteira Eficiente de Markowitz | Dev | 🟢 Baixa | scipy disponível |
 
@@ -52,6 +51,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DEV-overlap-detection | Overlap Detection ETFs — SWRD/AVGS/AVEM | 2026-05-01 | OverlapChart: horizontal stacked bar com top holdings compartilhados. Dados proxy sintéticos baseados em MSCI World. Pipeline inline em generate_data.py. CSVs reais dos emissores pendentes (futura integração). |
 | XX-system-audit | Auditoria Sistêmica Completa — Pipeline, Scripts, Dashboard, Arquitetura | 2026-05-01 | 12+ problemas estruturais identificados e corrigidos: assertions P0/P1, RUNBOOK.md com DAG, NakedIntegrationDetector, retry padronizado, fetch_utils.py, reconstruct_shadows.py, warnings explícitos para gaps P2/P3 (spendingSensibilidade, p_quality_aspiracional). Backlog documentado em generate_data.py. |
 | DEV-style-box | Style Box 3×3 via Factor Loadings | 2026-05-01 | StyleBoxChart implementado: grade Value/Blend/Growth × Small/Mid/Large, dots SWRD/AVGS/AVEM/Portfolio, AVGS composite on-the-fly. |
 | DEV-risk-return-scatter | Gráfico Retorno vs. Risco por Classe de Ativos | 2026-05-01 | RiskReturnScatter: bubble chart por bucket (SWRD/AVGS/AVEM/RF/Crypto/Total), seletores com marcos históricos (Pós-COVID/Pós-Euro/Pós-GFC/Máximo/5a/3a), linha Sharpe=0.5, legenda flex, anti-overlap labelLayout. |

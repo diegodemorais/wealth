@@ -1,0 +1,239 @@
+'use client';
+
+/**
+ * OverlapChart — Overlap Detection entre ETFs (SWRD / AVGS / AVEM).
+ * Horizontal stacked bar: top holdings compartilhados com peso consolidado na carteira.
+ * Equivalente ao Stock Intersection do Morningstar X-Ray.
+ *
+ * Feature: DEV-overlap-detection (2026-05-01)
+ */
+
+import { useMemo } from 'react';
+import { EChart } from '@/components/primitives/EChart';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
+import { EC, EC_TOOLTIP, EC_AXIS_LABEL, EC_SPLIT_LINE } from '@/utils/echarts-theme';
+
+// ── Tipos ─────────────────────────────────────────────────────────────────────
+
+export interface OverlapEntry {
+  name: string;
+  isin: string;
+  etfs: string[];
+  weight_combined_pct: number;
+  weight_per_etf: Record<string, number>;
+}
+
+export interface OverlapData {
+  total_overlap_pct: number;
+  unique_coverage_pct: number;
+  top_overlaps: OverlapEntry[];
+  last_updated?: string;
+  data_source?: string;
+}
+
+// ── Constantes ────────────────────────────────────────────────────────────────
+
+const ETF_COLORS: Record<string, string> = {
+  SWRD: EC.accent,
+  AVGS: EC.blue600,
+  AVEM: EC.cyan,
+};
+
+const ETF_ORDER = ['SWRD', 'AVGS', 'AVEM'];
+const MAX_ENTRIES = 12;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function badgeStyle(color: string): React.CSSProperties {
+  return {
+    display: 'inline-block',
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    background: color,
+    marginRight: 5,
+    flexShrink: 0,
+  };
+}
+
+// ── Componente ────────────────────────────────────────────────────────────────
+
+export function OverlapChart({ data }: { data: OverlapData | null | undefined }) {
+  const { privacyMode } = useEChartsPrivacy();
+  const chartRef = useChartResize();
+
+  const entries = useMemo(
+    () => (data?.top_overlaps ?? []).slice(0, MAX_ENTRIES),
+    [data],
+  );
+
+  const option = useMemo(() => {
+    if (!entries.length) return {};
+
+    // Y-axis: reversed so largest weight is at top
+    const names = [...entries].reverse().map(e => e.name);
+
+    const series = ETF_ORDER.map(etf => ({
+      name: etf,
+      type: 'bar' as const,
+      stack: 'overlap',
+      data: [...entries].reverse().map(e => {
+        const w = e.weight_per_etf[etf];
+        // Use null (not 0) for ETFs not in this holding — keeps stack clean
+        return e.etfs.includes(etf) && w != null ? parseFloat(w.toFixed(4)) : null;
+      }),
+      itemStyle: { color: ETF_COLORS[etf] ?? EC.muted },
+      barMaxWidth: 18,
+      emphasis: { itemStyle: { opacity: 0.85 } },
+    }));
+
+    return {
+      backgroundColor: 'transparent',
+      animation: false,
+      grid: { left: 110, right: 60, top: 16, bottom: 36 },
+      xAxis: {
+        type: 'value' as const,
+        name: 'Peso na carteira (%)',
+        nameLocation: 'middle' as const,
+        nameGap: 24,
+        nameTextStyle: { color: EC.muted, fontSize: 10 },
+        axisLabel: {
+          ...EC_AXIS_LABEL,
+          formatter: (v: number) => `${v.toFixed(2)}%`,
+        },
+        splitLine: EC_SPLIT_LINE,
+        axisLine: { lineStyle: { color: EC.border2 } },
+      },
+      yAxis: {
+        type: 'category' as const,
+        data: names,
+        axisLabel: {
+          ...EC_AXIS_LABEL,
+          fontSize: 10,
+          // Truncate long company names
+          formatter: (v: string) => v.length > 18 ? v.slice(0, 17) + '…' : v,
+          overflow: 'truncate' as const,
+          width: 100,
+        },
+        axisLine: { show: false },
+        axisTick: { show: false },
+      },
+      tooltip: {
+        trigger: 'axis' as const,
+        axisPointer: { type: 'shadow' as const },
+        ...EC_TOOLTIP,
+        formatter: (params: any[]) => {
+          if (!params?.length) return '';
+          const idx = entries.length - 1 - (params[0]?.dataIndex ?? 0);
+          const entry = entries[idx];
+          if (!entry) return '';
+          const rows = ETF_ORDER
+            .filter(etf => entry.etfs.includes(etf))
+            .map(etf => {
+              const w = entry.weight_per_etf[etf] ?? 0;
+              const label = privacyMode ? '••%' : `${w.toFixed(3)}%`;
+              return `<div style="display:flex;justify-content:space-between;gap:12px">
+                <span style="color:${ETF_COLORS[etf]}">● ${etf}</span>
+                <span style="font-weight:600">${label}</span>
+              </div>`;
+            }).join('');
+          const combined = privacyMode ? '••%' : `${entry.weight_combined_pct.toFixed(3)}%`;
+          return `<div style="padding:6px 10px;min-width:210px">
+            <div style="font-weight:700;margin-bottom:6px;color:${EC.text}">${entry.name}</div>
+            <div style="font-size:9px;color:${EC.muted};margin-bottom:6px">${entry.isin}</div>
+            ${rows}
+            <div style="border-top:1px solid ${EC.border2};margin-top:6px;padding-top:4px;display:flex;justify-content:space-between">
+              <span style="color:${EC.muted}">Peso combinado</span>
+              <span style="font-weight:700;color:${EC.text}">${combined}</span>
+            </div>
+          </div>`;
+        },
+      },
+      series,
+    };
+  }, [entries, privacyMode]);
+
+  if (!data) {
+    return (
+      <div style={{ padding: '24px 16px', color: EC.muted, fontSize: 13, textAlign: 'center' }}>
+        Dados de overlap não disponíveis.
+      </div>
+    );
+  }
+
+  const overlapPct = data.total_overlap_pct?.toFixed(1) ?? '—';
+  const uniquePct  = data.unique_coverage_pct?.toFixed(1) ?? '—';
+
+  return (
+    <div style={{ padding: '0 16px 16px' }}>
+      {/* Badges de resumo */}
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
+        <div
+          data-testid="overlap-total-pct"
+          style={{
+            background: 'var(--card2)',
+            borderRadius: 6,
+            padding: '8px 14px',
+            fontSize: 13,
+          }}
+        >
+          <span style={{ color: EC.muted }}>Overlap direto: </span>
+          <span style={{ fontWeight: 700, color: EC.yellow }}>
+            {privacyMode ? '••%' : `${overlapPct}%`}
+          </span>
+        </div>
+        <div
+          data-testid="overlap-unique-pct"
+          style={{
+            background: 'var(--card2)',
+            borderRadius: 6,
+            padding: '8px 14px',
+            fontSize: 13,
+          }}
+        >
+          <span style={{ color: EC.muted }}>Diversificação única: </span>
+          <span style={{ fontWeight: 700, color: EC.green }}>
+            {privacyMode ? '••%' : `${uniquePct}%`}
+          </span>
+        </div>
+      </div>
+
+      {/* Legenda (JSX, não ECharts legend) */}
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 10, fontSize: 11 }}>
+        {ETF_ORDER.map(etf => (
+          <span key={etf} style={{ display: 'flex', alignItems: 'center', color: EC.muted }}>
+            <span style={badgeStyle(ETF_COLORS[etf])} />
+            {etf}
+          </span>
+        ))}
+      </div>
+
+      {/* Gráfico */}
+      {entries.length > 0 ? (
+        <EChart
+          ref={chartRef}
+          option={option}
+          style={{ height: Math.max(260, entries.length * 28 + 60) }}
+        />
+      ) : (
+        <div style={{ color: EC.muted, fontSize: 13, padding: '12px 0' }}>
+          Nenhum overlap detectado.
+        </div>
+      )}
+
+      {/* Fonte dos dados */}
+      {data.data_source && (
+        <div style={{ marginTop: 8, fontSize: 10, color: EC.muted }}>
+          Fonte: {data.data_source}
+          {data.last_updated ? ` · Atualizado em ${data.last_updated}` : ''}
+          {data.data_source?.includes('synthetic') && (
+            <span style={{ color: EC.yellow, marginLeft: 6 }}>
+              ⚠ Dados proxy — integração com CSVs dos emissores pendente
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
