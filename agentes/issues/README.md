@@ -39,9 +39,7 @@
 ### Doing
 > Issues em andamento
 
-| ID | Titulo | Dono | Prioridade |
-|----|--------|------|------------|
-| DEV-pipeline-fail-fast | Pipeline fail-fast — eliminar fallbacks silenciosos | Dev | 🟢 Baixa |
+(vazio)
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -63,6 +61,7 @@
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DEV-pipeline-fail-fast | Pipeline fail-fast — eliminar fallbacks silenciosos | 2026-05-01 | `scripts/validate_env.py` invocado upfront em `generate_data.py`: pacotes core ausentes (yfinance/pyield/getfactormodels/bcb/fredapi) → RuntimeError em <1s com hint pro venv canônico. `get_factor_value_spread()` agora `assert_optional_pkg` + raise (era `return None` silencioso, causa do bug original 344/345). `btc_indicators.fetch_daily_prices_binance()` upgradou para `logger.warning` antes do return None (P3, fallback legítimo de correlação 90d). 9 testes novos cobrindo fail-fast paths e cache hit. Decisão: outras ocorrências de `except: return None` em generate_data.py são cascatas defensivas legítimas (FED snapshot, NTN-B per-day retry, taxa Renda+ cascade) — mantidas com fallbacks explícitos. Suite full verde (98 Playwright, 719 vitest, 6 pipeline E2E). |
 | DEV-spec-contract-fix | Spec contract fix — factor.value_spread | 2026-05-01 | Spec contract estava 344/345 porque rodadas via `python3` (system) não tinham `getfactormodels`, e `get_factor_value_spread()` falhava silenciosamente exportando None. HODL11 (pnl_brl/pnl_pct) e fire_montecarlo_liquido — campos previstos no spec original — já estavam corretos; o único campo divergente era `factor.value_spread`. Regenerado via venv canônico (`~/claude/finance-tools/.venv/bin/python3`). 345/345 OK. Suite full verde. |
 | DEV-pipeline-append-only | Pipeline append-only — séries históricas determinísticas | 2026-05-01 | 6 artefatos com `_meta.metodologia_version` + merge append-only (P1-P5). Lote A (retornos/historico/rolling) + Lote B (drawdown/fire_trilha) + Lote C (tlh_lotes com realizados append + open_lots snapshot, validado pela Tax) + R7 versionado. Teste E2E `test_pipeline_idempotency.py` — 6/6 PASS em 2× consecutivas. |
 | DEV-pipeline-gaps-p2 | Pipeline Gaps P2 — spendingSensibilidade, p_quality_aspiracional, fetch_with_retry | 2026-05-01 | Gap 1: state.spending.scenarios populado via MC real (3 cenários R$250k/270k/300k). Gap 2: p_quality_aspiracional confirmado funcionando (55.0%). Gap 3: 11 NAKED_INTEGRATION → 0; fetch_with_retry uniforme em yfinance/BCB/FRED. |
