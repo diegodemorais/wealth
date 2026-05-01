@@ -182,7 +182,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           fontSize: 10,
           interval: 0,
           formatter: (val: string) => val.slice(0, 4),
-          hideOverlap: false,
+          hideOverlap: true,
         },
       },
       yAxis: {

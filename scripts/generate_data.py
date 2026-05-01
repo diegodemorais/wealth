@@ -5039,12 +5039,14 @@ def main():
     fire_state = state.get("fire", {})
     # Extração de dados para scenario_comparison
     pat_med_53 = fire_state.get("pat_mediano_fire53", fire_state.get("pat_mediano_fire", 0))
-    pat_med_50 = fire_state.get("pat_mediano_fire50", 0)
     age_base = premissas_raw.get("idade_cenario_base", 53)
-    age_aspir = premissas_raw.get("idade_cenario_aspiracional", 50)
+    age_aspir = premissas_raw.get("idade_cenario_aspiracional", 49)
     gasto_anual = premissas_raw.get("custo_vida_base", 250000)
+    # MC grava como "pat_mediano_aspiracional" (fire_montecarlo.py:1611); fallback por idade
+    pat_med_aspir = fire_state.get("pat_mediano_aspiracional",
+                    fire_state.get(f"pat_mediano_fire{age_aspir}", 0))
     swr_53 = (gasto_anual / pat_med_53 * 100) if pat_med_53 > 0 else 0
-    swr_50 = (gasto_anual / pat_med_50 * 100) if pat_med_50 > 0 else 0
+    swr_aspir = (gasto_anual / pat_med_aspir * 100) if pat_med_aspir > 0 else 0
 
     base_scenario = {
         "idade": age_base,
@@ -5062,11 +5064,11 @@ def main():
         "base":        pfire_aspiracional.get("base"),
         "fav":         pfire_aspiracional.get("fav"),
         "stress":      pfire_aspiracional.get("stress"),
-        "pat_mediano": pat_med_50,
-        "pat_p10":     fire_state.get("pat_p10_fire50"),
-        "pat_p90":     fire_state.get("pat_p90_fire50"),
+        "pat_mediano": pat_med_aspir,
+        "pat_p10":     fire_state.get("pat_p10_aspiracional", fire_state.get(f"pat_p10_fire{age_aspir}")),
+        "pat_p90":     fire_state.get("pat_p90_aspiracional", fire_state.get(f"pat_p90_fire{age_aspir}")),
         "gasto_anual": gasto_anual,
-        "swr":         round(swr_50, 2),
+        "swr":         round(swr_aspir, 2),
     }
 
     scenario_comparison = {
