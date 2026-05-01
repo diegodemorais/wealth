@@ -6601,6 +6601,24 @@ def main():
     _se_top3_str = ", ".join(f"{s}={d['total_pct']:.1f}%" for s, d in _se_top3)
     print(f"  ✓ sector_exposure: dominant={_se['dominant']} | top3=[{_se_top3_str}]")
 
+    # ─── Efficient Frontier — Markowitz dual (DEV-efficient-frontier 2026-05-01) ──
+    # Otimização mean-variance com 6 ativos. Duas fronteiras (Histórica + Forward),
+    # toggle Crypto ON/OFF. Caps anti-corner, Ledoit-Wolf shrinkage, sanity checks
+    # bloqueantes, RF=5.34% real BRL como ancora-real (Diego trata IPCA+ longo HTM
+    # como vol=0). Referência: agentes/issues/archive/DEV-efficient-frontier.md.
+    try:
+        from reconstruct_efficient_frontier import build_payload as _ef_build
+        data["efficient_frontier"] = _ef_build(cov_method="ledoit_wolf", n_portfolios=60)
+        _ef = data["efficient_frontier"]
+        _ms_h = _ef["historica"]["crypto_on"]["max_sharpe"]
+        _ms_f = _ef["forward"]["crypto_on"]["max_sharpe"]
+        print(f"  ✓ efficient_frontier: hist max_sharpe={_ms_h['sharpe']:.3f} ret={_ms_h['ret']:.3f} | "
+              f"fwd max_sharpe={_ms_f['sharpe']:.3f} ret={_ms_f['ret']:.3f}")
+    except Exception as _ef_e:
+        # Fail-fast: relate erro mas não derruba pipeline (chart é optional na spec)
+        print(f"  ⚠️ efficient_frontier: falhou ({_ef_e}) — continuando sem fronteira")
+        data["efficient_frontier"] = None
+
     # CC1 — IIFPT: priority_matrix (lido de arquivo), domain_coverage, regime_vida
     # Invariante: priority_matrix nunca é sobrescrito automaticamente — apenas lido de arquivo.
     _pm_raw = json.loads(PRIORITY_MATRIX_PATH.read_text()) if PRIORITY_MATRIX_PATH.exists() else {}

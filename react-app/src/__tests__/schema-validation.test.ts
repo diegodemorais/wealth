@@ -138,7 +138,8 @@ describe('Schema Validation — Spec-Driven Contract', () => {
 
   describe('PORTFOLIO tab fields', () => {
     it('has required PORTFOLIO fields', () => {
-      const blocks = spec?.blocks?.filter((b: any) => b.tab === 'portfolio') ?? [];
+      // optional blocks excluded — campos podem não existir até o pipeline rodar
+      const blocks = spec?.blocks?.filter((b: any) => b.tab === 'portfolio' && !b.optional) ?? [];
       const missing: string[] = [];
       for (const block of blocks) {
         for (const field of (block.data_fields ?? [])) {

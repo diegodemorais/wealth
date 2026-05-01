@@ -41,7 +41,8 @@
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| (vazio) |
+
+(vazio)
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -54,7 +55,6 @@
 | ID | Titulo | Dono | Prioridade | Dependências |
 |----|--------|------|------------|--------------|
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
-| DEV-efficient-frontier | Fronteira Eficiente de Markowitz | Dev | 🟢 Baixa | scipy disponível |
 | DEV-data-dedup | Deduplicação de Séries — drawdown_extended, .values legado, cache yfinance | Dev | 🟢 Baixa | — |
 
 ### Done
@@ -62,6 +62,7 @@
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DEV-efficient-frontier | Fronteira Eficiente de Markowitz (Histórica + Forward) | 2026-05-02 | Quant validou metodologia; Head fixou universo (6 ativos: SWRD/AVGS/AVEM/RF_EST/RF_TAT/HODL11), caps anti-corner (50/35/25/30/10/5) e grupos Equity∈[50,90]% RF∈[5,30]%. `scripts/reconstruct_efficient_frontier.py` gera duas fronteiras: **Histórica** (μ=média 10y mensalizada, cov=Ledoit-Wolf shrinkage) e **Forward** (μ=AQR/Research Affiliates USD nominal − 2.5pp inflação USD ≈ BRL real, cov=histórica + disclaimer Black-Litterman v2). RF=5.34% real BRL como ancora-real (IPCA+ longo HTM, vol=0). Optimização SLSQP. Sanity checks bloqueantes: pesos somam 1, sem short, retorno monotônico, vol convexa, max_sharpe ∈ fronteira. **Insights — Histórica:** Max Sharpe (SWRD 43%, AVGS 14%, AVEM 8%, RF_EST 20%, RF_TAT 10%, HODL11 5%) gera Sharpe 0.816 vs carteira atual 0.730 — modelo recomenda menos AVGS/AVEM e adicionar RF_TAT 10% + HODL11 ao máximo. **Forward:** com US Large 3.1% (RA), modelo joga SWRD para o cap mínimo (10%, equity floor) e maximiza AVGS/AVEM — Max Sharpe 0.043 (positivo) vs carteira atual −0.042 (gap de 0.085 Sharpe). Componente `EfficientFrontierChart.tsx` (ECharts scatter+line) com toggle Histórica↔Forward + Crypto ON/OFF, tooltip com pesos ótimos, default colapsado em Portfolio. 16 testes Python pytest + 729 vitest + 100 Playwright verdes. |
 | DEV-sector-exposure | Sector Exposure Bottom-Up — GICS por ETF | 2026-05-01 | `SectorExposureChart` (ECharts stacked horizontal bar, 11 setores GICS) wireado em Portfolio. Pipeline inline em `generate_data.py` com `_compute_sector_exposure()`: distribuições proxy SWRD/AVGS/AVEM (somam 100% intra-ETF) ponderadas por `EQUITY_WEIGHTS` (50/30/20) → exposição agregada % do equity. Benchmark MSCI World inline + Δ vs benchmark no tooltip. Insight chave: portfolio 50/30/20 (market-cap + value tilt) tem **Financials 20.9% > Tech 18.6%** (vs MSCI World Tech 24.5% > Fin 16.2%) — value tilt visível no perfil setorial. 7 testes Python + 10 testes Vitest + semantic Playwright verde. Mesma fonte proxy do `overlap_detection`; integração com CSVs SSGA/Avantis fica para issue futura. |
 | DEV-pipeline-fail-fast | Pipeline fail-fast — eliminar fallbacks silenciosos | 2026-05-01 | `scripts/validate_env.py` invocado upfront em `generate_data.py`: pacotes core ausentes (yfinance/pyield/getfactormodels/bcb/fredapi) → RuntimeError em <1s com hint pro venv canônico. `get_factor_value_spread()` agora `assert_optional_pkg` + raise (era `return None` silencioso, causa do bug original 344/345). `btc_indicators.fetch_daily_prices_binance()` upgradou para `logger.warning` antes do return None (P3, fallback legítimo de correlação 90d). 9 testes novos cobrindo fail-fast paths e cache hit. Decisão: outras ocorrências de `except: return None` em generate_data.py são cascatas defensivas legítimas (FED snapshot, NTN-B per-day retry, taxa Renda+ cascade) — mantidas com fallbacks explícitos. Suite full verde (98 Playwright, 719 vitest, 6 pipeline E2E). |
 | DEV-spec-contract-fix | Spec contract fix — factor.value_spread | 2026-05-01 | Spec contract estava 344/345 porque rodadas via `python3` (system) não tinham `getfactormodels`, e `get_factor_value_spread()` falhava silenciosamente exportando None. HODL11 (pnl_brl/pnl_pct) e fire_montecarlo_liquido — campos previstos no spec original — já estavam corretos; o único campo divergente era `factor.value_spread`. Regenerado via venv canônico (`~/claude/finance-tools/.venv/bin/python3`). 345/345 OK. Suite full verde. |

@@ -32,6 +32,7 @@ import { FeeImpactChart } from '@/components/charts/FeeImpactChart';
 import { FactorProfileChart } from '@/components/charts/FactorProfileChart';
 import { StyleBoxChart } from '@/components/charts/StyleBoxChart';
 import { RollingReturnsHeatmap } from '@/components/charts/RollingReturnsHeatmap';
+import { EfficientFrontierChart } from '@/components/charts/EfficientFrontierChart';
 import { OverlapChart } from '@/components/charts/OverlapChart';
 import { SectorExposureChart } from '@/components/charts/SectorExposureChart';
 
@@ -562,6 +563,17 @@ export default function PortfolioPage() {
           defaultOpen={secOpen('portfolio', 'sector-exposure', false)}
         >
           <SectorExposureChart data={(data as any).sector_exposure} />
+        </CollapsibleSection>
+      )}
+
+      {/* 2a-sexies. Efficient Frontier — Markowitz dual (DEV-efficient-frontier 2026-05-01) */}
+      {(data as any)?.efficient_frontier && (
+        <CollapsibleSection
+          id="section-efficient-frontier"
+          title={secTitle('portfolio', 'efficient-frontier', 'Fronteira Eficiente — Markowitz (Histórica + Forward)')}
+          defaultOpen={secOpen('portfolio', 'efficient-frontier', false)}
+        >
+          <EfficientFrontierChart data={(data as any).efficient_frontier} />
         </CollapsibleSection>
       )}
 

@@ -1543,6 +1543,28 @@
       "optional": true,
       "_optional_reason": "Dados proxy sintéticos (mesmo padrão de overlap_detection) — não bloqueia pipeline se ausente.",
       "privacy": true
+    },
+    {
+      "id": "efficient-frontier-chart",
+      "tab": "portfolio",
+      "label": "Fronteira Eficiente — Markowitz (Histórica + Forward)",
+      "type": "chart",
+      "purpose": "Mean-variance optimization com 6 ativos da carteira (SWRD/AVGS/AVEM/RF_EST/RF_TAT/HODL11). Duas fronteiras com toggle: Histórica (μ + cov via Ledoit-Wolf 10y) e Forward-looking (μ via AQR/Research Affiliates, cov histórica + disclaimer). Marca carteira atual, Max Sharpe e Min Vol. RF Estratégica HTM tratada como ancora-real (vol=0). Caps anti-corner: SWRD≤50%, AVGS≤35%, AVEM≤25%, RF_EST≤30%, RF_TAT≤10%, HODL11≤5%; Equity∈[50,90]%, RF∈[5,30]%.",
+      "data_fields": [
+        "efficient_frontier.historica.crypto_on.points",
+        "efficient_frontier.historica.crypto_on.current",
+        "efficient_frontier.historica.crypto_on.max_sharpe",
+        "efficient_frontier.historica.crypto_on.min_vol",
+        "efficient_frontier.historica.rf",
+        "efficient_frontier.forward.crypto_on.points",
+        "efficient_frontier.forward.crypto_on.current",
+        "efficient_frontier.forward.crypto_on.max_sharpe",
+        "efficient_frontier.forward.crypto_on.min_vol",
+        "efficient_frontier.forward.disclaimer"
+      ],
+      "optional": true,
+      "_optional_reason": "Ferramenta de revisão (não diária). Pipeline pode falhar download yfinance — chart oculta se ausente.",
+      "privacy": false
     }
   ]
 }

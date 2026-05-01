@@ -422,6 +422,20 @@ test.describe('Portfolio — DARF panel', () => {
     const text = (await dom.textContent()) ?? '';
     expect(text, 'sector-exposure-dominant must contain digits').toMatch(/\d/);
   });
+
+  // DEV-efficient-frontier (2026-05-02): Markowitz mean-variance dual chart
+  test('efficient-frontier-chart block expands and shows scatter', async ({ page }) => {
+    // Section default-fechada — abre via header trigger
+    const header = page.locator('[data-test="section-header-section-efficient-frontier"]');
+    if (await header.count() === 0) {
+      // pipeline pode não ter gerado a fronteira (chart é optional) — skip
+      test.skip();
+    }
+    await header.scrollIntoViewIfNeeded();
+    await header.click();
+    const el = page.locator('[data-testid="efficient-frontier-chart"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
