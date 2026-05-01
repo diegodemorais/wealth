@@ -1,9 +1,11 @@
 # Pipeline Coverage — data.json
 
 > **Gerado por**: Integrator (auditoria 2026-05-01)
-> **Atualizado**: 2026-05-01 (fixes P1.1, P1.3, P2.1, P2.2, P3.1 implementados)
+> **Atualizado**: 2026-05-01 (auditoria arquitetural XX-system-audit — fases 1-4 concluídas)
 > **Fonte**: `react-app/public/data.json` (gerado em 2026-04-30T16:24:28)
-> **Pipeline**: `scripts/generate_data.py` (6179 linhas)
+> **Pipeline**: `scripts/generate_data.py` (~6190 linhas)
+> **DAG completo**: `scripts/RUNBOOK.md` (criado 2026-05-01)
+> **Scripts arquivados**: `scripts/archive/` (9 scripts legados, 2026-05-01)
 
 ---
 
@@ -388,4 +390,82 @@ Estes campos são importantes mas sem assert — podem ser null/zero sem bloquea
 
 ---
 
-*Gerado em 2026-05-01 pelo Integrator. Atualizar a cada auditoria mensal ou após evento estrutural.*
+## 8. Auditoria Arquitetural XX-system-audit (2026-05-01)
+
+### 8.1 Classificação dos Scripts
+
+**CORE** (obrigatórios para data.json — importados diretamente por generate_data.py):
+`fire_montecarlo.py`, `pfire_engine.py`, `pfire_transformer.py`, `tax_engine.py`,
+`bond_pool_engine.py`, `guardrail_engine.py`, `swr_engine.py`, `risk_metrics.py`,
+`config.py`, `reconstruct_fire_data.py` (subprocess), `backtest_portfolio.py` (subprocess),
+`reconstruct_realized_pnl.py` (subprocess condicional)
+
+**AUXILIAR** (pré-requisitos do pipeline — rodar antes de generate_data.py):
+`parse_carteira.py`, `reconstruct_history.py`, `reconstruct_factor.py`, `reconstruct_macro.py`,
+`reconstruct_tax.py`, `fx_utils.py`, `ibkr_lotes.py`, `ibkr_sync.py`, `spending_analysis.py`,
+`fetch_historico_sheets.py`, `market_data.py`, `withdrawal_engine.py`
+
+**STANDALONE** (CLIs para Diego — não no pipeline diário):
+`checkin_mensal.py`, `portfolio_analytics.py`, `multi_llm_query.py`, `factor_regression.py`,
+`resampled_frontier.py`, `brfiresim.py`, `btc_indicators.py`, `tlh_monitor.py`
+
+**TESTE** (validação e CI):
+`scripts/tests/*.py` (34 arquivos), `validate_data.py`, `validate_schema.py`,
+`validators.py`, `snapshot_schemas.py`, `ci_check_carteira_params.py`, `detect_hardcoding.py`
+
+**UTILITÁRIO** (manutenção):
+`pipeline_archive.py`, `snapshot_archive.py`, `sync_spec.py`, `data_pipeline_engine.py`,
+`parse_nubank_operations.py`, `binance_analysis.py`, `check_gatilhos.py`
+
+**ARQUIVO** (movidos para `scripts/archive/` em 2026-05-01):
+`binance_parse_pdf.py`, `fire_glide_path_scenarios.py`, `parse_issues.py`,
+`historico_patrimonio.py`, `ibkr_posicoes_sync.py`, `load_ibkr_posicoes.py`,
+`p4_patch_generator.py`, `p4_suggestion_engine.py`, `validate_changelog_registration.py`
+
+### 8.2 DAG do Pipeline (Texto)
+
+Ver `scripts/RUNBOOK.md` para DAG completo com outputs de cada step, TTLs de cache, e guia de falha por fonte externa.
+
+Resumo:
+```
+parse_carteira.py → config.py
+ibkr_sync.py / ibkr_lotes.py → dados/ibkr/lotes.json
+fetch_historico_sheets.py → dados/historico_carteira.csv
+checkin_mensal.py → state.shadows.{periodo}
+
+[Paralelo] reconstruct_fire_data.py → dados/fire_matrix.json, drawdown_history.json, ...
+[Paralelo] reconstruct_history.py → dados/retornos_mensais.json, rolling_metrics.json
+[Paralelo] reconstruct_factor.py → dados/factor_snapshot.json
+[Paralelo] reconstruct_macro.py → dados/macro_snapshot.json
+[Paralelo] spending_analysis.py → dados/spending_summary.json
+
+generate_data.py → react-app/public/data.json
+```
+
+### 8.3 Decisão de Schema (Fase 3)
+
+**Veredicto: assertions seletivas (status quo + melhorias incrementais)**
+
+Razão: Pydantic seria over-engineering para 1 consumidor. O spec.json existente cobre
+o contrato bilateral Python→React. As assertions existentes (31 campos) protegem os
+campos críticos. Campos de alto risco adicionais receberam warnings (Fase 3 desta auditoria).
+
+**Assertions adicionadas em Fases 2-3 desta auditoria:**
+- `premissas.fire_year_base` (assert not None, isinstance int)
+- Warnings (não bloqueia): `etf_composition.SWRD.aum_eur`, `fire.p_quality_aspiracional`,
+  `macro.selic_meta`, `pfire_base.base` range [40-100%]
+
+**Total de assertions ativas:** 36 (31 anteriores + 5 novas)
+
+### 8.4 Gaps Estruturais Confirmados
+
+| Gap | Severidade | Status |
+|-----|-----------|--------|
+| `shadows` null — nenhum script cria `state.shadows.q1_2026` | ALTO | Parcialmente mitigado: fallback usa período mais recente do state |
+| `spendingSensibilidade=[]` — nenhum script popula `state.spending.scenarios` | MÉDIO | Documentado em RUNBOOK.md, TODO em generate_data.py |
+| `fire.p_quality_aspiracional=null` — `--by_profile` não calcula aspiracional | ALTO | Documentado, warning adicionado |
+| Consultas externas sem retry unificado | MÉDIO | Documentado em RUNBOOK.md (Seção 7) |
+
+---
+
+*Atualizado 2026-05-01 pelo Integrator + auditoria XX-system-audit.*

@@ -2,6 +2,7 @@
 
 > **Maintainer**: Integrator  
 > **Atualizar em**: todo bug de propagação descoberto, toda premissa nova, todo componente novo.
+> **Atualizado**: 2026-05-01 (auditoria XX-system-audit — DAG em scripts/RUNBOOK.md)
 
 ---
 
