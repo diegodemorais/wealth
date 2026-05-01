@@ -1,13 +1,11 @@
 'use client';
 
 /**
- * ScenarioCompareCards — 3 cards side-by-side para comparação visual de cenários FIRE.
+ * ScenarioCompareCards — tabela comparativa 3 colunas: BASE | FAVORÁVEL | ASPIRACIONAL.
  *
- * Complementa FireScenariosTable com visualização rápida das métricas chave.
- * Cards: Base (53a) · Favorável (53a) · Aspiracional (49a)
- *
- * Incorpora P(Quality) e Gasto Anual da FireScenariosTable (tabela removida).
- * Spending sensitivity row abaixo quando spendingSensibilidade não vazia.
+ * Substitui layout de cards empilhados por tabela compacta onde todas as métricas
+ * ficam visíveis de uma vez, sem scroll vertical no mobile.
+ * Spending sensitivity cards abaixo quando spendingSensibilidade não vazia.
  */
 
 import { useDashboardStore } from '@/store/dashboardStore';
@@ -138,91 +136,146 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
     },
   ];
 
+  // Shared cell styles
+  const thStyle = (color: string): React.CSSProperties => ({
+    borderTop: `3px solid ${color}`,
+    padding: '10px 8px 8px',
+    textAlign: 'center' as const,
+    width: '21%',
+    background: 'var(--card)',
+  });
+
+  const tdLabelStyle: React.CSSProperties = {
+    fontSize: 9,
+    color: 'var(--muted)',
+    textTransform: 'uppercase',
+    letterSpacing: '.4px',
+    padding: '7px 8px',
+    width: '37%',
+    whiteSpace: 'nowrap' as const,
+  };
+
+  const tdValStyle = (isEven: boolean): React.CSSProperties => ({
+    fontSize: 'var(--text-sm)',
+    fontWeight: 600,
+    color: 'var(--text)',
+    padding: '7px 8px',
+    textAlign: 'center' as const,
+    background: isEven ? 'var(--card-alt, rgba(255,255,255,0.02))' : 'transparent',
+    width: '21%',
+  });
+
+  const trStyle = (isEven: boolean): React.CSSProperties => ({
+    borderTop: '1px solid var(--border)',
+    background: isEven ? 'var(--card-alt, rgba(255,255,255,0.02))' : 'transparent',
+  });
+
   return (
     <div data-testid="scenario-compare-cards">
-      {/* Main scenario cards */}
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-        {cards.map((card) => (
-          <div
-            key={card.title}
-            data-testid={`scenario-card-${card.title.toLowerCase()}`}
-            style={{
-              flex: '1 1 180px',
-              minWidth: 160,
-              background: 'var(--card)',
-              border: `1px solid ${card.highlightColor}40`,
-              borderTop: `3px solid ${card.highlightColor}`,
-              borderRadius: 8,
-              padding: 16,
-            }}
-          >
-            {/* Card header */}
-            <div style={{ marginBottom: 10 }}>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>
-                {card.title}
-              </div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: card.highlightColor }}>
-                {card.subtitle}
-              </div>
-            </div>
+      {/* Comparative table — overflowX for mobile landscape */}
+      <div style={{ overflowX: 'auto', marginBottom: 16 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 320 }}>
+          <thead>
+            <tr>
+              {/* Label column — empty header */}
+              <th style={{ width: '37%', padding: '10px 8px 8px', textAlign: 'left', background: 'var(--card)' }} />
 
-            {/* P(FIRE) badge */}
-            <div style={{ marginBottom: card.pquality != null ? 6 : 12 }}>
-              <div style={{ fontSize: 9, color: 'var(--muted)', marginBottom: 4 }}>P(FIRE)</div>
-              <span data-testid={`pfire-badge-${card.title.toLowerCase()}`} style={pfireBadgeStyle(card.pfire)}>
-                {privacyMode ? '••%' : `${card.pfire.toFixed(1)}%`}
-              </span>
-            </div>
+              {cards.map((card) => (
+                <th
+                  key={card.title}
+                  data-testid={`scenario-card-${card.title.toLowerCase()}`}
+                  style={thStyle(card.highlightColor)}
+                >
+                  <div style={{ fontSize: 9, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>
+                    {card.title}
+                  </div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: card.highlightColor }}>
+                    {card.subtitle}
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-            {/* P(Quality) badge — only for base and aspiracional */}
-            {card.pquality != null && (
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 9, color: 'var(--muted)', marginBottom: 2 }}>P(Quality)</div>
-                <span data-testid={`pquality-badge-${card.title.toLowerCase()}`} style={pqualityBadgeStyle(card.pquality)}>
-                  {privacyMode ? '••%' : `${card.pquality.toFixed(1)}%`}
-                </span>
-              </div>
+          <tbody>
+            {/* P(FIRE) row */}
+            <tr style={trStyle(false)}>
+              <td style={tdLabelStyle}>P(FIRE)</td>
+              {cards.map((card) => (
+                <td key={card.title} style={{ ...tdValStyle(false), textAlign: 'center' }}>
+                  <span data-testid={`pfire-badge-${card.title.toLowerCase()}`} style={pfireBadgeStyle(card.pfire)}>
+                    {privacyMode ? '••%' : `${card.pfire.toFixed(1)}%`}
+                  </span>
+                </td>
+              ))}
+            </tr>
+
+            {/* P(Quality) row — base and aspiracional only; favorável shows dash */}
+            <tr style={trStyle(true)}>
+              <td style={{ ...tdLabelStyle, background: 'var(--card-alt, rgba(255,255,255,0.02))' }}>P(Quality)</td>
+              {cards.map((card) => (
+                <td key={card.title} style={tdValStyle(true)}>
+                  {card.pquality != null ? (
+                    <span
+                      data-testid={`pquality-badge-${card.title.toLowerCase()}`}
+                      style={pqualityBadgeStyle(card.pquality)}
+                    >
+                      {privacyMode ? '••%' : `${card.pquality.toFixed(1)}%`}
+                    </span>
+                  ) : (
+                    <span style={{ color: 'var(--muted)' }}>—</span>
+                  )}
+                </td>
+              ))}
+            </tr>
+
+            {/* Patrimônio row */}
+            <tr style={trStyle(false)}>
+              <td style={tdLabelStyle}>Patrimônio</td>
+              {cards.map((card) => (
+                <td key={card.title} style={tdValStyle(false)}>
+                  <span data-testid={`pat-mediano-${card.title.toLowerCase()}`}>
+                    {fmtBrl(card.pat_mediano)}
+                  </span>
+                </td>
+              ))}
+            </tr>
+
+            {/* Gasto anual row — only when at least one card has data */}
+            {cards.some((c) => c.gasto_anual != null && c.gasto_anual > 0) && (
+              <tr style={trStyle(true)}>
+                <td style={{ ...tdLabelStyle, background: 'var(--card-alt, rgba(255,255,255,0.02))' }}>Gasto anual</td>
+                {cards.map((card) => (
+                  <td key={card.title} style={tdValStyle(true)}>
+                    {card.gasto_anual != null && card.gasto_anual > 0 ? fmtBrl(card.gasto_anual) : <span style={{ color: 'var(--muted)' }}>—</span>}
+                  </td>
+                ))}
+              </tr>
             )}
 
-            {/* Metrics grid */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div>
-                <div style={{ fontSize: 9, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Patrimônio</div>
-                <div
-                  data-testid={`pat-mediano-${card.title.toLowerCase()}`}
-                  style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)' }}
-                >
-                  {fmtBrl(card.pat_mediano)}
-                </div>
-              </div>
+            {/* SWR row — only when at least one card has data */}
+            {cards.some((c) => c.swr != null && c.swr > 0) && (
+              <tr style={trStyle(false)}>
+                <td style={tdLabelStyle}>SWR</td>
+                {cards.map((card) => (
+                  <td key={card.title} style={{ ...tdValStyle(false), color: card.swr != null && card.swr > 0 ? 'var(--accent)' : 'var(--text)' }}>
+                    {card.swr != null && card.swr > 0 ? fmtPct(card.swr) : <span style={{ color: 'var(--muted)' }}>—</span>}
+                  </td>
+                ))}
+              </tr>
+            )}
 
-              {card.gasto_anual != null && card.gasto_anual > 0 && (
-                <div>
-                  <div style={{ fontSize: 9, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Gasto anual</div>
-                  <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)' }}>
-                    {fmtBrl(card.gasto_anual)}
-                  </div>
-                </div>
-              )}
-
-              {card.swr != null && card.swr > 0 && (
-                <div>
-                  <div style={{ fontSize: 9, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>SWR</div>
-                  <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--accent)' }}>
-                    {fmtPct(card.swr)}
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <div style={{ fontSize: 9, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px' }}>Ano FIRE</div>
-                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)' }}>
+            {/* Ano FIRE row */}
+            <tr style={trStyle(true)}>
+              <td style={{ ...tdLabelStyle, background: 'var(--card-alt, rgba(255,255,255,0.02))' }}>Ano FIRE</td>
+              {cards.map((card) => (
+                <td key={card.title} style={tdValStyle(true)}>
                   {privacyMode ? '••••' : (2026 + (card.idade - 39))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       {/* Spending sensitivity cards — only shown when data is non-empty */}

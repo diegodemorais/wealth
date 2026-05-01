@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-05-01T10:00:00Z', type: 'layout', component: 'ScenarioCompareCards', tab: 'fire', anchor: 'section-scenario-compare-cards', de: 'Cards empilhados verticalmente (muito scroll no mobile)', para: 'Tabela comparativa 3 colunas: BASE/FAVORÁVEL/ASPIRACIONAL — toda informação visível sem scroll' },
   { datetime: '2026-05-01T09:00:00Z', type: 'gráfico', component: 'RollingReturnsHeatmap', tab: 'portfolio', anchor: 'section-rolling-returns', de: 'Heatmap mensal com eixo confuso', para: 'Heatmap por ano: células maiores, valor CAGR em cada célula, tooltip com range' },
   { datetime: '2026-05-01T09:00:00Z', type: 'layout', component: 'ScenarioCompareCards', tab: 'fire', anchor: 'section-scenario-compare-cards', de: 'Dois componentes duplicados (cards + tabela)', para: 'Componente único de cards com P(Quality) e gasto anual; tabela removida' },
   { datetime: '2026-05-01T09:00:00Z', type: 'fix', component: 'FeeImpactChart', tab: 'portfolio', anchor: 'section-fee-impact', de: 'Seção fechada por padrão', para: 'Seção aberta por padrão' },
