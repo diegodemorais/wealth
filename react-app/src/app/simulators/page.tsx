@@ -49,13 +49,14 @@ const _fmtPctFrac = fmtPctCanon; // re-export available if needed
 // ── Simulador FIRE — seção section-critical ───────────────────────────────────
 
 type FireCond = 'solteiro' | 'casamento' | 'filho';
-type FireMkt = 'stress' | 'base' | 'fav' | 'cambio_dinamico';
+type FireMkt = 'stress' | 'base' | 'fav' | 'aspiracional' | 'cambio_dinamico';
 
 // Labels only — values are derived from data.fire_matrix.retornos_equity / perfis at runtime
 const MKT_LABELS: Record<FireMkt, string> = {
   stress:          'Stress',
   base:            'Base',
   fav:             'Favorável',
+  aspiracional:    '🎯 Aspiracional',
   cambio_dinamico: '★ Câmbio',
 };
 
@@ -76,10 +77,13 @@ function FireSimuladorSection() {
   const fmPerfis   = (data as any)?.fire_matrix?.perfis ?? {};
   const premissas  = (data as any)?.premissas ?? {};
 
+  const favRetorno = fracToPct(fmRetornos.fav ?? premissas.retorno_equity_base ?? 0.0585) ?? 5.85;
   const MKT_PRESETS: Record<FireMkt, { retorno: number; label: string }> = {
     stress:          { retorno: fracToPct(fmRetornos.stress ?? premissas.retorno_equity_base ?? 0.0435) ?? 4.35, label: MKT_LABELS.stress },
     base:            { retorno: fracToPct(fmRetornos.base   ?? premissas.retorno_equity_base ?? 0.0485) ?? 4.85, label: MKT_LABELS.base },
-    fav:             { retorno: fracToPct(fmRetornos.fav    ?? premissas.retorno_equity_base ?? 0.0585) ?? 5.85, label: MKT_LABELS.fav },
+    fav:             { retorno: favRetorno, label: MKT_LABELS.fav },
+    // Aspiracional: mesmo retorno que Favorável + aporte elevado (handler dedicado)
+    aspiracional:    { retorno: favRetorno, label: MKT_LABELS.aspiracional },
     // Câmbio Dinâmico: r_USD base (sem dep_BRL embutida) — dep vem do fxRegime=true
     cambio_dinamico: { retorno: fracToPct(fmRetornos.base   ?? premissas.retorno_equity_base ?? 0.0485) ?? 4.85, label: MKT_LABELS.cambio_dinamico },
   };
@@ -128,13 +132,10 @@ function FireSimuladorSection() {
         presetApplied.current = true;
         const aspiracionalAporte = premissas.aporte_mensal_aspiracional ?? premissas.aporte_mensal;
         if (aspiracionalAporte != null) setAporte(aspiracionalAporte);
-        const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
-        if (favRetorno != null) setRetorno(+((favRetorno * 100).toFixed(2)));
-        const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
-        if (ci != null) setCusto(ci);
-        setFireCond('solteiro');
-        setFireMkt('fav');
+        setRetorno(favRetorno);
+        setFireMkt('aspiracional');
         setCustom(false);
+        // fireCond preservado: aspiracional é independente do perfil familiar
       } else if (cond && ['solteiro', 'casamento', 'filho'].includes(cond)) {
         presetApplied.current = true;
         if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
@@ -191,10 +192,16 @@ function FireSimuladorSection() {
     const v = COND_PRESETS[c].custo;
     if (v != null) setCusto(v);
     if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
+    // Sair do modo aspiracional ao trocar perfil — condição afeta spending, não mkt
+    if (fireMkt === 'aspiracional') {
+      setFireMkt('base');
+      setRetorno(MKT_PRESETS.base.retorno);
+    }
     setCustom(false);
   };
 
-  const setMktPreset = (m: FireMkt) => {
+  // Exclui 'aspiracional' — tem handler dedicado (setFire50Preset)
+  const setMktPreset = (m: Exclude<FireMkt, 'aspiracional'>) => {
     setFireMkt(m);
     const v = MKT_PRESETS[m].retorno;
     if (v != null) setRetorno(v);
@@ -202,15 +209,12 @@ function FireSimuladorSection() {
     setCustom(false);
   };
 
+  // Aspiracional: apenas mkt + aporte; perfil familiar preservado
   const setFire50Preset = () => {
+    setFireMkt('aspiracional');
     const aspiracionalAporte = premissas.aporte_mensal_aspiracional ?? premissas.aporte_mensal;
     if (aspiracionalAporte != null) setAporte(aspiracionalAporte);
-    const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
-    if (favRetorno != null) setRetorno(fracToPct(favRetorno));
-    const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
-    if (ci != null) setCusto(ci);
-    setFireCond('solteiro');
-    setFireMkt('fav');
+    setRetorno(MKT_PRESETS.aspiracional.retorno);
     setCustom(false);
   };
 
@@ -222,7 +226,7 @@ function FireSimuladorSection() {
   const profileKey: Record<FireCond, string> = { solteiro: 'atual', casamento: 'casado', filho: 'filho' };
   const earliestFire = (data as any)?.earliest_fire ?? null;
   const isCambioDinamico = fireMkt === 'cambio_dinamico';
-  const isAspirPreset = !custom && fireCond === 'solteiro' && fireMkt === 'fav';
+  const isAspirPreset = !custom && fireMkt === 'aspiracional';
 
   // Detect if custom mode value matches a preset — use preset mode in that case
   const preset = MKT_PRESETS[fireMkt];
@@ -481,7 +485,7 @@ function FireSimuladorSection() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '58px' }}>Mercado:</span>
           <div className="seg-group">
-            {(['stress', 'base', 'fav'] as Exclude<FireMkt, 'cambio_dinamico'>[]).map(m => (
+            {(['stress', 'base', 'fav'] as Exclude<FireMkt, 'aspiracional' | 'cambio_dinamico'>[]).map(m => (
               <button
                 key={m}
                 className={`seg-btn${isPresetMode && fireMkt === m ? ' active' : ''}`}
@@ -608,7 +612,9 @@ function FireSimuladorSection() {
 
       <div className="src">
         {isPresetMode
-          ? 'Modo preset: dados MC pré-calculados (consistente com FIRE page). Mova um slider para modo interativo.'
+          ? isAspirPreset
+            ? 'Cenário aspiracional pré-computado (pipeline): FIRE 49 anos · aporte elevado · mercado favorável · resultado independe do perfil selecionado.'
+            : 'Modo preset: dados MC pré-calculados (consistente com FIRE page). Mova um slider para modo interativo.'
           : `Modo interativo: simulação determinística · SWR ≤ ${swrTarget != null ? `${(swrTarget * 100).toFixed(1)}%` : '—'} · retorno ${retorno != null ? `${retorno.toFixed(2)}%` : '—'} diferente do preset`}
       </div>
     </div>
