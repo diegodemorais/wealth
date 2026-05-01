@@ -1,0 +1,54 @@
+{
+  "_generated": "2026-04-27T17:37:57",
+  "_source": "agentes/contexto/operacoes.md",
+  "operacoes": [
+    {
+      "data": "2026-04-13",
+      "tipo": "aplicacao",
+      "titulo": "Tesouro IPCA+ 2040",
+      "valor_brl": 46498.08,
+      "taxa": 7.1,
+      "nota": "Aporte salário+bônus 04/2026. DCA ativo. Bloco IPCA+ longo. Ordem enfileirada 10/04, liquidacao 13/04."
+    },
+    {
+      "data": "2026-04-13",
+      "tipo": "aplicacao",
+      "titulo": "Tesouro IPCA+ 2050",
+      "valor_brl": 11660.71,
+      "taxa": 6.85,
+      "nota": "Aporte salário+bônus 04/2026. Split 20% bloco IPCA+ longo. Primeira operação neste título. Ordem enfileirada 10/04, liquidacao 13/04."
+    },
+    {
+      "data": "2026-04-06",
+      "tipo": "aplicacao",
+      "titulo": "Tesouro IPCA+ 2040",
+      "valor_brl": 20035.48,
+      "taxa": 7.07,
+      "nota": "DCA salário 04/2026 (lote anterior ao aporte bônus)."
+    },
+    {
+      "data": "2026-03-01",
+      "tipo": "aplicacao",
+      "titulo": "Tesouro IPCA+ 2040",
+      "valor_brl": 46481.44,
+      "taxa": 7.07,
+      "nota": "Saldo pré-Bookkeeper (113.015 - 20.035,48 - 46.498,08 = 46.481,44)"
+    },
+    {
+      "data": "2026-03-01",
+      "tipo": "aplicacao",
+      "titulo": "Tesouro IPCA+ 2029",
+      "valor_brl": 86554.71,
+      "taxa": 7.58,
+      "nota": "Saldo pré-Bookkeeper. Reserva de emergência. Sem movimentações recentes."
+    },
+    {
+      "data": "2026-03-01",
+      "tipo": "aplicacao",
+      "titulo": "Renda+ 2065",
+      "valor_brl": 117832.62,
+      "taxa": 6.93,
+      "nota": "Saldo pré-Bookkeeper. Sem movimentações recentes."
+    }
+  ]
+}
