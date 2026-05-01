@@ -7,7 +7,7 @@
  * Eixos: X = volatilidade anualizada (%), Y = CAGR nominal (%).
  * Tamanho bubble: peso no portfolio (% alocação).
  * Linha de referência: Sharpe = 0.5 (y = 0.5 × x).
- * Seletor de período: 3y | 5y | since2020 | since2013 | all.
+ * Seletor de período: Pós-COVID | Pós-Euro | Pós-GFC | Máximo | 5a | 3a.
  */
 
 import { useState, useMemo } from 'react';
@@ -34,15 +34,18 @@ export interface RiskReturnScatterProps {
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
-const PERIODS: Array<{ id: string; label: string }> = [
-  { id: '3y',        label: '3 anos' },
-  { id: '5y',        label: '5 anos' },
-  { id: 'since2020', label: 'Desde 2020' },
-  { id: 'since2013', label: 'Desde 2013' },
-  { id: 'all',       label: 'Máximo' },
+// Alinhados ao backtest page — mesmo vocabulário de marcos históricos
+const PERIODS: Array<{ id: string; label: string; title: string }> = [
+  { id: 'since2020', label: 'Pós-COVID',  title: 'Jan/2020→hoje (6a) · desde o fundo de março 2020' },
+  { id: 'since2013', label: 'Pós-Euro',   title: 'Jan/2013→hoje (13a) · pós-crise da dívida europeia' },
+  { id: 'since2009', label: 'Pós-GFC',    title: 'Jan/2009→hoje (17a) · desde o fundo da crise 2008' },
+  { id: 'all',       label: 'Máximo',     title: 'Jan/2005→hoje (21a) · histórico completo com proxies' },
+  { id: '5y',        label: '5 anos',     title: 'Jan/2021→hoje (5a)' },
+  { id: '3y',        label: '3 anos',     title: 'Jan/2023→hoje (3a)' },
 ];
 
-const DEFAULT_PERIOD = '5y';
+// since2020 = início operacional da carteira; fallback para primeiro disponível
+const DEFAULT_PERIOD = 'since2020';
 
 // Mapa color_key → hex (EC não exporta 'blue'/'teal' direto — usar aliases)
 const COLOR_MAP: Record<string, string> = {
@@ -102,9 +105,10 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
         fontSize: 10,
         fontWeight: 700,
       },
-      tooltip: {
-        // Individual formatter via series (override global)
-      },
+      // Afasta labels sobrepostos automaticamente + traça leader line
+      labelLayout: { moveOverlap: 'shiftY' as const },
+      labelLine: { show: true, length2: 4, lineStyle: { color: bucketColor(pt.color_key), opacity: 0.35, width: 1 } },
+      tooltip: {},
     }));
 
     // Linha Sharpe = 0.5: y = 0.5 × x
@@ -183,15 +187,8 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
             </div>`;
         },
       },
-      legend: {
-        orient: 'horizontal' as const,
-        bottom: 0,
-        left: 'center' as const,
-        textStyle: { color: EC.muted, fontSize: 10 },
-        itemWidth: 10,
-        itemHeight: 10,
-        data: buckets.map(([, pt]) => pt.label),
-      },
+      // Legenda desativada no ECharts — exibida como flex acima do gráfico via JSX
+      legend: { show: false },
       series: [...scatterSeries, sharpeLine],
     };
   }, [periodData]);
@@ -200,21 +197,24 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
 
   return (
     <div style={{ padding: '0 16px 16px' }}>
-      {/* Seletor de período */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 12, flexWrap: 'wrap' as const }}>
+      {/* Seletor de período — scroll horizontal, labels com contexto histórico */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 12, overflowX: 'auto' as const, paddingBottom: 2 }}>
         {PERIODS.filter(p => data[p.id]).map(p => (
           <button
             key={p.id}
             onClick={() => setPeriod(p.id)}
+            title={p.title}
             style={{
-              padding: '3px 10px',
+              padding: '4px 12px',
               borderRadius: 4,
               border: `1px solid ${period === p.id ? EC.accent : 'var(--border)'}`,
               background: period === p.id ? 'color-mix(in srgb, var(--accent) 15%, transparent)' : 'transparent',
               color: period === p.id ? EC.accent : 'var(--muted)',
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: period === p.id ? 700 : 400,
               cursor: 'pointer',
+              whiteSpace: 'nowrap' as const,
+              flexShrink: 0,
             }}
           >
             {p.label}
@@ -222,10 +222,22 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
         ))}
       </div>
 
+      {/* Legenda inline — acima do chart, 3 itens por linha, não sobrepõe eixos */}
+      {periodData && (
+        <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: '4px 12px', marginBottom: 8 }}>
+          {Object.values(periodData).map(pt => (
+            <div key={pt.label} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: bucketColor(pt.color_key), display: 'inline-block', flexShrink: 0 }} />
+              <span style={{ fontSize: 10, color: 'var(--muted)' }}>{pt.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Chart */}
       {periodData ? (
         <div data-testid="risk-return-scatter-chart">
-          <EChart ref={chartRef} option={option} style={{ height: 360 }} />
+          <EChart ref={chartRef} option={option} style={{ height: 340 }} />
         </div>
       ) : (
         <div style={{ color: 'var(--muted)', fontSize: 12, padding: '20px 0' }}>

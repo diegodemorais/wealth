@@ -29,6 +29,9 @@ import { Globe, ClipboardList, Landmark, MapPin, BarChart3, Bitcoin } from 'luci
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { EChart } from '@/components/primitives/EChart';
 import { EC, EC_AXIS_LABEL } from '@/utils/echarts-theme';
+import { FeeImpactChart } from '@/components/charts/FeeImpactChart';
+import { FactorProfileChart } from '@/components/charts/FactorProfileChart';
+import { RollingReturnsHeatmap } from '@/components/charts/RollingReturnsHeatmap';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -515,6 +518,17 @@ export default function PortfolioPage() {
           </div>
         );
       })()}
+
+      {/* 2a-bis. Factor Profile Comparativo — SWRD vs AVGS vs AVEM (Morningstar-style) */}
+      {(data as any)?.factor_loadings && (
+        <CollapsibleSection
+          id="section-factor-profile"
+          title={secTitle('portfolio', 'factor-profile', 'Factor Profile Comparativo — SWRD · AVGS · AVEM')}
+          defaultOpen={secOpen('portfolio', 'factor-profile', false)}
+        >
+          <FactorProfileChart data={(data as any).factor_loadings} />
+        </CollapsibleSection>
+      )}
 
       {/* 2b. Drift Intra-Equity — SWRD / AVGS / AVEM */}
       {data?.drift && (() => {
@@ -1016,6 +1030,32 @@ export default function PortfolioPage() {
           <RiskReturnScatter data={(data as any).risk_return_scatter} />
         </CollapsibleSection>
       )}
+
+      {/* Rolling Returns Heatmap — sequências de retorno (1a/3a/5a móveis) */}
+      {(data as any)?.backtest?.dates && (
+        <CollapsibleSection
+          id="section-rolling-returns"
+          title={secTitle('portfolio', 'rolling-returns', 'Retornos Móveis — 1a · 3a · 5a (heatmap)')}
+          defaultOpen={secOpen('portfolio', 'rolling-returns', false)}
+        >
+          <RollingReturnsHeatmap
+            dates={(data as any).backtest.dates}
+            target={(data as any).backtest.target}
+          />
+        </CollapsibleSection>
+      )}
+
+      {/* Fee Impact Chart — custo acumulado de TERs em 20 anos */}
+      {(data as any)?.fee_impact && (
+        <CollapsibleSection
+          id="section-fee-impact"
+          title={secTitle('portfolio', 'fee-impact', 'Impacto das Taxas (TER) — Custo Acumulado 20 anos')}
+          defaultOpen={secOpen('portfolio', 'fee-impact', false)}
+        >
+          <FeeImpactChart data={(data as any).fee_impact} />
+        </CollapsibleSection>
+      )}
+
       {(() => {
         const risk = (data as any)?.risk;
         const contribs: Array<{ name: string; weight: number; risk_contribution_pct: number }> =
