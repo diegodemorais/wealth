@@ -31,6 +31,7 @@ import { FireSpectrumWidget } from './FireSpectrumWidget';
 import { CoastFireData, FireSpectrumData } from '@/types/dashboard';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
+import { BondPoolDepletionChart } from '@/components/charts/BondPoolDepletionChart';
 
 
 export default function FirePage() {
@@ -528,6 +529,19 @@ export default function FirePage() {
           </div>
         );
       })()}
+
+      {/* Bond Pool Depletion Tracker (FR-bond-pool-tracker) */}
+      <CollapsibleSection
+        id="section-bond-pool-depletion"
+        title={secTitle('fire', 'bond-pool-depletion', 'Bond Pool — Projeção de Esgotamento (2040–2055)')}
+        defaultOpen={secOpen('fire', 'bond-pool-depletion', false)}
+        icon={<Landmark size={18} />}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          <BondPoolDepletionChart data={data as any} />
+          <div className="src">Projeção determinística · Retorno real = pisoTaxaIpcaLongo · INSS reduz saque a partir de 2049 (Katia) e 2052 (Diego)</div>
+        </div>
+      </CollapsibleSection>
 
       {/* ── Group 1: Readiness ─────────────────────────────────────────────────── */}
       <SectionDivider label="Readiness" />

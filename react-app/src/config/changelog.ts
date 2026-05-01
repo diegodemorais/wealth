@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-05-01T03:00:00-03:00', type: 'gráfico', component: 'BondPoolDepletionChart', tab: 'fire', anchor: 'section-bond-pool-depletion', de: 'Sem visualização de esgotamento do bond pool pós-FIRE', para: 'FR-bond-pool-tracker: projeção determinística 2040–2055 com saldo "Meta atingida" (R$1.72M) vs "Trajetória atual" — INSS reduz saque a partir de 2049 (Katia) e 2052 (Diego)' },
   { datetime: '2026-05-01T00:00:00-03:00', type: 'fix', component: 'ChangelogTable', tab: 'assumptions', anchor: 'dashboard-updates', de: 'fmtDatetime fazia split de string — mostrava hora UTC sem converter para BRT', para: 'toLocaleString com timeZone: America/Sao_Paulo — idêntico ao formatBrt do Header' },
   { datetime: '2026-04-30T21:00:00', type: 'gráfico', component: 'DrawdownExtendedChart', tab: 'backtest', anchor: 'section-drawdown-extended', de: 'Gráfico de drawdown histórico multi-período não renderizava (drawdown_extended.periods ausente no data.json)', para: 'B10: pipeline agora computa 4 períodos — real (2021+, CSV real), medium (backtest 2019+), long (R5 2005+), academic (R7 1995+) — com dd_target_pct e dd_benchmark_pct por ponto' },
   { datetime: '2026-04-30T23:59:00', type: 'dado', component: 'NowPage', tab: 'now', anchor: '', de: 'Sem card de capital humano Katia na aba NOW', para: 'C8: mini card compacto — Cap. Humano Katia: INSS R$93.6k/ano (a partir de 2049) · PGBL FIRE R$490k · Custo solo R$160k/ano — visível quando inss_katia_anual > 0, privacy obrigatório' },
