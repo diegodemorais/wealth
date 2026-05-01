@@ -14,11 +14,14 @@ Nota MVRV Z-Score:
   dados disponíveis.
 """
 import json
+import logging
 import sys
 import requests
 import numpy as np
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+
+_log = logging.getLogger(__name__)
 
 from config import (
     BTC_SMA_WINDOW, BTC_MA_ZONE_NEAR_LOW, BTC_MA_ZONE_NEAR_HIGH, BTC_MA_ZONE_ABOVE_HIGH,
@@ -264,7 +267,9 @@ def fetch_daily_prices_binance(symbol, days=120):
             date = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).strftime(DATE_FORMAT_YMD)
             result.append((date, close))
         return result
-    except Exception:
+    except Exception as e:
+        # P3: fallback legítimo (correlação 90d é opcional), warning visível.
+        _log.warning("fetch_daily_prices_binance(%s) falhou: %s", symbol, e)
         return None
 
 
