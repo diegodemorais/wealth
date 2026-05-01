@@ -1002,7 +1002,13 @@ export default function BacktestPage() {
             defaultOpen={secOpen('backtest', 'drawdown-extended')}
           >
             <div style={{ padding: '0 16px 16px' }}>
-              <DrawdownExtendedChart periods={ext.periods} summary={ext.summary ?? {}} />
+              <DrawdownExtendedChart
+                periods={ext.periods}
+                summary={ext.summary ?? {}}
+                backtest={(data as any)?.backtest ?? null}
+                backtestR5={(data as any)?.backtestR5 ?? null}
+                backtest_r7={(data as any)?.backtest_r7 ?? null}
+              />
             </div>
           </CollapsibleSection>
         );

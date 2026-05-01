@@ -15,9 +15,26 @@ interface Period {
   note?: string;
 }
 
+interface BacktestDataset {
+  dates?: string[];
+  target?: number[];
+  shadowA?: number[];
+}
+
+interface BacktestR7Data {
+  cumulative_returns?: {
+    dates?: string[];
+    target?: number[];
+    bench?: number[];
+  };
+}
+
 interface Props {
   periods: Record<string, Period>;
   summary: Record<string, number>;
+  backtest?: BacktestDataset | null;
+  backtestR5?: BacktestDataset | null;
+  backtest_r7?: BacktestR7Data | null;
 }
 
 const PERIOD_ORDER = ['real', 'medium', 'long', 'academic'];
@@ -27,14 +44,91 @@ const PERIOD_LABELS: Record<string, string> = {
   long: 'Backtest 21a (2005+)',
   academic: 'Série Longa 31a (1995+)',
 };
+const PERIOD_NOTES: Record<string, string> = {
+  medium: 'Proxy backtest UCITS: AVGS/AVEM/SWRD (ago/2019–hoje). Target 50/30/20 vs VWRA.',
+  long: 'Série longa pré-UCITS: proxies FF5/MSCI (2005–hoje). Inclui GFC 2008.',
+  academic: 'Série acadêmica 1995–2026 (proxies Fama-French + DFEMX). Inclui Dotcom, GFC, COVID.',
+};
 
-export function DrawdownExtendedChart({ periods, summary }: Props) {
+function computeDrawdownFromPrices(prices: number[]): number[] {
+  if (!prices.length) return [];
+  let peak = prices[0];
+  return prices.map(v => {
+    if (v > peak) peak = v;
+    return peak > 0 ? Math.round((v - peak) / peak * 10000) / 100 : 0;
+  });
+}
+
+function buildDerivedPeriod(
+  key: 'medium' | 'long' | 'academic',
+  backtest?: BacktestDataset | null,
+  backtestR5?: BacktestDataset | null,
+  backtest_r7?: BacktestR7Data | null,
+): Period | null {
+  if (key === 'medium') {
+    const dates = backtest?.dates ?? [];
+    const target = backtest?.target ?? [];
+    const shadow = backtest?.shadowA ?? [];
+    if (!dates.length || dates.length !== target.length) return null;
+    return {
+      label: PERIOD_LABELS.medium,
+      dates,
+      dd_target_pct: computeDrawdownFromPrices(target),
+      dd_benchmark_pct: computeDrawdownFromPrices(shadow),
+      note: PERIOD_NOTES.medium,
+    };
+  }
+  if (key === 'long') {
+    const dates = backtestR5?.dates ?? [];
+    const target = backtestR5?.target ?? [];
+    const shadow = backtestR5?.shadowA ?? [];
+    if (!dates.length || dates.length !== target.length) return null;
+    return {
+      label: PERIOD_LABELS.long,
+      dates,
+      dd_target_pct: computeDrawdownFromPrices(target),
+      dd_benchmark_pct: computeDrawdownFromPrices(shadow),
+      note: PERIOD_NOTES.long,
+    };
+  }
+  if (key === 'academic') {
+    const cr = backtest_r7?.cumulative_returns;
+    const rawDates = cr?.dates ?? [];
+    const target = cr?.target ?? [];
+    const bench = cr?.bench ?? [];
+    if (!rawDates.length || rawDates.length !== target.length) return null;
+    return {
+      label: PERIOD_LABELS.academic,
+      dates: rawDates.map(d => d.slice(0, 7)),
+      dd_target_pct: computeDrawdownFromPrices(target),
+      dd_benchmark_pct: computeDrawdownFromPrices(bench),
+      note: PERIOD_NOTES.academic,
+    };
+  }
+  return null;
+}
+
+export function DrawdownExtendedChart({ periods, summary, backtest, backtestR5, backtest_r7 }: Props) {
   const { privacyMode, theme } = useEChartsPrivacy();
   const chartRef = useChartResize();
-  const availablePeriods = PERIOD_ORDER.filter(k => periods[k]);
-  const [selectedPeriod, setSelectedPeriod] = useState(availablePeriods.includes('long') ? 'long' : availablePeriods[0]);
 
-  const period = periods[selectedPeriod];
+  const allPeriods = useMemo((): Record<string, Period> => {
+    const derived: Record<string, Period> = {};
+    for (const key of ['medium', 'long', 'academic'] as const) {
+      if (!periods[key]) {
+        const p = buildDerivedPeriod(key, backtest, backtestR5, backtest_r7);
+        if (p) derived[key] = p;
+      }
+    }
+    return { ...periods, ...derived };
+  }, [periods, backtest, backtestR5, backtest_r7]);
+
+  const availablePeriods = PERIOD_ORDER.filter(k => allPeriods[k]);
+  const [selectedPeriod, setSelectedPeriod] = useState(
+    availablePeriods.includes('long') ? 'long' : availablePeriods[0]
+  );
+
+  const period = allPeriods[selectedPeriod];
 
   const option = useMemo(() => {
     if (!period?.dates?.length) return {};
@@ -139,7 +233,7 @@ export function DrawdownExtendedChart({ periods, summary }: Props) {
               cursor: 'pointer',
             }}
           >
-            {PERIOD_LABELS[k] ?? periods[k]?.label ?? k}
+            {PERIOD_LABELS[k] ?? allPeriods[k]?.label ?? k}
           </button>
         ))}
       </div>

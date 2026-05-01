@@ -216,10 +216,16 @@ describe('Page Integration', () => {
       console.warn('⚠️  Backtest page: retornos_mensais missing');
     }
 
-    // DrawdownExtendedChart needs drawdown_extended.periods
+    // DrawdownExtendedChart: periods.real from JSON; medium/long/academic derived in React from backtest arrays.
+    // After generate_data.py is rerun, only 'real' should remain in JSON (DEV-data-dedup).
     const ddExt = (realData as any).drawdown_extended;
     if (ddExt) {
       expect(typeof ddExt).toBe('object');
+      if (ddExt.periods && !('medium' in ddExt.periods)) {
+        // Post-dedup data.json: verify synthetic periods are absent
+        expect('long' in ddExt.periods).toBe(false);
+        expect('academic' in ddExt.periods).toBe(false);
+      }
     }
   });
 

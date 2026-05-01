@@ -1257,7 +1257,7 @@ def compute_rolling_sharpe(retornos_mensais: dict, selic_meta: float, window: in
     """
     import math
     dates = retornos_mensais.get("dates", [])
-    vals = retornos_mensais.get("values", [])
+    vals = retornos_mensais.get("twr_pct") or retornos_mensais.get("values", [])
 
     if len(vals) < window + 1:
         return {"dates": [], "values": [], "window": window, "rf_anual": selic_meta}
@@ -1336,6 +1336,20 @@ def _enrich_factor_rolling(result: dict) -> dict:
     return result
 
 
+# Module-level cache: avoids redundant yfinance downloads within a single pipeline run.
+# Key: (tickers_tuple, start_date_str). Populated on first call; reused by subsequent callers.
+_PRICE_SERIES_CACHE: dict = {}
+
+
+def _get_shared_price_series(tickers: list, start: str):
+    """Download price series once per pipeline run; return cached DataFrame on subsequent calls."""
+    import yfinance as yf
+    key = (tuple(sorted(tickers)), start)
+    if key not in _PRICE_SERIES_CACHE:
+        _PRICE_SERIES_CACHE[key] = yf.download(tickers, start=start, progress=False, auto_adjust=True)
+    return _PRICE_SERIES_CACHE[key]
+
+
 def get_factor_rolling():
     """Rolling 12-month return difference AVGS.L minus SWRD.L (percentage points).
 
@@ -1346,11 +1360,10 @@ def get_factor_rolling():
 
     print("  ▶ factor rolling 12m AVGS vs SWRD ...")
     try:
-        import yfinance as yf
         import pandas as pd
 
         tickers = ["AVGS.L", TICKER_SWRD_LSE]
-        data = yf.download(tickers, start="2019-01-01", progress=False, auto_adjust=True)
+        data = _get_shared_price_series(tickers, "2019-01-01")
 
         # Handle MultiIndex columns from yfinance
         if isinstance(data.columns, pd.MultiIndex):
@@ -1410,18 +1423,15 @@ def get_factor_signal():
 
     print("  ▶ factor signal (YTD + since launch) ...")
     try:
-        import yfinance as yf
-
         today = date.today()
         ytd_start = f"{today.year}-01-01"
 
-        tickers = yf.download(
-            [TICKER_SWRD_LSE, TICKER_AVGS_LSE], start=AVGS_LAUNCH_STR,
-            auto_adjust=True, progress=False
-        )[COLUMN_CLOSE]
-
+        # Reuse cached series from get_factor_rolling (start="2019-01-01" covers AVGS_LAUNCH_STR).
+        import pandas as pd
+        raw = _get_shared_price_series([TICKER_SWRD_LSE, TICKER_AVGS_LSE], "2019-01-01")
+        close = raw[COLUMN_CLOSE] if isinstance(raw.columns, pd.MultiIndex) else raw[[COLUMN_CLOSE]]
         # dropna: yfinance inclui o dia atual com NaN quando mercado ainda não fechou
-        tickers = tickers.dropna()
+        tickers = close[close.index >= AVGS_LAUNCH_STR].dropna()
         ytd     = tickers[tickers.index >= ytd_start]
         swrd_ytd        = float((ytd[TICKER_SWRD_LSE].iloc[-1] / ytd[TICKER_SWRD_LSE].iloc[0] - 1) * 100)
         avgs_ytd        = float((ytd[TICKER_AVGS_LSE].iloc[-1] / ytd[TICKER_AVGS_LSE].iloc[0] - 1) * 100)
@@ -4274,7 +4284,7 @@ def main():
     if RETORNOS_CORE.exists():
         print("  ▶ lendo retornos de dados/retornos_mensais.json (core) ...")
         _rc = json.loads(RETORNOS_CORE.read_text())
-        retornos_mensais = {"dates": _rc["dates"], "values": _rc["twr_pct"]}
+        retornos_mensais = {"dates": _rc["dates"]}
         # Propagate annual returns + TWR summary for dashboard
         retornos_mensais["annual_returns"] = _rc.get("annual_returns", [])
         retornos_mensais["twr_real_brl_pct"] = _rc.get("twr_real_brl_pct")
@@ -5543,46 +5553,9 @@ def main():
             "note": "Drawdown real da carteira (histórico_carteira.csv). Benchmark: VWRA proxy (backtest shadowA).",
         }
 
-    # Período "medium": backtest completo (2019+)
-    _bt_d_m  = backtest.get("dates", [])
-    _bt_tg_m = backtest.get("target", [])
-    _bt_sh_m = backtest.get("shadowA", [])
-    if _bt_d_m and _bt_tg_m and _bt_sh_m and len(_bt_d_m) == len(_bt_tg_m):
-        _dd_periods["medium"] = {
-            "label": "Backtest 7a (2019+)",
-            "dates": _bt_d_m,
-            "dd_target_pct": _price_to_drawdown_pct(_bt_tg_m),
-            "dd_benchmark_pct": _price_to_drawdown_pct(_bt_sh_m),
-            "note": "Proxy backtest UCITS: AVGS/AVEM/SWRD (ago/2019–hoje). Target 50/30/20 vs VWRA.",
-        }
-
-    # Período "long": backtestR5 (2005+)
-    _r5_d  = backtest_r5.get("dates", [])
-    _r5_tg = backtest_r5.get("target", [])
-    _r5_sh = backtest_r5.get("shadowA", [])
-    if _r5_d and _r5_tg and _r5_sh and len(_r5_d) == len(_r5_tg):
-        _dd_periods["long"] = {
-            "label": "Backtest 21a (2005+)",
-            "dates": _r5_d,
-            "dd_target_pct": _price_to_drawdown_pct(_r5_tg),
-            "dd_benchmark_pct": _price_to_drawdown_pct(_r5_sh),
-            "note": "Série longa pré-UCITS: proxies FF5/MSCI (2005–hoje). Inclui GFC 2008.",
-        }
-
-    # Período "academic": backtest_r7 cumulative_returns (1995+)
-    _r7_cr    = (backtest_r7_data or {}).get("cumulative_returns", {})
-    _r7_cr_d  = _r7_cr.get("dates", [])
-    _r7_cr_tg = _r7_cr.get("target", [])
-    _r7_cr_bn = _r7_cr.get("bench", [])
-    if _r7_cr_d and _r7_cr_tg and _r7_cr_bn and len(_r7_cr_d) == len(_r7_cr_tg):
-        # R7 dates são "YYYY-MM-DD" — normalizar para "YYYY-MM"
-        _dd_periods["academic"] = {
-            "label": "Série Longa 31a (1995+)",
-            "dates": [d[:7] for d in _r7_cr_d],
-            "dd_target_pct": _price_to_drawdown_pct(_r7_cr_tg),
-            "dd_benchmark_pct": _price_to_drawdown_pct(_r7_cr_bn),
-            "note": "Série acadêmica 1995–2026 (proxies Fama-French + DFEMX). Inclui Dotcom, GFC, COVID.",
-        }
+    # medium, long, academic são deriváveis dos arrays backtest/backtestR5/backtest_r7 já no JSON.
+    # Computados em DrawdownExtendedChart.tsx para evitar duplicação de dados.
+    # (DEV-data-dedup: removidos do JSON, economiza ~17.9 KB / 7.7%)
 
     if _dd_periods:
         drawdown_extended_computed = {
