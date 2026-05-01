@@ -25,19 +25,24 @@ export function WithdrawalRateChart({ data }: Props) {
     const xData: string[] = [];
     const swrBruta: number[] = [];
     const swrLiquida: number[] = [];
+    const inssKatiaLine: (number | null)[] = [];
+    const inssDiegoLine: (number | null)[] = [];
 
     trilhaDatas.forEach((yr, i) => {
       const pat = p50[i];
       if (!pat) return;
       xData.push(String(yr));
 
-      // Gross SWR: full spending vs portfolio
       swrBruta.push(parseFloat(((spending / pat) * 100).toFixed(2)));
 
-      // INSS offset reduces net portfolio draw
-      const inss = (yr >= 2049 ? inssKatia : 0) + (yr >= 2052 ? inssDiego : 0);
-      const netSpend = Math.max(0, spending - inss);
+      const katia = yr >= 2049 ? inssKatia : 0;
+      const diego = yr >= 2052 ? inssDiego : 0;
+      const netSpend = Math.max(0, spending - katia - diego);
       swrLiquida.push(parseFloat(((netSpend / pat) * 100).toFixed(2)));
+
+      // INSS as % of portfolio — shows each stream's contribution to reducing the draw
+      inssKatiaLine.push(yr >= 2049 ? parseFloat(((inssKatia / pat) * 100).toFixed(2)) : null);
+      inssDiegoLine.push(yr >= 2052 ? parseFloat(((inssDiego / pat) * 100).toFixed(2)) : null);
     });
 
     const swrAtFire = swrBruta[trilhaDatas.indexOf(2040)] ?? swrBruta[0] ?? 0;
@@ -56,7 +61,7 @@ export function WithdrawalRateChart({ data }: Props) {
         },
       },
       legend: {
-        data: ['SWR Bruta', 'SWR Líquida (pós-INSS)'],
+        data: ['SWR Bruta', 'SWR Líquida (pós-INSS)', 'INSS Katia', 'INSS Diego'],
         textStyle: { color: EC.muted, fontSize: 10 },
         bottom: 0,
       },
@@ -106,6 +111,24 @@ export function WithdrawalRateChart({ data }: Props) {
           lineStyle: { color: EC.green, width: 2, type: 'dashed' },
           itemStyle: { color: EC.green },
           symbol: 'none',
+        },
+        {
+          name: 'INSS Katia',
+          type: 'line',
+          data: inssKatiaLine,
+          lineStyle: { color: EC.accent, width: 1.5, type: 'dotted' },
+          itemStyle: { color: EC.accent },
+          symbol: 'none',
+          connectNulls: false,
+        },
+        {
+          name: 'INSS Diego',
+          type: 'line',
+          data: inssDiegoLine,
+          lineStyle: { color: EC.muted, width: 1.5, type: 'dotted' },
+          itemStyle: { color: EC.muted },
+          symbol: 'none',
+          connectNulls: false,
         },
       ],
     };
