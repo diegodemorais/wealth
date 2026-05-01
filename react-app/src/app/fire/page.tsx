@@ -34,6 +34,7 @@ import { EC } from '@/utils/echarts-theme';
 import { BondPoolDepletionChart } from '@/components/charts/BondPoolDepletionChart';
 import { PostFireFanChart } from '@/components/charts/PostFireFanChart';
 import { SpendingTimelineChart } from '@/components/charts/SpendingTimelineChart';
+import { WithdrawalRateChart } from '@/components/charts/WithdrawalRateChart';
 
 
 export default function FirePage() {
@@ -1424,6 +1425,20 @@ export default function FirePage() {
           </CollapsibleSection>
         );
       })()}
+
+      {/* Withdrawal Rate + INSS Floor (FR-withdrawal-rate-chart) */}
+      {(data as any)?.trilha_p50 && (
+        <CollapsibleSection
+          id="section-withdrawal-rate"
+          title={secTitle('fire', 'withdrawal-rate', 'Withdrawal Rate — SWR pós-FIRE com piso INSS')}
+          defaultOpen={secOpen('fire', 'withdrawal-rate', false)}
+        >
+          <div style={{ padding: '0 16px 16px' }}>
+            <WithdrawalRateChart data={data as any} />
+            <div className="src">SWR bruta vs líquida pós-INSS · INSS Katia 2049 (R$93.6k) + Diego 2052 (R$18k) · Linha pontilhada = gatilho SWR {((data as any)?.premissas?.swr_gatilho ?? 0.03) * 100}%</div>
+          </div>
+        </CollapsibleSection>
+      )}
 
       {/* Spending Timeline — Gastos por ano 2040–2077 (FR-spending-timeline) */}
       {(data as any)?.spending_smile && (

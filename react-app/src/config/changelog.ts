@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-05-01T06:00:00-03:00', type: 'gráfico', component: 'WithdrawalRateChart', tab: 'fire', anchor: 'section-withdrawal-rate', de: 'SWR exibido apenas como número estático', para: 'FR-withdrawal-rate-chart: linha SWR bruta vs líquida (pós-INSS) 2038–2075 com gatilho 3% e marcadores INSS Katia (2049) e Diego (2052)' },
   { datetime: '2026-05-01T05:00:00-03:00', type: 'gráfico', component: 'SpendingTimelineChart', tab: 'fire', anchor: 'section-spending-timeline', de: 'Spending smile mostrava apenas 3 fases agregadas sem visão ano-a-ano', para: 'FR-spending-timeline: stacked bar chart anual 2040–2077 com Lifestyle + Saúde (VCMH), transições Go-Go/Slow-Go/No-Go marcadas' },
   { datetime: '2026-05-01T04:00:00-03:00', type: 'gráfico', component: 'PostFireFanChart', tab: 'fire', anchor: 'section-fan-chart-mc', de: 'P(FIRE) exibido apenas como número — sem visualização de trajetórias', para: 'FR-fan-chart-mc: fan chart P10/P50/P90 pós-FIRE com banda sombreada (2038–2075), trajetória real/projetada pré-FIRE, linhas de FIRE Day (2040) e FIRE Number' },
   { datetime: '2026-05-01T03:00:00-03:00', type: 'gráfico', component: 'BondPoolDepletionChart', tab: 'fire', anchor: 'section-bond-pool-depletion', de: 'Sem visualização de esgotamento do bond pool pós-FIRE', para: 'FR-bond-pool-tracker: projeção determinística 2040–2055 com saldo "Meta atingida" (R$1.72M) vs "Trajetória atual" — INSS reduz saque a partir de 2049 (Katia) e 2052 (Diego)' },
