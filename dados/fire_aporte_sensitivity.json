@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-05-01T15:40:00",
-  "_window_id": "20260501T154000",
+  "_generated": "2026-05-01T16:07:43",
+  "_window_id": "20260501T160743",
   "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
   "aportes_brl": [
     15000,
