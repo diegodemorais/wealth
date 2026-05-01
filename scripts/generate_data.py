@@ -3815,6 +3815,198 @@ def compute_correlation_stress(retornos_mensais_data: dict) -> dict | None:
     }
 
 
+# ─── DEV-risk-return-scatter: Retorno vs Risco por bucket ─────────────────────
+
+def compute_risk_return_by_bucket(backtest_data: dict, config_weights: dict) -> dict:
+    """Calcula CAGR nominal e volatilidade anualizada por bucket e período.
+
+    Usa yfinance via fetch_with_retry. Retorno nominal (sem deflação IPCA —
+    deflação real exigiria BCB série completa; nominal é suficiente para o scatter).
+    Fallback gracioso: bucket omitido no período se dados insuficientes.
+
+    Buckets: SWRD, AVGS, AVEM, RF_EST (IPCA+ proxy), RF_TAT (CDI proxy), CRYPTO.
+    Portfolio Total: métricas já em backtest.metrics_by_period.
+
+    Periods: 3y (2023-01), 5y (2021-01), since2020 (2020-01), since2013 (2013-01), all (2019-08).
+    """
+    import sys as _sys
+    try:
+        import yfinance as _yf
+        import numpy as _np
+        from fetch_utils import fetch_with_retry as _fwr
+    except ImportError as e:
+        print(f"  ⚠️ risk_return_scatter: import error {e}", file=_sys.stderr)
+        return {}
+
+    # Pesos no portfolio total (lidos de config — EQUITY_PCT × equity_weights + rf + cripto)
+    weights = {
+        "SWRD":    config_weights.get("SWRD", 0.395),
+        "AVGS":    config_weights.get("AVGS", 0.237),
+        "AVEM":    config_weights.get("AVEM", 0.158),
+        "RF_EST":  config_weights.get("IPCA", 0.150),
+        "RF_TAT":  config_weights.get("RF_TAT", 0.030),   # pool curto (ausente = ~3%)
+        "CRYPTO":  config_weights.get("HODL11", 0.030),
+        "TOTAL":   1.0,
+    }
+
+    bucket_meta = {
+        "SWRD":   {"label": "Equity Global",        "color_key": "accent",  "tickers": ["SWRD.L", "IVV"]},
+        "AVGS":   {"label": "Equity Dev. Value",     "color_key": "blue",    "tickers": ["AVGS.L", "AVUV"]},
+        "AVEM":   {"label": "Equity EM Value",       "color_key": "teal",    "tickers": ["AVEM", "EEM"]},
+        "RF_EST": {"label": "RF Estratégica",        "color_key": "green",   "tickers": []},  # sintética
+        "RF_TAT": {"label": "RF Tática",             "color_key": "yellow",  "tickers": []},  # sintética
+        "CRYPTO": {"label": "Crypto (HODL11/BTC)",   "color_key": "orange",  "tickers": ["BTC-USD"]},
+        "TOTAL":  {"label": "Carteira Total",        "color_key": "pink",    "tickers": []},  # de backtest
+    }
+
+    # Períodos (data início → chave no metrics_by_period)
+    periods = {
+        "3y":        "2023-01-01",
+        "5y":        "2021-01-01",
+        "since2020": "2020-01-01",
+        "since2013": "2013-01-01",
+        "all":       "2019-07-01",
+    }
+
+    def _download_monthly(tickers: list[str], start: str) -> "_pd.Series | None":
+        """Baixa série mensal (retornos) para lista de tickers (usa primeiro com dados suficientes)."""
+        import pandas as _pd
+        for tk in tickers:
+            cache_key = f"rrs_{tk}_{start[:7]}"
+            def _fetch(t=tk, s=start):
+                raw = _yf.download(t, start=s, auto_adjust=True, progress=False)
+                if raw.empty:
+                    return None
+                if isinstance(raw.columns, _pd.MultiIndex):
+                    close = raw["Close"].squeeze()
+                else:
+                    close = raw["Close"]
+                monthly = close.resample("ME").last().dropna()
+                if len(monthly) < 6:
+                    return None
+                rets = monthly.pct_change().dropna()
+                return rets.tolist(), [str(d.date()) for d in rets.index]
+            result = _fwr(fn=_fetch, fallback=None, retries=2,
+                          cache_key=cache_key, cache_ttl_h=24)
+            if result is not None:
+                rets_list, dates_list = result
+                import pandas as _pd2
+                s = _pd2.Series(rets_list,
+                                index=_pd2.to_datetime(dates_list),
+                                name=tk)
+                return s
+        return None
+
+    def _metrics(rets: "_pd.Series") -> dict | None:
+        """Calcula CAGR nominal e vol anualizada (%)."""
+        import numpy as _np2
+        n = len(rets)
+        if n < 6:
+            return None
+        n_anos = n / 12
+        total = (1 + rets).prod()
+        if total <= 0:
+            return None
+        cagr_pct = round((total ** (1 / n_anos) - 1) * 100, 2)
+        vol_pct = round(float(rets.std() * _np2.sqrt(12) * 100), 2)
+        sharpe = round(cagr_pct / vol_pct, 2) if vol_pct > 0 else None
+        return {"twr": cagr_pct, "vol": vol_pct, "sharpe": sharpe}
+
+    # Baixar séries completas (máximo histórico) — filtrar por período depois
+    # Períodos mais longos usam proxies diferentes; usamos o mesmo ticker para simplicidade
+    _series_cache: dict = {}
+
+    def _get_series(bucket: str) -> "_pd.Series | None":
+        if bucket in _series_cache:
+            return _series_cache[bucket]
+        meta = bucket_meta[bucket]
+        if not meta["tickers"]:
+            _series_cache[bucket] = None
+            return None
+        # Baixar desde 2012 para cobrir todos os períodos
+        s = _download_monthly(meta["tickers"], start="2012-01-01")
+        _series_cache[bucket] = s
+        return s
+
+    # Série sintética RF Estratégica: CAGR fixo por período com vol estimada
+    # Proxy: IPCA+ taxa histórica (~8-12% nominal, vol ~4%) — sem yfinance disponível
+    # Fallback: retorno constante = taxa_ipca_plus_nominal_estimada com vol=4
+    def _rf_est_metrics() -> dict:
+        # Premissa conservadora: retorno nominal ~11% (IPCA 6%+5% real) vol 4%
+        return {"twr": 11.0, "vol": 4.0, "sharpe": round(11.0 / 4.0, 2)}
+
+    def _rf_tat_metrics() -> dict:
+        # CDI proxy: retorno nominal ~13% vol 0.5%
+        return {"twr": 13.5, "vol": 0.5, "sharpe": round(13.5 / 0.5, 2)}
+
+    result: dict = {}
+
+    for period_key, start_date in periods.items():
+        period_result: dict = {}
+        import pandas as _pd
+
+        for bucket in ["SWRD", "AVGS", "AVEM", "CRYPTO", "RF_EST", "RF_TAT", "TOTAL"]:
+            try:
+                meta = bucket_meta[bucket]
+                w = round(weights.get(bucket, 0.0) * 100, 1)
+
+                if bucket == "TOTAL":
+                    # Usar metrics_by_period do backtest
+                    mbp = backtest_data.get("metrics_by_period", {})
+                    pm = mbp.get(period_key, {}).get("target")
+                    if pm is None:
+                        continue
+                    period_result["TOTAL"] = {
+                        "twr":    pm.get("cagr"),
+                        "vol":    pm.get("vol"),
+                        "sharpe": pm.get("sharpe"),
+                        "label":  meta["label"],
+                        "weight": w,
+                        "color_key": meta["color_key"],
+                    }
+                    continue
+
+                if bucket == "RF_EST":
+                    m = _rf_est_metrics()
+                    period_result["RF_EST"] = {**m, "label": meta["label"], "weight": w, "color_key": meta["color_key"]}
+                    continue
+
+                if bucket == "RF_TAT":
+                    m = _rf_tat_metrics()
+                    period_result["RF_TAT"] = {**m, "label": meta["label"], "weight": w, "color_key": meta["color_key"]}
+                    continue
+
+                series = _get_series(bucket)
+                if series is None:
+                    continue
+
+                # Filtrar pelo período
+                start_ts = _pd.Timestamp(start_date)
+                filtered = series[series.index >= start_ts]
+                if len(filtered) < 6:
+                    continue
+
+                m = _metrics(filtered)
+                if m is None:
+                    continue
+
+                period_result[bucket] = {
+                    **m,
+                    "label":     meta["label"],
+                    "weight":    w,
+                    "color_key": meta["color_key"],
+                }
+
+            except Exception as e:
+                print(f"  ⚠️ risk_return_scatter: bucket={bucket} period={period_key}: {e}", file=_sys.stderr)
+
+        if period_result:
+            result[period_key] = period_result
+
+    print(f"  ✓ risk_return_scatter: {list(result.keys())} períodos × {len(result.get('5y', {}))} buckets")
+    return result
+
+
 # ─── Gap U: Factor Value Spread (AQR HML Devil + KF SMB) ─────────────────────
 def get_factor_value_spread() -> dict | None:
     """Carrega factor value spread de factor_cache.json ou computa via market_data.
@@ -6002,6 +6194,23 @@ def main():
     assert data.get("correlation_stress") is not None, \
         "correlation_stress missing — retornos_mensais insuficiente"
     print(f"  ✓ Gap P correlation_stress: n_stress={correlation_stress.get('n_stress_months')} meses | equity-RF normal={correlation_stress.get('correlacoes_normais', {}).get('equity_rf')}")
+
+    # DEV-risk-return-scatter: Retorno vs Risco por classe de ativos
+    # Non-blocking: se yfinance falhar, exporta {} (React trata gracefully via null check)
+    _rrs_config_weights = {
+        "SWRD":   PESOS_TARGET.get("SWRD",   0.395),
+        "AVGS":   PESOS_TARGET.get("AVGS",   0.237),
+        "AVEM":   PESOS_TARGET.get("AVEM",   0.158),
+        "IPCA":   PESOS_TARGET.get("IPCA",   0.150),
+        "HODL11": PESOS_TARGET.get("HODL11", 0.030),
+    }
+    _rrs_backtest = data.get("backtest", {})
+    try:
+        _rrs = compute_risk_return_by_bucket(_rrs_backtest, _rrs_config_weights)
+        data["risk_return_scatter"] = _rrs if _rrs else None
+    except Exception as _rrs_e:
+        print(f"  ⚠️ risk_return_scatter: falhou ({_rrs_e}) — continuando sem scatter")
+        data["risk_return_scatter"] = None
 
     # Gap U: Factor Value Spread (AQR HML Devil + KF SMB)
     # Non-blocking: se falhar, exporta None (componente React trata gracefully)
