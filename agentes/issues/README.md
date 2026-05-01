@@ -39,6 +39,11 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
+| FR-fan-chart-mc | Fan Chart P10/P50/P90 — Trajetórias MC | Dev | 🔴 Alta | HD-projection-lab-audit concluída |
+| FR-bond-pool-tracker | Bond Pool Depletion Tracker (2040–2047) | Dev | 🔴 Alta | HD-projection-lab-audit concluída |
+| FR-spending-timeline | Spending por Componente ao Longo do Tempo | Dev | 🟡 Média | FR-spending-smile, FR-guardrails-categoria-elasticidade |
+| FR-withdrawal-rate-chart | Withdrawal Rate ao Longo do Tempo + INSS Floor | Dev | 🟡 Média | HD-projection-lab-audit concluída |
+| FR-networth-overlay | Historical Net Worth Overlay (Real vs Projeção P50) | Dev | 🟡 Média | HD-projection-lab-audit concluída |
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
 
 ### Done — Últimas Issues Concluídas
