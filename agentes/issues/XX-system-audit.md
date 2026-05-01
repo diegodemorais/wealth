@@ -75,7 +75,33 @@ Auditoria arquitetural completa do sistema de dados e dashboard, cobrindo:
 - [ ] Tratar consultas externas uniformemente: wrapper com retry, cache TTL, fallback explícito
 - [ ] Documentar TTL de cache para cada fonte externa
 
-### Fase 5 — Limpeza (Dev)
+### Fase 5 — Integrações externas (Arquiteto + Dev)
+
+Analisar todas as integrações do sistema com serviços externos e como estruturá-las:
+
+**Inventário de integrações existentes:**
+- [ ] **yfinance** — preços ETFs, câmbio BRL/USD, AUM. Onde é chamado? Direto em vários scripts ou centralizado?
+- [ ] **pyield / ANBIMA** — taxas IPCA+, Renda+. Encapsulado em `market_data.py`?
+- [ ] **python-bcb** — PTAX, Selic, IPCA, Focus. Centralizado em `fx_utils.py`?
+- [ ] **fredapi** — Fed Funds, Treasury, VIX, CDS. Onde vive?
+- [ ] **IBKR Flex** — posições, lotes FIFO, IR. `ibkr_lotes.py` é a única porta?
+- [ ] **Binance** — cripto legado. Qual script? Ainda ativo?
+- [ ] **Google Sheets** (gws) — Carteira Viva. É usado no pipeline automático ou só manual?
+- [ ] **XP / Nubank** — extratos TD, holdings. Arquivos locais ou API?
+
+**Análise arquitetural das integrações:**
+- [ ] Cada integração tem: retry? timeout? cache com TTL explícito? fallback documentado?
+- [ ] Existe camada de abstração (ex: `market_data.py`)? Está sendo usada consistentemente ou há chamadas diretas espalhadas?
+- [ ] Qual é o modelo de falha de cada integração? Silencioso ou barulhento?
+- [ ] Há dependências circulares entre integrações (ex: câmbio depende de posições que dependem de câmbio)?
+
+**Proposta de estrutura:**
+- [ ] Definir: as integrações devem estar centralizadas num único módulo (`integrations/`) ou o padrão atual (por domínio em scripts separados) é suficiente?
+- [ ] Padrão recomendado para nova integração: template com retry, cache, fallback, logging
+- [ ] Documentar em `scripts/RUNBOOK.md` a seção "Integrações: o que fazer quando X cai"
+- [ ] Avaliar: faz sentido ter um `integration_health.py` que testa cada integração e reporta status? (útil para debugging e monitoramento)
+
+### Fase 6 — Limpeza (Dev)
 - [ ] Identificar scripts legados que podem ser removidos ou arquivados
 - [ ] Verificar funções duplicadas entre scripts Python
 - [ ] Checar imports não-utilizados e dead code em `generate_data.py`
