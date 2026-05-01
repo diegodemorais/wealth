@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-05-01T13:00:00Z', type: 'cálculo', component: 'DrawdownExtendedChart', tab: 'backtest', anchor: 'section-drawdown-extended', de: 'periods.{medium,long,academic} computados no pipeline e armazenados no JSON (~17.9 KB)', para: 'Derivados em TypeScript via computeDrawdownFromPrices() a partir dos arrays backtest/backtestR5/backtest_r7 já presentes no JSON; só periods.real permanece no JSON (DEV-data-dedup)' },
   { datetime: '2026-05-01T12:20:00Z', type: 'fix', component: 'FireSimuladorSection', tab: 'simulators', anchor: 'section-critical', de: 'Botão Aspiracional forçava fireCond=solteiro e apagava perfil familiar; isAspirPreset = solteiro&&fav (frágil)', para: 'FireMkt inclui aspiracional dedicado; setFire50Preset preserva fireCond; isAspirPreset = fireMkt===aspiracional; 20 testes novos' },
   { datetime: '2026-05-01T12:10:00Z', type: 'layout', component: 'ScenarioCompareCards', tab: 'fire', anchor: 'section-scenario-compare-cards', de: '3 colunas: BASE/FAVORÁVEL/ASPIRACIONAL', para: '4 colunas: SOLTEIRO/CASADO/FILHO/ASPIR — P(Quality) de p_quality_matrix.B, gastos familiares canônicos (270k/300k)' },
   { datetime: '2026-05-01T11:00:00Z', type: 'gráfico', component: 'OverlapChart', tab: 'portfolio', anchor: 'section-overlap', de: 'Sem visualização de overlap entre ETFs', para: 'Horizontal stacked bar: top holdings compartilhados entre SWRD/AVGS/AVEM com peso consolidado na carteira' },
