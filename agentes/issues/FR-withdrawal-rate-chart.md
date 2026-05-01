@@ -6,12 +6,12 @@
 |-------|-------|
 | **ID** | FR-withdrawal-rate-chart |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Dev (implementação), FIRE (spec) |
 | **Criado em** | 2026-05-01 |
 | **Origem** | HD-projection-lab-audit — gap P2 (Withdrawal Rate visualization no PL) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-05-01 |
 
 ---
 

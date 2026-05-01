@@ -39,17 +39,17 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
-| FR-fan-chart-mc | Fan Chart P10/P50/P90 — Trajetórias MC | Dev | 🔴 Alta | HD-projection-lab-audit concluída |
-| FR-bond-pool-tracker | Bond Pool Depletion Tracker (2040–2047) | Dev | 🔴 Alta | HD-projection-lab-audit concluída |
-| FR-spending-timeline | Spending por Componente ao Longo do Tempo | Dev | 🟡 Média | FR-spending-smile, FR-guardrails-categoria-elasticidade |
-| FR-withdrawal-rate-chart | Withdrawal Rate ao Longo do Tempo + INSS Floor | Dev | 🟡 Média | HD-projection-lab-audit concluída |
-| FR-networth-overlay | Historical Net Worth Overlay (Real vs Projeção P50) | Dev | 🟡 Média | HD-projection-lab-audit concluída |
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
 
 ### Done — Últimas Issues Concluídas
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| FR-fan-chart-mc | Fan Chart P10/P50/P90 — Trajetórias MC | 2026-05-01 | PostFireFanChart: banda P10–P90 (2038–2075), trajetória pré-FIRE verde, P50 accent, linhas FIRE Day 2040 e FIRE Number. Dados trilha_p10/p50/p90 do data.json (zero pipeline changes). |
+| FR-bond-pool-tracker | Bond Pool Depletion Tracker (2040–2055) | 2026-05-01 | BondPoolDepletionChart: projeção determinística saldo pool. Taxa 5.34% real (retorno_rf_real_bond_pool). INSS Katia 2049 + Diego 2052 reduzem saque. Meta vs Trajetória atual. |
+| FR-spending-timeline | Spending Timeline — Gastos anuais por componente | 2026-05-01 | SpendingTimelineChart: stacked bar anual 2040–2077. Lifestyle + Saúde (VCMH). Transições Go-Go/Slow-Go/No-Go marcadas. |
+| FR-withdrawal-rate-chart | Withdrawal Rate + INSS Floor | 2026-05-01 | WithdrawalRateChart: SWR bruta vs líquida pós-INSS (2038–2075). Gatilho 3% pontilhado vermelho. Marcadores INSS 2049 e 2052. |
+| FR-networth-overlay | Historical Net Worth Overlay (Real vs Projeção P50) | 2026-05-01 | Fechado como já implementado: TrackingFireChart (section-tracking-fire) já sobrepõe fire_trilha real com bandas P10/P90. Nenhum novo componente necessário. |
 | HD-projection-lab-audit | Auditoria Projection Lab vs Dashboard Diego | 2026-05-01 | PL inferior em 7 dimensões (sem BR, sem guardrails risk-based, mono-moeda). 5 features priorizadas: fan chart P10/P50/P90, bond pool tracker, spending por componente, withdrawal rate, histórico overlay. |
 | DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | 2026-04-30 | ECharts strict typing (CallbackDataParams), dead code removal, usePageData migration. Build ✅ 669 testes. |
 | DEV-qa-improvements | Implementar Melhorias QA — Fases 1+2 | 2026-04-30 | Privacy regression (••%), dcaItems validation, PerformanceSummary privacy mode. 40/40 test files, 669 testes. Fase 3 (BX) → backlog baixo. |

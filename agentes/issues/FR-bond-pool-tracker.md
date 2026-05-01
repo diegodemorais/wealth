@@ -6,12 +6,12 @@
 |-------|-------|
 | **ID** | FR-bond-pool-tracker |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | 🔴 Alta |
 | **Participantes** | Dev (implementação), FIRE (spec) |
 | **Criado em** | 2026-05-01 |
 | **Origem** | HD-projection-lab-audit — gap Diego-specific sem equivalente no PL |
-| **Concluido em** | — |
+| **Concluido em** | 2026-05-01 |
 
 ---
 
