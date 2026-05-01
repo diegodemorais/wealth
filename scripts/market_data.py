@@ -30,6 +30,18 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 sys.path.insert(0, str(Path(__file__).parent))
 
+# fetch_with_retry — retry exponencial + cache (XX-system-audit Item 2)
+try:
+    from fetch_utils import fetch_with_retry as _fetch_with_retry
+except ImportError:
+    def _fetch_with_retry(fn, fallback=None, retries=3, cache_key=None, cache_ttl_h=4):
+        try:
+            return fn()
+        except Exception:
+            if fallback is not None:
+                return fallback
+            raise
+
 
 def macro_br() -> dict:
     """Dados macro Brasil via python-bcb (fonte canônica)."""
@@ -141,10 +153,17 @@ def tesouro() -> dict:
         import pyield as yd
         today = date.today()
 
-        # ANBIMA NTN-B rates
+        # ANBIMA NTN-B rates — fetch_with_retry para retry exponencial + cache 24h
+        def _fetch_ntnb():
+            result = yd.anbima.tpf(today, "NTN-B")
+            if result is None:
+                raise ValueError("pyield retornou None para NTN-B")
+            return result
+
         ntnb_data = []
         try:
-            ntnb = yd.anbima.tpf(today, "NTN-B")
+            ntnb = _fetch_with_retry(fn=_fetch_ntnb, fallback=None, retries=3,
+                                     cache_key="anbima_ntnb", cache_ttl_h=24)
             if ntnb is not None:
                 for row in ntnb.iter_rows(named=True):
                     venc = row.get("data_vencimento") or row.get("vencimento")
@@ -158,9 +177,16 @@ def tesouro() -> dict:
             ntnb_data = [{"error": str(e)}]
 
         # NTN-B Principal (Renda+)
+        def _fetch_ntnbp():
+            result = yd.anbima.tpf(today, "NTN-B Principal")
+            if result is None:
+                raise ValueError("pyield retornou None para NTN-B Principal")
+            return result
+
         ntnbp_data = []
         try:
-            ntnbp = yd.anbima.tpf(today, "NTN-B Principal")
+            ntnbp = _fetch_with_retry(fn=_fetch_ntnbp, fallback=None, retries=3,
+                                      cache_key="anbima_ntnb_principal", cache_ttl_h=24)
             if ntnbp is not None:
                 for row in ntnbp.iter_rows(named=True):
                     venc = row.get("data_vencimento") or row.get("vencimento")
