@@ -72,7 +72,19 @@ Veredictos: separar **dado** (fato verificável) de **interpretação** (inferê
 
 ## Issues
 
-"Issue" = `agentes/issues/{ID}.md` + board `agentes/issues/README.md`. Nunca GitHub Issues.
+## Issues
+
+**Fonte única de verdade: `agentes/issues/README.md`** — é o board completo.
+Arquivos `.md` em `agentes/issues/` são specs de suporte; issues concluídas vão para `archive/`.
+
+| Ação | Regra |
+|------|-------|
+| Ver board | Ler só `README.md` — nunca escanear a pasta inteira |
+| Abrir issue | 1) Criar `{ID}.md` · 2) Adicionar linha no README.md (mesma operação) |
+| Concluir issue | 1) Mover linha para Done no README.md · 2) `mv {ID}.md archive/` |
+| Duplicatas | Proibido — checar README.md antes de criar |
+
+Nunca GitHub Issues.
 
 ## Dados em tempo real
 

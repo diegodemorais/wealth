@@ -1,13 +1,22 @@
 # Issues — Carteira Diego
 
-## Modos Operandi
+> **FONTE ÚNICA DE VERDADE.**
+> Este arquivo é o board completo. Nenhuma issue existe fora dele.
+> Arquivos `.md` aqui são specs de suporte — a issue vive no board, não no arquivo.
+> Issues concluídas: `archive/`. Nada mais existe no root desta pasta.
 
-| Modo | Descricao | Quando |
-|------|-----------|--------|
-| **Conversa** | Livre, exploratorio. Head roteia e sintetiza | Modo padrao |
-| **Issue** | Formal, estruturado, com conclusao obrigatoria | Temas que merecem profundidade |
+---
 
-Conversas podem gerar Issues. O Head deve sugerir proativamente.
+## Protocolo
+
+| Ação | Como |
+|------|------|
+| **Abrir issue** | 1) Criar `{ID}.md` em `agentes/issues/` · 2) Adicionar linha no board (Discovery ou Backlog) |
+| **Mover status** | Editar APENAS este README — mover linha entre seções |
+| **Concluir issue** | 1) Mover linha para Done neste README · 2) `mv {ID}.md archive/` |
+| **Ler o board** | Ler APENAS este README — nunca escanear a pasta inteira |
+
+**Agentes**: ao criar ou fechar issue, atualizar ESTE arquivo na mesma operação. Sem exceções.
 
 ---
 
@@ -32,6 +41,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
+
+(vazio)
+
 ### Blocked
 > Issues aguardando dependências externas
 
@@ -40,174 +52,108 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Backlog
 > Issues prontas para execução, aguardando vez
 
-| ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
-|----|--------|------|------------|----------|
+| ID | Titulo | Dono | Prioridade | Dependências |
+|----|--------|------|------------|--------------|
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
 | DEV-pipeline-gaps-p2 | Pipeline Gaps P2 — spendingSensibilidade, p_quality_aspiracional, fetch_with_retry | Dev | 🟡 Média | — |
 | DEV-sector-exposure | Sector Exposure Bottom-Up — GICS por ETF | Dev | 🟢 Baixa | Mesma fonte que overlap |
 | DEV-efficient-frontier | Fronteira Eficiente de Markowitz | Dev | 🟢 Baixa | scipy disponível |
 
-### Done — Últimas Issues Concluídas
+### Done
+> Issues concluídas. Arquivos movidos para `archive/`.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
-| DEV-overlap-detection | Overlap Detection ETFs — SWRD/AVGS/AVEM | 2026-05-01 | OverlapChart: horizontal stacked bar com top holdings compartilhados. Dados proxy sintéticos baseados em MSCI World. Pipeline inline em generate_data.py. CSVs reais dos emissores pendentes (futura integração). |
-| XX-system-audit | Auditoria Sistêmica Completa — Pipeline, Scripts, Dashboard, Arquitetura | 2026-05-01 | 12+ problemas estruturais identificados e corrigidos: assertions P0/P1, RUNBOOK.md com DAG, NakedIntegrationDetector, retry padronizado, fetch_utils.py, reconstruct_shadows.py, warnings explícitos para gaps P2/P3 (spendingSensibilidade, p_quality_aspiracional). Backlog documentado em generate_data.py. |
-| DEV-style-box | Style Box 3×3 via Factor Loadings | 2026-05-01 | StyleBoxChart implementado: grade Value/Blend/Growth × Small/Mid/Large, dots SWRD/AVGS/AVEM/Portfolio, AVGS composite on-the-fly. |
-| DEV-risk-return-scatter | Gráfico Retorno vs. Risco por Classe de Ativos | 2026-05-01 | RiskReturnScatter: bubble chart por bucket (SWRD/AVGS/AVEM/RF/Crypto/Total), seletores com marcos históricos (Pós-COVID/Pós-Euro/Pós-GFC/Máximo/5a/3a), linha Sharpe=0.5, legenda flex, anti-overlap labelLayout. |
-| FR-fan-chart-mc | Fan Chart P10/P50/P90 — Trajetórias MC | 2026-05-01 | PostFireFanChart: banda P10–P90 (2038–2075), trajetória pré-FIRE verde, P50 accent, linhas FIRE Day 2040 e FIRE Number. Dados trilha_p10/p50/p90 do data.json (zero pipeline changes). |
-| FR-bond-pool-tracker | Bond Pool Depletion Tracker (2040–2055) | 2026-05-01 | BondPoolDepletionChart: projeção determinística saldo pool. Taxa 5.34% real (retorno_rf_real_bond_pool). INSS Katia 2049 + Diego 2052 reduzem saque. Meta vs Trajetória atual. |
-| FR-spending-timeline | Spending Timeline — Gastos anuais por componente | 2026-05-01 | SpendingTimelineChart: stacked bar anual 2040–2077. Lifestyle + Saúde (VCMH). Transições Go-Go/Slow-Go/No-Go marcadas. |
-| FR-withdrawal-rate-chart | Withdrawal Rate + INSS Floor | 2026-05-01 | WithdrawalRateChart: SWR bruta vs líquida pós-INSS (2038–2075). Gatilho 3% pontilhado vermelho. Marcadores INSS 2049 e 2052. |
-| FR-networth-overlay | Historical Net Worth Overlay (Real vs Projeção P50) | 2026-05-01 | Fechado como já implementado: TrackingFireChart (section-tracking-fire) já sobrepõe fire_trilha real com bandas P10/P90. Nenhum novo componente necessário. |
-| HD-projection-lab-audit | Auditoria Projection Lab vs Dashboard Diego | 2026-05-01 | PL inferior em 7 dimensões (sem BR, sem guardrails risk-based, mono-moeda). 5 features priorizadas: fan chart P10/P50/P90, bond pool tracker, spending por componente, withdrawal rate, histórico overlay. |
-| DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | 2026-04-30 | ECharts strict typing (CallbackDataParams), dead code removal, usePageData migration. Build ✅ 669 testes. |
-| DEV-qa-improvements | Implementar Melhorias QA — Fases 1+2 | 2026-04-30 | Privacy regression (••%), dcaItems validation, PerformanceSummary privacy mode. 40/40 test files, 669 testes. Fase 3 (BX) → backlog baixo. |
-| DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | 2026-04-30 | ECharts privacy gaps auditados e corrigidos. useEChartsPrivacy() aplicado onde faltava. |
-| FR-audit-p2-improvements | P2 Melhorias — 40 itens em 3 clusters (labels, métricas analíticas, UX) | 2026-04-30 | Todos os 40 itens P2 endereçados. |
-| FR-audit-p1-missing | P1 Info Crítica — 12/13 gaps implementados (G4 spending smile aguarda spec) | 2026-04-30 | G1-G3, G5-G13: AUM alert, P(FIRE) cenários, NTN-B history, bond pool progress, TER+AUM HoldingsTable, guardrail strip, IPCA+ slider. G4 (spending smile) → aguarda spec FIRE. |
-| DEV-iifpt-dashboard | Dashboard IIFPT: Radar, Regime Badge, Gap Note, Pipeline | 2026-04-30 | CC1: priority_matrix + domain_coverage + regime_vida em data.json. DC1: IifptRadar (ECharts Radar 6 eixos, RM/Est em vermelho). DC2: badge "Acumulação · r3 ~2034" no NOW tab. DC3: nota "RM ❌ Est ⏳ não modelados" no KpiHero. 664 testes ✅. Dashboard v1.202.2. |
-| HD-iifpt-integration | Aplicação do Framework IIFPT à Carteira de Diego | 2026-04-30 | Λ calibrado: Inv 0.35/Ret 0.25/Tax 0.18/CF 0.10/RM 0.07/Est 0.05. Driver Tax↔Inv (46.8%). Gap RM confirmado. Regime r2, trigger r3 ~2034. CC2 config.py. Coupling reference. Integration premium ~7.8% NW midpoint. Spec Dev → DEV-iifpt-dashboard. |
-| QA-test-plan-audit | Auditoria e Melhoria dos Planos de Teste | 2026-04-30 | Auditoria completa: 3 gaps críticos (CR-1 ••% masking, CR-2 assertions falsas, CR-3 E2E ineficaz), 4 médios, 3 baixos. Plano 3 fases documentado. Backlog implementação → DEV-qa-improvements. |
-| ARCH-audit | Auditoria de Arquitetura do Dashboard React | 2026-04-30 | 6 categorias auditadas (file structure, data flow, type safety, ECharts, privacy, performance). 1 bug crítico corrigido (CSS vars em canvas ECharts). Backlog P1/P2/P3 gerado → DEV-arch-fixes. |
-| HD-gaps-aposenteaos40-spec | Coast FIRE + FIRE Spectrum + brFIRESim | 2026-04-30 | 3 features implementadas: CoastFireCard (R$5.15M coast number, ano 2029), FireSpectrumWidget (4 bandas Fat/FIRE/Lean/Barista, Diego em Barista 167x), BRFireSimSection (4 ciclos 20a, SWR 3-6% → 4/4, SWR 8% → 2/4). Quant validated. Build ✅ |
-| HD-benchmark-aposenteaos40 | Benchmark vs lab.aposenteaos40.org | 2026-04-30 | Mapeamento completo das 7 ferramentas (brFIRESim, MC, Coast FIRE, Backtest multi-carteira, Meu IPCA, Fronteira Eficiente, PIP) e conteúdo educacional (TSR BR, Termômetro FIRE 4 bandas, Anuário FIRE). Top gaps: Meu IPCA pessoal, brFIRESim por ciclos históricos, Thermometer bands, heatmap retornos anuais, Coast FIRE calculator. |
-| FR-mc-bond-pool-partial-isolation | Bond Pool Partial Isolation no MC FIRE | 2026-04-29 | Isolation gradual/proporcional: vol e guardrails proporcionais à fração de cobertura do bucket (atual: 24%). enabled=True sempre que posição > 0. Badge distingue partial/full/zero. P(quality) mais preciso durante acumulação. 18 testes. Dashboard v1.161.0. |
-| FR-mc-bond-pool-isolation | Bond Pool Isolation Real no MC FIRE | 2026-04-29 | vol=0 + guardrails suprimidos anos 0-6 quando isolation ativa. compute_bond_pool_status() automático. Estado: 24% completo, isolation inativa (ativa ao atingir R$416k). p_quality_proxy preservado. Badge dashboard. 17 testes. Fase 4: TD 2040 → Selic se FIRE atrasa. Dashboard v1.160.0. |
-| FR-pquality-recalibration | Recalibração e Expansão do P(quality) | 2026-04-29 | Critério B (≤1 ano ruim go-go) como default. PQualityMatrix 5×3×3. P(quality) adicionado em KpiHero, FireScenariosTable, Simuladores. 95/95 Playwright. Dashboard v1.156.1. Issue derivada: FR-mc-bond-pool-isolation. |
-| FR-regime-switching-model | Regime Switching no MC FIRE | 2026-04-29 | Debate 4 agentes. Delta P(FIRE) revisado: -3 a +2pp (não -5 a -8pp). Nenhuma das 5 decisões muda. Veredicto: NÃO implementar — limitação conhecida documentada. P(quality) frágil (~56-62% com regime). Reabertura condicional a evidência out-of-sample. |
-| FR-pfire-model-robustness | Auditoria de Robustez do Modelo P(FIRE) | 2026-04-29 | 9 críticas ChatGPT avaliadas por FIRE+Quant+FC+Advocate. RF arithmetic bug 6.0%→5.34%. P(FIRE) base: 84.1%→83.7%. Intervalo modelo 72-92% exibido no dashboard. Sub-issue FR-regime-switching-model aberta. 323/323 spec, 28/28 Playwright. |
-| FR-saude-modelo-custo | Auditoria Modelo de Custo de Saúde no MC | 2026-04-29 | VCMH 5%→3.5%, SAUDE_DECAY 50%→15%. P(FIRE) base: 79.0%→84.1%, fav: 87.9%→91.4%, stress: 73.3%→79.0%. Debate FIRE+Quant+FC. Arquiteto: zero hardcoding. 323/323 spec. Dashboard v1.136.1. FR-saude-decay absorvida. |
-| HD-pfire-consistencia-modelo | Consistência e Correção do Modelo P(FIRE) | 2026-04-29 | Debate 4 agentes (FIRE·Quant·FC·Advocate). Veredicto: ACEITAR 79.0% — correção de erro real (saúde comprimida no floor era premissa errada). by_profile re-rodado. 5 arquivos propagados. Dashboard v1.134.0. Issue FR-saude-decay-nogo-phase aberta. |
-| FR-guardrails-categoria-elasticidade | Separar Saúde de Lifestyle nos Guardrails MC | 2026-04-28 | Saúde inelástica separada dos guardrails MC. P(FIRE): 86.4%→79.0% (correção correta). P(quality)=64.3% (N=10k) / 81.4% (condicional). piso dinâmico 80% do target da fase. Widget Gap T em Assumptions tab. 323/323 spec fields, 563 testes ✅. |
-| HD-dashboard-gaps-tier2 | Dashboard Gaps Tier 2 — Novos Cálculos no Pipeline | 2026-04-28 | 8/8 gaps L-S implementados. Pipeline: spending_ceiling, pfire_sensitivity, bond_pool, vol_realizada, correlation_stress, breakeven_ipca_selic, retorno_decomposicao, renda_plus_mtm. 8 Playwright tests ✅. Dashboard v1.94.0. |
-| HD-dashboard-gaps-tier1 | Dashboard Gaps Tier 1 — Quick Wins | 2026-04-28 | 10/11 gaps implementados. A: balanço holístico. B: CDS semáforo. C: P(FIRE) líquido 85.3% corrigido. D: Renda+ DCA widget. E: testid exposicao-geografica. F: renda floor Katia. G: FIRE Number com progress bar. H: factor drought counter. J: drawdown context banner. K: IPS summary card. Gap I (estate tax) → Tier 2 (dado null). 73 Playwright testes ✅. |
-| HD-risco-portfolio | Mapeamento Completo de Risco do Portfolio | 2026-04-27 | 7-agent audit: Risk Score 7.7/10 "Agressivo-Moderado". Bug drawdown corrigido (-14.74%→-30.27% real). 6 blocos R1-R6 implementados (gauge, semáforos, contribution, duration scenarios, drawdown monitor, SoRR). CLAUDE.md invariant expandido para todos os scripts. |
-| HD-pipeline-observabilidade | Observabilidade, Automação e Cobertura do Pipeline | 2026-04-27 | Fase 1+2 concluídas: staleness badge, IBKR sync, sync_spec.py, check_gatilhos.py, data.json archive, 6 E2E tests, +3 Playwright assertions. Cobertura spec 1→4/68. |
-| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration & Invariants | 2026-04-27 | 7/7 invariants implementados. PIPELINE_PHASES DAG, 5 prohibition tests, pipeline_archive.py (7-day rollback). _window_id sync, SnapshotValidator, SSOT validation, CLAUDE.md cascade com scripts/CLAUDE.md. |
-| IBKR-PHASE-3B | Phase 3b — IBKR Data Integration & Remaining Audit Items | 2026-04-27 | Blocker1: realized_pnl.json FIFO+Flex 53 trades USD 26k. Blocker2: corr 33% chart. Blocker3: stagflation 17.1%/hyperinflation 0.0% MC. DARF panel ✅. Score ~10.0/10. |
-| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation & Dashboard Integration | 2026-04-27 | generate_data.py completo. pfire_base.source="mc", is_canonical=true. 563/563 testes. IR diferido R$169k, factor_signal populado. |
-| HD-ARCHITECT-P4 | Auto-Fix Suggestion Engine | 2026-04-27 | SuggestionEngine + --fix CLI. ast.Num bug fixed. Zero violations. 6 scripts refatorados, withdrawal_engine constants extraídas. |
-| HD-ARCHITECT | Guardião de Arquitetura & Centralizations | 2026-04-27 | P0–P4 completos. Zero hardcoding violations. Scanner, whitelist, config.py, 10+ scripts atualizados. |
-| HD-ARCHITECT-P3 | Refactor 323 Hardcoding Violations | 2026-04-27 | 323 violations refactored, zero remaining. Estate tax centralizado. React constants → data.json. |
-| HD-ARCHITECT-P2 | Advanced Hardcoding Detection — AST + Grep | 2026-04-27 | 323 violations detectadas via AST + grep. CI pre-check carteira_params.json integrado. |
-| HD-ARCHITECT-P0P1 | Implementação P0 & P1 — Automação + Validação | 2026-04-27 | P0 concluído, P1 pronto. Automação + validação implementados. |
-| DEV-semantic-test-coverage | Semantic tests + data-testid | 2026-04-27 | 9 data-testids, semantic-smoke.spec.ts (9 testes Playwright), pipeline assertions, checklist CLAUDE.md |
-
-### Done — Últimos Componentes Alterados (Dashboard Changelog)
-> Mudanças visualmente percebidas no dashboard (últimas 10 alterações)
-
-| ID | Componente | Data | Descrição | Link |
-|----|-----------|------|-----------|------|
-| DEV-semantic-test-coverage | Semantic tests + data-testid | 2026-04-27 | 9 data-testids adicionados, semantic-smoke.spec.ts (9 testes), pipeline assertions em generate_data.py, checklist CLAUDE.md | [e2e/semantic-smoke.spec.ts](https://github.com/diegodemorais/wealth/blob/main/react-app/e2e/semantic-smoke.spec.ts) |
-| HD-ARCHITECT | React: pfire-engine TypeScript fixes | 2026-04-27 | Fixed type errors in PFireResult validation and canonicalization. Removed trajectories property, aligned percentiles with CanonicalMCResult | [react-app/src/utils/pfire-engine.ts](https://github.com/diegodemorais/wealth/blob/main/react-app/src/utils/pfire-engine.ts) |
-| HD-ARCHITECT | React: version.ts auto-generated | 2026-04-27 | Version bump v1.2.58 (auto-generated by build script) | [react-app/src/config/version.ts](https://github.com/diegodemorais/wealth/blob/main/react-app/src/config/version.ts) |
-| HD-ARCHITECT-P2 | scripts/ci_check_carteira_params.py | 2026-04-27 | CI pre-check script validating carteira_params.json freshness | [scripts/ci_check_carteira_params.py](https://github.com/diegodemorais/wealth/blob/main/scripts/ci_check_carteira_params.py) |
-| HD-ARCHITECT-P2 | scripts/reconstruct_tax.py | 2026-04-27 | Bug fix: undefined ptax_source variable in tax snapshot output | [scripts/reconstruct_tax.py](https://github.com/diegodemorais/wealth/blob/main/scripts/reconstruct_tax.py) |
-| HD-ARCHITECT-P2 | Data Pipeline: CI Pre-check + GENERATORS_CONFIG | 2026-04-27 | CI workflow integra carteira_params.json freshness check. GENERATORS_CONFIG dict controls timeout/n_sim per generator. Node.js 18→20 fix | [.github/workflows/data-pipeline.yml](https://github.com/diegodemorais/wealth/blob/main/.github/workflows/data-pipeline.yml) + [scripts/config.py](https://github.com/diegodemorais/wealth/blob/main/scripts/config.py) |
-| HD-ARCHITECT | Data Integrity Fixes: Schema + Rastreabilidade | 2026-04-27 | _schema_version 2.0, _data_sources mapping, _pfire_canonical_carteira, patrimonio_pico fallback | [scripts/generate_data.py](https://github.com/diegodemorais/wealth/blob/main/scripts/generate_data.py) + [scripts/withdrawal_engine.py](https://github.com/diegodemorais/wealth/blob/main/scripts/withdrawal_engine.py) |
-| IBKR-PHASE-3B | Data Pipeline: Complete Audit & Fixes | 2026-04-27 | 14/14 data.json fields ✅. Fixed imports (DATE_FORMAT, TICKER_*), pandas compat, fire_matrix regen | [scripts/generate_data.py](https://github.com/diegodemorais/wealth/blob/main/scripts/generate_data.py) |
-| IBKR-PHASE-3B | reconstruct_fire_data.py + spending_analysis | 2026-04-27 | Added missing DATE_FORMAT imports; full JSON rebuild (fire_trilha, drawdown, fire_matrix) | [scripts/reconstruct_fire_data.py](https://github.com/diegodemorais/wealth/blob/main/scripts/reconstruct_fire_data.py) |
-| IBKR-PHASE-3B | spending_analysis.py — Import Fixes | 2026-04-27 | Fixed DATE_FORMAT_YM, DATE_FORMAT_YMD imports; full transaction analysis pipeline | [scripts/spending_analysis.py](https://github.com/diegodemorais/wealth/blob/main/scripts/spending_analysis.py) |
-| IBKR-PHASE-3B | tax_engine.py — DATE_FORMAT_YMD Import | 2026-04-27 | Added DATE_FORMAT_YMD constant for PTAX date lookups in US estate tax calculations | [scripts/tax_engine.py](https://github.com/diegodemorais/wealth/blob/main/scripts/tax_engine.py) |
-| HD-ARCHITECT-P3 | **P3: 323 Violations Refactored** | 2026-04-27 | Estate tax centralized. React constants → data.json. 54 strings + 251 numerics → config | [agentes/issues/HD-ARCHITECT-P3.md](https://github.com/diegodemorais/wealth/blob/main/agentes/issues/HD-ARCHITECT-P3.md) |
-| HD-ARCHITECT-P3 | React: useConfig hook + 8 components | 2026-04-27 | GuardrailsChart, HODL11, BRL, DARF, NetWorth, Surplus, ReverseFire, RollingMetrics | [react-app/src/hooks/useConfig.ts](https://github.com/diegodemorais/wealth/blob/main/react-app/src/hooks/useConfig.ts) |
-| HD-ARCHITECT-P3 | Python Scripts: String dedup | 2026-04-27 | backtest_portfolio, btc_indicators, checkin_mensal, factor_regression, spending_analysis | [scripts/config.py#TICKER](https://github.com/diegodemorais/wealth/blob/main/scripts/config.py) |
-| HD-ARCHITECT-P3 | Python Scripts: Numeric literals | 2026-04-27 | fire_montecarlo, generate_data, portfolio_analytics, reconstruct_*, tax_engine | [scripts/tax_engine.py#calculate_us_estate_tax](https://github.com/diegodemorais/wealth/blob/main/scripts/tax_engine.py) |
-| XX-test-parameters-audit | **Issue Completa** | 2026-04-27 | Auditoria P0-P1 + 70+ testes (fixtures/mock) + pre-commit validation | [agentes/issues/XX-test-parameters-audit.md](https://github.com/diegodemorais/wealth/blob/main/agentes/issues/XX-test-parameters-audit.md) |
-| XX-test-parameters-audit | Config: TER (AVGS/AVEM/JPGL) | 2026-04-27 | Corrigido 0.25%→0.39%, 0.25%→0.35%, 0.38%→0.19% | [scripts/config.py#206-208](https://github.com/diegodemorais/wealth/blob/main/scripts/config.py#L206) |
-| VERIF-PFIRE-CANONICO | React: assumptions/page.tsx | 2026-04-26 | Exibição P(FIRE) corrigida (formato .percentStr) | [react-app/src/app/assumptions/page.tsx#632](https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/assumptions/page.tsx#L632) |
-| DEV-ux-prototipo | React: CollapsibleSection.tsx | 2026-04-25 | Auto-open em seções (ux/spec consistency) | [react-app/src/components/dashboard/CollapsibleSection.tsx](https://github.com/diegodemorais/wealth/blob/main/react-app/src/components/dashboard/CollapsibleSection.tsx) |
-| DASH-2026-04-25-consistency | React: performance/page.tsx | 2026-04-25 | TER display corrigido, alpha drought caveat | [react-app/src/app/performance/page.tsx](https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/performance/page.tsx) |
-| DASH-2026-04-25-consistency | React: home/page.tsx | 2026-04-25 | pctAlvo dinâmico (12%/3%), CAUTELA styling | [react-app/src/app/page.tsx](https://github.com/diegodemorais/wealth/blob/main/react-app/src/app/page.tsx) |
-| DEV-decisao-mes-redesign | React: DecisaoDoMes.tsx | 2026-04-25 | Componente consolidado (340→557 linhas, 3 bugs) | [react-app/src/components/dashboard/DecisaoDoMes.tsx](https://github.com/diegodemorais/wealth/blob/main/react-app/src/components/dashboard/DecisaoDoMes.tsx) |
-| FR-scripts-premissas | PREMISSAS_SOURCE e alinhamento guardrails nos scripts MC | FIRE | 2026-03-31 | Bug tornado corrigido. Scripts pesquisa deletados. Canonical script limpo. |
-| FI-jpgl-redundancia | JPGL 20% — manter, reduzir ou remover? | 02 Factor | 2026-03-31 | **MANTER 20%**. 7-0. Factor regression: 4 loadings, alpha não significativo. Sector-neutral drag não se aplica (inverse-vol). 22 anos: +3pp/ano vs MSCI World. Período 2019-2026 = única exceção histórica. 5 gatilhos de monitoramento registrados. |
-| HD-python-stack | Automação de rotinas com Python stack | Head | 2026-03-30 | 3 scripts criados e testados. Otimizador de aporte reescrito com cascade correto: IPCA+ longo (>=6%) → Renda+ (>=6.5%) → 100% JPGL fracionário IB. Fronteira eficiente com proxy AVUV/AVDV (4.5 anos). |
-| PT-onelife | Bond OneLife: converter participacao na holding | 09 Patrimonial | 2026-03-27 | 9-0 contra entrar. 4 pilares fiscais frágeis. IDF compartilhado inviável (CAA 26/1). Parecer próprio obrigatório antes de qualquer decisão. |
-| XX-casamento | Casamento iminente: recalibrar FIRE e planejamento patrimonial | 00 Head | 2026-04-02 | P(FIRE 55 casal)=77,1% (R$270k)/80,1% (R$250k). Modelo saúde corrigido: +12pp vs análise anterior. |
-| FR-fire2040 | FIRE 2040: bond tent, guardrail de fonte, gatilho R$13.4M/SWR 2.4% | 04 FIRE | 2026-03-27 | Bond tent = 5% do ganho. Driver = patrimônio. Safe harbor 2040, meta FIRE 50. |
-| FR-spending-smile | Spending smile + saude com inflator proprio + age sweep 50–60 | 04 FIRE | 2026-03-27 | P(sucesso) 80.8% base. FIRE 55 = 90.5%. Bear -30% ano 1 = risco dominante. |
-| HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | 2026-03-26 | 7 implementacoes: pre-mortem+pre-parade, falsificacao, dado/interpretacao, scoring retro, julgamentos independentes. |
-| HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | 2026-03-26 | 9 itens adicionados ao Advocate. Item #9 (echo chamber LLM) e o unico genuinamente novo. |
-| RF-renda-teto | Teto ótimo Renda+ 2065: 3% ou 5%? | 03 RF | 2026-03-26 | 5% confirmado. Racional em renda-plus-2065-cenarios.md. |
-| MA-equity-br | Equity Brasil: faz sentido dado balanço soberano? | 08 Macro | 2026-03-26 | 0% equity BR. Double concentration confirmada. Renda+ 2065 é o trade. |
-| TX-inss-beneficio | Estimativa correta do benefício INSS aos 65 anos | 05 Wealth | 2026-03-26 | R$14-28k/ano real 2026 (central R$18-20k). PV ~R$80k. Art.15 vs Art.26 requer especialista. |
-| TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Wealth | 2026-03-26 | Saving liquido ~R$12k/ano. INSS R$46-55k (nao R$97k). Gap 50-53 critico. Lombard NPV +R$1,7M. |
-| RK-managed-futures | Managed Futures como diversificador | 06 Risco | 2026-03-26 | Zero MF. JPGL primeiro. Monitorar return stacking UCITS. |
-| RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge | 06 Risco | 2026-03-26 | Zero ouro. Capital para JPGL. Managed futures superior. |
-| MA-bond-correlation | Correlacao stock-bond inflacionario: IPCA+ como hedge? | 08 Macro | 2026-03-26 | Premissa inaplicavel. IPCA+ HTM = carry, nao hedge. Risco real = recessao global. |
-| HD-brazil-concentration | Exposicao real ao Brasil: capital humano + soberano | 07 FX | 2026-03-26 | Concentracao 62.9% estrutural. Portfolio financeiro correto (6.1% BR). Risco e liquidez, nao alocacao. |
-| HD-scorecard | Scorecard + shadow portfolios com premissas HD-006 | 10 Advocate | 2026-03-26 | P(FIRE)=91% preenchido. Shadow C adicionado. 10 novos findings. Alpha 0.16%/ano (haircut 58%). |
-| HD-simplicity | VWRA + IPCA+ é suficiente? (burden of proof) | 10 Advocate | 2026-03-25 | Carteira atual mantida. Alpha ~0.16% real. Haircut correto: 58% (McLean & Pontiff). Precommitment AVGS validado. |
-| HD-equity-weight | 79% equity certo para horizonte fixo de 11 anos? | 04 FIRE | 2026-03-25 | Confirmado. Equity internacional = única diversificação soberana. Balanço total já é quase 100% Brasil. |
-| FR-glide-path | Glide path pre-FIRE: definir regra formal de reducao de equity | 04 FIRE | 2026-03-25 | Sem glide path formal. SoRR coberto por 15% IPCA+ longo + 3% IPCA+ curto. INSS aos 65 como floor. |
-| FI-crowdedness | Crowdedness de factor strategies e risco AVGS/JPGL | 02 Factor | 2026-03-24 | Tese sustentada. Momentum na zona de atenção sistêmica. Haircut SmB/HmL recalibrar 35-40%. Quant crisis 2.0 modelar no HD-scorecard. |
-| FR-equity-equivalent | Equity equivalent do tilt fatorial | 04 FIRE | 2026-03-24 | Portfólio Sortino-eficiente. EE 74.2% (haircut). Vol 16.8%. Nenhuma mudança de alocação. SWRD = seguro anti-modelo. |
-| XX-001-Performance_attribution_trimestral | Performance attribution trimestral — primeiro report | 13 Bookkeeper | 2026-03-23 | Framework Q1 pronto. BRL +6.15% neutralizou USD +3.9%. Q2 terá dados completos. |
-| FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL | 02 Factor | 2026-03-23 | JPGL validado. 5 fatores significativos ao vivo. TER cortado para 0.19% (total ~0.45%). Cost-benefit vs SWRD: +1.88%/ano net (30% haircut). Momentum crash risk nao aplicavel (long-only). Risco real: AUM €245M — gatilhos de monitoramento adicionados. |
-| XX-004-Bogleheads_forum_scan | Intelligence Gathering — Bogleheads forum scan | 00 Head | 2026-03-23 | 7 topicos lidos. Carteira 100% alinhada com consensus. JPGL confirmado melhor multi-factor UCITS. SWRD validado. SWR non-US = 3.5% (dado novo). Ponto acionavel: cash IBKR < $60k (estate tax sobre cash). RSS feed disponivel: feed.php?f=22 |
-| HD-007-Mapa_completo_gatilhos | Mapa completo de gatilhos: inventario, gaps, monitoramento | 00 Head | 2026-03-23 | 60+ gatilhos reduzidos a 16 ativos em 3 niveis (Alarme/Mensal/Anual). HTM absoluto confirmado IPCA+ estrutural. Arquivo: agentes/contexto/gatilhos.md |
-| HD-009-Audit_gastos_pessoais | Auditoria de gastos pessoais e consistencia com FIRE | 00 Head | 2026-03-23 | Gastos VERDE: R$215k/ano anualizado, dentro do range FIRE. R$250k baseline confirmado com margem ~25-30% (primeira validacao bottom-up). Spending smile e saude com inflator proprio identificados como gaps no modelo. Dois issues backlog criados: FR-spending-smile e TX-desacumulacao |
-| XX-003-RR_Forum_Intelligence_scan | Intelligence Gathering — RR Forum scan de topicos relevantes | 00 Head | 2026-03-22 | 10 topicos lidos. Carteira confirmada alinhada com consensus do forum. Avantis UCITS lancados jun/2024 — Diego ja tem os produtos certos. JPGL usa momentum como negative screen (superior a XDEM/IWMO). Issue criado: RK-managed-futures. Nenhuma acao imediata. |
-| HD-008-Reconciliacao_arquivos_deduplicacao | Reconciliacao de arquivos e deduplicacao agent defs | 00 Head | 2026-03-22 | 10+ conflitos corrigidos (ips, evolucao, risk-framework, execucoes, memorias, perfis). 13 agent defs enxugados para bootstrap-only. 2 blocos extraidos para referencia (autonomia-critica, debate-estruturado) |
-| FIRE-002-Plano_B_perda_renda | Plano B: perda de renda + decada perdida (escopo expandido) | 04 FIRE | 2026-03-22 | Perda renda nao e risco dominante (R$250k viavel ate perda aos 42, SWR 3.12%). Decada perdida e o killer (SR 31-43%). Plano B: human capital hedge (consultoria R$120-180k/ano) + guardrails + piso R$180k. Nenhuma acao preventiva necessaria agora |
-| TX-002-Tax_loss_harvesting_transitorios | Tax-loss harvesting nos 7 ETFs transitorios | 05 Tributacao | 2026-03-22 | Nao aplicavel — todos transitorios com lucro. Framework TLH registrado. Sem wash sale rule no Brasil. Gatilho: reativar em drawdown (TLH + migracao UCITS = duplo beneficio) |
-| FR-004-Bond_tent_pre_FIRE (v2) | Bond tent pre-FIRE: design e glidepath | 04 FIRE | 2026-03-22 | Bond tent = 15% IPCA+ longo (HD-006) + 3% IPCA+ curto (aos 50). Tent natural, nao requer gestao ativa. Equity 79% no FIRE, rising pos-vencimento. FR-003: bond tent +0.1pp SR — valor esta no retorno garantido |
-| RK-001-Stress_test_risco_soberano_BR (v2) | Stress test risco soberano Brasil (bloco ~21%) | 06 Risco | 2026-03-22 | Bloco soberano ~21% aceito. Risco compensado pelo retorno all-in superior IPCA+ >= 6.0%. Drawdowns Renda+ corrigidos (formula exata). Regra de liquidacao mantida. Equity continua risco dominante (~7x maior) |
-| HD-006-Audit_reconciliacao_premissas | Audit e reconciliacao de premissas (retornos, breakeven, IR) | 00 Head | 2026-03-22 | 9+4 erros corrigidos. Decisao final: IPCA+ longo 15%, piso 6.0%, equity 79%, cripto 3%. Breakeven all-in ~5.5%. Selic removido -> IPCA+ curto 3% aos 50. 5 regras anti-recorrencia |
-| FR-003-Monte_Carlo_computacional | Monte Carlo 10k trajetorias com premissas HD-006 | 04 FIRE | 2026-03-22 | Pat mediano R$10.56M. SR R$250k: 91% (guard), R$350k: 87%. FR-001 errava 3-6pp sem guard. Decada perdida: 31-43%. Bond tent: +0.1pp |
-| HD-002-Scorecard_metricas_sistema | Scorecard de metricas do sistema de agentes | 10 Advocate | 2026-03-20 | Scorecard + 2 shadows + findings log + previsoes. Baseline T0 preenchido. P(FIRE) pendente FR-003 |
-| RF-003-Duration_risk_Renda2065_inflacao | Duration risk Renda+ 2065 em regime de inflacao | 03 RF | 2026-03-20 | Target revertido para 5% (decisao Diego 2026-03-22). DCA reativado. Gatilhos mantidos. IPCA+ 2040 e tese diferente (estrutural) |
-| RK-001-Stress_test_risco_soberano_BR | Stress test risco soberano Brasil (bloco ~13%) | 06 Risco | 2026-03-20 | IPCA+ 7% adequado. Risco real e equity 89%. Liquidacao: Reserva -> equity -> RF por ultimo |
-| FR-004-Bond_tent_pre_FIRE | Bond tent pre-FIRE: design e glidepath | 04 FIRE | 2026-03-20 | NAO implementar tent agressivo. Manter 88% equity no FIRE. IPCA+ 2040 e o tent natural |
-| HD-003-Scan_Chicago_Booth | Scan Material Chicago Booth | 01 Head | 2026-03-20 | Scan completo em `agentes/contexto/chicago_booth_scan.md`. 60+ papers, 18 frameworks, 8 issues candidatos |
-| FI-003-AVGC_vs_JPGL_multifator | AVGC vs JPGL: melhor multifator UCITS? | 02 Factor | 2026-03-18 | JPGL confirmado — complementa com momentum + low vol. AVGC closet indexing |
-| RF-002-IPCA_plus_agora_taxa_7 | Alocar 10% IPCA+ agora (taxa 7%+) | 03 Renda Fixa | 2026-03-18 | Aprovado. Ladder 2035/2040/2050 sem cupom. Gatilho IPCA+ aos 48 removido. **Superseded por HD-006** (alvo final: 15%, TD 2040 80% + TD 2050 20%, piso 6.0%) |
-| FR-001-Stress_test_custo_vida_fire | Stress test FIRE: cenarios de custo de vida | 04 FIRE | 2026-03-18 | Limite seguro R$ 360k/ano. R$ 250k folga ampla, R$ 350k viavel (SWR 3,40%) |
-| RF-001-Renda_plus_rentabilidade_cenarios_queda | Rentabilidade Renda+ 2065 nos cenarios de queda | 03 Renda Fixa | 2026-03-18 | Gatilho 6,0% validado. Duration 43,6. Compra DCA ate 5% se taxa >= 6,5% |
-| HD-001-Retro_2026_03_18_acoes | Acoes da Retro 2026-03-18 | 01 Head | 2026-03-18 | 6/6 acoes concluidas |
-
-### Deprecated
-> Issues removidas do board (arquivos mantidos como registro historico)
-
-| ID | Titulo | Motivo |
-|----|--------|--------|
-| FI-002-Reduzir_AVEM_20_para_15 | Reduzir AVEM de 20% para 15% | Superado por decisao HD-006 (alocacao final aprovada) |
-| FR-005-FIRE_bands_custo_vida | FIRE bands: modelar custo de vida R$300-400k | Coberto por FR-003 (Monte Carlo com guardrails) |
-| XX-002-Correlacao_stock_bond_BR | Correlacao stock-bond no Brasil | Absorvido por RK-001 v2 (stress test soberano) |
-| FI-006-Intangibles_value_factor_AVGS | Intangibles e o value factor | Escopo coberto por FI-004 (validacao empirica JPGL) |
-| FI-001-Rebalancear_SWRD_AVGS_factor_tilt | SWRD 35->30% / AVGS 25->30% | Superado por HD-006 (alocacao final aprovada com targets atuais) |
-| HD-005-Carry_framework_carteira | Carry framework (Koijen 2018) | Baixa prioridade vs backlog atual, escopo parcialmente coberto por FI-004 |
-| HD-falsificabilidade | Registrar condição de falsificabilidade em decisões de manter | Absorvida por XX-lacunas-estrategicas (2026-04-01) |
-| FI-vanguard-smallcap-ucits | Monitor lançamento Vanguard FTSE Global Small-Cap UCITS | Coberto por etf-candidatos.md (⏳) + scan mensal automático via /etf-candidatos-scan |
+| DEV-overlap-detection | Overlap Detection ETFs — SWRD/AVGS/AVEM | 2026-05-01 | OverlapChart implementado. Dados proxy sintéticos. Pipeline inline em generate_data.py. |
+| XX-system-audit | Auditoria Sistêmica Completa | 2026-05-01 | 12+ problemas estruturais corrigidos. Backlog documentado em DEV-pipeline-gaps-p2. |
+| DEV-style-box | Style Box 3×3 via Factor Loadings | 2026-05-01 | StyleBoxChart implementado. |
+| DEV-risk-return-scatter | Gráfico Retorno vs. Risco por Classe de Ativos | 2026-05-01 | RiskReturnScatter com marcos históricos. |
+| FR-fan-chart-mc | Fan Chart P10/P50/P90 — Trajetórias MC | 2026-05-01 | PostFireFanChart implementado. |
+| FR-bond-pool-tracker | Bond Pool Depletion Tracker | 2026-05-01 | BondPoolDepletionChart implementado. |
+| FR-spending-timeline | Spending Timeline — Gastos anuais por componente | 2026-05-01 | SpendingTimelineChart implementado. |
+| FR-withdrawal-rate-chart | Withdrawal Rate + INSS Floor | 2026-05-01 | WithdrawalRateChart implementado. |
+| FR-networth-overlay | Historical Net Worth Overlay | 2026-05-01 | Fechado: já coberto por TrackingFireChart. |
+| HD-projection-lab-audit | Auditoria Projection Lab vs Dashboard Diego | 2026-05-01 | 5 features priorizadas, todas implementadas. |
+| DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | 2026-04-30 | ECharts typing, dead code, usePageData. |
+| DEV-qa-improvements | Melhorias QA — Fases 1+2 | 2026-04-30 | Privacy regression, 40 test files. |
+| DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React | 2026-04-30 | useEChartsPrivacy() aplicado. |
+| FR-audit-p2-improvements | P2 Melhorias — 40 itens | 2026-04-30 | Todos endereçados. |
+| FR-audit-p1-missing | P1 Info Crítica — 12/13 gaps | 2026-04-30 | G1-G13 implementados. |
+| DEV-iifpt-dashboard | Dashboard IIFPT | 2026-04-30 | IifptRadar, badge, nota KpiHero. |
+| HD-iifpt-integration | Framework IIFPT à Carteira | 2026-04-30 | Λ calibrado, coupling reference. |
+| QA-test-plan-audit | Auditoria e Melhoria dos Planos de Teste | 2026-04-30 | 3 gaps críticos + plano 3 fases. |
+| ARCH-audit | Auditoria de Arquitetura do Dashboard React | 2026-04-30 | 6 categorias, backlog P1/P2/P3. |
+| HD-gaps-aposenteaos40-spec | Coast FIRE + FIRE Spectrum + brFIRESim | 2026-04-30 | 3 features implementadas. |
+| HD-benchmark-aposenteaos40 | Benchmark vs lab.aposenteaos40.org | 2026-04-30 | 7 ferramentas mapeadas. |
+| FR-mc-bond-pool-partial-isolation | Bond Pool Partial Isolation no MC | 2026-04-29 | Isolation gradual. 18 testes. |
+| FR-mc-bond-pool-isolation | Bond Pool Isolation Real no MC | 2026-04-29 | vol=0 nos primeiros 6 anos. |
+| FR-pquality-recalibration | Recalibração P(quality) | 2026-04-29 | PQualityMatrix 5×3×3. |
+| FR-regime-switching-model | Regime Switching no MC FIRE | 2026-04-29 | NÃO implementar — limitação documentada. |
+| FR-pfire-model-robustness | Auditoria Robustez P(FIRE) | 2026-04-29 | RF bug 6.0%→5.34%. Intervalo 72-92%. |
+| FR-saude-modelo-custo | Auditoria Custo de Saúde no MC | 2026-04-29 | VCMH 5%→3.5%, SAUDE_DECAY 50%→15%. |
+| HD-pfire-consistencia-modelo | Consistência do Modelo P(FIRE) | 2026-04-29 | Aceitar 79.0%. by_profile re-rodado. |
+| FR-guardrails-categoria-elasticidade | Saúde nos Guardrails MC | 2026-04-28 | Saúde inelástica separada. |
+| HD-dashboard-gaps-tier2 | Dashboard Gaps Tier 2 | 2026-04-28 | 8/8 gaps implementados. |
+| HD-dashboard-gaps-tier1 | Dashboard Gaps Tier 1 | 2026-04-28 | 10/11 gaps implementados. |
+| HD-risco-portfolio | Mapeamento Completo de Risco | 2026-04-27 | Risk Score 7.7/10. 6 blocos R1-R6. |
+| HD-pipeline-observabilidade | Observabilidade do Pipeline | 2026-04-27 | Staleness badge, IBKR sync, sync_spec.py. |
+| DATA_PIPELINE_CENTRALIZATION | Data Snapshot Orchestration | 2026-04-27 | 7/7 invariants. PIPELINE_PHASES DAG. |
+| IBKR-PHASE-3B | IBKR Data Integration | 2026-04-27 | FIFO+Flex 53 trades. DARF panel. |
+| PFIRE_PHASE4_DATA_GEN | Full Data.json Generation | 2026-04-27 | generate_data.py completo. |
+| HD-ARCHITECT-P4 | Auto-Fix Suggestion Engine | 2026-04-27 | SuggestionEngine + --fix CLI. |
+| HD-ARCHITECT | Guardião de Arquitetura | 2026-04-27 | Zero hardcoding violations. |
+| HD-ARCHITECT-P3 | 323 Violations Refactored | 2026-04-27 | Estate tax centralizado. |
+| HD-ARCHITECT-P2 | AST + Grep Detection | 2026-04-27 | 323 violations detectadas. |
+| HD-ARCHITECT-P0P1 | Automação + Validação | 2026-04-27 | P0 e P1 concluídos. |
+| DEV-semantic-test-coverage | Semantic tests + data-testid | 2026-04-27 | 9 testids, semantic-smoke.spec.ts. |
+| FI-jpgl-redundancia | JPGL 20% — manter, reduzir ou remover? | Factor | 2026-03-31 | MANTER 20%. 7-0. |
+| HD-python-stack | Automação com Python stack | Head | 2026-03-30 | 3 scripts criados. Otimizador de aporte. |
+| PT-onelife | Bond OneLife | Patrimonial | 2026-03-27 | 9-0 contra entrar. |
+| XX-casamento | Casamento iminente — recalibrar FIRE | Head | 2026-04-02 | P(FIRE 55 casal)=77,1%. |
+| FR-fire2040 | FIRE 2040: bond tent, guardrail | FIRE | 2026-03-27 | Bond tent = 5% do ganho. |
+| FR-spending-smile | Spending smile + saúde | FIRE | 2026-03-27 | P(sucesso) 80.8% base. |
+| HD-psicologia | Psicologia cognitiva | Head | 2026-03-26 | 7 implementações. |
+| HD-behavioral | Behavioral checklist | Advocate | 2026-03-26 | 9 itens adicionados. |
+| RF-renda-teto | Teto ótimo Renda+ 2065 | RF | 2026-03-26 | 5% confirmado. |
+| MA-equity-br | Equity Brasil | Macro | 2026-03-26 | 0% equity BR. |
+| TX-inss-beneficio | Estimativa INSS | Tax | 2026-03-26 | R$14-28k/ano real. |
+| TX-desacumulacao | Custos tributários pós-FIRE | Tax | 2026-03-26 | Saving líquido ~R$12k/ano. |
+| RK-managed-futures | Managed Futures | Risco | 2026-03-26 | Zero MF. |
+| RK-gold-hedge | Ouro como hedge | Risco | 2026-03-26 | Zero ouro. |
+| MA-bond-correlation | Correlação stock-bond | Macro | 2026-03-26 | IPCA+ HTM = carry, não hedge. |
+| HD-brazil-concentration | Exposição real ao Brasil | FX | 2026-03-26 | Concentração 62.9% estrutural. |
+| HD-scorecard | Scorecard + shadow portfolios | Advocate | 2026-03-26 | P(FIRE)=91% preenchido. |
+| HD-equity-weight | 79% equity correto? | FIRE | 2026-03-25 | Confirmado. |
+| FR-glide-path | Glide path pré-FIRE | FIRE | 2026-03-25 | Sem glide path formal. |
+| TX-tlh-automation | Tax-loss harvesting | Tax | 2026-03-22 | Não aplicável. Framework registrado. |
+| FR-bond-tent-pre-fire | Bond tent pré-FIRE v2 | FIRE | 2026-03-22 | 15% IPCA+ longo + 3% IPCA+ curto. |
+| RK-stress-soberano | Stress test risco soberano Brasil | Risco | 2026-03-22 | Bloco ~21% aceito. |
+| HD-premissas-audit | Audit premissas (retornos, breakeven, IR) | Head | 2026-03-22 | 9+4 erros corrigidos. |
+| FR-monte-carlo | Monte Carlo 10k trajetórias | FIRE | 2026-03-22 | Pat mediano R$10.56M. SR R$250k: 91%. |
+| HD-scorecard-metricas | Scorecard métricas do sistema | Advocate | 2026-03-20 | Baseline T0 preenchido. |
+| RF-duration-renda2065 | Duration risk Renda+ 2065 | RF | 2026-03-20 | Target revertido para 5%. |
 
 ---
 
-## Convencao de IDs
+## Convenção de IDs
 
 Formato: `{SIGLA}-{slug-descritivo}`
-- Slug: kebab-case, 1-3 palavras, legivel sem contexto. Ex: `RF-ipca-dca`, `FR-spending-smile`
-- Arquivo: `agentes/issues/{ID}.md`
-- Issues arquivadas (Done pre-2026-03-24): mantêm formato antigo `{SIGLA}-{NUM}-{Slug}` como registro historico
 
-| Sigla | Agente | Exemplo |
-|-------|--------|---------|
-| HD | 00 Head de Investimentos | HD-scorecard |
-| FI | 02 Factor Investing | FI-crowdedness |
-| RF | 03 Fixed Income | RF-ipca-dca |
-| FR | 04 FIRE / Aposentadoria | FR-spending-smile |
-| TX | 05 Wealth | TX-desacumulacao |
-| RK | 06 Tactical | RK-gold-hedge |
-| FX | 07 FX [removido] | FX-hedge-custo |
-| MA | 08 Macro | MA-bond-correlation |
-| PT | 09 Patrimonial [removido] | PT-onelife |
-| XX | Cross-domain (multiplos) | XX-retro-q1 |
-
-Sigla = agente RESPONSAVEL principal (mesmo que outros participem).
+| Sigla | Domínio |
+|-------|---------|
+| HD | Head de Investimentos |
+| FI | Factor Investing |
+| RF | Fixed Income |
+| FR | FIRE / Aposentadoria |
+| TX | Tributação |
+| RK | Risco / Tático |
+| MA | Macro |
+| PT | Patrimonial |
+| DEV | Dashboard / Pipeline |
+| XX | Cross-domain |
 
 ---
 
 ## Template
 
-Cada issue e um arquivo em `agentes/issues/{ID}.md`. Ver `_TEMPLATE.md` para o modelo.
+Ver `_TEMPLATE.md`. Criar arquivo SOMENTE quando registrar no board simultaneamente.
