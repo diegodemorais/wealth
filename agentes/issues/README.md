@@ -58,6 +58,7 @@
 | DEV-pipeline-gaps-p2 | Pipeline Gaps P2 — spendingSensibilidade, p_quality_aspiracional, fetch_with_retry | Dev | 🟡 Média | — |
 | DEV-sector-exposure | Sector Exposure Bottom-Up — GICS por ETF | Dev | 🟢 Baixa | Mesma fonte que overlap |
 | DEV-efficient-frontier | Fronteira Eficiente de Markowitz | Dev | 🟢 Baixa | scipy disponível |
+| DEV-data-dedup | Deduplicação de Séries — drawdown_extended, .values legado, cache yfinance | Dev | 🟢 Baixa | — |
 
 ### Done
 > Issues concluídas. Arquivos movidos para `archive/`.
