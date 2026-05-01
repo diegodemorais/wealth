@@ -6472,6 +6472,135 @@ def main():
     _od = data["overlap_detection"]
     print(f"  ✓ overlap_detection: {len(_od['top_overlaps'])} overlaps | total_overlap={_od['total_overlap_pct']}% | unique={_od['unique_coverage_pct']}%")
 
+    # ─── Sector Exposure — GICS bottom-up (DEV-sector-exposure 2026-05-01) ────
+    # Decompõe a alocação equity total por setor GICS (11 setores) usando
+    # holdings sintéticos por ETF + benchmark MSCI World inline. % sobre o equity
+    # total da carteira (alinha com OverlapChart).
+    # Razão do proxy: holdings reais SSGA/Avantis requerem scraping/auth (idem overlap).
+    def _compute_sector_exposure() -> dict:
+        """Calcula exposição setorial GICS bottom-up por ETF + carteira agregada.
+
+        Distribuição setorial proxy (% intra-ETF, soma=100):
+        - SWRD (MSCI World market-cap): heavy Tech/Financials/Healthcare
+        - AVGS (Global small-cap value): mais Financials/Industrials/Energy, menos Tech
+        - AVEM (EM value): mais Financials/Materials/Energy/Comm Services
+        - MSCI World benchmark: factsheet MSCI World abr/2026 (referência)
+        """
+        GICS_SECTORS = [
+            'Information Technology', 'Financials', 'Health Care', 'Consumer Discretionary',
+            'Industrials', 'Communication Services', 'Consumer Staples', 'Energy',
+            'Materials', 'Real Estate', 'Utilities',
+        ]
+
+        # Pesos intra-equity da carteira (mesmo que overlap)
+        w_swrd = EQUITY_WEIGHTS.get("SWRD", 0.50)
+        w_avgs = EQUITY_WEIGHTS.get("AVGS", 0.30)
+        w_avem = EQUITY_WEIGHTS.get("AVEM", 0.20)
+
+        # SWRD = market-cap MSCI World (factsheet SSGA dez/2024 — proxy)
+        swrd_sector_pct = {
+            'Information Technology':   25.4,
+            'Financials':               16.0,
+            'Health Care':              11.2,
+            'Consumer Discretionary':   10.5,
+            'Industrials':              10.8,
+            'Communication Services':    7.6,
+            'Consumer Staples':          5.9,
+            'Energy':                    3.8,
+            'Materials':                 3.5,
+            'Real Estate':               2.4,
+            'Utilities':                 2.9,
+        }
+
+        # AVGS = Avantis Global Small-Cap Value: tilt para Financials/Industrials/Energy
+        # (small-cap value tem menos Tech/Healthcare; mais cíclicos baratos)
+        avgs_sector_pct = {
+            'Information Technology':   10.5,
+            'Financials':               24.0,
+            'Health Care':               6.5,
+            'Consumer Discretionary':   12.5,
+            'Industrials':              19.0,
+            'Communication Services':    3.5,
+            'Consumer Staples':          4.5,
+            'Energy':                    7.5,
+            'Materials':                 7.0,
+            'Real Estate':               3.0,
+            'Utilities':                 2.0,
+        }
+
+        # AVEM = Avantis Emerging Markets Value: tilt para Financials/Materials/Energy
+        avem_sector_pct = {
+            'Information Technology':   14.0,
+            'Financials':               28.5,
+            'Health Care':               4.0,
+            'Consumer Discretionary':   10.0,
+            'Industrials':               7.5,
+            'Communication Services':    8.5,
+            'Consumer Staples':          5.5,
+            'Energy':                    8.0,
+            'Materials':                10.5,
+            'Real Estate':               2.0,
+            'Utilities':                 1.5,
+        }
+
+        # MSCI World benchmark (factsheet abr/2026 — proxy estável)
+        msci_world_sector_pct = {
+            'Information Technology':   24.5,
+            'Financials':               16.2,
+            'Health Care':              11.5,
+            'Consumer Discretionary':   10.7,
+            'Industrials':              11.0,
+            'Communication Services':    7.8,
+            'Consumer Staples':          6.0,
+            'Energy':                    3.9,
+            'Materials':                 3.6,
+            'Real Estate':               2.5,
+            'Utilities':                 2.3,
+        }
+
+        # Validar somas (proxy must sum 100 ±0.1)
+        for label, dist in [
+            ("SWRD", swrd_sector_pct), ("AVGS", avgs_sector_pct),
+            ("AVEM", avem_sector_pct), ("MSCI World", msci_world_sector_pct),
+        ]:
+            tot = sum(dist.values())
+            assert abs(tot - 100.0) < 0.1, f"sector_exposure: soma {label}={tot:.2f} != 100"
+
+        # Agregação: contribuição de cada ETF pro peso do setor na carteira equity
+        by_sector: dict = {}
+        for sec in GICS_SECTORS:
+            swrd_pct = round(w_swrd * swrd_sector_pct[sec], 4)  # já em % do equity (w × pct)
+            avgs_pct = round(w_avgs * avgs_sector_pct[sec], 4)
+            avem_pct = round(w_avem * avem_sector_pct[sec], 4)
+            total_pct = round(swrd_pct + avgs_pct + avem_pct, 4)
+            by_sector[sec] = {
+                "total_pct":       total_pct,
+                "swrd_pct":        swrd_pct,
+                "avgs_pct":        avgs_pct,
+                "avem_pct":        avem_pct,
+                "msci_world_pct":  msci_world_sector_pct[sec],
+            }
+
+        # Setor dominante
+        dominant = max(by_sector.items(), key=lambda kv: kv[1]["total_pct"])[0]
+        total_sum = sum(v["total_pct"] for v in by_sector.values())
+        # Validação final: soma dos 11 setores deve ser ~100% do equity
+        assert abs(total_sum - 100.0) < 0.5, f"sector_exposure: soma agregada={total_sum:.2f} != 100"
+
+        return {
+            "by_sector":     by_sector,
+            "dominant":      dominant,
+            "as_of":         str(date.today()),
+            "data_source":   "synthetic_proxy",
+            "benchmark":     "MSCI World (factsheet abr/2026)",
+        }
+
+    data["sector_exposure"] = _compute_sector_exposure()
+    _se = data["sector_exposure"]
+    _se_top3 = sorted(_se["by_sector"].items(), key=lambda kv: kv[1]["total_pct"], reverse=True)[:3]
+    _se_top3_str = ", ".join(f"{s}={d['total_pct']:.1f}%" for s, d in _se_top3)
+    print(f"  ✓ sector_exposure: dominant={_se['dominant']} | top3=[{_se_top3_str}]")
+
     # CC1 — IIFPT: priority_matrix (lido de arquivo), domain_coverage, regime_vida
     # Invariante: priority_matrix nunca é sobrescrito automaticamente — apenas lido de arquivo.
     _pm_raw = json.loads(PRIORITY_MATRIX_PATH.read_text()) if PRIORITY_MATRIX_PATH.exists() else {}

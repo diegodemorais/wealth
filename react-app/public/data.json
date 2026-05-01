@@ -15953,5 +15953,90 @@
     "rm": 0.1,
     "est": 0.1
   },
-  "regime_vida": "r2_mid_career"
+  "regime_vida": "r2_mid_career",
+  "sector_exposure": {
+    "by_sector": {
+      "Information Technology": {
+        "total_pct": 18.65,
+        "swrd_pct": 12.7,
+        "avgs_pct": 3.15,
+        "avem_pct": 2.8,
+        "msci_world_pct": 24.5
+      },
+      "Financials": {
+        "total_pct": 20.9,
+        "swrd_pct": 8.0,
+        "avgs_pct": 7.2,
+        "avem_pct": 5.7,
+        "msci_world_pct": 16.2
+      },
+      "Health Care": {
+        "total_pct": 8.35,
+        "swrd_pct": 5.6,
+        "avgs_pct": 1.95,
+        "avem_pct": 0.8,
+        "msci_world_pct": 11.5
+      },
+      "Consumer Discretionary": {
+        "total_pct": 11.0,
+        "swrd_pct": 5.25,
+        "avgs_pct": 3.75,
+        "avem_pct": 2.0,
+        "msci_world_pct": 10.7
+      },
+      "Industrials": {
+        "total_pct": 12.6,
+        "swrd_pct": 5.4,
+        "avgs_pct": 5.7,
+        "avem_pct": 1.5,
+        "msci_world_pct": 11.0
+      },
+      "Communication Services": {
+        "total_pct": 6.55,
+        "swrd_pct": 3.8,
+        "avgs_pct": 1.05,
+        "avem_pct": 1.7,
+        "msci_world_pct": 7.8
+      },
+      "Consumer Staples": {
+        "total_pct": 5.4,
+        "swrd_pct": 2.95,
+        "avgs_pct": 1.35,
+        "avem_pct": 1.1,
+        "msci_world_pct": 6.0
+      },
+      "Energy": {
+        "total_pct": 5.75,
+        "swrd_pct": 1.9,
+        "avgs_pct": 2.25,
+        "avem_pct": 1.6,
+        "msci_world_pct": 3.9
+      },
+      "Materials": {
+        "total_pct": 5.95,
+        "swrd_pct": 1.75,
+        "avgs_pct": 2.1,
+        "avem_pct": 2.1,
+        "msci_world_pct": 3.6
+      },
+      "Real Estate": {
+        "total_pct": 2.5,
+        "swrd_pct": 1.2,
+        "avgs_pct": 0.9,
+        "avem_pct": 0.4,
+        "msci_world_pct": 2.5
+      },
+      "Utilities": {
+        "total_pct": 2.35,
+        "swrd_pct": 1.45,
+        "avgs_pct": 0.6,
+        "avem_pct": 0.3,
+        "msci_world_pct": 2.3
+      }
+    },
+    "dominant": "Financials",
+    "as_of": "2026-05-01",
+    "data_source": "synthetic_proxy",
+    "benchmark": "MSCI World (factsheet abr/2026)"
+  }
 }

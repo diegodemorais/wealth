@@ -33,6 +33,7 @@ import { FactorProfileChart } from '@/components/charts/FactorProfileChart';
 import { StyleBoxChart } from '@/components/charts/StyleBoxChart';
 import { RollingReturnsHeatmap } from '@/components/charts/RollingReturnsHeatmap';
 import { OverlapChart } from '@/components/charts/OverlapChart';
+import { SectorExposureChart } from '@/components/charts/SectorExposureChart';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -550,6 +551,17 @@ export default function PortfolioPage() {
           defaultOpen={secOpen('portfolio', 'overlap', false)}
         >
           <OverlapChart data={(data as any).overlap_detection} />
+        </CollapsibleSection>
+      )}
+
+      {/* 2a-quinquies. Sector Exposure — GICS bottom-up (DEV-sector-exposure 2026-05-01) */}
+      {(data as any)?.sector_exposure && (
+        <CollapsibleSection
+          id="section-sector-exposure"
+          title={secTitle('portfolio', 'sector-exposure', 'Sector Exposure — GICS bottom-up')}
+          defaultOpen={secOpen('portfolio', 'sector-exposure', false)}
+        >
+          <SectorExposureChart data={(data as any).sector_exposure} />
         </CollapsibleSection>
       )}
 

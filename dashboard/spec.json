@@ -1528,6 +1528,21 @@
       "optional": true,
       "_optional_reason": "Dados proxy sintéticos — não bloqueia pipeline se ausente. CSVs reais dos emissores pendentes.",
       "privacy": true
+    },
+    {
+      "id": "sector-exposure-chart",
+      "tab": "portfolio",
+      "label": "Sector Exposure — GICS bottom-up",
+      "type": "chart",
+      "purpose": "Horizontal stacked bar: decomposição da alocação equity por setor GICS (11 setores) — soma contribuição SWRD/AVGS/AVEM, com benchmark MSCI World inline (equivalente ao Morningstar X-Ray Sector Exposure).",
+      "data_fields": [
+        "sector_exposure.by_sector",
+        "sector_exposure.dominant",
+        "sector_exposure.as_of"
+      ],
+      "optional": true,
+      "_optional_reason": "Dados proxy sintéticos (mesmo padrão de overlap_detection) — não bloqueia pipeline se ausente.",
+      "privacy": true
     }
   ]
 }

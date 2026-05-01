@@ -408,6 +408,20 @@ test.describe('Portfolio — DARF panel', () => {
     const el = page.locator('[data-testid="rf-posicoes"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
+
+  // DEV-sector-exposure (2026-05-01): bottom-up GICS sector decomposition
+  test('sector-exposure-chart block is visible and shows dominant sector', async ({ page }) => {
+    // Section default-fechada — abre via header trigger
+    const header = page.locator('[data-test="section-header-section-sector-exposure"]');
+    await header.scrollIntoViewIfNeeded();
+    await header.click();
+    const el = page.locator('[data-testid="sector-exposure-chart"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+    const dom = page.locator('[data-testid="sector-exposure-dominant"]');
+    await expect(dom).toBeVisible({ timeout: 15_000 });
+    const text = (await dom.textContent()) ?? '';
+    expect(text, 'sector-exposure-dominant must contain digits').toMatch(/\d/);
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
