@@ -23,6 +23,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | HD-gatilho-soberano | Quantificar gatilho "risco soberano extremo" para IPCA+ | Head | 🟢 Monitoramento — escalar se IPCA+ >30% portfolio |
 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Scan trimestral |
 | TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Scan trimestral |
+| XX-benchmark-portfolio-visualizer | Investigação — Portfolio Visualizer (backtesting, factor analysis, Monte Carlo) | Head | 🟡 Aguardando decisão Head |
+| XX-benchmark-morningstar | Investigação — Morningstar (X-Ray, overlap detection, factor profile) | Head | 🟡 Aguardando decisão Head |
+| XX-benchmark-empower | Investigação — Personal Capital/Empower (net worth tracking, retirement planner) | Head | 🟡 Aguardando decisão Head |
 
 ### Doing
 > Issues em andamento
