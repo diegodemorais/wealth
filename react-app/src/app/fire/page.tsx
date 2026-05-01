@@ -32,6 +32,7 @@ import { CoastFireData, FireSpectrumData } from '@/types/dashboard';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
 import { BondPoolDepletionChart } from '@/components/charts/BondPoolDepletionChart';
+import { PostFireFanChart } from '@/components/charts/PostFireFanChart';
 
 
 export default function FirePage() {
@@ -945,6 +946,18 @@ export default function FirePage() {
         </div>
       </section>
       </div>
+
+      {/* Fan Chart P10/P50/P90 — Trajetórias MC (FR-fan-chart-mc) */}
+      <CollapsibleSection
+        id="section-fan-chart-mc"
+        title={secTitle('fire', 'fan-chart-mc', 'Fan Chart — Trajetórias P10/P50/P90 pós-FIRE')}
+        defaultOpen={secOpen('fire', 'fan-chart-mc', true)}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          <PostFireFanChart data={safeData} />
+          <div className="src">Monte Carlo 10k simulações · Banda P10–P90 · FIRE Day 2040 · R$ reais constante 2026</div>
+        </div>
+      </CollapsibleSection>
 
       {/* Contribution vs Returns Crossover */}
       {(safeData as any)?.contribuicao_retorno_crossover && (
