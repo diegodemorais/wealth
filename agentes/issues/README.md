@@ -45,6 +45,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| HD-projection-lab-audit | Auditoria Projection Lab vs Dashboard Diego | 2026-05-01 | PL inferior em 7 dimensões (sem BR, sem guardrails risk-based, mono-moeda). 5 features priorizadas: fan chart P10/P50/P90, bond pool tracker, spending por componente, withdrawal rate, histórico overlay. |
 | DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | 2026-04-30 | ECharts strict typing (CallbackDataParams), dead code removal, usePageData migration. Build ✅ 669 testes. |
 | DEV-qa-improvements | Implementar Melhorias QA — Fases 1+2 | 2026-04-30 | Privacy regression (••%), dcaItems validation, PerformanceSummary privacy mode. 40/40 test files, 669 testes. Fase 3 (BX) → backlog baixo. |
 | DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | 2026-04-30 | ECharts privacy gaps auditados e corrigidos. useEChartsPrivacy() aplicado onde faltava. |
