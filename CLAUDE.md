@@ -51,6 +51,7 @@ Reutilizar via SendMessage antes de spawnar novo. Múltiplos em paralelo quando 
 | Stress-test | `advocate` | |
 | Dados/números | `bookkeeper` | Head NÃO atualiza direto |
 | Dashboard/BI + pipeline | `dev` | Responsável técnico por react-app/ e scripts/ |
+| Integridade do sistema | `integrator` | Mudança estrutural, premissa nova, evento de vida, auditoria mensal |
 | Behavioral | `behavioral` | Gatilho: drawdown >10%, mudança não-planejada |
 | CIO | `cio` | Auto quando 3+ agentes |
 | Outside View | `outside-view` | Obrigatório em decisão >5% portfolio |
