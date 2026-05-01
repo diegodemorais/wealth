@@ -32,7 +32,6 @@ import { CoastFireData, FireSpectrumData } from '@/types/dashboard';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
 import { BondPoolDepletionChart } from '@/components/charts/BondPoolDepletionChart';
-import { PostFireFanChart } from '@/components/charts/PostFireFanChart';
 import { SpendingTimelineChart } from '@/components/charts/SpendingTimelineChart';
 import { WithdrawalRateChart } from '@/components/charts/WithdrawalRateChart';
 
@@ -941,25 +940,13 @@ export default function FirePage() {
         <NetWorthProjectionChart data={safeData} />
         <div style={{ marginTop: 4, padding: '6px 10px', background: 'color-mix(in srgb, var(--yellow) 8%, transparent)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-sm)' }}>
           <AlertTriangle size={14} style={{ display: 'inline', verticalAlign: '-2px', flexShrink: 0 }} /> Portfólio financeiro apenas. Aportes futuros de R$25k/mês já estão modelados trajetória a trajetória (proxy de capital humano). O modelo não captura risco de interrupção de renda — doença, invalidez ou queda de receita PJ.{' '}
-          Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: retorno blended (P10=2.5%, P50=3.5%, P90=4.5% real) com spending smile (Go-Go/Slow-Go/No-Go) + saúde VCMH em R$ reais (constante 2026).
+          Pré-FIRE: dados reais de fire_trilha (realizado + projeção mensal). Pós-FIRE: percentis P10/P50/P90 das 10k trajetórias MC — inclui spending smile (Go-Go/Slow-Go/No-Go), VCMH, guardrails, bond pool isolation e INSS.
         </div>
         <div className="src">
           Base: Monte Carlo 10k simulações · R$ reais constante 2026
         </div>
       </section>
       </div>
-
-      {/* Fan Chart P10/P50/P90 — Trajetórias MC (FR-fan-chart-mc) */}
-      <CollapsibleSection
-        id="section-fan-chart-mc"
-        title={secTitle('fire', 'fan-chart-mc', 'Fan Chart — Trajetórias P10/P50/P90 pós-FIRE')}
-        defaultOpen={secOpen('fire', 'fan-chart-mc', true)}
-      >
-        <div style={{ padding: '0 16px 16px' }}>
-          <PostFireFanChart data={safeData} />
-          <div className="src">Monte Carlo 10k simulações · Banda P10–P90 · FIRE Day 2040 · R$ reais constante 2026</div>
-        </div>
-      </CollapsibleSection>
 
       {/* Contribution vs Returns Crossover */}
       {(safeData as any)?.contribuicao_retorno_crossover && (

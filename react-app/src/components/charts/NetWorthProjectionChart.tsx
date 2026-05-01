@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
-import { useConfig } from '@/hooks/useConfig';
 import { DashboardData } from '@/types/dashboard';
 import { createNetWorthProjectionChartOption } from '@/utils/chartSetup';
 import { ChartCard } from '@/components/primitives/ChartCard';
@@ -16,12 +15,11 @@ export interface NetWorthProjectionChartProps {
 
 export function NetWorthProjectionChart({ data }: NetWorthProjectionChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
-  const { config } = useConfig();
   const chartRef = useChartResize();
 
   const option = useMemo(
-    () => createNetWorthProjectionChartOption({ data, privacyMode, theme, uiConfig: config.ui }),
-    [data, privacyMode, theme, config.ui]
+    () => createNetWorthProjectionChartOption({ data, privacyMode, theme }),
+    [data, privacyMode, theme]
   );
 
   return (

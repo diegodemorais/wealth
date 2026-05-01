@@ -346,7 +346,7 @@ export function createSankeyChartOption(options: BaseChartOptions) {
  * Net Worth Projection Chart (Percentile Lines)
  */
 export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
-  const { data, privacyMode, theme, uiConfig } = options;
+  const { data, privacyMode, theme } = options;
 
   const ft = (data as any)?.fire_trilha ?? {};
 
@@ -390,83 +390,37 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   // nHistorico for annual: count how many downsampled points are historical
   const nHistAnnual  = uniqueIndices.filter(i => i < nHistorico).length;
 
-  // --- Post-FIRE extension with withdrawal model (spending smile) ---
-  const postFireYears = 37;  // Age 53 to 90
-  const p10End = rawP10Brl.at(-1) ?? 0;
-  const p50End = (rawTrilhaBrl[rawDates.length - 1] ?? 0) as number;
-  const p90End = rawP90Brl.at(-1) ?? 0;
+  // --- Post-FIRE: use MC simulation percentiles directly ---
+  // trilha_p10/p50/p90 from rodar_monte_carlo_com_trajetorias include the full model:
+  // spending smile + VCMH + guardrails + bond pool isolation + INSS offsets.
+  // Replaces blended analytical approximation (2.5%/3.5%/4.5% real).
+  const mcTrilhaDatas: string[] = ((data as any)?.trilha_datas ?? []).map(String);
+  const mcP10: number[] = (data as any)?.trilha_p10 ?? [];
+  const mcP50: number[] = (data as any)?.trilha_p50 ?? [];
+  const mcP90: number[] = (data as any)?.trilha_p90 ?? [];
 
-  // Spending smile: canonical spending_smile (lifestyle + saúde por fase).
-  // Legacy spendingSmile removed from pipeline; spending_smile.*.gasto_lifestyle is the lifestyle component.
-  // getSpendingByYear adds healthcare separately via ANS multipliers.
-  const smileRich = (data as any)?.spending_smile;
-  const smileData = smileRich
-    ? {
-        go_go:   { gasto: smileRich.go_go?.gasto_lifestyle   ?? 242_000 },
-        slow_go: { gasto: smileRich.slow_go?.gasto_lifestyle ?? 200_000 },
-        no_go:   { gasto: smileRich.no_go?.gasto_lifestyle   ?? 187_000 },
-      }
-    : {
-        go_go:   { gasto: 242_000 },
-        slow_go: { gasto: 200_000 },
-        no_go:   { gasto: 187_000 },
-      };
+  // Filter to years strictly after fireYear to avoid overlap with pre-FIRE segment
+  const postFireEntries = mcTrilhaDatas
+    .map((yr, i) => ({ yr, p10: mcP10[i] ?? null, p50: mcP50[i] ?? null, p90: mcP90[i] ?? null }))
+    .filter(e => parseInt(e.yr, 10) > fireYear);
 
-  // Healthcare costs: VCMH grows 5.0%/year real, ANS age-bracket multipliers (FR-healthcare-recalibracao 2026-04-23)
-  const saudeBase = (data as any)?.saude_base ?? 24_000;
-  const SAUDE_INFLATOR = uiConfig?.guardrails?.saudeInflator ?? 0.050;
-  const SAUDE_DECAY_THRESHOLD = uiConfig?.guardrails?.saudeDecayThreshold ?? 30;
-  const SAUDE_DECAY = uiConfig?.guardrails?.saudeDecay ?? 0.50;
+  const postFireDates = postFireEntries.map(e => e.yr);
+  const p10Post: (number|null)[] = postFireEntries.map(e => e.p10);
+  const p50Post: (number|null)[] = postFireEntries.map(e => e.p50);
+  const p90Post: (number|null)[] = postFireEntries.map(e => e.p90);
 
-  const ansMultiplier = (yearPostFire: number): number => {
-    const currentAge = 53 + yearPostFire;
-    if (currentAge < 54) return 3.0;
-    if (currentAge < 60) return 3.0 + (currentAge - 54) * (0.5 / 6);
-    return 4.0;
-  };
-
-  const getSpendingByYear = (yearPostFire: number): number => {
-    let gastoBase = smileData.no_go?.gasto ?? 187_000;
-    if (yearPostFire < 15) gastoBase = smileData.go_go?.gasto ?? 242_000;
-    else if (yearPostFire < 30) gastoBase = smileData.slow_go?.gasto ?? 200_000;
-
-    let saudeVcmh = saudeBase * Math.pow(1 + SAUDE_INFLATOR, yearPostFire);
-    let saude = saudeVcmh * ansMultiplier(yearPostFire);
-    if (yearPostFire >= SAUDE_DECAY_THRESHOLD) saude *= SAUDE_DECAY;
-
-    return gastoBase + saude;
-  };
-
-  // Calculate post-FIRE trajectories with withdrawal (real returns, real spending)
-  const calculatePostFireTrajectory = (startValue: number, returnRate: number): number[] => {
-    const trajectory = [startValue];
-    let value = startValue;
-    for (let i = 1; i < postFireYears; i++) {
-      const spending = getSpendingByYear(i);
-      value = value * (1 + returnRate) - spending;
-      trajectory.push(Math.max(value, 0));
-    }
-    return trajectory;
-  };
-
-  // Post-FIRE trajectories: slice off index 0 (duplicate of last pre-FIRE value)
-  const postFireYearsLabel = postFireYears - 1;  // 36 years of post-FIRE data
-  const postFireDates = Array.from({ length: postFireYearsLabel }, (_, i) => `${fireYear + 1 + i}`);
-  // Post-FIRE return rates: blended portfolio (glide path ~50% equity + 40% bonds + 10% crypto)
-  // Not pure equity — using realistic blended returns post-retirement
-  const p10PostFull = calculatePostFireTrajectory(p10End as number, 0.025);  // P10: 2.5% real (stress blended)
-  const p50PostFull = calculatePostFireTrajectory(p50End, 0.035);            // P50: 3.5% real (blended base)
-  const p90PostFull = calculatePostFireTrajectory(p90End as number, 0.045);  // P90: 4.5% real (blended favorable)
-
-  const p10Post = p10PostFull.slice(1);
-  const p50Post = p50PostFull.slice(1);
-  const p90Post = p90PostFull.slice(1);
+  // FIRE Number horizontal reference (custo_vida_base / swr_gatilho)
+  const fireNumber = (() => {
+    const custo: number = (data as any)?.premissas?.custo_vida_base ?? 250_000;
+    const swr: number = (data as any)?.premissas?.swr_gatilho ?? 0.03;
+    return swr > 0 ? custo / swr : 0;
+  })();
 
   // --- Assemble final arrays: annual pre-FIRE + annual post-FIRE ---
-  const p10Aligned: (number|null)[]    = [...p10Brl, ...p10Post];
-  const p90Aligned: (number|null)[]    = [...p90Brl, ...p90Post];
-  const p50Full: (number|null)[]       = [...trilhaBrl, ...p50Post];
-  const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireYearsLabel).fill(null)];
+  const p10Aligned: (number|null)[] = [...p10Brl, ...p10Post];
+  const p90Aligned: (number|null)[] = [...p90Brl, ...p90Post];
+  const p50Full: (number|null)[]    = [...trilhaBrl, ...p50Post];
+  const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireDates.length).fill(null)];
 
   const allDates = [...dates, ...postFireDates];
 
@@ -613,6 +567,13 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
         lineStyle: { width: 2.5, color: CHART_COLORS.green },
         itemStyle: { color: CHART_COLORS.green },
         symbolSize: 0,
+        ...(fireNumber > 0 ? {
+          markLine: {
+            silent: true,
+            symbol: ['none', 'none'],
+            data: [{ yAxis: fireNumber, lineStyle: { color: CHART_COLORS.green, type: 'dotted' as const, width: 1, opacity: 0.6 }, label: { show: !privacyMode, formatter: 'FIRE #', color: CHART_COLORS.green, fontSize: 10, position: 'insideEndTop' } }],
+          },
+        } : {}),
       },
       // ── P90 (otimista) — future only ──
       {
