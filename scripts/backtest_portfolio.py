@@ -957,6 +957,11 @@ def verify_regime7_data():
     return all_ok
 
 
+# Append-only contract: bumpar quando lógica de R7 mudar (proxies, splices,
+# pesos, métricas) — força rebuild. Lido por generate_data.py.
+METODOLOGIA_VERSION_R7 = "r7-1989-2026-v1"
+
+
 def run_regime7():
     """Executa backtest completo do Regime 7."""
     cfg = REGIME7_CONFIG
@@ -1146,6 +1151,10 @@ def run_regime7():
 
     import datetime as _dt
     return {
+        "_meta": {
+            "metodologia_version": METODOLOGIA_VERSION_R7,
+            "schema_version": "1.0",
+        },
         "gerado_em": _dt.date.today().isoformat(),
         "periodo": {"start": str(r_target_anual.index[0].date()), "end": str(r_target_anual.index[-1].date())},
         "n_meses": len(r_target_anual),

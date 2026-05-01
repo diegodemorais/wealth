@@ -128,16 +128,25 @@ append-only documentado em `agentes/issues/DEV-pipeline-append-only.md` (P1–P5
 `METODOLOGIA_VERSION_*` no script gerador. Próximo run automaticamente faz
 rebuild e registra `rebuild_reason="missing-or-version-mismatch"` no `_meta`.
 
-**Artefatos com contrato ativo (Lote A):**
+**Artefatos com contrato ativo:**
 | Arquivo | Versão | Script |
 |---------|--------|--------|
 | `historico_carteira.csv` (+ sidecar `.meta.json`) | `twr-md-v1` | `reconstruct_history.py` |
 | `retornos_mensais.json` | `twr-md-v1` | `reconstruct_history.py` |
 | `rolling_metrics.json` | `rolling-12m-v1` | `reconstruct_history.py` |
+| `drawdown_history.json` | `dd-peak-trough-v1` | `reconstruct_fire_data.py` |
+| `fire_trilha.json` | `trilha-v1` | `reconstruct_fire_data.py` |
+| `tlh_lotes.json` (`realizados` append + `open_lots` snapshot) | `fifo-ibkr-v1` | `ibkr_lotes.py` |
+| `backtest_r7.json` | `r7-1989-2026-v1` | `backtest_portfolio.py --r7` (via `generate_data.py`) |
 
-Lotes pendentes (issue DEV-pipeline-append-only): `drawdown_history.json`,
-`fire_trilha.json` (Lote B — FIRE specialist), `tlh_lotes.json`
-(Lote C — Tax specialist).
+**Caso especial `tlh_lotes.json`:** Tax specialist confirmou imutabilidade
+fiscal de realizados (data_venda registrada → fato gerador IR ocorrido).
+Estrutura: `realizados[]` (append-only por `trade_id` estável) +
+`open_lots[]` (snapshot reconstruído via FIFO sobre todos os trades a cada
+run). Equivalência matemática: FIFO determinístico na ordem cronológica.
+
+**Teste E2E:** `scripts/test_pipeline_idempotency.py` — roda 2× consecutivas
+e verifica que artefatos não mudam (ignorando `_meta`/`_generated`).
 
 ## Qualidade (Python)
 

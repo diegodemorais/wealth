@@ -30,7 +30,13 @@ OUTPUT_DIR = Path(__file__).parent.parent / "dados"
 OUTPUT_FILE = OUTPUT_DIR / "tlh_lotes.json"
 
 sys.path.insert(0, str(Path(__file__).parent))
+from append_only import load_or_init, write_with_meta
 from config import BUCKET_MAP, IR_ALIQUOTA, DATE_FORMAT_YMD
+
+# Append-only contract: bumpar quando lógica de FIFO ou enrich mudar.
+# Realizados (data_venda registrada, IR já incidiu) são imutáveis.
+# Open lots são snapshot reconstruído a cada run sobre realizados acumulados.
+METODOLOGIA_VERSION_LOTES = "fifo-ibkr-v1"
 
 # Classificação de ETFs
 ALVO = {"SWRD", "AVGS", "AVEM"}
@@ -470,10 +476,20 @@ def summary(lots: list[dict]) -> dict:
     return totals
 
 
+def _realized_trade_id(r: dict) -> str:
+    """Chave estável para um lote realizado (FIFO consume).
+
+    Identifica unicamente um par (lote de compra, evento de venda) que produziu IR.
+    """
+    return f"{r['date']}|{r['symbol']}|{r['lot_date']}|{r['qty_sold']:.6f}|{r['cost_per_share']:.6f}|{r['sell_price']:.6f}"
+
+
 def main():
     parser = argparse.ArgumentParser(description="IBKR Lot Builder (FIFO)")
     parser.add_argument("csv", nargs="?", default=str(DEFAULT_CSV), help="CSV path")
     parser.add_argument("--flex", action="store_true", help="Complement CSV with Flex Query API trades")
+    parser.add_argument("--rebuild", action="store_true",
+                        help="Força regeneração de realizados + open_lots (mesmo com versão igual).")
     args = parser.parse_args()
 
     csv_path = Path(args.csv)
@@ -529,19 +545,58 @@ def main():
         lot["price_usd"] = round(lot["price_usd"], 4)
         lot["commission_usd"] = round(lot["commission_usd"], 4)
 
+    # ── Realizados (append-only) + Open Lots (snapshot) ──────────────────────
+    # Realizados: Tax specialist confirmou imutabilidade fiscal (data_venda
+    # registrada → fato gerador ocorrido). Reconstruir FIFO sobre todos os trades
+    # produz a mesma base de open_lots porque o algoritmo é determinístico na
+    # ordem cronológica. Ver agentes/issues/DEV-pipeline-append-only.md (Lote C).
+    realizados_now = build_realized_pnl(trades)
+    for r in realizados_now:
+        r["trade_id"] = _realized_trade_id(r)
+
+    existing, needs_rebuild = load_or_init(
+        OUTPUT_FILE, METODOLOGIA_VERSION_LOTES, rebuild_flag=args.rebuild,
+    )
+    rebuild_reason = None
+    if needs_rebuild:
+        rebuild_reason = "cli-flag" if args.rebuild else "missing-or-version-mismatch"
+        realizados_merged = realizados_now
+    else:
+        existing_realizados = existing.get("realizados", []) or []
+        # Merge por trade_id: preserva imutáveis, adiciona novos.
+        # NOTA: trade_id NÃO é período → merge_append não se aplica. Usamos
+        # imutabilidade fiscal direta: qualquer realizado em existing é mantido
+        # (princípio: data_venda registrada = fato gerador ocorrido).
+        ex_by_id = {r["trade_id"]: r for r in existing_realizados}
+        realizados_merged_dict = dict(ex_by_id)
+        for r in realizados_now:
+            if r["trade_id"] not in ex_by_id:
+                realizados_merged_dict[r["trade_id"]] = r
+        realizados_merged = sorted(
+            realizados_merged_dict.values(),
+            key=lambda x: (x["date"], x["symbol"], x["lot_date"]),
+        )
+
+    last_period = max((r["date"] for r in realizados_merged), default="")
+
     output = {
-        "_generated": datetime.now(datetime.now().astimezone().tzinfo).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "_window_id": None,
         "_source": csv_path.name + (" + Flex Query" if args.flex else ""),
         "_period": f"{lots[0]['date']} → {lots[-1]['date']}" if lots else "",
         "_ptax_atual": lots[0].get("ptax_atual") if lots else None,
         "summary": summ,
-        "lots": lots,
+        "lots": lots,         # legacy alias = open_lots (consumidores existentes)
+        "open_lots": lots,    # snapshot reconstruído sobre realizados acumulados
+        "realizados": realizados_merged,
     }
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_FILE, "w") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
-    print(f"\n✅ {OUTPUT_FILE} ({len(lots)} lotes, IR total R${summ['ir_brl_total']:,.0f})")
+    write_with_meta(
+        OUTPUT_FILE, output, METODOLOGIA_VERSION_LOTES, last_period,
+        rebuild_reason=rebuild_reason,
+    )
+    print(f"\n✅ {OUTPUT_FILE} ({len(lots)} open lots, "
+          f"{len(realizados_merged)} realizados, IR total R${summ['ir_brl_total']:,.0f})")
 
 
 if __name__ == "__main__":

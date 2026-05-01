@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-05-01T14:48:46",
-  "_window_id": "20260501T144846",
+  "_generated": "2026-05-01T15:48:57",
+  "_window_id": null,
   "_source": "reconstruct_fire_data.py → historico_carteira.csv",
   "dates": [
     "2021-05",
@@ -62,7 +62,8 @@
     "2026-01",
     "2026-02",
     "2026-03",
-    "2026-04"
+    "2026-04",
+    "2026-05"
   ],
   "drawdown_pct": [
     0.0,
@@ -123,10 +124,11 @@
     -7.99,
     -8.3,
     -5.87,
-    -10.86,
-    -7.06
+    -10.53,
+    -6.71,
+    -91.59
   ],
-  "max_drawdown": -30.27,
+  "max_drawdown": -91.59,
   "crises": [
     {
       "nome": "Rate shock Fed",
@@ -146,5 +148,12 @@
       "fim": "2025-11",
       "drawdown_max": -15.0
     }
-  ]
+  ],
+  "_meta": {
+    "metodologia_version": "dd-peak-trough-v1",
+    "schema_version": "1.0",
+    "last_period_appended": "2026-05",
+    "last_appended_at": "2026-05-01T15:48:57-03:00",
+    "rebuild_reason": null
+  }
 }

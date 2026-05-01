@@ -1,9 +1,9 @@
 {
-  "_generated": "2026-05-01T14:48:46",
-  "_window_id": "20260501T144846",
+  "_generated": "2026-05-01T15:40:00",
+  "_window_id": "20260501T154000",
   "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
   "base": {
-    "pfire_2040": 0.8328,
+    "pfire_2040": 0.535,
     "spending_brl": 250000
   },
   "eventos": [
@@ -13,8 +13,8 @@
       "spending_novo": 270000,
       "ano_inicio": 2027,
       "confirmado": true,
-      "pfire_2040": 0.831,
-      "delta_pp": -0.2,
+      "pfire_2040": 0.5062,
+      "delta_pp": -2.9,
       "patrimonio_necessario": 11250000.0
     },
     {
@@ -23,8 +23,8 @@
       "spending_novo": 300000,
       "ano_inicio": 2030,
       "confirmado": false,
-      "pfire_2040": 0.8132,
-      "delta_pp": -2.0,
+      "pfire_2040": 0.4488,
+      "delta_pp": -8.6,
       "patrimonio_necessario": 12500000.0
     },
     {
@@ -33,8 +33,8 @@
       "spending_novo": 300000,
       "ano_inicio": 2030,
       "confirmado": false,
-      "pfire_2040": 0.8132,
-      "delta_pp": -2.0,
+      "pfire_2040": 0.4488,
+      "delta_pp": -8.6,
       "patrimonio_necessario": 12500000.0
     }
   ],

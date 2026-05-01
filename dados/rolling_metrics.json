@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-05-01T15:29:08",
+  "_generated": "2026-05-01T15:38:48",
   "_source": "reconstruct_history.py",
   "window": 12,
   "rf_brl_atual": {
@@ -461,7 +461,7 @@
     "metodologia_version": "rolling-12m-v1",
     "schema_version": "1.0",
     "last_period_appended": "2026-05",
-    "last_appended_at": "2026-05-01T15:29:09-03:00",
+    "last_appended_at": "2026-05-01T15:38:50-03:00",
     "rebuild_reason": null
   }
 }

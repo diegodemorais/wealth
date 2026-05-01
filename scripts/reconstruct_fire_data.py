@@ -33,6 +33,11 @@ ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import numpy as np
+from append_only import (
+    load_or_init,
+    merge_append_parallel,
+    write_with_meta,
+)
 from config import (
     APORTE_MENSAL, CUSTO_VIDA_BASE, PATRIMONIO_GATILHO,
     IDADE_ATUAL, IDADE_CENARIO_BASE,
@@ -51,6 +56,16 @@ from swr_engine import SWREngine, SWRRequest
 NOW = datetime.now().isoformat(timespec="seconds")
 DADOS = ROOT / "dados"
 _WINDOW_ID = None  # DATA_PIPELINE_CENTRALIZATION: Invariant 1 — set by CLI --window-id
+
+# Append-only contract: bumpar quando lógica de cálculo mudar (força rebuild).
+# - DD: peak-to-trough sobre TWR (acumulado_pct ou compondo patrimonio_var).
+# - TRILHA: trilha esperada (CAGR + aportes) vs realizado, ambos por mês.
+METODOLOGIA_VERSION_DD = "dd-peak-trough-v1"
+METODOLOGIA_VERSION_TRILHA = "trilha-v1"
+
+# CLI flag global — definido pelo argparser; permite que generators chamados via
+# --only herdem a flag.
+_REBUILD_FLAG = False
 
 
 def _save(path: Path, data: dict):
@@ -81,8 +96,25 @@ def gen_etf_composition():
 
 # ─── R5: Trilha Patrimonial ────────────────────────────────────────────────────
 
-def gen_fire_trilha():
-    """R5 — Trilha patrimonial esperada vs realizado por ano, extendida até 2040-01."""
+def gen_fire_trilha(rebuild: bool = False):
+    """R5 — Trilha patrimonial esperada vs realizado por ano, extendida até 2040-01.
+
+    Append-only: pontos de meses fechados (histórico) são imutáveis. Futuro é
+    sempre re-projetado a partir do último realizado (MC + trilha continuação).
+    Versão FIRE specialist: trilha esperada (CAGR estático) + realizado fixo →
+    histórico determinístico salvo bump de premissa (force version bump).
+    """
+    out_path = DADOS / "fire_trilha.json"
+    rebuild_flag = rebuild or _REBUILD_FLAG
+    existing_trilha, needs_rebuild_t = load_or_init(
+        out_path, METODOLOGIA_VERSION_TRILHA, rebuild_flag=rebuild_flag,
+    )
+    rebuild_reason_t = None
+    if needs_rebuild_t:
+        rebuild_reason_t = (
+            "cli-flag" if rebuild_flag
+            else "missing-or-version-mismatch"
+        )
     csv_path = DADOS / "historico_carteira.csv"
     if not csv_path.exists():
         print("  ⚠️  historico_carteira.csv não encontrado — skipping fire_trilha")
@@ -223,13 +255,99 @@ def gen_fire_trilha():
         data["trilha_p90_brl"] = trilha_p90_brl
         data["trilha_percentis_source"] = "fire_montecarlo.py projetar_acumulacao_mensal (5k sims, garantindo P10<=P50<=P90)"
 
-    _save(DADOS / "fire_trilha.json", data)
+    # Append-only sobre prefixo histórico: meses fechados imutáveis em
+    # trilha_brl/realizado_brl/status (e percentis None nesse trecho).
+    # Futuro (n_hist..end) é sempre re-projetado: sobrescreve.
+    if not needs_rebuild_t and existing_trilha:
+        ex_dates = existing_trilha.get("dates", [])
+        ex_realizado = existing_trilha.get("realizado_brl", [])
+        # Considerar histórico do existing onde realizado != None (proxy para "fechado").
+        hist_idx_ex = [i for i, v in enumerate(ex_realizado) if v is not None]
+        ex_hist_dates = [ex_dates[i] for i in hist_idx_ex]
+        ex_hist_realizado = [ex_realizado[i] for i in hist_idx_ex]
+        ex_hist_trilha = [existing_trilha.get("trilha_brl", [])[i] for i in hist_idx_ex] if existing_trilha.get("trilha_brl") else []
+        ex_hist_status = [existing_trilha.get("status", [])[i] for i in hist_idx_ex] if existing_trilha.get("status") else []
+
+        new_hist_dates = [r["date"] for r in rows]
+        new_hist_realizado = [round(r["patrimonio"], 0) for r in rows]
+        new_hist_trilha = trilha_hist
+        new_hist_status = status_hist
+
+        if ex_hist_dates and len(ex_hist_trilha) == len(ex_hist_dates) \
+                and len(ex_hist_realizado) == len(ex_hist_dates) \
+                and len(ex_hist_status) == len(ex_hist_dates):
+            try:
+                m_dates, m_arrs, divergent = merge_append_parallel(
+                    ex_hist_dates,
+                    {
+                        "trilha_brl": ex_hist_trilha,
+                        "realizado_brl": ex_hist_realizado,
+                        "status": ex_hist_status,
+                    },
+                    new_hist_dates,
+                    {
+                        "trilha_brl": new_hist_trilha,
+                        "realizado_brl": new_hist_realizado,
+                        "status": new_hist_status,
+                    },
+                )
+                if divergent:
+                    print(f"  ⚠ fire_trilha: {len(divergent)} divergências em meses fechados (mantidas antigas)")
+                # Reconstroi all_* concatenando histórico merged + futuro re-projetado.
+                hist_n = len(m_dates)
+                all_dates = m_dates + future_dates
+                all_trilha = list(m_arrs["trilha_brl"]) + (
+                    [round(v, 0) for v in mc_p50] if trilha_p10_brl is not None else future_trilha
+                )
+                all_realizado = list(m_arrs["realizado_brl"]) + [None] * len(future_dates)
+                all_status = list(m_arrs["status"]) + ["future"] * len(future_dates)
+                if trilha_p10_brl is not None:
+                    trilha_p10_brl = [None] * hist_n + [round(v, 0) for v in mc_p10]
+                    trilha_p50_brl = [None] * hist_n + [round(v, 0) for v in mc_p50]
+                    trilha_p90_brl = [None] * hist_n + [round(v, 0) for v in mc_p90]
+                # Atualiza data dict
+                data["dates"] = all_dates
+                data["trilha_brl"] = all_trilha
+                data["realizado_brl"] = all_realizado
+                data["status"] = all_status
+                if trilha_p10_brl is not None:
+                    data["trilha_p10_brl"] = trilha_p10_brl
+                    data["trilha_p50_brl"] = trilha_p50_brl
+                    data["trilha_p90_brl"] = trilha_p90_brl
+            except ValueError as e:
+                print(f"  ⚠ merge fire_trilha falhou ({e}) — forçando rebuild")
+                rebuild_reason_t = "legacy-misaligned"
+                needs_rebuild_t = True
+
+    last_period_t = data["dates"][n_hist - 1] if n_hist > 0 else ""
+    write_with_meta(
+        out_path, data, METODOLOGIA_VERSION_TRILHA, last_period_t,
+        rebuild_reason=rebuild_reason_t,
+    )
+    print(f"  ✓ {out_path.relative_to(ROOT)} "
+          f"({'rebuild' if needs_rebuild_t else 'append-merge'})")
 
 
 # ─── N1: Drawdown History ──────────────────────────────────────────────────────
 
-def gen_drawdown_history():
-    """N1 — Série temporal de drawdown do portfolio + anotações de crises."""
+def gen_drawdown_history(rebuild: bool = False):
+    """N1 — Série temporal de drawdown do portfolio + anotações de crises.
+
+    Append-only: meses fechados são imutáveis. Mês corrente recalcula.
+    Versão FIRE specialist: drawdown = (value - peak) / peak; peak monotônico
+    sobre histórico fixo → fechados imutáveis (validado).
+    """
+    out_path = DADOS / "drawdown_history.json"
+    rebuild_flag = rebuild or _REBUILD_FLAG
+    existing, needs_rebuild = load_or_init(
+        out_path, METODOLOGIA_VERSION_DD, rebuild_flag=rebuild_flag,
+    )
+    rebuild_reason_dd = None
+    if needs_rebuild:
+        rebuild_reason_dd = (
+            "cli-flag" if rebuild_flag
+            else "missing-or-version-mismatch"
+        )
     retornos_path = DADOS / "retornos_mensais.json"
     historico_path = DADOS / "historico_carteira.csv"
 
@@ -315,6 +433,27 @@ def gen_drawdown_history():
             "drawdown_max": round(dd_max, 1) if dd_max is not None else None,
         })
 
+    # Append-only merge: meses fechados imutáveis.
+    if not needs_rebuild:
+        ex_dates = existing.get("dates", [])
+        ex_dd = existing.get("drawdown_pct", [])
+        if len(ex_dd) == len(ex_dates):
+            try:
+                merged_dates, merged_arrs, divergent = merge_append_parallel(
+                    ex_dates, {"drawdown_pct": ex_dd},
+                    dates, {"drawdown_pct": drawdowns},
+                )
+                if divergent:
+                    print(f"  ⚠ drawdown_history: {len(divergent)} divergências em meses fechados (mantidas antigas)")
+                dates = merged_dates
+                drawdowns = merged_arrs["drawdown_pct"]
+                max_dd = min(drawdowns) if drawdowns else 0.0
+            except ValueError as e:
+                print(f"  ⚠ merge falhou ({e}) — forçando rebuild")
+                rebuild_reason_dd = "legacy-misaligned"
+                needs_rebuild = True
+
+    last_period_dd = dates[-1] if dates else ""
     data = {
         "_generated": NOW,
         "_window_id": _WINDOW_ID,
@@ -324,7 +463,12 @@ def gen_drawdown_history():
         "max_drawdown": round(max_dd, 2),
         "crises": crises,
     }
-    _save(DADOS / "drawdown_history.json", data)
+    write_with_meta(
+        out_path, data, METODOLOGIA_VERSION_DD, last_period_dd,
+        rebuild_reason=rebuild_reason_dd,
+    )
+    print(f"  ✓ {out_path.relative_to(ROOT)} "
+          f"({'rebuild' if needs_rebuild else 'append-merge'})")
 
 
 # ─── N3: Bond Pool Runway ──────────────────────────────────────────────────────
@@ -686,9 +830,13 @@ if __name__ == "__main__":
     parser.add_argument("--only", type=str, help=f"Gerar só um JSON. Opções: {list(GENERATORS)}")
     parser.add_argument("--n-sim", type=int, default=5_000, help="Número de simulações MC (default: 5k)")
     parser.add_argument("--window-id", default=None, help="Pipeline run window ID for synchronization")
+    parser.add_argument("--rebuild", action="store_true",
+                        help="Força regeneração dos artefatos append-only (drawdown, trilha) mesmo com versão igual.")
     args = parser.parse_args()
     if args.window_id:
         _WINDOW_ID = args.window_id
+    if args.rebuild:
+        _REBUILD_FLAG = True
 
     if args.only:
         if args.only not in GENERATORS:

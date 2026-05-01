@@ -41,6 +41,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from pfire_engine import PFireEngine, PFireRequest
 from pfire_transformer import canonicalize_pfire
 from risk_metrics import compute_risk_metrics
+from append_only import load_or_init
 
 from config import (
     PESOS_TARGET, BUCKET_MAP, EQUITY_WEIGHTS,
@@ -154,6 +155,8 @@ PIPELINE_PHASES: dict = {
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
 parser.add_argument("--skip-prices",  action="store_true")
+parser.add_argument("--rebuild-r7",  action="store_true",
+                    help="Força regeneração do backtest_r7.json mesmo com versão igual.")
 args = parser.parse_args()
 
 
@@ -5081,8 +5084,18 @@ def main():
             return None
 
     # ─── Backtest R7 (regime longo 1989-2026) → dados/backtest_r7.json ─────────
-    if not BACKTEST_R7_PATH.exists():
-        print("  ▶ Gerando backtest_r7.json (backtest_portfolio.py --r7) ...")
+    # Append-only via versão de metodologia (P1): se versão divergir → rebuild;
+    # caso contrário pula. Flag --rebuild-r7 força regeneração.
+    from backtest_portfolio import METODOLOGIA_VERSION_R7 as _R7_VER
+    _r7_existing, _r7_needs_rebuild = load_or_init(
+        BACKTEST_R7_PATH, _R7_VER, rebuild_flag=args.rebuild_r7,
+    )
+    if _r7_needs_rebuild:
+        _r7_reason = (
+            "cli-flag" if args.rebuild_r7
+            else "missing-or-version-mismatch"
+        )
+        print(f"  ▶ Gerando backtest_r7.json (backtest_portfolio.py --r7, reason={_r7_reason}) ...")
         _venv_py = Path.home() / "claude" / "finance-tools" / ".venv" / "bin" / "python3"
         _r7_cmd = [str(_venv_py), str(ROOT / "scripts" / "backtest_portfolio.py"), "--r7"]
         _r7_out, _r7_err = run(_r7_cmd)
@@ -5091,12 +5104,21 @@ def main():
         if _r7_out and _r7_out.strip():
             try:
                 _r7_data = json.loads(_r7_out)
+                # Garantir que _meta inclui rebuild_reason e last_appended_at
+                _r7_data.setdefault("_meta", {})
+                _r7_data["_meta"]["metodologia_version"] = _R7_VER
+                _r7_data["_meta"]["schema_version"] = "1.0"
+                _r7_data["_meta"]["rebuild_reason"] = _r7_reason
+                _r7_data["_meta"]["last_appended_at"] = datetime.now().astimezone().isoformat(timespec="seconds")
+                _r7_data["_meta"]["last_period_appended"] = _r7_data.get("periodo", {}).get("end", "")
                 BACKTEST_R7_PATH.write_text(json.dumps(_r7_data, ensure_ascii=False, indent=2))
-                print(f"  ✓ backtest_r7.json salvo")
+                print(f"  ✓ backtest_r7.json salvo (version={_R7_VER})")
             except Exception as _e:
                 print(f"  ✗ Erro ao salvar backtest_r7.json: {_e}")
         else:
             print("  ✗ backtest_r7: sem output JSON")
+    else:
+        print(f"  ✓ backtest_r7.json up-to-date (version={_R7_VER})")
 
     # ─── Realized PnL (IBKR FIFO) → DARF panel ──────────────────────────────
     if not REALIZED_PNL_PATH.exists():
