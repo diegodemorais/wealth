@@ -198,7 +198,7 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
   return (
     <div style={{ padding: '0 16px 16px' }}>
       {/* Seletor de período — scroll horizontal, labels com contexto histórico */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 12, overflowX: 'auto' as const, paddingBottom: 2 }}>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 6, overflowX: 'auto' as const, paddingBottom: 2 }}>
         {PERIODS.filter(p => data[p.id]).map(p => (
           <button
             key={p.id}
@@ -221,6 +221,16 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
           </button>
         ))}
       </div>
+
+      {/* Descrição do período selecionado */}
+      {activePeriod && (() => {
+        const meta = PERIODS.find(p => p.id === activePeriod);
+        return meta ? (
+          <div style={{ fontSize: 11, color: EC.muted, marginBottom: 10 }}>
+            {meta.title}
+          </div>
+        ) : null;
+      })()}
 
       {/* Legenda inline — acima do chart, 3 itens por linha, não sobrepõe eixos */}
       {periodData && (
