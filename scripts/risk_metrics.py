@@ -289,6 +289,15 @@ def _build_sorr_scenarios(sorr_base_pfire: float) -> list[dict]:
     ]
 
 
+def _extract_renda_plus_taxa(data: dict) -> float | None:
+    """Extrai taxa atual da Renda+ 2065 de data['rf']['renda2065']['taxa'].
+
+    Fonte primária: rf.renda2065.taxa (injetado por generate_data.py).
+    Retorna None se não disponível.
+    """
+    return (data.get("rf") or {}).get("renda2065", {}).get("taxa")
+
+
 def compute_risk_metrics(data: dict) -> dict:
     """Calcula todas as métricas de risco e retorna dict `risk`."""
     portfolio_value = _get_portfolio_value(data)
@@ -320,6 +329,30 @@ def compute_risk_metrics(data: dict) -> dict:
     )
     equity_drift_semaforo = _compute_equity_drift_status(data)
 
+    # Renda+ 2065 taxa — injetada de rf.renda2065.taxa (fonte: holdings.md + ANBIMA)
+    taxa_renda_plus = _extract_renda_plus_taxa(data)
+    if taxa_renda_plus is not None:
+        from config import PISO_VENDA_RENDA_PLUS, PISO_TAXA_RENDA_PLUS  # type: ignore[import]
+        _gap_rp = round(taxa_renda_plus - PISO_VENDA_RENDA_PLUS, 2)
+        if taxa_renda_plus <= PISO_VENDA_RENDA_PLUS:
+            _status_rp = "vermelho"
+        elif taxa_renda_plus <= PISO_TAXA_RENDA_PLUS:
+            _status_rp = "amarelo"
+        else:
+            _status_rp = "verde"
+        renda_plus_taxa_semaforo = {
+            "value":  round(taxa_renda_plus, 2),
+            "status": _status_rp,
+            "gap_pp": _gap_rp,
+            "label":  "Ver gatilhos",
+        }
+    else:
+        renda_plus_taxa_semaforo = {
+            "value":  None,
+            "status": "verde",
+            "label":  "Ver gatilhos",
+        }
+
     return {
         "score":               score,
         "label":               _score_label(score),
@@ -340,11 +373,7 @@ def compute_risk_metrics(data: dict) -> dict:
                 "threshold_min": 0.015,
                 "threshold_max": 0.05,
             },
-            "renda_plus_taxa": {
-                "value":  None,
-                "status": "verde",
-                "label":  "Ver gatilhos",
-            },
+            "renda_plus_taxa": renda_plus_taxa_semaforo,
         },
         "duration_scenarios":   duration_scenarios,
         "sorr_scenarios":       _build_sorr_scenarios(sorr_base_pfire),

@@ -196,6 +196,10 @@ def read_holdings_taxas():
         if not m:
             # fallback: última taxa numérica na linha da Renda+ 2065
             m = re.search(r'[Rr]enda\+?\s*2065[^|\n]*?~\s*(\d+[.,]\d+)\s*%', txt)
+        if not m:
+            # fallback: taxa na linha de tabela markdown com corretora (ex: "| Renda+ 2065 | Nubank | ... | 6.80% |")
+            # Captura taxa na 6ª coluna (campo Taxa) — evita gatilho "taxa <= 6.0%"
+            m = re.search(r'^\|\s*[Rr]enda\+?\s*2065\s*\|[^|]+\|[^|]+\|[^|]+\|[^|]+\|\s*(\d+[.,]\d+)\s*%\s*\|', txt, re.MULTILINE)
         if m:
             taxa_renda2065 = float(m.group(1).replace(',', '.'))
     except Exception as e:
@@ -642,6 +646,10 @@ def compute_extended_mc_scenarios(premissas_base: dict) -> dict:
             resultado = fm.rodar_monte_carlo(premissas_mod, n_sim=10_000, cenario="base",
                                              seed=42, strategy="guardrails")
             canonical = canonicalize_pfire(resultado["p_sucesso"], source='mc')
+            # Validação de range: p_sucesso_pct deve ser [0, 100] — 0 é válido (hyperinflation)
+            assert 0.0 <= canonical.percentage <= 100.0, (
+                f"p_sucesso_pct={canonical.percentage} fora de [0,100] — erro no MC ({nome})"
+            )
             results[nome] = {
                 "p_sucesso_pct": canonical.percentage,
                 "label":         cfg["label"],
@@ -1591,7 +1599,11 @@ def get_factor_loadings():
 # ─── 6. POSIÇÕES + PREÇOS ────────────────────────────────────────────────────
 def get_posicoes_precos(state):
     posicoes = state.get("posicoes", {})
-    cambio   = state.get("patrimonio", {}).get("cambio", CAMBIO_FALLBACK)
+    _cambio_state = state.get("patrimonio", {}).get("cambio")
+    _using_fallback = _cambio_state is None or _cambio_state <= 0
+    cambio = _cambio_state if not _using_fallback else CAMBIO_FALLBACK
+    if _using_fallback:
+        print(f"  ⚠️ cambio: state vazio ou inválido — usando CAMBIO_FALLBACK={CAMBIO_FALLBACK} (config.py)")
 
     prices = {}  # cache de preços live; inclui HODL11 quando disponível
     if not args.skip_prices:
@@ -1611,6 +1623,7 @@ def get_posicoes_precos(state):
             # Câmbio
             if "USD_BRL" in prices:
                 cambio = prices["USD_BRL"]
+                _using_fallback = False
 
             # Atualizar preços nas posições
             for tk, pos in posicoes.items():
@@ -1618,6 +1631,11 @@ def get_posicoes_precos(state):
                     posicoes[tk]["price"] = prices[tk]
         except Exception as e:
             print(f"  ⚠️ yfinance: {e}")
+
+    # Assertion: câmbio deve ser positivo — base de todos cálculos patrimoniais
+    assert cambio is not None and cambio > 0, f"cambio inválido: {cambio} — verificar dashboard_state.json e yfinance"
+    if _using_fallback:
+        print(f"  ⚠️ ATENÇÃO: câmbio={cambio} é FALLBACK (não live). Todos os valores patrimoniais em BRL são estimados.")
 
     # Garantir bucket, status e TER em cada posição
     for tk, pos in posicoes.items():
@@ -5363,6 +5381,14 @@ def main():
             if "ter" not in _etf:
                 _etf["ter"] = ETF_TER.get(_tk)
         # G11: fetch AUM from yfinance — €300M IPS comfort threshold
+        # Nota: yfinance não retorna totalAssets para ETFs UCITS irlandeses (SWRD.L, AVGS.L, AVEM.L).
+        # Fallback hardcoded baseado em dados públicos (atualizar trimestralmente):
+        # SWRD ~$80B USD (MSCI World, maior ETF UCITS), AVGS ~$2.8B, AVEM ~$3.5B — fonte: etf.com/justetf 2025-05
+        _AUM_FALLBACKS_USD = {
+            "SWRD": 80_000_000_000,  # ~$80B USD — MSCI World UCITS (maior ETF UCITS global)
+            "AVGS": 2_800_000_000,   # ~$2.8B USD — Avantis Global Small Cap Value UCITS
+            "AVEM": 3_500_000_000,   # ~$3.5B USD — Avantis EM Equity UCITS
+        }
         _AUM_THRESHOLD_EUR = 300_000_000
         _AUM_USD_TO_EUR = 0.92  # fixed rate (EUR PTAX unavailable)
         try:
@@ -5375,8 +5401,16 @@ def main():
                 try:
                     _info = yf.Ticker(_yf_ticker).info
                     _aum_usd = _info.get("totalAssets")
+                    # Se yfinance não retornar AUM (UCITS sem totalAssets), usar fallback
+                    _aum_source = "yfinance"
+                    if not _aum_usd:
+                        _aum_usd = _AUM_FALLBACKS_USD.get(_tk_key)
+                        _aum_source = "fallback_hardcoded_2025-05"
+                        if _aum_usd:
+                            print(f"    ⚠️ yfinance não retornou AUM para {_tk_key} (UCITS) — usando fallback ${_aum_usd/1e9:.1f}B USD")
                     _aum_eur = round(_aum_usd * _AUM_USD_TO_EUR) if _aum_usd else None
                     _etf_entry["aum_eur"] = _aum_eur
+                    _etf_entry["aum_source"] = _aum_source
                     _etf_entry["aum_threshold_eur"] = _AUM_THRESHOLD_EUR
                     if _aum_eur is not None:
                         if _aum_eur < 150_000_000:
@@ -5388,9 +5422,24 @@ def main():
                     else:
                         _etf_entry["aum_status"] = "desconhecido"
                 except Exception:
-                    _etf_entry.setdefault("aum_status", "desconhecido")
+                    # Fallback para exceções individuais (timeout, parse error)
+                    _fb_usd = _AUM_FALLBACKS_USD.get(_tk_key)
+                    if _fb_usd:
+                        _etf_entry["aum_eur"] = round(_fb_usd * _AUM_USD_TO_EUR)
+                        _etf_entry["aum_source"] = "fallback_hardcoded_2025-05"
+                        _etf_entry["aum_threshold_eur"] = _AUM_THRESHOLD_EUR
+                        _etf_entry["aum_status"] = "verde"  # todos os fallbacks estão acima do threshold
+                    else:
+                        _etf_entry.setdefault("aum_status", "desconhecido")
         except ImportError:
-            pass  # yfinance not available — AUM fields omitted
+            # yfinance não disponível — aplicar todos os fallbacks
+            for _tk_key, _fb_usd in _AUM_FALLBACKS_USD.items():
+                if _tk_key in etf_comp_data["etfs"]:
+                    _etf_entry = etf_comp_data["etfs"][_tk_key]
+                    _etf_entry["aum_eur"] = round(_fb_usd * _AUM_USD_TO_EUR)
+                    _etf_entry["aum_source"] = "fallback_hardcoded_2025-05"
+                    _etf_entry["aum_threshold_eur"] = _AUM_THRESHOLD_EUR
+                    _etf_entry["aum_status"] = "verde"
     bond_pool_rwy_data  = _load_json_safe(BOND_POOL_RUNWAY_PATH, "bond_pool_runway")
     lumpy_data          = _load_json_safe(LUMPY_EVENTS_PATH,     "lumpy_events")
 
@@ -6087,6 +6136,17 @@ def main():
             print(f"  ✓ SSOT validation: OK (pipeline_run={d['_pipeline_run']})")
 
     _validate_ssot_basic(data)
+
+    # ─── Assertions de integridade para campos críticos ────────────────────────
+    # Bloqueia pipeline se campos críticos forem None/zero — dados corrompidos não chegam ao dashboard.
+    _pfire_asp = data.get("pfire_aspiracional") or {}
+    _pfire_base_d = data.get("pfire_base") or {}
+    _dd_hist = data.get("drawdown_history")
+    assert pfire_aspiracional is not None, "pfire_aspiracional é None — pipeline abortado"
+    assert _pfire_asp.get("base") is not None, f"pfire_aspiracional.base é None — verificar PFireEngine"
+    assert _pfire_base_d.get("base") is not None, f"pfire_base.base é None — verificar PFireEngine"
+    assert _dd_hist is not None, "drawdown_history é None — verificar reconstruct_fire_data.py"
+    assert cambio > 0, f"cambio={cambio} inválido no momento do save — pipeline abortado"
 
     OUT_PATH.parent.mkdir(exist_ok=True)
     OUT_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False))

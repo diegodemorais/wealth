@@ -244,17 +244,32 @@ def gen_drawdown_history():
         acum = rm.get("acumulado_pct", [])
         pat_series = [100 * (1 + a / 100) for a in acum]
 
-    # Fallback: patrimônio bruto (apenas se não houver retornos TWR)
+    # Fallback: TWR via patrimonio_var (retorno % mensal) — mais preciso que patrimônio bruto
+    # patrimônio bruto é distorcido por aportes que criam picos artificiais, mascarando drawdown real.
+    # patrimonio_var é o retorno % do mês, que ao ser composto resulta em índice TWR correto.
     if not pat_series and historico_path.exists():
         import csv as _csv
+        _twr_rows = []
         with open(historico_path, newline="", encoding="utf-8") as f:
             reader = _csv.DictReader(f)
             for row in reader:
                 try:
-                    dates.append(row["data"][:7])
-                    pat_series.append(float(row["patrimonio_brl"]))
+                    dt = row["data"][:7]
+                    pv_str = row.get("patrimonio_var", "").strip()
+                    _twr_rows.append((dt, pv_str))
                 except (KeyError, ValueError):
                     continue
+        if _twr_rows:
+            # Construir índice TWR: começa em 100, compõe patrimonio_var mensalmente
+            twr_idx = 100.0
+            for dt, pv_str in _twr_rows:
+                dates.append(dt)
+                pat_series.append(round(twr_idx, 6))
+                if pv_str:
+                    try:
+                        twr_idx *= (1 + float(pv_str) / 100)
+                    except ValueError:
+                        pass  # mês sem retorno: mantém índice
 
     if not pat_series:
         print("  ⚠️  Sem dados para drawdown_history")
