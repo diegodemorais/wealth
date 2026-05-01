@@ -260,9 +260,15 @@ function FireSimuladorSection() {
   if (isPresetMode) {
     // Preset mode: use pré-computed data
     if (isAspirPreset) {
-      // Aspiracional: use earliest_fire from MC
+      // Aspiracional: use earliest_fire + scenario_comparison.aspiracional para pat/swr
       if (earliestFire) {
-        result = { ano: earliestFire.ano, idade: earliestFire.idade, pat: 0, swrAtFire: 0 };
+        const aspirScenario = (data as any)?.scenario_comparison?.aspiracional;
+        result = {
+          ano: earliestFire.ano,
+          idade: earliestFire.idade,
+          pat: aspirScenario?.pat_mediano ?? 0,
+          swrAtFire: aspirScenario?.swr ?? 0,
+        };
         firePire = (data as any)?.pfire_aspiracional?.base ?? earliestFire.pfire ?? null;
       }
     } else if (isCambioDinamico) {
