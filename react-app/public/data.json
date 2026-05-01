@@ -953,11 +953,11 @@
       "base": 91.1,
       "fav": 91.1,
       "stress": 78.7,
-      "pat_mediano": 0,
-      "pat_p10": null,
-      "pat_p90": null,
+      "pat_mediano": 12727921.0,
+      "pat_p10": 7756273.0,
+      "pat_p90": 20042742.0,
       "gasto_anual": 250000,
-      "swr": 0
+      "swr": 1.96
     },
     "fire53": {
       "idade": 53,
@@ -975,11 +975,11 @@
       "base": 91.1,
       "fav": 91.1,
       "stress": 78.7,
-      "pat_mediano": 0,
-      "pat_p10": null,
-      "pat_p90": null,
+      "pat_mediano": 12727921.0,
+      "pat_p10": 7756273.0,
+      "pat_p90": 20042742.0,
       "gasto_anual": 250000,
-      "swr": 0
+      "swr": 1.96
     },
     "nota_scenarios_pat": "Pat. mediano no FIRE Day (base): R$11.48M (@53) / R$0.00M (@49). Fonte: fire_montecarlo.py MC 10k sims."
   },
