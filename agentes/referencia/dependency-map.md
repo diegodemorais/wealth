@@ -220,6 +220,11 @@ carteira.md → premissas.pct_equity
 | 2026-05-01 | `retorno_decomposicao` bloqueia pipeline | Sem cache fallback; reconstruct_history não rodou | Cache fallback adicionado | ⚠ Não |
 | 2026-05-01 | ReverseFire aspiracional usava aporte R$25k e idadeFire=53 | build_pfire_request não usava aporte_cenario_aspiracional; setAspiracional não setava idadeFire | Corrigido em generate_data.py e ReverseFire.tsx | ⚠ Não |
 | 2026-05-01 | StressTest label "50 anos (FIRE aspiracional)" | Hardcoded; idade mudou de 50 para 49 | Hardcoded corrigido para 49 | ⚠ Não |
+| 2026-05-01 | `drawdown_history.crises[1].drawdown_max=0.0` (Tariffs Trump) | `gen_drawdown_history()` usava patrimônio bruto como fallback quando `retornos_mensais.json` ausente; aportes inflavam patrimônio mascarando drawdown real | Corrigido para usar TWR via `patrimonio_var` (retorno % mensal do CSV). Agora Tariffs Trump=-7.7%, Rate shock Fed=-30.3% | ⚠ Não (testes existentes passam) |
+| 2026-05-01 | `etf_composition.SWRD.aum_eur=null` | yfinance não retorna `totalAssets` para ETFs UCITS irlandeses (.L suffix) | Fallback hardcoded com dados 2025-05: SWRD ~$80B, AVGS ~$2.8B, AVEM ~$3.5B. `aum_source=fallback_hardcoded_2025-05` documentado | ⚠ Não |
+| 2026-05-01 | `risk.semaforos.renda_plus_taxa.value=null` | `compute_risk_metrics()` hardcodava `value=None` no semaforo; não lia `rf.renda2065.taxa` | `_extract_renda_plus_taxa(data)` adicionado; semaforo agora reflete taxa real com status verde/amarelo/vermelho e gap_pp | ⚠ Não |
+| 2026-05-01 | `mercado.renda2065_mtd_pp=null` | `read_holdings_taxas()` regex procurava "Taxa atual ~X%" mas holdings.md usa formato de tabela `\| 6.80% \|` | Adicionado terceiro fallback regex para tabela markdown (6ª coluna). Taxa 6.80% agora capturada corretamente | ⚠ Não |
+| 2026-05-01 | `cambio` sem assertion — fallback silencioso | `get_posicoes_precos()` usava `CAMBIO_FALLBACK` sem avisar quando state vazio | Assertion `assert cambio > 0` adicionada; logs explícitos quando fallback ativo; flag `_using_fallback` rastreada | ⚠ Não |
 
 ---
 
@@ -249,7 +254,7 @@ Legenda: ✅ = assertion presente e bloqueia | ⚠ = sem assertion (falha silenc
 |-------|-----------|-----------|--------|-------|
 | `date` | `main()` date.today() | ⚠ | ok | BAIXO |
 | `timestamps` | `get_source_timestamps()` | ⚠ | ok | BAIXO |
-| `cambio` | `get_posicoes_precos()` yfinance BRL/USD | ⚠ | ok (usa CAMBIO_FALLBACK se yfinance falha — sem aviso explícito) | **MÉDIO** — base de todos os cálculos sem assert |
+| `cambio` | `get_posicoes_precos()` yfinance BRL/USD | ✅ (assert >0) | ok (loga explicitamente quando CAMBIO_FALLBACK ativo) | BAIXO — assert bloqueia pipeline se câmbio inválido |
 
 ### Posições e Alocação
 
@@ -267,7 +272,7 @@ Legenda: ✅ = assertion presente e bloqueia | ⚠ = sem assertion (falha silenc
 |-------|-----------|-----------|--------|-------|
 | `pfire_aspiracional` | `get_pfire_tornado()` PFireEngine | ⚠ | ok (91.1%) | MÉDIO |
 | `pfire_base` | `get_pfire_tornado()` PFireEngine | ⚠ | ok (83.4%) | MÉDIO 📌 |
-| `pfire_cenarios_estendidos` | `compute_extended_mc_scenarios()` | ⚠ | 🔴 `stagflation.params.retorno_equity_base=0.0`; `hyperinflation.p_sucesso_pct=0.0` | **ALTO** — zeros suspeitos passam silenciosamente |
+| `pfire_cenarios_estendidos` | `compute_extended_mc_scenarios()` | ✅ (assert 0≤pct≤100) | `stagflation=14.9%`, `hyperinflation=0.0%` — ambos válidos. 0.0 é correto para cenário catastrófico | BAIXO |
 | `pfire_by_profile` | `main()` stub | ✅ assert "atual" presente | `casado.base=null`, `filho.base=null` — design (TODO) | MÉDIO |
 | `premissas` | `main()` dict (35 sub-campos) | ✅ fire_year_base, haircut_alpha_liquido | ok | BAIXO |
 | `tornado` | `get_pfire_tornado()` --tornado subprocess | ⚠ | ok (4 variáveis) | MÉDIO 📌 |
