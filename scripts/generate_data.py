@@ -3,10 +3,9 @@
 generate_data.py — Agrega todos os dados da carteira em react-app/public/data.json.
 
 Uso:
-    python3 scripts/generate_data.py [--skip-scripts] [--skip-prices]
+    python3 scripts/generate_data.py [--skip-prices]
 
 Flags:
-    --skip-scripts  Não roda fire_montecarlo/backtest/fx_utils (usa cache)
     --skip-prices   Não busca preços yfinance (usa dashboard_state.json)
 
 Output:
@@ -154,7 +153,6 @@ PIPELINE_PHASES: dict = {
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
-parser.add_argument("--skip-scripts", action="store_true")
 parser.add_argument("--skip-prices",  action="store_true")
 args = parser.parse_args()
 
@@ -591,10 +589,6 @@ def build_pfire_request(scenario: str, premissas: dict) -> PFireRequest:
 # ─── 1b. RECONSTRUIR FIRE DATA (fire_trilha com P10/P90) ──────────────────────
 def rebuild_fire_data(window_id: str = None):
     """Roda reconstruct_fire_data.py para gerar JSONs FIRE (fire_trilha, drawdown, fire_matrix, etc)."""
-    if args.skip_scripts:
-        print("  ⊘ reconstruct_fire_data.py (skip-scripts)")
-        return
-
     print("  ▶ reconstruct_fire_data.py: fire_trilha, drawdown, fire_swr_percentis ...")
     # Quick run: essential components (fire_matrix is slow, run separately with smaller n_sim)
     # Pass --window-id so all outputs share same synchronization window (Invariant 1)
@@ -667,56 +661,6 @@ def compute_extended_mc_scenarios(premissas_base: dict) -> dict:
 
 # ─── 2. P(FIRE) + TORNADO ────────────────────────────────────────────────────
 def get_pfire_tornado():
-    if args.skip_scripts:
-        state = load_state()
-        fire = state.get("fire", {})
-        # Normalizar tornado: garantir campos "label" (schema) e "variavel" (template)
-        raw_tornado = fire.get("tornado", [])
-        norm_tornado = []
-        for t in raw_tornado:
-            var = t.get("variavel", t.get("label", ""))
-            norm_tornado.append({
-                "label":    var,
-                "variavel": var,
-                "mais10":   t.get("mais10", 0),
-                "menos10":  t.get("menos10", 0),
-                "delta":    t.get("delta", abs(t.get("mais10", 0)) + abs(t.get("menos10", 0))),
-            })
-        # pfire_aspiracional = P(FIRE@49) — Cenário Aspiracional (FIRE 2035, 49 anos)
-        # pfire_base = P(FIRE@53) — Cenário Base (FIRE 2040, 53 anos)
-        # State values come from last MC run → source="mc", is_canonical=True
-        _pfire_has_mc = bool(fire.get("pfire_base") or fire.get("pfire49_base"))
-        _source = "mc" if _pfire_has_mc else "fallback"
-
-        # Computar p_quality_aspiracional se ausente (roda mesmo em skip-scripts)
-        if fire.get("p_quality_aspiracional") is None:
-            try:
-                import fire_montecarlo as _fm_aspq
-                _idade_aspir = _fm_aspq.PREMISSAS.get("idade_cenario_aspiracional", 49)
-                _premissas_aspir = dict(_fm_aspq.PREMISSAS)
-                _premissas_aspir["idade_fire_alvo"] = _idade_aspir
-                _premissas_aspir["anos_simulacao"] = _fm_aspq.HORIZONTE_VIDA - _idade_aspir
-                _pq_aspir = _fm_aspq.compute_p_quality(_premissas_aspir, n_sim=5_000, seed=42,
-                                                        bond_pool_isolation=_premissas_aspir.get("bond_pool_isolation", False))
-                _fire_upd = {**fire, "p_quality_aspiracional": round(_pq_aspir * 100, 1)}
-                update_dashboard_state("fire", _fire_upd, generator="generate_data.py")
-                fire["p_quality_aspiracional"] = round(_pq_aspir * 100, 1)
-                print(f"  ✓ p_quality_aspiracional: {_pq_aspir:.1%} (computado inline)")
-            except Exception as _eq:
-                print(f"  ⚠️ p_quality_aspiracional falhou: {_eq}")
-
-        return (
-            {"base": fire.get("pfire49_base", fire.get("pfire50_base", fire.get("pfire_base"))),
-             "fav":  fire.get("pfire49_fav",  fire.get("pfire50_fav",  fire.get("pfire_fav"))),
-             "stress": fire.get("pfire49_stress", fire.get("pfire50_stress", fire.get("pfire_stress"))),
-             "source": _source, "is_canonical": _pfire_has_mc},
-            {"base": fire.get("pfire53_base", fire.get("pfire_base")),
-             "fav":  fire.get("pfire53_fav",  fire.get("pfire_fav")),
-             "stress": fire.get("pfire53_stress", fire.get("pfire_stress")),
-             "source": _source, "is_canonical": _pfire_has_mc},
-            norm_tornado
-        )
-
     # ─── Usar PFireEngine para cálculos canônicos de P(FIRE) ────────────────
     print("  ▶ Calculando P(FIRE) canônicos via PFireEngine ...")
     premissas, _, _, _ = get_premissas()
@@ -865,13 +809,6 @@ def get_pfire_tornado():
 
 # ─── 3. BACKTEST ──────────────────────────────────────────────────────────────
 def get_backtest():
-    if args.skip_scripts:
-        # Tenta ler de arquivo JSON de cache
-        cache = ROOT / "dados" / "ibkr" / "backtest_cache.json"
-        if cache.exists():
-            return json.loads(cache.read_text())
-        return {}
-
     print("  ▶ backtest_portfolio.py ...")
     out, err = run([VENV_PY, "scripts/backtest_portfolio.py", "--json"], cwd=ROOT)
 
@@ -1345,12 +1282,8 @@ def _try_populate_factor_cache():
         return  # já existe
     print("  ▶ factor cache não encontrado — tentando popular inline ...")
     try:
-        # Temporariamente desabilitar skip_scripts para computar factor data
-        _orig = args.skip_scripts
-        args.skip_scripts = False
         rolling  = get_factor_rolling()
         loadings = get_factor_loadings()
-        args.skip_scripts = _orig
 
         cache_data = {}
         if rolling.get("dates"):
@@ -1402,16 +1335,6 @@ def get_factor_rolling():
     threshold (yellow) = -5pp, threshold_red = -10pp (Gap W 2026-04-28)
     """
     THRESHOLD = FACTOR_UNDERPERF_THRESHOLD
-
-    if args.skip_scripts:
-        try:
-            cache = json.loads(FACTOR_CACHE.read_text())
-            if "factor_rolling" in cache:
-                print("  ✓ factor_rolling (cache)")
-                return _enrich_factor_rolling(cache["factor_rolling"])
-        except Exception:
-            pass
-        return _enrich_factor_rolling({"dates": [], "avgs_vs_swrd_12m": [], "threshold": THRESHOLD})
 
     print("  ▶ factor rolling 12m AVGS vs SWRD ...")
     try:
@@ -1473,26 +1396,9 @@ def get_factor_signal():
 
     Different from factor_rolling (rolling 12-month window) — shows discrete
     periods useful for KPI card display.
-    Falls back to dashboard_state.json when --skip-scripts.
     """
     AVGS_LAUNCH = date(2024, 10, 14)
     AVGS_LAUNCH_STR = "2024-10-14"
-
-    if args.skip_scripts:
-        # Try dashboard_state first, then factor_cache
-        for src_path, src_name in [
-            (ROOT / "dados" / "dashboard_state.json", "state"),
-            (FACTOR_CACHE, "cache"),
-        ]:
-            try:
-                s = json.loads(src_path.read_text())
-                fs = s.get("factor_signal")
-                if fs:
-                    print(f"  ✓ factor_signal ({src_name})")
-                    return fs
-            except Exception:
-                pass
-        return None
 
     print("  ▶ factor signal (YTD + since launch) ...")
     try:
@@ -1540,18 +1446,8 @@ def get_factor_loadings():
 
     Returns dict: {TICKER: {alpha, mkt_rf, smb, hml, rmw, cma, mom, r2, n_months}, ...}
     Uses Developed Markets factors from Ken French Data Library.
-    Caches result to dados/factor_cache.json for --skip-scripts.
+    Caches result to dados/factor_cache.json.
     """
-    if args.skip_scripts:
-        try:
-            cache = json.loads(FACTOR_CACHE.read_text())
-            if "factor_loadings" in cache:
-                print("  ✓ factor_loadings (cache)")
-                return cache["factor_loadings"]
-        except Exception:
-            pass
-        return {}
-
     print("  ▶ factor loadings (FF5 + MOM) ...")
     try:
         import io as _io
