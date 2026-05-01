@@ -687,6 +687,24 @@ def get_pfire_tornado():
         # State values come from last MC run → source="mc", is_canonical=True
         _pfire_has_mc = bool(fire.get("pfire_base") or fire.get("pfire49_base"))
         _source = "mc" if _pfire_has_mc else "fallback"
+
+        # Computar p_quality_aspiracional se ausente (roda mesmo em skip-scripts)
+        if fire.get("p_quality_aspiracional") is None:
+            try:
+                import fire_montecarlo as _fm_aspq
+                _idade_aspir = _fm_aspq.PREMISSAS.get("idade_cenario_aspiracional", 49)
+                _premissas_aspir = dict(_fm_aspq.PREMISSAS)
+                _premissas_aspir["idade_fire_alvo"] = _idade_aspir
+                _premissas_aspir["anos_simulacao"] = _fm_aspq.HORIZONTE_VIDA - _idade_aspir
+                _pq_aspir = _fm_aspq.compute_p_quality(_premissas_aspir, n_sim=5_000, seed=42,
+                                                        bond_pool_isolation=_premissas_aspir.get("bond_pool_isolation", False))
+                _fire_upd = {**fire, "p_quality_aspiracional": round(_pq_aspir * 100, 1)}
+                update_dashboard_state("fire", _fire_upd, generator="generate_data.py")
+                fire["p_quality_aspiracional"] = round(_pq_aspir * 100, 1)
+                print(f"  ✓ p_quality_aspiracional: {_pq_aspir:.1%} (computado inline)")
+            except Exception as _eq:
+                print(f"  ⚠️ p_quality_aspiracional falhou: {_eq}")
+
         return (
             {"base": fire.get("pfire49_base", fire.get("pfire50_base", fire.get("pfire_base"))),
              "fav":  fire.get("pfire49_fav",  fire.get("pfire50_fav",  fire.get("pfire_fav"))),
@@ -729,6 +747,24 @@ def get_pfire_tornado():
                          "pat_p10_aspiracional":     round(result_aspiracional.pat_p10_fire, 0),
                          "pat_p90_aspiracional":     round(result_aspiracional.pat_p90_fire, 0)}
             update_dashboard_state("fire", _fire_upd, generator="generate_data.py")
+
+        # Computar p_quality_aspiracional inline (evita rodar fire_montecarlo standalone)
+        if _sf_asp.get("p_quality_aspiracional") is None:
+            try:
+                import fire_montecarlo as _fm_aspq
+                _idade_aspir = premissas.get("idade_cenario_aspiracional", 49)
+                _premissas_aspir = dict(_fm_aspq.PREMISSAS)
+                _premissas_aspir["idade_fire_alvo"] = _idade_aspir
+                _premissas_aspir["anos_simulacao"] = _fm_aspq.HORIZONTE_VIDA - _idade_aspir
+                _bond_isol = _premissas_aspir.get("bond_pool_isolation", False)
+                _pq_aspir = _fm_aspq.compute_p_quality(_premissas_aspir, n_sim=5_000, seed=42,
+                                                        bond_pool_isolation=_bond_isol)
+                _fire_upd2 = {**load_state().get("fire", {}), "p_quality_aspiracional": round(_pq_aspir * 100, 1)}
+                update_dashboard_state("fire", _fire_upd2, generator="generate_data.py")
+                print(f"  ✓ p_quality_aspiracional: {_pq_aspir:.1%}")
+            except Exception as _eq:
+                print(f"  ⚠️ p_quality_aspiracional falhou: {_eq}")
+
         print(f"  ✓ Aspiracional (P@49): {canonical_aspiracional.pct_str} (canônico, source={canonical_aspiracional.source})")
     except Exception as e:
         print(f"  ⚠️ PFireEngine aspiracional falhou: {e} — usando fallback")

@@ -203,7 +203,8 @@ function FireSimuladorSection() {
   };
 
   const setFire50Preset = () => {
-    if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
+    const aspiracionalAporte = premissas.aporte_mensal_aspiracional ?? premissas.aporte_mensal;
+    if (aspiracionalAporte != null) setAporte(aspiracionalAporte);
     const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
     if (favRetorno != null) setRetorno(fracToPct(favRetorno));
     const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
@@ -485,8 +486,8 @@ function FireSimuladorSection() {
             ))}
           </div>
           <button
-            className="seg-btn"
-            style={{ borderRadius: '6px', border: '1px dashed var(--border)', background: 'transparent' }}
+            className={`seg-btn${isAspirPreset ? ' active' : ''}`}
+            style={{ borderRadius: '6px', border: `1px dashed ${isAspirPreset ? 'var(--accent)' : 'var(--border)'}`, background: isAspirPreset ? 'rgba(99,179,237,.08)' : 'transparent' }}
             onClick={setFire50Preset}
           >
             🎯 Aspiracional
