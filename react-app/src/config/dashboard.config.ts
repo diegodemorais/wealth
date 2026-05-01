@@ -88,6 +88,8 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'rf-crypto',     title: 'Renda Fixa + Cripto',                      defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
     { id: 'real-yield',    title: 'Real Yield Gauge — NTN-Bs Líquido de IR',  defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
     { id: 'crypto-band',   title: 'HODL11 — Banda Criptográfica',             defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
+    // Group: Análise de Risco
+    { id: 'risk-return-scatter', title: 'Retorno vs. Risco por Classe de Ativos', defaultOpen: true, collapsible: true, group: 'Análise de Risco' },
   ],
 
   // ── PERFORMANCE (/performance) ─────────────────────────────────────────────
