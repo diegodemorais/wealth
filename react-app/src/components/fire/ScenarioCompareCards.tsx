@@ -139,10 +139,12 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
   // Shared cell styles
   const thStyle = (color: string): React.CSSProperties => ({
     borderTop: `3px solid ${color}`,
-    padding: '10px 8px 8px',
+    padding: '10px 4px 8px',
     textAlign: 'center' as const,
     width: '21%',
     background: 'var(--card)',
+    minWidth: 92,
+    wordBreak: 'break-word' as const,
   });
 
   const tdLabelStyle: React.CSSProperties = {
