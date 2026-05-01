@@ -15,6 +15,9 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-05-01T09:00:00Z', type: 'gráfico', component: 'RollingReturnsHeatmap', tab: 'portfolio', anchor: 'section-rolling-returns', de: 'Heatmap mensal com eixo confuso', para: 'Heatmap por ano: células maiores, valor CAGR em cada célula, tooltip com range' },
+  { datetime: '2026-05-01T09:00:00Z', type: 'layout', component: 'ScenarioCompareCards', tab: 'fire', anchor: 'section-scenario-compare-cards', de: 'Dois componentes duplicados (cards + tabela)', para: 'Componente único de cards com P(Quality) e gasto anual; tabela removida' },
+  { datetime: '2026-05-01T09:00:00Z', type: 'fix', component: 'FeeImpactChart', tab: 'portfolio', anchor: 'section-fee-impact', de: 'Seção fechada por padrão', para: 'Seção aberta por padrão' },
   { datetime: '2026-05-01T21:30:00-03:00', type: 'gráfico', component: 'FeeImpactChart', tab: 'portfolio', anchor: 'section-fee-impact', de: 'Sem visualização de custo TER acumulado', para: 'Linha dupla portfolio com/sem TER projetado 20a; área vermelha = custo em BRL; TER médio ponderado 0.247%/a' },
   { datetime: '2026-05-01T21:30:00-03:00', type: 'gráfico', component: 'FactorProfileChart', tab: 'portfolio', anchor: 'section-factor-profile', de: 'Factor loadings só por ETF individual (FF5 bars)', para: 'Factor Profile Comparativo lado a lado SWRD vs AVGS vs AVEM — estilo Morningstar' },
   { datetime: '2026-05-01T21:30:00-03:00', type: 'gráfico', component: 'RollingReturnsHeatmap', tab: 'portfolio', anchor: 'section-rolling-returns', de: 'Sem visualização de retornos móveis', para: 'Heatmap 1a/3a/5a de janelas móveis do backtest; verde=positivo, vermelho=negativo' },

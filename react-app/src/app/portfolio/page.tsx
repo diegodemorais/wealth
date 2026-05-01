@@ -1050,7 +1050,7 @@ export default function PortfolioPage() {
         <CollapsibleSection
           id="section-fee-impact"
           title={secTitle('portfolio', 'fee-impact', 'Impacto das Taxas (TER) — Custo Acumulado 20 anos')}
-          defaultOpen={secOpen('portfolio', 'fee-impact', false)}
+          defaultOpen={secOpen('portfolio', 'fee-impact', true)}
         >
           <FeeImpactChart data={(data as any).fee_impact} />
         </CollapsibleSection>

@@ -11,7 +11,6 @@ import { AlertTriangle } from 'lucide-react';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
 import { NetWorthProjectionChart } from '@/components/charts/NetWorthProjectionChart';
 import { GlidePathChart } from '@/components/charts/GlidePathChart';
-import { FireScenariosTable } from '@/components/fire/FireScenariosTable';
 import { SequenceOfReturnsRisk } from '@/components/fire/SequenceOfReturnsRisk';
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
@@ -593,18 +592,6 @@ export default function FirePage() {
       >
         <div style={{ padding: '0 16px 16px' }}>
           <ScenarioCompareCards />
-        </div>
-      </CollapsibleSection>
-
-      {/* C10b: Tabela detalhada Base vs Aspiracional */}
-      <CollapsibleSection
-        id="section-scenario-compare"
-        title={secTitle('fire', 'scenario-compare', 'Tabela detalhada — Base vs Aspiracional')}
-        defaultOpen={secOpen('fire', 'scenario-compare', false)}
-      >
-        <div style={{ padding: '0 16px 16px' }}>
-          <FireScenariosTable />
-          <div className="src">Base: Monte Carlo 10k simulações</div>
         </div>
       </CollapsibleSection>
 
