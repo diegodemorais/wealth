@@ -12,6 +12,7 @@
 
 import { useState, useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
+import { useChartResize } from '@/hooks/useChartResize';
 import { EC, EC_TOOLTIP, EC_AXIS_LABEL, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
@@ -68,6 +69,7 @@ function symbolSize(weight: number): number {
 // ── Componente ────────────────────────────────────────────────────────────────
 
 export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
+  const chartRef = useChartResize();
   const [period, setPeriod] = useState(DEFAULT_PERIOD);
 
   // Escolher período disponível mais próximo do selecionado
@@ -223,7 +225,7 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
       {/* Chart */}
       {periodData ? (
         <div data-testid="risk-return-scatter-chart">
-          <EChart option={option} style={{ height: 360 }} />
+          <EChart ref={chartRef} option={option} style={{ height: 360 }} />
         </div>
       ) : (
         <div style={{ color: 'var(--muted)', fontSize: 12, padding: '20px 0' }}>
