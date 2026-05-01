@@ -15,14 +15,15 @@ import { computeDerivedValues } from '@/utils/dataWiring';
 
 // Mês corrente no formato YYYY-MM (compatível com ultimoAporteData)
 const CURRENT_MONTH = new Date().toISOString().substring(0, 7);
+const CURRENT_DATE = CURRENT_MONTH + '-01';
 const PAST_MONTH = '2020-01';
 
 function makeData(premissasOverride: Record<string, any> = {}, topOverride: Record<string, any> = {}): DashboardData {
   return {
-    _generated: '2026-04-01T00:00:00Z',
-    _generated_brt: '2026-04-01T00:00:00-03:00',
-    date: '2026-04-01',
-    timestamps: { geral: '2026-04-01T00:00:00Z', posicoes_ibkr: '', precos_yfinance: '', historico_csv: '', holdings_md: '', fire_mc: '' },
+    _generated: CURRENT_DATE + 'T00:00:00Z',
+    _generated_brt: CURRENT_DATE + 'T00:00:00-03:00',
+    date: CURRENT_DATE,
+    timestamps: { geral: CURRENT_DATE + 'T00:00:00Z', posicoes_ibkr: '', precos_yfinance: '', historico_csv: '', holdings_md: '', fire_mc: '' },
     cambio: 5.0,
     posicoes: { SWRD: { valor_usd: 100000, valor_brl: 500000, bucket: 'DM', shares: 1000, price_usd: 100, pct_portfolio: 0.5 } },
     pesosTarget: { SWRD: 0.5 },

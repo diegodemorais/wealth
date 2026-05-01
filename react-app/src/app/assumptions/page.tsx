@@ -100,9 +100,17 @@ const TAB_LABELS: Record<string, string> = {
 };
 
 function fmtDatetime(iso: string): string {
-  const [date, time] = iso.split('T');
-  const [y, m, d] = date.split('-');
-  return `${d}/${m} ${time}`;
+  try {
+    return new Date(iso).toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return iso;
+  }
 }
 
 function ChangelogTable() {

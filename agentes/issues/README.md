@@ -39,20 +39,17 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Dependências Resolvidas |
 |----|--------|------|------------|----------|
-| FR-audit-p2-improvements | P2 Melhorias — 40 itens em 3 clusters (labels, métricas analíticas, UX) | Dev | 🟡 P2 — Backlog | HD-visual-audit-playwright concluída |
-| DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | Dev | 🟡 Média | ARCH-audit concluída |
-| DEV-qa-improvements | Implementar Melhorias QA-test-plan-audit (CR/MD/BX) | Dev | 🟡 Média | QA-test-plan-audit concluída |
-| DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | Head + Dev | 🟡 Média | — |
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
 
 ### Done — Últimas Issues Concluídas
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DEV-arch-fixes | Implementar Backlog ARCH-audit (P1/P2/P3) | 2026-04-30 | ECharts strict typing (CallbackDataParams), dead code removal, usePageData migration. Build ✅ 669 testes. |
+| DEV-qa-improvements | Implementar Melhorias QA — Fases 1+2 | 2026-04-30 | Privacy regression (••%), dcaItems validation, PerformanceSummary privacy mode. 40/40 test files, 669 testes. Fase 3 (BX) → backlog baixo. |
+| DEV-privacy-audit-react | Auditoria Privacy Mode — Dashboard React (v2) | 2026-04-30 | ECharts privacy gaps auditados e corrigidos. useEChartsPrivacy() aplicado onde faltava. |
+| FR-audit-p2-improvements | P2 Melhorias — 40 itens em 3 clusters (labels, métricas analíticas, UX) | 2026-04-30 | Todos os 40 itens P2 endereçados. |
 | FR-audit-p1-missing | P1 Info Crítica — 12/13 gaps implementados (G4 spending smile aguarda spec) | 2026-04-30 | G1-G3, G5-G13: AUM alert, P(FIRE) cenários, NTN-B history, bond pool progress, TER+AUM HoldingsTable, guardrail strip, IPCA+ slider. G4 (spending smile) → aguarda spec FIRE. |
-| FR-audit-p0-bugs | P0 Bugs — 10 bugs corrigidos, B8 reclassificado | 2026-04-30 | B1-B11 resolvidos: no-sell, E[R] USD, targets clarity, age/aporte/year dinâmicos, DCA badge, alpha geométrico, haircut dinâmico, pfire_by_profile stub. B8 → spending smile (G4/P1). |
-| HD-visual-audit-playwright | Auditoria Visual Playwright — 64 findings, P0/P1/P2 priorizados, 10 issues P0 abertas | 2026-04-30 | 64 findings (11 P0 bugs, 13 P1 faltando, 40 P2 melhorias). P0: rebalancing no-sell, E[R] BRL, equity targets, age hardcoded, FIRE labels, coast aporte, renda floor Katia, piso RF, DCA renda, alpha annualization, fee literal. 10 issues FR- sugeridas. |
-| HD-aposenteaos40-ui-gaps-v2 | Análise UI aposenteaos40.org — 4 gaps implementados | 2026-04-30 | Gap 1: ETA mês/ano. Gap 2: taxa de poupança KPI. Gap 3: fan chart P10/P90 (já existia). Gap 4: Marcos FIRE (Barista/Lean/FIRE) + notas acadêmico vs comunidade. Dashboard v1.224.0. |
 | DEV-iifpt-dashboard | Dashboard IIFPT: Radar, Regime Badge, Gap Note, Pipeline | 2026-04-30 | CC1: priority_matrix + domain_coverage + regime_vida em data.json. DC1: IifptRadar (ECharts Radar 6 eixos, RM/Est em vermelho). DC2: badge "Acumulação · r3 ~2034" no NOW tab. DC3: nota "RM ❌ Est ⏳ não modelados" no KpiHero. 664 testes ✅. Dashboard v1.202.2. |
 | HD-iifpt-integration | Aplicação do Framework IIFPT à Carteira de Diego | 2026-04-30 | Λ calibrado: Inv 0.35/Ret 0.25/Tax 0.18/CF 0.10/RM 0.07/Est 0.05. Driver Tax↔Inv (46.8%). Gap RM confirmado. Regime r2, trigger r3 ~2034. CC2 config.py. Coupling reference. Integration premium ~7.8% NW midpoint. Spec Dev → DEV-iifpt-dashboard. |
 | QA-test-plan-audit | Auditoria e Melhoria dos Planos de Teste | 2026-04-30 | Auditoria completa: 3 gaps críticos (CR-1 ••% masking, CR-2 assertions falsas, CR-3 E2E ineficaz), 4 médios, 3 baixos. Plano 3 fases documentado. Backlog implementação → DEV-qa-improvements. |
