@@ -41,8 +41,7 @@
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-
-(vazio)
+| _(vazio)_ | | | |
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -65,6 +64,7 @@
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DEV-overlap-chart-v2 | Overlap Chart v2 — ticker + labels inline + top-5 concentração | 2026-05-01 | Grid 2 colunas (overlaps + top-5 totais), ticker no eixo Y, % inline com threshold 0.05%, privacy preservada. |
 | DEV-overlap-detection | Overlap Detection ETFs — SWRD/AVGS/AVEM | 2026-05-01 | OverlapChart implementado. Dados proxy sintéticos. Pipeline inline em generate_data.py. |
 | XX-system-audit | Auditoria Sistêmica Completa | 2026-05-01 | 12+ problemas estruturais corrigidos. Backlog documentado em DEV-pipeline-gaps-p2. |
 | DEV-style-box | Style Box 3×3 via Factor Loadings | 2026-05-01 | StyleBoxChart implementado. |
