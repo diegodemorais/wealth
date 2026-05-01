@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-05-01T12:10:00Z', type: 'layout', component: 'ScenarioCompareCards', tab: 'fire', anchor: 'section-scenario-compare-cards', de: '3 colunas: BASE/FAVORÁVEL/ASPIRACIONAL', para: '4 colunas: SOLTEIRO/CASADO/FILHO/ASPIR — P(Quality) de p_quality_matrix.B, gastos familiares canônicos (270k/300k)' },
   { datetime: '2026-05-01T11:00:00Z', type: 'gráfico', component: 'OverlapChart', tab: 'portfolio', anchor: 'section-overlap', de: 'Sem visualização de overlap entre ETFs', para: 'Horizontal stacked bar: top holdings compartilhados entre SWRD/AVGS/AVEM com peso consolidado na carteira' },
   { datetime: '2026-05-01T10:00:00Z', type: 'layout', component: 'ScenarioCompareCards', tab: 'fire', anchor: 'section-scenario-compare-cards', de: 'Cards empilhados verticalmente (muito scroll no mobile)', para: 'Tabela comparativa 3 colunas: BASE/FAVORÁVEL/ASPIRACIONAL — toda informação visível sem scroll' },
   { datetime: '2026-05-01T09:00:00Z', type: 'gráfico', component: 'RollingReturnsHeatmap', tab: 'portfolio', anchor: 'section-rolling-returns', de: 'Heatmap mensal com eixo confuso', para: 'Heatmap por ano: células maiores, valor CAGR em cada célula, tooltip com range' },

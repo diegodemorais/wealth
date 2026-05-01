@@ -1,18 +1,17 @@
 'use client';
 
 /**
- * ScenarioCompareCards — tabela comparativa 3 colunas: BASE | FAVORÁVEL | ASPIRACIONAL.
+ * ScenarioCompareCards — tabela comparativa 4 colunas: SOLTEIRO | CASADO | FILHO | ASPIRAC.
  *
- * Substitui layout de cards empilhados por tabela compacta onde todas as métricas
- * ficam visíveis de uma vez, sem scroll vertical no mobile.
- * Spending sensitivity cards abaixo quando spendingSensibilidade não vazia.
+ * P(FIRE) para casado/filho é pipeline TODO (null → mostra —).
+ * P(Quality) vem de fire.p_quality_matrix.values.B (critério B = padrão).
+ * Gasto casado=270k/filho=300k são valores canônicos do pipeline.
  */
 
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
-// Badge color by P(FIRE) threshold
 function pfireBadgeStyle(pfire: number): React.CSSProperties {
   const bg =
     pfire >= 70 ? 'rgba(62,211,129,0.15)' :
@@ -22,10 +21,9 @@ function pfireBadgeStyle(pfire: number): React.CSSProperties {
     pfire >= 70 ? 'var(--green)'  :
     pfire >= 50 ? 'var(--yellow)' :
                   'var(--red)';
-  return { background: bg, color, border: `1px solid ${color}40`, borderRadius: 12, padding: '2px 8px', fontWeight: 700, fontSize: 'var(--text-sm)', display: 'inline-block' };
+  return { background: bg, color, border: `1px solid ${color}40`, borderRadius: 12, padding: '2px 6px', fontWeight: 700, fontSize: 'var(--text-sm)', display: 'inline-block' };
 }
 
-// Badge color by P(Quality) threshold — same semaphore as P(FIRE)
 function pqualityBadgeStyle(pq: number): React.CSSProperties {
   const color =
     pq >= 70 ? 'var(--green)'  :
@@ -37,10 +35,10 @@ function pqualityBadgeStyle(pq: number): React.CSSProperties {
 interface ScenarioCardData {
   title: string;
   subtitle: string;
-  pfire: number;
-  pquality?: number | null;
+  pfire: number | null;
+  pquality: number | null;
   pat_mediano: number | null;
-  gasto_anual?: number | null;
+  gasto_anual: number | null;
   swr: number | null;
   idade: number;
   highlightColor: string;
@@ -55,7 +53,6 @@ interface SpendingSensItem {
 }
 
 interface ScenarioCompareCardsProps {
-  // Allow overriding data for tests
   scenarioComparison?: {
     base?: { idade?: number; base?: number; fav?: number; pat_mediano?: number; swr?: number; gasto_anual?: number };
     aspiracional?: { idade?: number; base?: number; pat_mediano?: number; swr?: number; gasto_anual?: number };
@@ -74,11 +71,13 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
   const sc = scenarioComparison ?? (storeData as any)?.scenario_comparison;
   const pb = pfireBase ?? (storeData as any)?.pfire_base;
 
-  // P(Quality) from props or store
   const pQualityBase = pqBaseProp !== undefined ? pqBaseProp : ((storeData as any)?.fire?.p_quality ?? null);
-  const pQualityAsp  = pqAspProp !== undefined  ? pqAspProp  : ((storeData as any)?.fire?.p_quality_aspiracional ?? null);
+  const pQualityAsp  = pqAspProp  !== undefined ? pqAspProp  : ((storeData as any)?.fire?.p_quality_aspiracional ?? null);
 
-  // Spending sensitivity rows (future feature — empty array if not present)
+  // P(Quality) matrix — criterion B (default: ≤1 ano ruim total)
+  const pqMatrix = (storeData as any)?.fire?.p_quality_matrix?.values ?? null;
+  const pqB = pqMatrix?.B ?? null;
+
   const spendingSensibilidade: SpendingSensItem[] = (storeData as any)?.spendingSensibilidade ?? [];
 
   if (!sc) {
@@ -99,13 +98,12 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
     return privacyMode ? '••%' : `${v.toFixed(1)}%`;
   };
 
-  // 3 cards: base, favorável (base cenário com pfire fav), aspiracional
   const cards: ScenarioCardData[] = [
     {
-      title: 'Base',
+      title: 'Solteiro',
       subtitle: `${sc.base?.idade ?? 53} anos`,
-      pfire: pb?.base ?? sc.base?.base ?? 0,
-      pquality: pQualityBase,
+      pfire: pb?.base ?? sc.base?.base ?? null,
+      pquality: pqB?.atual?.base ?? pQualityBase,
       pat_mediano: sc.base?.pat_mediano ?? null,
       gasto_anual: sc.base?.gasto_anual ?? null,
       swr: sc.base?.swr ?? null,
@@ -113,21 +111,32 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
       highlightColor: 'var(--accent)',
     },
     {
-      title: 'Favorável',
+      title: 'Casado',
       subtitle: `${sc.base?.idade ?? 53} anos`,
-      pfire: pb?.fav ?? sc.base?.fav ?? 0,
-      pquality: null, // P(Quality) not computed for favorável
-      pat_mediano: sc.base?.pat_mediano ?? null,
-      gasto_anual: sc.base?.gasto_anual ?? null,
-      swr: sc.base?.swr ?? null,
+      pfire: null, // pipeline TODO: MC com tem_conjuge=True
+      pquality: pqB?.casado?.base ?? null,
+      pat_mediano: null,
+      gasto_anual: 270_000,
+      swr: null,
       idade: sc.base?.idade ?? 53,
-      highlightColor: 'var(--green)',
+      highlightColor: 'var(--yellow)',
     },
     {
-      title: 'Aspiracional',
+      title: 'Filho',
+      subtitle: `${sc.base?.idade ?? 53} anos`,
+      pfire: null, // pipeline TODO: MC com custo_vida_filho
+      pquality: pqB?.filho?.base ?? null,
+      pat_mediano: null,
+      gasto_anual: 300_000,
+      swr: null,
+      idade: sc.base?.idade ?? 53,
+      highlightColor: 'var(--red)',
+    },
+    {
+      title: 'Aspir',
       subtitle: `${sc.aspiracional?.idade ?? 49} anos`,
-      pfire: sc.aspiracional?.base ?? 0,
-      pquality: pQualityAsp,
+      pfire: sc.aspiracional?.base ?? null,
+      pquality: pqB?.atual?.base != null ? (pQualityAsp) : pQualityAsp,
       pat_mediano: sc.aspiracional?.pat_mediano ?? null,
       gasto_anual: sc.aspiracional?.gasto_anual ?? null,
       swr: sc.aspiracional?.swr ?? null,
@@ -136,15 +145,13 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
     },
   ];
 
-  // Shared cell styles
   const thStyle = (color: string): React.CSSProperties => ({
     borderTop: `3px solid ${color}`,
     padding: '10px 4px 8px',
     textAlign: 'center' as const,
-    width: '21%',
+    width: '19%',
     background: 'var(--card)',
-    minWidth: 92,
-    wordBreak: 'break-word' as const,
+    minWidth: 78,
   });
 
   const tdLabelStyle: React.CSSProperties = {
@@ -153,7 +160,7 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
     textTransform: 'uppercase',
     letterSpacing: '.4px',
     padding: '7px 8px',
-    width: '37%',
+    width: '24%',
     whiteSpace: 'nowrap' as const,
   };
 
@@ -161,10 +168,10 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
     fontSize: 'var(--text-sm)',
     fontWeight: 600,
     color: 'var(--text)',
-    padding: '7px 8px',
+    padding: '7px 4px',
     textAlign: 'center' as const,
     background: isEven ? 'var(--card-alt, rgba(255,255,255,0.02))' : 'transparent',
-    width: '21%',
+    width: '19%',
   });
 
   const trStyle = (isEven: boolean): React.CSSProperties => ({
@@ -174,24 +181,21 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
 
   return (
     <div data-testid="scenario-compare-cards">
-      {/* Comparative table — overflowX for mobile landscape */}
       <div style={{ overflowX: 'auto', marginBottom: 16 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 320 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 360 }}>
           <thead>
             <tr>
-              {/* Label column — empty header */}
-              <th style={{ width: '37%', padding: '10px 8px 8px', textAlign: 'left', background: 'var(--card)' }} />
-
+              <th style={{ width: '24%', padding: '10px 8px 8px', textAlign: 'left', background: 'var(--card)' }} />
               {cards.map((card) => (
                 <th
                   key={card.title}
                   data-testid={`scenario-card-${card.title.toLowerCase()}`}
                   style={thStyle(card.highlightColor)}
                 >
-                  <div style={{ fontSize: 9, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>
+                  <div style={{ fontSize: 8, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.3px', marginBottom: 2 }}>
                     {card.title}
                   </div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: card.highlightColor }}>
+                  <div style={{ fontSize: '1rem', fontWeight: 800, color: card.highlightColor }}>
                     {card.subtitle}
                   </div>
                 </th>
@@ -200,19 +204,23 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
           </thead>
 
           <tbody>
-            {/* P(FIRE) row */}
+            {/* P(FIRE) */}
             <tr style={trStyle(false)}>
               <td style={tdLabelStyle}>P(FIRE)</td>
               {cards.map((card) => (
                 <td key={card.title} style={{ ...tdValStyle(false), textAlign: 'center' }}>
-                  <span data-testid={`pfire-badge-${card.title.toLowerCase()}`} style={pfireBadgeStyle(card.pfire)}>
-                    {privacyMode ? '••%' : `${card.pfire.toFixed(1)}%`}
-                  </span>
+                  {card.pfire != null ? (
+                    <span data-testid={`pfire-badge-${card.title.toLowerCase()}`} style={pfireBadgeStyle(card.pfire)}>
+                      {privacyMode ? '••%' : `${card.pfire.toFixed(1)}%`}
+                    </span>
+                  ) : (
+                    <span style={{ color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>—</span>
+                  )}
                 </td>
               ))}
             </tr>
 
-            {/* P(Quality) row — base and aspiracional only; favorável shows dash */}
+            {/* P(Quality) */}
             <tr style={trStyle(true)}>
               <td style={{ ...tdLabelStyle, background: 'var(--card-alt, rgba(255,255,255,0.02))' }}>P(Quality)</td>
               {cards.map((card) => (
@@ -231,7 +239,7 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
               ))}
             </tr>
 
-            {/* Patrimônio row */}
+            {/* Patrimônio */}
             <tr style={trStyle(false)}>
               <td style={tdLabelStyle}>Patrimônio</td>
               {cards.map((card) => (
@@ -243,7 +251,7 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
               ))}
             </tr>
 
-            {/* Gasto anual row — only when at least one card has data */}
+            {/* Gasto anual */}
             {cards.some((c) => c.gasto_anual != null && c.gasto_anual > 0) && (
               <tr style={trStyle(true)}>
                 <td style={{ ...tdLabelStyle, background: 'var(--card-alt, rgba(255,255,255,0.02))' }}>Gasto anual</td>
@@ -255,7 +263,7 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
               </tr>
             )}
 
-            {/* SWR row — only when at least one card has data */}
+            {/* SWR */}
             {cards.some((c) => c.swr != null && c.swr > 0) && (
               <tr style={trStyle(false)}>
                 <td style={tdLabelStyle}>SWR</td>
@@ -267,7 +275,7 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
               </tr>
             )}
 
-            {/* Ano FIRE row */}
+            {/* Ano FIRE */}
             <tr style={trStyle(true)}>
               <td style={{ ...tdLabelStyle, background: 'var(--card-alt, rgba(255,255,255,0.02))' }}>Ano FIRE</td>
               {cards.map((card) => (
@@ -280,7 +288,6 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
         </table>
       </div>
 
-      {/* Spending sensitivity cards — only shown when data is non-empty */}
       {spendingSensibilidade.length > 0 && (
         <div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 8 }}>

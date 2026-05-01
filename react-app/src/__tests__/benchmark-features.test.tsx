@@ -114,7 +114,7 @@ describe('RollingReturnsHeatmap — CAGR calculation', () => {
 // ─── Feature 2: ScenarioCompareCards ────────────────────────────────────────
 
 describe('ScenarioCompareCards', () => {
-  it('renders 3 cards with scenario data', async () => {
+  it('renders 4 cards with scenario data', async () => {
     const { ScenarioCompareCards } = await import('@/components/fire/ScenarioCompareCards');
     render(
       React.createElement(ScenarioCompareCards, {
@@ -127,9 +127,10 @@ describe('ScenarioCompareCards', () => {
       })
     );
     expect(screen.getByTestId('scenario-compare-cards')).toBeDefined();
-    expect(screen.getByTestId('scenario-card-base')).toBeDefined();
-    expect(screen.getByTestId('scenario-card-favorável')).toBeDefined();
-    expect(screen.getByTestId('scenario-card-aspiracional')).toBeDefined();
+    expect(screen.getByTestId('scenario-card-solteiro')).toBeDefined();
+    expect(screen.getByTestId('scenario-card-casado')).toBeDefined();
+    expect(screen.getByTestId('scenario-card-filho')).toBeDefined();
+    expect(screen.getByTestId('scenario-card-aspir')).toBeDefined();
   });
 
   it('badge is green when P(FIRE) > 70%', async () => {
@@ -144,7 +145,7 @@ describe('ScenarioCompareCards', () => {
         privacyMode: false,
       })
     );
-    const baseBadge = screen.getByTestId('pfire-badge-base');
+    const baseBadge = screen.getByTestId('pfire-badge-solteiro');
     // Green style should be applied — check content shows >70%
     expect(baseBadge.textContent).toContain('83.4%');
     // The style should contain the green color
