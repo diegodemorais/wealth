@@ -53,5 +53,8 @@ dashboard/audit-reports/
 __pycache__/
 react-app/public/data/data.json
 
-# Generated data files (outputs from Python scripts)
-dados/
+# Pipeline outputs em dados/ DEVEM ser versionados — CI não roda Python,
+# só faz Next.js build. Todos os JSONs consumidos pelo React/Next chegam ao
+# deploy via git. Ignorar apenas raw caches grandes/transitórios:
+dados/binance/raw/
+dados/**/*.tmp

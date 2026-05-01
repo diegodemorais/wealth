@@ -41,7 +41,7 @@
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| _(vazio)_ | | | |
+| DEV-pipeline-append-only | Pipeline append-only — séries históricas determinísticas | Dev (+ Bookkeeper, FIRE, Tax) | 🟡 Média |
 
 ### Blocked
 > Issues aguardando dependências externas

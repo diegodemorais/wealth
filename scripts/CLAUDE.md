@@ -85,6 +85,60 @@ resultado = fetch_with_retry(
 
 **Shadows:** após fechar um mês de checkin_mensal, rodar `python3 scripts/reconstruct_shadows.py` para agregar retornos em períodos trimestrais no state.
 
+## Append-only contract
+
+Séries históricas determinísticas em `dados/` (mensal/diário) seguem contrato
+append-only documentado em `agentes/issues/DEV-pipeline-append-only.md` (P1–P5).
+
+**Helpers canônicos:** `scripts/append_only.py`
+- `load_or_init(path, version, *, rebuild_flag)` → `(artefato, needs_rebuild)`
+- `write_with_meta(path, data, version, last_period, rebuild_reason=None)`
+- `is_period_closed(period, today=None)` — mês/dia anterior ao corrente
+- `merge_append(existing, new, key)` — merge por chave (`mes`, `data`)
+- `merge_append_parallel(ex_dates, ex_arr, new_dates, new_arr)` — para artefatos
+  com arrays paralelos (ex: `retornos_mensais.json`)
+- `load_or_init_sidecar` / `write_meta_sidecar` — para CSV (`<name>.meta.json`)
+
+**Bloco `_meta` canônico:**
+```json
+{
+  "_meta": {
+    "metodologia_version": "twr-md-v1",
+    "schema_version": "1.0",
+    "last_period_appended": "2026-04",
+    "last_appended_at": "2026-05-01T15:00:00-03:00",
+    "rebuild_reason": null
+  }
+}
+```
+
+**Princípios vinculantes:**
+- **P1.** `metodologia_version` é o gate: divergência entre script e arquivo
+  força rebuild (registra `rebuild_reason`).
+- **P2.** Períodos fechados (mês anterior ao corrente, dia anterior a hoje)
+  são imutáveis. Mês corrente pode ser atualizado a cada run.
+- **P3.** Cada script gerador de série histórica passa por `load_or_init` e
+  termina em `write_with_meta`/`write_meta_sidecar`.
+- **P4.** Cada script tem flag `--rebuild` (CLI) que força regeneração mesmo
+  com versão igual.
+- **P5.** Antes de bumpar metodologia: validar bit-for-bit que `--rebuild`
+  produz output idêntico ao append (excluindo `_meta` e `_generated`).
+
+**Bumpar versão:** ao alterar lógica de cálculo de um artefato, incrementar
+`METODOLOGIA_VERSION_*` no script gerador. Próximo run automaticamente faz
+rebuild e registra `rebuild_reason="missing-or-version-mismatch"` no `_meta`.
+
+**Artefatos com contrato ativo (Lote A):**
+| Arquivo | Versão | Script |
+|---------|--------|--------|
+| `historico_carteira.csv` (+ sidecar `.meta.json`) | `twr-md-v1` | `reconstruct_history.py` |
+| `retornos_mensais.json` | `twr-md-v1` | `reconstruct_history.py` |
+| `rolling_metrics.json` | `rolling-12m-v1` | `reconstruct_history.py` |
+
+Lotes pendentes (issue DEV-pipeline-append-only): `drawdown_history.json`,
+`fire_trilha.json` (Lote B — FIRE specialist), `tlh_lotes.json`
+(Lote C — Tax specialist).
+
 ## Qualidade (Python)
 
 - Funções: 4–20 linhas, responsabilidade única

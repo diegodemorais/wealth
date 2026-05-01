@@ -12,6 +12,7 @@ Fontes:
 Output: dados/historico_carteira.csv (patrimônio BRL mensal real)
 """
 
+import argparse
 import csv
 import json
 import sys
@@ -21,6 +22,24 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from config import TICKER_SWRD_LSE, COLUMN_CLOSE, DATE_FORMAT_YM, DATE_FORMAT_YMD
+from append_only import (
+    is_period_closed,
+    load_or_init,
+    load_or_init_sidecar,
+    merge_append,
+    merge_append_parallel,
+    write_meta_sidecar,
+    write_with_meta,
+)
+
+# ── Append-only methodology versions (P1) ─────────────────────────────────────
+# Bumpar quando lógica de cálculo mudar — força rebuild dos artefatos:
+#   - historico_carteira.csv (TWR Modified Dietz mensal)
+#   - retornos_mensais.json  (TWR + decomposição + annual table)
+#   - rolling_metrics.json   (Sharpe/Sortino/Vol/MaxDD rolling 12-mo)
+METODOLOGIA_VERSION_HISTORICO = "twr-md-v1"
+METODOLOGIA_VERSION_RETORNOS = "twr-md-v1"
+METODOLOGIA_VERSION_ROLLING = "rolling-12m-v1"
 
 ROOT = Path(__file__).parent.parent
 IBKR_CSV = ROOT / "analysis" / "raw" / "U5947683.TRANSACTIONS.20210408.20260331.csv"
@@ -544,9 +563,10 @@ def _last_known_fx(fx: dict, month: str) -> float:
 # 6. MAIN: reconstruct monthly patrimonio
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def main():
+def main(rebuild: bool = False):
     print("=" * 70)
-    print("RECONSTRUÇÃO DO HISTÓRICO DE PATRIMÔNIO MENSAL")
+    print("RECONSTRUÇÃO DO HISTÓRICO DE PATRIMÔNIO MENSAL"
+          + (" [--rebuild]" if rebuild else " [append-only]"))
     print("=" * 70)
 
     # ── Step 1: Build positions ────────────────────────────────────────────
@@ -817,16 +837,87 @@ def main():
             else:
                 row["equity_var_usd"] = ""
 
+    # ── Append-only contract: merge com CSV existente, preservando meses fechados ──
+    # CSV não tem _meta inline → meta vai em sidecar historico_carteira.meta.json.
+    rebuild_reason = None
+    sidecar_meta, needs_rebuild_csv = load_or_init_sidecar(
+        OUTPUT_CSV, METODOLOGIA_VERSION_HISTORICO, rebuild_flag=rebuild,
+    )
+    if needs_rebuild_csv:
+        rebuild_reason = "cli-flag" if rebuild else (
+            "missing-or-version-mismatch" if not OUTPUT_CSV.exists()
+            or sidecar_meta.get("_meta", {}).get("metodologia_version") != METODOLOGIA_VERSION_HISTORICO
+            else "stale-sidecar"
+        )
+        merged_rows = rows
+        divergences: list[str] = []
+    else:
+        # Carrega CSV existente, merge por chave 'data' (YYYY-MM-DD) tratando
+        # meses fechados como imutáveis. Fechamento avaliado por YYYY-MM (primeiros 7 chars).
+        existing_rows: list[dict] = []
+        with open(OUTPUT_CSV, newline="", encoding="utf-8") as fh:
+            existing_rows = list(csv.DictReader(fh))
+        # Normaliza: a chave de fechamento é YYYY-MM, mas merge_append usa key='data'
+        # (YYYY-MM-DD). Para que is_period_closed funcione, criamos chave auxiliar 'mes'.
+        for r in existing_rows:
+            r["mes"] = r["data"][:7]
+        new_rows_normalized = [dict(r, mes=r["data"][:7]) for r in rows]
+        merged_with_mes = merge_append(existing_rows, new_rows_normalized, key="mes")
+        # Diagnóstico: detectar divergências em meses fechados
+        divergences = []
+        ex_by_mes = {r["mes"]: r for r in existing_rows}
+        for new_r in new_rows_normalized:
+            mes = new_r["mes"]
+            if mes in ex_by_mes and is_period_closed(mes):
+                old = ex_by_mes[mes]
+                for fn in fieldnames:
+                    old_v = str(old.get(fn, ""))
+                    new_v = str(new_r.get(fn, ""))
+                    if old_v != new_v:
+                        divergences.append(f"{mes}/{fn}: {old_v!r} → {new_v!r}")
+                        break
+        merged_rows = merged_with_mes
+
+    print(f"\n8. Writing {OUTPUT_CSV.relative_to(ROOT)} "
+          f"({'rebuild' if needs_rebuild_csv else 'append-merge'})...")
+    if divergences:
+        print(f"   ⚠ {len(divergences)} divergência(s) em meses fechados (mantidas as antigas):")
+        for d in divergences[:5]:
+            print(f"     - {d}")
+        if len(divergences) > 5:
+            print(f"     ... +{len(divergences) - 5} mais")
+
     with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(merged_rows)
+    last_period_csv = merged_rows[-1]["data"][:7] if merged_rows else ""
+    write_meta_sidecar(
+        OUTPUT_CSV, METODOLOGIA_VERSION_HISTORICO, last_period_csv,
+        rebuild_reason=rebuild_reason,
+    )
+
+    # rows reflete o que foi efetivamente persistido (com meses fechados imutáveis):
+    # importante para que _generate_core_jsons compute sobre os mesmos dados.
+    # Re-cast para garantir mesmas chaves originais (sem 'mes' extra).
+    rows = [{k: v for k, v in r.items() if k != "mes"} for r in merged_rows]
+    # Re-coerce tipos numéricos que vieram do CSV como string (apenas no merge path).
+    if not needs_rebuild_csv:
+        for r in rows:
+            for fn in ("patrimonio_brl", "aporte_brl", "equity_usd", "aporte_usd",
+                       "equity_brl", "xp_brl", "rf_brl", "coe_brl", "usdbrl"):
+                v = r.get(fn, "")
+                if isinstance(v, str) and v != "":
+                    try:
+                        r[fn] = float(v)
+                    except ValueError:
+                        pass
 
     # ═══════════════════════════════════════════════════════════════════
     # 9. Generate core JSON structures
     # ═══════════════════════════════════════════════════════════════════
     print(f"\n9. Generating core JSON structures...")
-    _generate_core_jsons(rows)
+    _generate_core_jsons(rows, rebuild=rebuild)
 
     print(f"\n{'=' * 70}")
     print(f"✅ {len(rows)} meses escritos em {OUTPUT_CSV.relative_to(ROOT)}")
@@ -989,10 +1080,25 @@ def _compute_information_ratio(dates: list[str], twr_usd_pct: list) -> dict | No
     return result
 
 
-def _generate_core_jsons(rows: list[dict]):
+def _generate_core_jsons(rows: list[dict], rebuild: bool = False):
     """
     Gera os JSONs core da camada de dados do portfolio.
     Fonte de verdade para todos os consumidores (dashboard, checkin, FIRE MC, retros).
+
+    Append-only contract:
+    - retornos_mensais.json e rolling_metrics.json têm bloco _meta
+      (metodologia_version, last_period_appended, ...).
+    - Em modo append (rebuild=False e versão match): meses fechados são imutáveis,
+      apenas mês corrente + meses novos são (re)escritos com valores recém-calculados.
+    - Em modo rebuild (rebuild=True ou versão divergiu): regenera tudo, registra
+      rebuild_reason no _meta.
+
+    Nuances:
+    - rolling_metrics.json: rolling 12-mo precisa dos 11 meses anteriores ao mês novo
+      para calcular cada janela. O cálculo é executado sobre a série completa em
+      memória (`twr_pct`, `dates`); a economia do append acontece somente no
+      *write*: pontos de janelas que terminam em mês fechado mantêm valor antigo
+      caso o existente já cubra (P2).
     """
     import math
     import json as _json
@@ -1348,8 +1454,74 @@ def _generate_core_jsons(rows: list[dict]):
     }
 
     retornos_path = ROOT / "dados" / "retornos_mensais.json"
-    retornos_path.write_text(json.dumps(retornos, indent=2, ensure_ascii=False))
-    print(f"  ✓ {retornos_path.relative_to(ROOT)} ({len(dates)} meses, BRL + USD)")
+
+    # ── Append-only contract para retornos_mensais.json ─────────────────
+    existing_ret, needs_rebuild_ret = load_or_init(
+        retornos_path, METODOLOGIA_VERSION_RETORNOS, rebuild_flag=rebuild,
+    )
+    rebuild_reason_ret = None
+    if needs_rebuild_ret:
+        rebuild_reason_ret = (
+            "cli-flag" if rebuild
+            else ("missing-or-version-mismatch" if not existing_ret else "stale")
+        )
+    else:
+        # Merge parallel arrays — meses fechados mantêm valores antigos.
+        ex_dates = existing_ret.get("dates", [])
+        parallel_keys = ["twr_pct", "twr_usd_pct", "acumulado_pct", "acumulado_usd_pct"]
+        ex_arr = {k: existing_ret.get(k, []) for k in parallel_keys}
+        new_arr = {
+            "twr_pct": list(twr_pct),
+            "twr_usd_pct": list(twr_usd_pct),
+            "acumulado_pct": list(acumulado),
+            "acumulado_usd_pct": list(acumulado_usd),
+        }
+        # Defesa: se existing arrays estiverem desalinhados (legacy), pula merge e rebuild.
+        if any(len(ex_arr[k]) != len(ex_dates) for k in parallel_keys):
+            print("  ⚠ retornos_mensais.json existente desalinhado — forçando rebuild")
+            rebuild_reason_ret = "legacy-misaligned"
+            needs_rebuild_ret = True
+        else:
+            merged_dates, merged_arrs, divergent = merge_append_parallel(
+                ex_dates, ex_arr, dates, new_arr,
+            )
+            if divergent:
+                print(f"  ⚠ {len(divergent)} meses fechados divergiram em retornos_mensais "
+                      f"(mantidos antigos): {divergent[:5]}{'...' if len(divergent) > 5 else ''}")
+            # Decomposição também é parallel array — mesmo merge
+            ex_dec = existing_ret.get("decomposicao", {}) or {}
+            dec_keys = ["equity_usd", "fx", "rf_xp"]
+            ex_dec_arr = {k: ex_dec.get(k, []) for k in dec_keys}
+            new_dec_arr = {
+                "equity_usd": list(comp_equity_usd),
+                "fx": list(comp_fx),
+                "rf_xp": list(comp_other),
+            }
+            if all(len(ex_dec_arr[k]) == len(ex_dates) for k in dec_keys):
+                _, merged_dec, _ = merge_append_parallel(
+                    ex_dates, ex_dec_arr, dates, new_dec_arr,
+                )
+            else:
+                merged_dec = new_dec_arr
+            # Sobrescreve no payload os arrays merged
+            retornos["dates"] = merged_dates
+            retornos["twr_pct"] = merged_arrs["twr_pct"]
+            retornos["twr_usd_pct"] = merged_arrs["twr_usd_pct"]
+            retornos["acumulado_pct"] = merged_arrs["acumulado_pct"]
+            retornos["acumulado_usd_pct"] = merged_arrs["acumulado_usd_pct"]
+            retornos["decomposicao"] = merged_dec
+            # Campos agregados (CAGRs, annual_returns) sempre refletem a série
+            # completa atualmente em memória — recomputo é determinístico sobre
+            # rows e annual_table já cobre todos os anos.
+
+    last_period_ret = (retornos.get("dates") or [""])[-1]
+    write_with_meta(
+        retornos_path, retornos, METODOLOGIA_VERSION_RETORNOS, last_period_ret,
+        rebuild_reason=rebuild_reason_ret,
+    )
+    print(f"  ✓ {retornos_path.relative_to(ROOT)} "
+          f"({len(retornos.get('dates', []))} meses, BRL + USD, "
+          f"{'rebuild' if needs_rebuild_ret else 'append-merge'})")
 
     # ── 2. rolling_metrics.json ──────────────────────────────────────
     WINDOW = 12
@@ -1520,8 +1692,54 @@ def _generate_core_jsons(rows: list[dict]):
         print("  ⚠ Information Ratio omitido (yfinance falhou ou dados insuficientes)")
 
     rolling_path = ROOT / "dados" / "rolling_metrics.json"
-    rolling_path.write_text(json.dumps(rolling, indent=2, ensure_ascii=False))
-    print(f"  ✓ {rolling_path.relative_to(ROOT)} ({len(roll_dates)} pontos, dual Sharpe BRL+USD)")
+
+    # ── Append-only contract para rolling_metrics.json ──────────────────
+    # Cada janela rolling 12-mo termina em rolling["dates"][i] e usa twr_pct dos
+    # 12 meses anteriores. Se o mês de fim (data) é fechado, a janela é imutável.
+    existing_roll, needs_rebuild_roll = load_or_init(
+        rolling_path, METODOLOGIA_VERSION_ROLLING, rebuild_flag=rebuild,
+    )
+    rebuild_reason_roll = None
+    if needs_rebuild_roll:
+        rebuild_reason_roll = (
+            "cli-flag" if rebuild
+            else ("missing-or-version-mismatch" if not existing_roll else "stale")
+        )
+    else:
+        ex_roll_dates = existing_roll.get("dates", [])
+        roll_keys = ["sharpe_brl", "sharpe_usd", "sortino", "volatilidade", "max_dd"]
+        ex_roll_arr = {k: existing_roll.get(k, []) for k in roll_keys}
+        new_roll_arr = {
+            "sharpe_brl": list(roll_sharpe_brl),
+            "sharpe_usd": list(roll_sharpe_usd),
+            "sortino": list(roll_sortino),
+            "volatilidade": list(roll_vol),
+            "max_dd": list(roll_maxdd),
+        }
+        if any(len(ex_roll_arr[k]) != len(ex_roll_dates) for k in roll_keys):
+            print("  ⚠ rolling_metrics.json existente desalinhado — forçando rebuild")
+            rebuild_reason_roll = "legacy-misaligned"
+            needs_rebuild_roll = True
+        else:
+            merged_roll_dates, merged_roll_arrs, divergent_roll = merge_append_parallel(
+                ex_roll_dates, ex_roll_arr, roll_dates, new_roll_arr,
+            )
+            if divergent_roll:
+                print(f"  ⚠ {len(divergent_roll)} pontos rolling fechados divergiram "
+                      f"(mantidos antigos): {divergent_roll[:5]}"
+                      f"{'...' if len(divergent_roll) > 5 else ''}")
+            rolling["dates"] = merged_roll_dates
+            for k in roll_keys:
+                rolling[k] = merged_roll_arrs[k]
+
+    last_period_roll = (rolling.get("dates") or [""])[-1]
+    write_with_meta(
+        rolling_path, rolling, METODOLOGIA_VERSION_ROLLING, last_period_roll,
+        rebuild_reason=rebuild_reason_roll,
+    )
+    print(f"  ✓ {rolling_path.relative_to(ROOT)} "
+          f"({len(rolling.get('dates', []))} pontos, dual Sharpe BRL+USD, "
+          f"{'rebuild' if needs_rebuild_roll else 'append-merge'})")
 
     # ── 3. portfolio_summary.json ────────────────────────────────────
     first = rows[0]
@@ -1602,4 +1820,12 @@ def _generate_core_jsons(rows: list[dict]):
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--rebuild",
+        action="store_true",
+        help="Força rebuild bit-for-bit dos artefatos append-only "
+             "(historico_carteira.csv + sidecar, retornos_mensais.json, rolling_metrics.json)",
+    )
+    args = parser.parse_args()
+    main(rebuild=args.rebuild)
