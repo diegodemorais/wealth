@@ -4462,7 +4462,14 @@ def main():
 
     # Spending sensibilidade — state usa {label, pfire}; template espera {label, custo, base, fav, stress}
     # Area A fix: SEMPRE recalcular fav/stress usando deltas atuais para evitar inconsistência com pfire_base
+    # TODO XX-system-audit (GAP ESTRUTURAL): nenhum script popula state.spending.scenarios.
+    #   spendingSensibilidade fica sempre vazio [] pois a chave nunca é escrita no state.
+    #   Fix futuro: calcular P(FIRE) para 3 níveis de gasto (R$250k, R$270k, R$300k) usando
+    #   PFireEngine e persistir em state.spending.scenarios via update_dashboard_state().
+    #   Estimativa: ~3 chamadas adicionais ao PFireEngine por run (rápido, <5s).
     _sens_raw = state.get("spending", {}).get("scenarios", [])
+    if not _sens_raw:
+        print("  ⚠️ spendingSensibilidade: state.spending.scenarios vazio — nenhum script popula este campo (GAP documentado em RUNBOOK.md)")
     spending_sens = []
     _custo_map = {"R$250k": 250_000, "R$270k": 270_000, "R$300k": 300_000,
                   "Solteiro/FIRE Day": 250_000, "Pós-casamento": 270_000, "Casamento+filho": 300_000}
@@ -4727,19 +4734,41 @@ def main():
         print("  ⚠️ B11 attribution_by_period: timeline_attribution insuficiente")
 
     # Shadows — ler do state e adicionar campos flat no nível raiz
+    # TODO XX-system-audit (GAP ESTRUTURAL): shadows nunca são calculados trimestralmente.
+    #   checkin_mensal.py popula state.shadows com chave = label do mês (ex: "Abr/2026"),
+    #   mas generate_data.py tenta ler state.shadows.q1_2026 — chave que nunca é criada.
+    #   Fix futuro: criar reconstruct_shadows.py que agrega retornos mensais em períodos
+    #   trimestrais e persiste state.shadows.{periodo} com chaves padronizadas.
+    #   Por enquanto: shadows.delta_vwra/delta_ipca/delta_shadow_c ficam null no dashboard.
+    #   Workaround: rodar checkin_mensal.py mensalmente (popula período mais recente).
     _shadows_raw = state.get("shadows", {})
     # Campos flat esperados pelo template: delta_vwra, delta_ipca, delta_shadow_c
     # shadow A = VWRA, shadow B = IPCA+, shadow C = 60/40 (não disponível ainda)
     _q1 = _shadows_raw.get("q1_2026", {})
+    # Fallback: tentar usar o período mais recente disponível no state
+    if not _q1 and _shadows_raw:
+        # checkin_mensal.py salva {periodo, atual, target, shadow_a, shadow_b, shadow_c, delta_a, delta_b}
+        # Campos delta_a e delta_b são equivalentes a delta_vwra e delta_ipca
+        _latest_shadow = _shadows_raw
+        _q1 = {
+            "delta_a": _latest_shadow.get("delta_a"),
+            "delta_b": _latest_shadow.get("delta_b"),
+            "delta_c": _latest_shadow.get("shadow_c"),
+            "periodo": _latest_shadow.get("periodo", ""),
+            "atual":   _latest_shadow.get("atual"),
+            "target":  _latest_shadow.get("target"),
+        }
     shadows = {
         **_shadows_raw,  # mantém estrutura original
         "delta_vwra":     _q1.get("delta_a"),       # shadow A = VWRA benchmark primário
         "delta_ipca":     _q1.get("delta_b"),       # shadow B = IPCA+ RF benchmark
         "delta_shadow_c": _q1.get("delta_c"),        # shadow C (60/40) — None se não disponível
-        "periodo":        _q1.get("periodo", "Q1 2026"),
+        "periodo":        _q1.get("periodo", ""),
         "atual":          _q1.get("atual"),
         "target":         _q1.get("target"),
-    } if _q1 else {**_shadows_raw, "delta_vwra": None, "delta_ipca": None, "delta_shadow_c": None}
+    } if _q1.get("delta_a") is not None else {**_shadows_raw, "delta_vwra": None, "delta_ipca": None, "delta_shadow_c": None}
+    if shadows.get("delta_vwra") is None:
+        print("  ⚠️ shadows: delta_vwra/delta_ipca null — rode checkin_mensal.py para atualizar (GAP: state.shadows nunca tem chave q1_2026)")
 
     # P(FIRE@53): ler chave específica pfire_base_* (salva quando fire_montecarlo roda sem --anos)
     # Architect V1 Fix: usar carteira.md como fallback definitivo
@@ -6139,6 +6168,7 @@ def main():
 
     # ─── Assertions de integridade para campos críticos ────────────────────────
     # Bloqueia pipeline se campos críticos forem None/zero — dados corrompidos não chegam ao dashboard.
+    # Adicionados em 2026-05-01 (XX-system-audit, Fase 3):
     _pfire_asp = data.get("pfire_aspiracional") or {}
     _pfire_base_d = data.get("pfire_base") or {}
     _dd_hist = data.get("drawdown_history")
@@ -6147,6 +6177,31 @@ def main():
     assert _pfire_base_d.get("base") is not None, f"pfire_base.base é None — verificar PFireEngine"
     assert _dd_hist is not None, "drawdown_history é None — verificar reconstruct_fire_data.py"
     assert cambio > 0, f"cambio={cambio} inválido no momento do save — pipeline abortado"
+
+    # Warnings (não bloqueiam) para campos de alto risco sem assert rígido:
+    # etf_composition: SWRD.aum_eur pode ser null se yfinance não retornar (tem fallback hardcoded)
+    _etf_comp = (data.get("etf_composition") or {}).get("etfs", {})
+    if _etf_comp and _etf_comp.get("SWRD", {}).get("aum_eur") is None:
+        print("  ⚠️ etf_composition.SWRD.aum_eur=null — fallback hardcoded pode estar em uso; verificar aum_source")
+    # fire.p_quality_aspiracional: null esperado até fire_montecarlo --by_profile calcular aspiracional
+    _pq_aspir = (data.get("fire") or {}).get("p_quality_aspiracional")
+    if _pq_aspir is None:
+        print("  ⚠️ fire.p_quality_aspiracional=null — GAP: --by_profile não calcula aspiracional (documentado)")
+    # macro: se dict vazio, campos do dashboard ficam sem dados
+    _macro = data.get("macro") or {}
+    if not _macro.get("selic_meta"):
+        print("  ⚠️ macro.selic_meta ausente — rode reconstruct_macro.py ou market_data.py --macro-br")
+    # premissas: campos de P(FIRE) críticos
+    _premissas = data.get("premissas") or {}
+    assert _premissas.get("fire_year_base") is not None, "premissas.fire_year_base ausente — config.py inconsistente"
+    assert isinstance(_premissas.get("fire_year_base"), int), f"premissas.fire_year_base={_premissas.get('fire_year_base')} não é int"
+    # Validações de range P(FIRE) — warnings se fora de faixas esperadas para carteira de Diego
+    _pb_base = _pfire_base_d.get("base")
+    if _pb_base is not None and not (40.0 <= _pb_base <= 100.0):
+        print(f"  ⚠️ pfire_base.base={_pb_base}% fora do range esperado [40-100%] — verificar PFireEngine ou premissas")
+    _pa_base = _pfire_asp.get("base")
+    if _pa_base is not None and not (40.0 <= _pa_base <= 100.0):
+        print(f"  ⚠️ pfire_aspiracional.base={_pa_base}% fora do range esperado [40-100%] — verificar PFireEngine")
 
     OUT_PATH.parent.mkdir(exist_ok=True)
     OUT_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False))
