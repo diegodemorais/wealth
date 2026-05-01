@@ -19,6 +19,7 @@ import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
 import { HumanCapitalCrossover } from '@/components/dashboard/HumanCapitalCrossover';
 import { PFireDistribution } from '@/components/fire/PFireDistribution';
 import { PQualityMatrix } from '@/components/fire/PQualityMatrix';
+import { ScenarioCompareCards } from '@/components/fire/ScenarioCompareCards';
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
@@ -584,7 +585,18 @@ export default function FirePage() {
         </div>
       </CollapsibleSection>
 
-      {/* C10: Tabela detalhada Base vs Aspiracional — movida para antes de Coast/Spectrum */}
+      {/* C10a: Cards de cenário — leitura rápida Base vs Favorável vs Aspiracional */}
+      <CollapsibleSection
+        id="section-scenario-compare-cards"
+        title={secTitle('fire', 'scenario-compare-cards', 'Cenários FIRE — Visão Rápida')}
+        defaultOpen={secOpen('fire', 'scenario-compare-cards', true)}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          <ScenarioCompareCards />
+        </div>
+      </CollapsibleSection>
+
+      {/* C10b: Tabela detalhada Base vs Aspiracional */}
       <CollapsibleSection
         id="section-scenario-compare"
         title={secTitle('fire', 'scenario-compare', 'Tabela detalhada — Base vs Aspiracional')}
