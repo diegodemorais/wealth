@@ -35,6 +35,7 @@ ARTEFACTS = [
     ("dados/drawdown_history.json",    [PY, "scripts/reconstruct_fire_data.py", "--only", "drawdown_history"]),
     ("dados/fire_trilha.json",         [PY, "scripts/reconstruct_fire_data.py", "--only", "fire_trilha"]),
     ("dados/tlh_lotes.json",           [PY, "scripts/ibkr_lotes.py"]),
+    ("dados/spending_summary.json",    [PY, "scripts/spending_analysis.py", "--json-output"]),
 ]
 
 VOLATILE_META_KEYS = {"_meta", "_generated", "_window_id", "gerado_em"}

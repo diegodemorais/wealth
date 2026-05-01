@@ -1,35 +1,57 @@
 #!/usr/bin/env python3
 """
 Spending Analysis — Carteira Diego Morais
-Processa CSV de gastos pessoais (formato All-Accounts export)
+Processa CSV de gastos pessoais (formato All-Accounts export do Actual Budget)
 e produz análise completa por mês, categoria e anomalias.
 
-Uso:
-    python3 scripts/spending_analysis.py [caminho_csv]
-    python3 scripts/spending_analysis.py [caminho_csv] --json-output
-    Se não informar o CSV, usa o mais recente em analysis/
+Uso (rotina mensal canônica):
+    ~/claude/finance-tools/.venv/bin/python3 scripts/spending_analysis.py \\
+        --csv analysis/raw/All-Accounts-{Mês}{Ano}.csv
 
-Output:
-    Sem flag: relatório formatado no terminal
-    --json-output: salva dados/spending_summary.json (lido por build_dashboard.py)
+Outras formas:
+    spending_analysis.py                       — relatório no terminal (CSV mais recente)
+    spending_analysis.py [csv]                 — relatório do CSV indicado
+    spending_analysis.py --json-output         — só atualiza dados/spending_summary.json
+    spending_analysis.py --rebuild             — força rebuild total (ignora versão)
+
+Append-only contract (P1–P5 de scripts/CLAUDE.md):
+    - METODOLOGIA_VERSION_SPENDING governa quando o JSON é regenerado do zero.
+    - Meses fechados são preservados bit-for-bit no monthly_breakdown[].
+    - Mês corrente recalcula a cada run (cartão pode cair atrasado).
+    - Decisão Head: mês N considera-se "fechado" só a partir do dia 5 do mês N+1
+      (margem para fatura cair). Antes disso, ainda é "corrente".
+    - Agregados (must_spend_mensal, total_anual, etc.) são derivados — sempre
+      recalculados sobre o monthly_breakdown final.
 """
 
+from __future__ import annotations
+
+import argparse
 import csv
-import sys
-import os
 import glob
 import json
+import os
+import sys
 from collections import defaultdict
-from datetime import datetime
-from pathlib import Path as _Path
+from datetime import date, datetime, timedelta
+from pathlib import Path
 
-_sys_path = _Path(__file__).parent
+_sys_path = Path(__file__).parent
 if str(_sys_path) not in sys.path:
     sys.path.insert(0, str(_sys_path))
-from config import (
+from config import (  # noqa: E402
     SPENDING_ANOMALY_THRESHOLD_BRL, DATE_FORMAT_YM, DATE_FORMAT_YMD, OPTIONAL_FLAG_MINIMUM_BRL,
     SPENDING_CATEGORY_ESSENTIALS, SPENDING_CATEGORY_OPTIONALS, SPENDING_CATEGORY_UNEXPECTED
 )
+from append_only import (  # noqa: E402
+    is_period_closed,
+    load_or_init,
+    merge_append,
+    write_with_meta,
+)
+
+# ─── Versionamento append-only ─────────────────────────────────────────────────
+METODOLOGIA_VERSION_SPENDING = "spending-actual-v1"
 
 # ─── Configuração de categorias ────────────────────────────────────────────────
 
@@ -92,12 +114,23 @@ BASELINE = {
 # ─── Helpers ───────────────────────────────────────────────────────────────────
 
 def find_latest_csv():
-    """Encontra o CSV mais recente em analysis/."""
+    """Encontra o CSV All-Accounts mais recente (analysis/ ou analysis/raw/).
+
+    Filtra arquivos IBKR e demais transactions internos.
+    """
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    pattern = os.path.join(root, 'analysis', '*.csv')
-    files = [f for f in glob.glob(pattern) if 'ibkr' not in f.lower() and 'transactions' not in f.lower()]
+    patterns = [
+        os.path.join(root, 'analysis', '*.csv'),
+        os.path.join(root, 'analysis', 'raw', '*.csv'),
+    ]
+    files = []
+    for pat in patterns:
+        files.extend(
+            f for f in glob.glob(pat)
+            if 'ibkr' not in f.lower() and 'transactions' not in f.lower()
+        )
     if not files:
-        raise FileNotFoundError("Nenhum CSV de gastos encontrado em analysis/")
+        raise FileNotFoundError("Nenhum CSV de gastos encontrado em analysis/ ou analysis/raw/")
     return max(files, key=os.path.getmtime)
 
 
@@ -128,11 +161,11 @@ def load_csv(path):
             amount = float(amount_str)
             date_str = row.get('Date', '').strip()
             try:
-                date = datetime.strptime(date_str, '%Y-%m-%d')
+                d = datetime.strptime(date_str, '%Y-%m-%d')
             except ValueError:
                 continue
             transactions.append({
-                'date': date,
+                'date': d,
                 'payee': row.get('Payee', '').strip(),
                 'notes': row.get('Notes', '').strip(),
                 'cat': cat,
@@ -153,9 +186,9 @@ def analyze(transactions):
     for t in transactions:
         cat    = t['cat']
         amount = t['amount']
-        date   = t['date']
+        d      = t['date']
         payee  = t['payee']
-        month  = date.strftime(DATE_FORMAT_YM)
+        month  = d.strftime(DATE_FORMAT_YM)
 
         # Investimentos: registrar separado
         if cat in SKIP_CATEGORIES:
@@ -328,73 +361,189 @@ def report(data, csv_path):
     print()
 
 
-# ─── JSON Output ───────────────────────────────────────────────────────────────
+# ─── Mês corrente vs fechado ───────────────────────────────────────────────────
 
-def export_json(data, csv_path, output_path=None):
-    """Exporta resumo de spending para JSON (lido por build_dashboard.py)."""
-    mg = data['monthly_by_group']
-    months = sorted(mg.keys())
-    n = len(months)
+def _spending_effective_today(today: date | None = None) -> date:
+    """Retorna 'today' deslocado 4 dias para trás.
 
-    if n == 0:
-        print("Nenhum dado para exportar.")
-        return
+    Decisão Head: mês N só conta como FECHADO a partir do dia 5 do mês N+1
+    (margem para fatura do cartão cair). Subtraindo 4 dias antes de chamar
+    `is_period_closed`, conseguimos esse efeito reusando o helper canônico:
 
-    avg_ess = sum(mg[m][SPENDING_CATEGORY_ESSENTIALS]  for m in months) / n
-    avg_opt = sum(mg[m][SPENDING_CATEGORY_OPTIONALS]   for m in months) / n
-    avg_imp = sum(mg[m][SPENDING_CATEGORY_UNEXPECTED] for m in months) / n
-    avg_tot = sum(mg[m]['TOTAL']       for m in months) / n
+        today_real = 2026-05-01 → effective = 2026-04-27 → abr/2026 ainda corrente
+        today_real = 2026-05-05 → effective = 2026-05-01 → abr/2026 fechado
+    """
+    today = today or date.today()
+    return today - timedelta(days=4)
 
-    # Valores são negativos no CSV (saídas); armazenar como positivos
-    # Breakdown mensal — últimos 12 meses ordenados cronologicamente
-    recent_months = sorted(mg.keys())[-12:]
-    monthly_breakdown = [
-        {
+
+def _is_spending_month_closed(period: str, today: date | None = None) -> bool:
+    return is_period_closed(period, today=_spending_effective_today(today))
+
+
+# ─── Build de monthly_breakdown a partir do dict 'analyze' ─────────────────────
+
+def _monthly_breakdown_from_analyze(mg: dict) -> list[dict]:
+    """Converte o dict monthly_by_group → list[dict] no formato canônico do JSON.
+
+    Valores são positivos (saídas no CSV vêm negativas).
+    """
+    rows: list[dict] = []
+    for m in sorted(mg.keys()):
+        rows.append({
             "mes": m,
-            "essenciais": round(abs(mg[m].get(SPENDING_CATEGORY_ESSENTIALS, 0))),
-            "opcionais":  round(abs(mg[m].get(SPENDING_CATEGORY_OPTIONALS, 0))),
+            "essenciais":  round(abs(mg[m].get(SPENDING_CATEGORY_ESSENTIALS,  0))),
+            "opcionais":   round(abs(mg[m].get(SPENDING_CATEGORY_OPTIONALS,   0))),
             "imprevistos": round(abs(mg[m].get(SPENDING_CATEGORY_UNEXPECTED, 0))),
-            "total":      round(abs(mg[m].get('TOTAL', 0))),
-        }
-        for m in recent_months
-    ]
+            "total":       round(abs(mg[m].get('TOTAL', 0))),
+        })
+    return rows
 
-    summary = {
-        "periodo": f"{months[0]} a {months[-1]}",
-        "meses": n,
-        "must_spend_mensal": round(abs(avg_ess)),
-        "like_spend_mensal": round(abs(avg_opt)),
-        "imprevistos_mensal": round(abs(avg_imp)),
-        "total_mensal": round(abs(avg_tot)),
-        "must_spend_anual": round(abs(avg_ess) * 12),
-        "like_spend_anual": round(abs(avg_opt) * 12),
-        "imprevistos_anual": round(abs(avg_imp) * 12),
-        "total_anual": round(abs(avg_tot) * 12),
-        "modelo_fire_anual": BASELINE['model_fire'],
-        "monthly_breakdown": monthly_breakdown,
-        "updated_at": datetime.now().strftime(DATE_FORMAT_YMD),
-        "fonte": os.path.basename(csv_path),
+
+def _aggregates_from_breakdown(breakdown: list[dict]) -> dict:
+    """Calcula agregados (médias mensais e anuais) sobre o monthly_breakdown final.
+
+    Agregados são SEMPRE derivados do breakdown — nunca persistidos como
+    dados de período.
+    """
+    n = len(breakdown)
+    if n == 0:
+        return {
+            "must_spend_mensal": 0, "like_spend_mensal": 0,
+            "imprevistos_mensal": 0, "total_mensal": 0,
+            "must_spend_anual": 0, "like_spend_anual": 0,
+            "imprevistos_anual": 0, "total_anual": 0,
+        }
+    avg_ess = sum(r["essenciais"]  for r in breakdown) / n
+    avg_opt = sum(r["opcionais"]   for r in breakdown) / n
+    avg_imp = sum(r["imprevistos"] for r in breakdown) / n
+    avg_tot = sum(r["total"]       for r in breakdown) / n
+    return {
+        "must_spend_mensal":  round(avg_ess),
+        "like_spend_mensal":  round(avg_opt),
+        "imprevistos_mensal": round(avg_imp),
+        "total_mensal":       round(avg_tot),
+        "must_spend_anual":   round(avg_ess * 12),
+        "like_spend_anual":   round(avg_opt * 12),
+        "imprevistos_anual":  round(avg_imp * 12),
+        "total_anual":        round(avg_tot * 12),
     }
+
+
+# ─── JSON Output (append-only) ─────────────────────────────────────────────────
+
+def export_json(
+    data: dict,
+    csv_path: str,
+    output_path: str | os.PathLike | None = None,
+    *,
+    rebuild: bool = False,
+    today: date | None = None,
+) -> dict | None:
+    """Exporta resumo de spending para JSON em modo append-only.
+
+    - Lê JSON existente. Se versão bate e --rebuild=False: faz merge_append
+      preservando meses fechados imutáveis e atualizando só o mês corrente +
+      meses novos.
+    - Se versão difere ou --rebuild=True: regenera do zero.
+    - Agregados (médias) são sempre recomputados sobre o breakdown final.
+    """
+    mg = data['monthly_by_group']
+    if not mg:
+        print("Nenhum dado para exportar.")
+        return None
 
     if output_path is None:
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         output_path = os.path.join(root, 'dados', 'spending_summary.json')
+    out_path = Path(output_path)
 
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(summary, f, indent=2, ensure_ascii=False)
-    print(f"✅ spending_summary.json salvo em: {output_path}")
+    # ── Append-only: decide rebuild vs merge ──
+    existing, needs_rebuild = load_or_init(
+        out_path, METODOLOGIA_VERSION_SPENDING, rebuild_flag=rebuild,
+    )
+
+    new_breakdown = _monthly_breakdown_from_analyze(mg)
+
+    if needs_rebuild:
+        rebuild_reason = (
+            "cli-flag" if rebuild
+            else "missing-or-version-mismatch"
+        )
+        merged_breakdown = new_breakdown
+        divergences: list[str] = []
+    else:
+        rebuild_reason = None
+        existing_breakdown = existing.get("monthly_breakdown", [])
+        # Diagnóstico: detectar divergências em meses fechados (mantemos o antigo)
+        existing_by_mes = {r["mes"]: r for r in existing_breakdown}
+        divergences = []
+        for r in new_breakdown:
+            m = r["mes"]
+            if m in existing_by_mes and _is_spending_month_closed(m, today=today):
+                old = existing_by_mes[m]
+                for k in ("essenciais", "opcionais", "imprevistos", "total"):
+                    if old.get(k) != r.get(k):
+                        divergences.append(
+                            f"{m}/{k}: {old.get(k)!r} → {r.get(k)!r} (mantido antigo)"
+                        )
+                        break
+        # Merge: períodos fechados (segundo regra spending) ficam imutáveis;
+        # mês corrente + meses novos absorvem novos dados.
+        merged_breakdown = merge_append(
+            existing_breakdown, new_breakdown,
+            key="mes", today=_spending_effective_today(today),
+        )
+
+    if divergences:
+        print(f"   ⚠ {len(divergences)} divergência(s) em meses fechados (mantidas as antigas):")
+        for d in divergences[:5]:
+            print(f"     - {d}")
+        if len(divergences) > 5:
+            print(f"     ... +{len(divergences) - 5} mais")
+
+    # ── Agregados: sempre recomputados sobre o breakdown final ──
+    aggregates = _aggregates_from_breakdown(merged_breakdown)
+
+    months_sorted = [r["mes"] for r in merged_breakdown]
+    n = len(months_sorted)
+    last_period = months_sorted[-1] if months_sorted else ""
+
+    summary = {
+        "periodo": f"{months_sorted[0]} a {months_sorted[-1]}" if months_sorted else "",
+        "meses": n,
+        **aggregates,
+        "modelo_fire_anual": BASELINE['model_fire'],
+        "monthly_breakdown": merged_breakdown,
+        "updated_at": datetime.now().strftime(DATE_FORMAT_YMD),
+        "fonte": os.path.basename(csv_path),
+    }
+
+    write_with_meta(
+        out_path, summary,
+        version=METODOLOGIA_VERSION_SPENDING,
+        last_period=last_period,
+        rebuild_reason=rebuild_reason,
+    )
+    mode = "rebuild" if needs_rebuild else "append-merge"
+    print(f"✅ spending_summary.json salvo em: {out_path} ({mode}, {n} meses)")
     return summary
 
 
 # ─── Main ──────────────────────────────────────────────────────────────────────
 
-def main():
-    json_output = '--json-output' in sys.argv
-    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("csv_pos", nargs="?", help="Caminho do CSV (positional, opcional)")
+    parser.add_argument("--csv", help="Caminho do CSV (kwarg, override do positional)")
+    parser.add_argument("--json-output", action="store_true",
+                        help="Atualiza dados/spending_summary.json (modo append-only)")
+    parser.add_argument("--rebuild", action="store_true",
+                        help="Força rebuild bit-for-bit do spending_summary.json")
+    args = parser.parse_args()
 
-    if args:
-        csv_path = args[0]
-    else:
+    csv_path = args.csv or args.csv_pos
+    if not csv_path:
         csv_path = find_latest_csv()
 
     print(f"\nCarregando: {csv_path}")
@@ -403,8 +552,12 @@ def main():
 
     data = analyze(transactions)
 
-    if json_output:
-        export_json(data, csv_path)
+    # Modo de operação:
+    #   - --json-output: só escreve JSON
+    #   - --rebuild (sem --json-output): também grava JSON (rebuild implica escrita)
+    #   - default: relatório no terminal
+    if args.json_output or args.rebuild:
+        export_json(data, csv_path, rebuild=args.rebuild)
     else:
         report(data, csv_path)
 

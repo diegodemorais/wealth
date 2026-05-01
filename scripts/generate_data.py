@@ -4166,22 +4166,17 @@ def main():
     except Exception as _e:
         print(f"  ⚠️ parse_carteira falhou ({_e}) — usando cache existente")
 
-    # Atualizar spending_summary.json a partir do CSV mais recente em analysis/
+    # Atualizar spending_summary.json a partir do CSV mais recente em analysis/ (ou analysis/raw/)
+    # Append-only: meses fechados imutáveis (ver scripts/spending_analysis.py).
     try:
-        import glob as _glob
-        _csv_files = [
-            f for f in _glob.glob(str(ROOT / "analysis" / "*.csv"))
-            if 'ibkr' not in f.lower() and 'transactions' not in f.lower()
-        ]
-        if _csv_files:
-            import spending_analysis as _sa
-            _latest_csv = max(_csv_files, key=__import__('os').path.getmtime)
-            _txns = _sa.load_csv(_latest_csv)
-            _data = _sa.analyze(_txns)
-            _sa.export_json(_data, _latest_csv)
-            print(f"  ✓ spending_summary.json atualizado ({len(_txns)} transações)")
-        else:
-            print("  ℹ️ spending_summary.json: nenhum CSV em analysis/ — usando cache existente")
+        import spending_analysis as _sa
+        _latest_csv = _sa.find_latest_csv()
+        _txns = _sa.load_csv(_latest_csv)
+        _data = _sa.analyze(_txns)
+        _sa.export_json(_data, _latest_csv)
+        print(f"  ✓ spending_summary.json atualizado ({len(_txns)} transações de {_latest_csv})")
+    except FileNotFoundError:
+        print("  ℹ️ spending_summary.json: nenhum CSV em analysis/ — usando cache existente")
     except Exception as _e:
         print(f"  ⚠️ spending_analysis falhou ({_e}) — usando cache existente")
 

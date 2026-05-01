@@ -138,6 +138,17 @@ rebuild e registra `rebuild_reason="missing-or-version-mismatch"` no `_meta`.
 | `fire_trilha.json` | `trilha-v1` | `reconstruct_fire_data.py` |
 | `tlh_lotes.json` (`realizados` append + `open_lots` snapshot) | `fifo-ibkr-v1` | `ibkr_lotes.py` |
 | `backtest_r7.json` | `r7-1989-2026-v1` | `backtest_portfolio.py --r7` (via `generate_data.py`) |
+| `spending_summary.json` (`monthly_breakdown` append, agregados derivados) | `spending-actual-v1` | `spending_analysis.py --json-output` |
+
+**Rotina mensal canônica de gastos:**
+```bash
+~/claude/finance-tools/.venv/bin/python3 scripts/spending_analysis.py \
+  --csv analysis/raw/All-Accounts-{Mês}{Ano}.csv --json-output
+```
+Mês N considera-se "fechado" só a partir do **dia 5 do mês N+1** (margem para
+fatura do cartão cair). Antes disso é mês corrente e recalcula a cada run.
+Agregados (`must_spend_mensal`, `total_anual`, etc.) derivam do
+`monthly_breakdown` final — nunca persistidos como dados de período.
 
 **Caso especial `tlh_lotes.json`:** Tax specialist confirmou imutabilidade
 fiscal de realizados (data_venda registrada → fato gerador IR ocorrido).
