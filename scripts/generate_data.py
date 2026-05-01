@@ -5767,6 +5767,35 @@ def main():
             if "alpha_vs_vwra" not in row:
                 row["alpha_vs_vwra"] = 0.0
 
+    # ─── pfire_by_profile: P(FIRE) por perfil familiar ───────────────────────
+    # atual = pfire_base (solteiro). casado/filho: MC 5k sims com custo_vida ajustado.
+    _pfire_by_profile = {
+        "atual":  {"base": pfire_base.get("base"), "fav": pfire_base.get("fav"), "stress": pfire_base.get("stress")},
+        "casado": {"base": None, "fav": None, "stress": None},
+        "filho":  {"base": None, "fav": None, "stress": None},
+    }
+    try:
+        import importlib.util as _ilu
+        _spec_p = _ilu.spec_from_file_location("fire_mc_p", ROOT / "scripts" / "fire_montecarlo.py")
+        _mod_p  = _ilu.module_from_spec(_spec_p)
+        _spec_p.loader.exec_module(_mod_p)
+        _mc_premissas = getattr(_mod_p, "PREMISSAS", {})
+        _idade_fire = _mc_premissas.get("idade_fire_alvo", 53)
+        for _perf, _cv in [("casado", CUSTO_VIDA_BASE_CASADO), ("filho", CUSTO_VIDA_BASE_FILHO)]:
+            _res = {}
+            for _cen in ["base", "favoravel", "stress"]:
+                _pp = dict(_mc_premissas)
+                _pp["custo_vida_base"] = _cv
+                _pp["idade_fire_alvo"] = _idade_fire
+                _pp["anos_simulacao"] = _mc_premissas.get("horizonte_vida", 90) - _idade_fire
+                _r = _mod_p.rodar_monte_carlo(_pp, n_sim=5_000, cenario=_cen, seed=42)
+                _key = "fav" if _cen == "favoravel" else _cen
+                _res[_key] = round(_r["p_sucesso"] * 100, 1)
+            _pfire_by_profile[_perf] = _res
+            print(f"  ✓ pfire_by_profile.{_perf}: base={_res['base']}%, fav={_res['fav']}%, stress={_res['stress']}%")
+    except Exception as _e:
+        print(f"  ⚠️ pfire_by_profile casado/filho MC skipped: {_e}")
+
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -5797,15 +5826,7 @@ def main():
         "pfire_aspiracional":       pfire_aspiracional,
         "pfire_base":              pfire_base,
         "pfire_cenarios_estendidos": pfire_cenarios_estendidos,
-        # pfire_by_profile: P(FIRE) por perfil familiar (atual/casado/filho).
-        # atual = pfire_base (solteiro, cenário base idêntico).
-        # casado/filho: TODO — MC por perfil (fire_montecarlo --by-profile).
-        # Stub atual permite React usar campo sem fallback incorreto.
-        "pfire_by_profile": {
-            "atual":  {"base": pfire_base.get("base"),  "fav": pfire_base.get("fav"),  "stress": pfire_base.get("stress")},
-            "casado": {"base": None, "fav": None, "stress": None},  # TODO: MC com tem_conjuge=True, custo_vida_casado
-            "filho":  {"base": None, "fav": None, "stress": None},  # TODO: MC com tem_conjuge=True, custo_vida_filho
-        },
+        "pfire_by_profile": _pfire_by_profile,
         "premissas":  premissas,
         "guardrails": guardrails,
         "gasto_piso": gasto_piso,

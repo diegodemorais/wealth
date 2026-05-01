@@ -4,11 +4,9 @@
  * FloorUpsideFire — Cobertura por Fase (FIRE Day vs pós-INSS)
  *
  * Extracted from fire/page.tsx (ARCH P2: sub-component extraction).
- * Shows floor vs equity gap coverage for two retirement phases.
+ * Shows floor vs equity gap coverage for two retirement phases as a comparison table.
  */
 
-import { EC } from '@/utils/echarts-theme';
-import { EChart } from '@/components/primitives/EChart';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface FloorUpsideFireProps {
@@ -52,29 +50,60 @@ export function FloorUpsideFire({
         ? Math.min(100, (patrimonio / patNecPosInss) * 100)
         : null;
 
-  // Fase 1 bar %
-  const floorPct1 = custoVida > 0 ? (floorFireDay / custoVida) * 100 : 0;
-  const gapPct1 = 100 - floorPct1;
-  const cobPct1 = cobFireDay != null ? Math.min(gapPct1, (cobFireDay / 100) * gapPct1) : 0;
-  const descPct1 = Math.max(0, gapPct1 - cobPct1);
+  const fmtK = (v: number) => fmtPrivacy(v / 1000, privacyMode);
+  const fmtPct = (v: number | null) =>
+    v == null ? '—' : privacyMode ? '••%' : `${v.toFixed(0)}%`;
+  const cobColor = (v: number | null) =>
+    v != null && v >= 100 ? 'var(--green)' : v != null && v >= 80 ? 'var(--yellow)' : 'var(--red)';
 
-  // Fase 2 bar %
-  const floorPct2 = custoVida > 0 ? (Math.min(floorPosInss, custoVida) / custoVida) * 100 : 0;
-  const gapPct2 = Math.max(0, 100 - floorPct2);
-  const cobPct2 = cobPosInss != null ? Math.min(gapPct2, (cobPosInss / 100) * gapPct2) : 0;
-  const descPct2 = Math.max(0, gapPct2 - cobPct2);
-
-  const barOption = (floorBar: number, cobBar: number, descBar: number) => ({
-    backgroundColor: 'transparent',
-    grid: { left: 0, right: 0, top: 4, bottom: 4 },
-    xAxis: { type: 'value', max: 100, show: false },
-    yAxis: { type: 'category', data: [''], show: false },
-    series: [
-      { type: 'bar', stack: 'total', data: [floorBar], itemStyle: { color: EC.accent }, barMaxWidth: 32 },
-      { type: 'bar', stack: 'total', data: [cobBar], itemStyle: { color: '#22c55e' }, barMaxWidth: 32 },
-      { type: 'bar', stack: 'total', data: [descBar], itemStyle: { color: '#ef4444' }, barMaxWidth: 32 },
-    ],
+  const thStyle = (color: string): React.CSSProperties => ({
+    borderTop: `3px solid ${color}`,
+    padding: '10px 8px 8px',
+    textAlign: 'center' as const,
+    background: 'var(--card)',
+    fontWeight: 700,
+    fontSize: 'var(--text-xs)',
+    color: color,
+    letterSpacing: '.3px',
+    textTransform: 'uppercase' as const,
   });
+
+  const tdLabel: React.CSSProperties = {
+    fontSize: 9,
+    color: 'var(--muted)',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '.4px',
+    padding: '7px 8px',
+    whiteSpace: 'nowrap' as const,
+  };
+
+  const tdVal = (even: boolean): React.CSSProperties => ({
+    fontSize: 'var(--text-sm)',
+    fontWeight: 600,
+    padding: '7px 8px',
+    textAlign: 'center' as const,
+    background: even ? 'var(--card-alt, rgba(255,255,255,0.02))' : 'transparent',
+  });
+
+  const trStyle = (even: boolean): React.CSSProperties => ({
+    borderTop: '1px solid var(--border)',
+    background: even ? 'var(--card-alt, rgba(255,255,255,0.02))' : 'transparent',
+  });
+
+  // Cobertura bar (compact visual indicator)
+  const CobBar = ({ pct }: { pct: number | null }) => {
+    const p = Math.min(100, pct ?? 0);
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
+        <div style={{ flex: 1, maxWidth: 60, height: 6, background: 'var(--card2)', borderRadius: 3, overflow: 'hidden' }}>
+          <div style={{ width: `${p}%`, height: '100%', background: cobColor(pct), borderRadius: 3 }} />
+        </div>
+        <span style={{ fontWeight: 700, color: cobColor(pct), fontSize: 'var(--text-sm)', minWidth: 34, textAlign: 'right' }}>
+          {fmtPct(pct)}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -98,128 +127,46 @@ export function FloorUpsideFire({
         🏦 Floor vs Upside — Cobertura por Fase
       </h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* Fase 1 — FIRE Day */}
-        <div>
-          <div
-            style={{
-              fontSize: 'var(--text-xs)',
-              color: 'var(--muted)',
-              marginBottom: '4px',
-              fontWeight: 600,
-            }}
-          >
-            FIRE Day (50–65 anos)
-          </div>
-          <EChart option={barOption(floorPct1, cobPct1, descPct1)} style={{ height: 44 }} />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 mt-2">
-            <div
-              style={{
-                background: 'var(--card2)',
-                borderRadius: '6px',
-                padding: '6px',
-                border: '1px solid rgba(59,130,246,.25)',
-              }}
-            >
-              <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Floor RF</div>
-              <div style={{ fontWeight: 700, color: EC.accent }} className="pv">
-                {fmtPrivacy(floorFireDay / 1000, privacyMode)}
-              </div>
-            </div>
-            <div
-              style={{
-                background: 'var(--card2)',
-                borderRadius: '6px',
-                padding: '6px',
-                border: '1px solid rgba(239,68,68,.25)',
-              }}
-            >
-              <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Gap equity</div>
-              <div style={{ fontWeight: 700, color: '#ef4444' }} className="pv">
-                {fmtPrivacy(gapFireDay / 1000, privacyMode)}
-              </div>
-            </div>
-            <div
-              style={{
-                background: 'var(--card2)',
-                borderRadius: '6px',
-                padding: '6px',
-                border: `1px solid ${cobFireDay != null && cobFireDay >= 100 ? 'rgba(34,197,94,.25)' : 'rgba(239,68,68,.25)'}`,
-              }}
-            >
-              <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Cobertura</div>
-              <div
-                style={{
-                  fontWeight: 700,
-                  color: cobFireDay != null && cobFireDay >= 100 ? '#22c55e' : '#ef4444',
-                }}
-              >
-                {cobFireDay != null ? (privacyMode ? '••%' : `${cobFireDay.toFixed(0)}%`) : '—'}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Fase 2 — pós-INSS */}
-        <div>
-          <div
-            style={{
-              fontSize: 'var(--text-xs)',
-              color: 'var(--muted)',
-              marginBottom: '4px',
-              fontWeight: 600,
-            }}
-          >
-            Pós-INSS (65+ anos)
-          </div>
-          <EChart option={barOption(floorPct2, cobPct2, descPct2)} style={{ height: 44 }} />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 mt-2">
-            <div
-              style={{
-                background: 'var(--card2)',
-                borderRadius: '6px',
-                padding: '6px',
-                border: '1px solid rgba(59,130,246,.25)',
-              }}
-            >
-              <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Floor c/INSS</div>
-              <div style={{ fontWeight: 700, color: EC.accent }} className="pv">
-                {fmtPrivacy(Math.min(floorPosInss, custoVida), privacyMode)}
-              </div>
-            </div>
-            <div
-              style={{
-                background: 'var(--card2)',
-                borderRadius: '6px',
-                padding: '6px',
-                border: '1px solid rgba(239,68,68,.25)',
-              }}
-            >
-              <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Gap equity</div>
-              <div style={{ fontWeight: 700, color: '#ef4444' }} className="pv">
-                {fmtPrivacy(gapPosInss / 1000, privacyMode)}
-              </div>
-            </div>
-            <div
-              style={{
-                background: 'var(--card2)',
-                borderRadius: '6px',
-                padding: '6px',
-                border: `1px solid ${cobPosInss != null && cobPosInss >= 100 ? 'rgba(34,197,94,.25)' : 'rgba(239,68,68,.25)'}`,
-              }}
-            >
-              <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Cobertura</div>
-              <div
-                style={{
-                  fontWeight: 700,
-                  color: cobPosInss != null && cobPosInss >= 100 ? '#22c55e' : '#ef4444',
-                }}
-              >
-                {cobPosInss != null ? (privacyMode ? '••%' : `${cobPosInss.toFixed(0)}%`) : '—'}
-              </div>
-            </div>
-          </div>
-        </div>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 280 }}>
+          <thead>
+            <tr>
+              <th style={{ width: '40%', padding: '10px 8px 8px', textAlign: 'left', background: 'var(--card)' }} />
+              <th style={thStyle('var(--accent)')}>FIRE Day<br /><span style={{ fontWeight: 400, fontSize: 8, color: 'var(--muted)' }}>50–65 anos</span></th>
+              <th style={thStyle('var(--green)')}>Pós-INSS<br /><span style={{ fontWeight: 400, fontSize: 8, color: 'var(--muted)' }}>65+ anos</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={trStyle(false)}>
+              <td style={tdLabel}>Floor RF</td>
+              <td style={{ ...tdVal(false), color: 'var(--accent)' }}>{fmtK(floorFireDay)}</td>
+              <td style={{ ...tdVal(false), color: 'var(--green)' }}>{fmtK(Math.min(floorPosInss, custoVida))}</td>
+            </tr>
+            <tr style={trStyle(true)}>
+              <td style={{ ...tdLabel, background: 'var(--card-alt, rgba(255,255,255,0.02))' }}>Gap equity</td>
+              <td style={{ ...tdVal(true), color: gapFireDay > 0 ? 'var(--red)' : 'var(--green)' }}>{fmtK(gapFireDay)}</td>
+              <td style={{ ...tdVal(true), color: gapPosInss > 0 ? 'var(--red)' : 'var(--green)' }}>{fmtK(gapPosInss)}</td>
+            </tr>
+            <tr style={trStyle(false)}>
+              <td style={tdLabel}>Pat. necessário</td>
+              <td style={{ ...tdVal(false), color: 'var(--muted)' }}>
+                {patNecFireDay != null ? fmtPrivacy(patNecFireDay, privacyMode) : '—'}
+              </td>
+              <td style={{ ...tdVal(false), color: 'var(--muted)' }}>
+                {patNecPosInss != null ? fmtPrivacy(patNecPosInss, privacyMode) : '—'}
+              </td>
+            </tr>
+            <tr style={trStyle(true)}>
+              <td style={{ ...tdLabel, background: 'var(--card-alt, rgba(255,255,255,0.02))' }}>Cobertura</td>
+              <td style={{ ...tdVal(true) }}>
+                <CobBar pct={cobFireDay} />
+              </td>
+              <td style={{ ...tdVal(true) }}>
+                <CobBar pct={cobPosInss} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div className="src" style={{ marginTop: '8px' }}>

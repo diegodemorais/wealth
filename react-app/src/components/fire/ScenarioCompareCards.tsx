@@ -80,6 +80,11 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
 
   const spendingSensibilidade: SpendingSensItem[] = (storeData as any)?.spendingSensibilidade ?? [];
 
+  // P(FIRE) by profile from pipeline (populated after MC --by-profile run)
+  const pfbp = (storeData as any)?.pfire_by_profile ?? null;
+  const pfireC = pfbp?.casado?.base ?? null;
+  const pfireF = pfbp?.filho?.base ?? null;
+
   if (!sc) {
     return (
       <div data-testid="scenario-compare-cards-empty" style={{ padding: '12px 0', color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>
@@ -113,22 +118,22 @@ export function ScenarioCompareCards({ scenarioComparison, pfireBase, pQualityBa
     {
       title: 'Casado',
       subtitle: `${sc.base?.idade ?? 53} anos`,
-      pfire: null, // pipeline TODO: MC com tem_conjuge=True
+      pfire: pfireC,
       pquality: pqB?.casado?.base ?? null,
-      pat_mediano: null,
+      pat_mediano: sc.base?.pat_mediano ?? null,
       gasto_anual: 270_000,
-      swr: null,
+      swr: sc.base?.pat_mediano ? 270_000 / sc.base.pat_mediano * 100 : null,
       idade: sc.base?.idade ?? 53,
       highlightColor: 'var(--yellow)',
     },
     {
       title: 'Filho',
       subtitle: `${sc.base?.idade ?? 53} anos`,
-      pfire: null, // pipeline TODO: MC com custo_vida_filho
+      pfire: pfireF,
       pquality: pqB?.filho?.base ?? null,
-      pat_mediano: null,
+      pat_mediano: sc.base?.pat_mediano ?? null,
       gasto_anual: 300_000,
-      swr: null,
+      swr: sc.base?.pat_mediano ? 300_000 / sc.base.pat_mediano * 100 : null,
       idade: sc.base?.idade ?? 53,
       highlightColor: 'var(--red)',
     },
