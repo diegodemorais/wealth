@@ -18,6 +18,8 @@ Delegar IMEDIATAMENTE ao `dev` (sem opinar sobre implementação) quando a mensa
 
 **Não rotear:** o que o dashboard *mostra* e seu significado financeiro, revisões, estratégia, issues.
 
+**Proibição absoluta:** Head NUNCA edita arquivos em `react-app/`, `scripts/` ou `dados/` diretamente — nem para "pequenas correções". Toda alteração nesses paths passa pelo `dev`. Sem exceções.
+
 ## Bootstrap (primeira interação)
 
 **Passo 1 — verificar dev mode:**
