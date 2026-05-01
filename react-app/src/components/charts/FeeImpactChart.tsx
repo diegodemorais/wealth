@@ -21,7 +21,7 @@ export interface FeeImpactData {
   ter_swrd_pct?: number;
   ter_avgs_pct?: number;
   ter_avem_pct?: number;
-  retorno_nominal_pct?: number;
+  retorno_real_pct?: number;
   fonte_ter_avgs?: string;
   anos: number[];
   portfolio_com_ter: number[];
@@ -173,7 +173,7 @@ export function FeeImpactChart({ data }: FeeImpactChartProps) {
         {[
           { label: 'TER médio ponderado', val: `${terMedio.toFixed(3)}%/ano`, color: EC.accent },
           { label: 'Custo em 20 anos',    val: privacyMode ? '••••' : fmtBRL(custo20a, false), color: EC.red },
-          { label: 'Retorno nominal usado', val: `${data.retorno_nominal_pct ?? 7}% a.a.`, color: EC.muted },
+          { label: 'Retorno real usado', val: `${data.retorno_real_pct ?? 4}% a.a.`, color: EC.muted },
         ].map(({ label, val, color }) => (
           <div key={label} style={{
             background: 'var(--card2)',
@@ -221,7 +221,7 @@ export function FeeImpactChart({ data }: FeeImpactChartProps) {
       </div>
 
       <div className="src" style={{ marginTop: 8 }}>
-        Projeção mensal: P(t) = P₀×(1+g_m)^t + A_m×[(1+g_m)^t−1]/g_m · g_m = (r−TER)/12 · aporte mensal constante · retorno nominal {data.retorno_nominal_pct ?? 7}% a.a.
+        Projeção mensal: P(t) = P₀×(1+g_m)^t + A_m×[(1+g_m)^t−1]/g_m · g_m = (r−TER)/12 · aporte mensal constante · retorno real {data.retorno_real_pct ?? 4}% a.a. (valores em BRL de hoje).
         Área vermelha = dinheiro perdido em fees. TER ponderado = Σ(peso × TER). AVGS: TER conforme prospecto ETF.
       </div>
     </div>

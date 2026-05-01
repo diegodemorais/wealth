@@ -5983,7 +5983,7 @@ def main():
     _fi_w_avgs   = EQUITY_WEIGHTS.get("AVGS", 0.30)
     _fi_w_avem   = EQUITY_WEIGHTS.get("AVEM", 0.20)
     _fi_ter_medio = _fi_w_swrd * _fi_ter_swrd + _fi_w_avgs * _fi_ter_avgs + _fi_w_avem * _fi_ter_avem
-    _fi_r_nominal = 0.07  # retorno nominal benchmark (7% a.a.)
+    _fi_r_real = 0.04  # retorno real benchmark (4% a.a.) — nominal ~7% - inflação ~3%
     _fi_p0 = float(premissas.get("patrimonio_atual", 3_760_000))
     _fi_aporte = float(premissas.get("aporte_mensal", 25_000)) * 12  # anual
 
@@ -5997,8 +5997,8 @@ def main():
         return round(pv + fv_aportes, 0)
 
     _fi_anos = list(range(1, 21))
-    _fi_com_ter = [_fi_portfolio(_fi_p0, _fi_r_nominal - _fi_ter_medio, _fi_aporte, t) for t in _fi_anos]
-    _fi_sem_ter = [_fi_portfolio(_fi_p0, _fi_r_nominal, _fi_aporte, t) for t in _fi_anos]
+    _fi_com_ter = [_fi_portfolio(_fi_p0, _fi_r_real - _fi_ter_medio, _fi_aporte, t) for t in _fi_anos]
+    _fi_sem_ter = [_fi_portfolio(_fi_p0, _fi_r_real, _fi_aporte, t) for t in _fi_anos]
     _fi_custo   = [round(_fi_sem_ter[i] - _fi_com_ter[i], 0) for i in range(20)]
 
     data["fee_impact"] = {
@@ -6006,7 +6006,7 @@ def main():
         "ter_swrd_pct":       round(_fi_ter_swrd * 100, 3),
         "ter_avgs_pct":       round(_fi_ter_avgs * 100, 3),
         "ter_avem_pct":       round(_fi_ter_avem * 100, 3),
-        "retorno_nominal_pct": round(_fi_r_nominal * 100, 1),
+        "retorno_real_pct":   round(_fi_r_real * 100, 1),
         "anos":               _fi_anos,
         "portfolio_com_ter":  _fi_com_ter,
         "portfolio_sem_ter":  _fi_sem_ter,

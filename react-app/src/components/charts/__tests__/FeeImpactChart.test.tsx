@@ -56,7 +56,7 @@ function buildData(overrides?: Partial<FeeImpactData>): FeeImpactData {
     ter_swrd_pct:       0.12,
     ter_avgs_pct:       0.39,
     ter_avem_pct:       0.35,
-    retorno_nominal_pct: 7,
+    retorno_real_pct: 4,
     anos,
     portfolio_com_ter:  comTer,
     portfolio_sem_ter:  semTer,
