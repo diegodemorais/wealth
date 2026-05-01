@@ -454,3 +454,195 @@ O `generate_data.py` usa os seguintes padrões de log:
 | `❌ SPEC CONTRACT` | Campo obrigatório null — pipeline bloqueado |
 
 **TODO (Fase 2.3 XX-system-audit):** Padronizar para `🔴 CRÍTICO:`, `🟡 DEGRADADO:`, `✅ OK:`, `⊘ PULADO:` nos warnings de campos opcionais. Impacto: ~80 linhas de print em generate_data.py. Prioridade BAIXA pois o padrão atual é legível.
+
+---
+
+## 10. Integrações Externas — Inventário Completo (Fase 5 XX-system-audit)
+
+### 10.1 Mapa de Integrações
+
+| Integração | Biblioteca | Scripts que chamam diretamente | Abstração canônica | TTL cache |
+|-----------|-----------|-------------------------------|-------------------|----------|
+| **yfinance** | `yfinance` | `generate_data.py` (6x), `reconstruct_factor.py` (3x), `reconstruct_history.py` (3x), `reconstruct_macro.py`, `checkin_mensal.py`, `backtest_portfolio.py`, `brfiresim.py`, `portfolio_analytics.py`, `tlh_monitor.py`, `binance_analysis.py`, `factor_regression.py`, `resampled_frontier.py` | Nenhuma — chamadas diretas espalhadas | 4h (sem TTL explícito no pipeline) |
+| **pyield/ANBIMA** | `pyield` | `market_data.py`, `generate_data.py` (build_ntnb_history), `reconstruct_history.py` | `market_data.py --tesouro` (parcial) | 24h |
+| **python-bcb** | `python-bcb` | `fx_utils.py`, `market_data.py`, `reconstruct_macro.py`, `generate_data.py`, `tax_engine.py`, `checkin_mensal.py`, `ibkr_lotes.py` | `fx_utils.py` (canônico para PTAX/Selic/IPCA) | 6h |
+| **FRED CSV** | `urllib` | `generate_data.py`, `reconstruct_macro.py` | Nenhuma — inline em 2 scripts | 24h |
+| **fredapi** | `fredapi` | `market_data.py` | `market_data.py --macro-us` | 24h |
+| **IBKR Flex** | `ibflex` | `ibkr_lotes.py` | `ibkr_lotes.py` + `ibkr_sync.py` | 168h (manual) |
+| **Binance API** | `urllib` direto | `btc_indicators.py` | Nenhuma — `binance_analysis.py` usa yfinance para preços | 4h |
+| **Google Sheets** | `urllib` (CSV público) | `fetch_historico_sheets.py` | `fetch_historico_sheets.py` | 48h |
+| **Ken French** | `getfactormodels`, `urllib+zip` | `market_data.py`, `reconstruct_factor.py`, `backtest_portfolio.py` | `reconstruct_factor.py` (parcial) | 72h |
+
+### 10.2 Avaliação: Retry / Timeout / Cache / Fallback
+
+| Integração | Retry | Timeout | Cache explícito | Fallback |
+|-----------|-------|---------|----------------|---------|
+| yfinance | ❌ Nenhum | ❌ Nenhum (yfinance interno) | Parcial (`factor_cache.json`) | `CAMBIO_FALLBACK` em config.py; state existente |
+| pyield/ANBIMA | Parcial (D-1, D-2 manual em `reconstruct_history.py`) | ❌ Nenhum | `ntnb_history_cache.json` (sem TTL explícito) | cache existente |
+| python-bcb | ❌ Nenhum | ❌ Nenhum | Nenhum direto (usa state como fallback) | `SELIC_META_SNAPSHOT` hardcoded; `5.20` em `fx_utils.get_ptax` |
+| FRED CSV | ❌ Nenhum | 5–8s (`timeout` no urlopen) | Nenhum | `FED_FUNDS_SNAPSHOT` em config.py; state existente |
+| fredapi | ❌ Nenhum | ❌ Nenhum (fredapi interno) | Nenhum | state existente |
+| IBKR Flex | ❌ Nenhum | ❌ Nenhum | `lotes.json` (manual) | lotes.json existente (stale) |
+| Binance API | ❌ Nenhum | 5–30s (por chamada) | `binance/posicoes.json` | fallback config |
+| Google Sheets | ❌ Nenhum | 15s (`fetch_csv`) | `historico_sheets.json` | sys.exit(1) se falha |
+| Ken French | ❌ Nenhum | 30s (`urllib`) | `factor_cache.json` (sem TTL) | snapshot anterior |
+
+**Gaps críticos:**
+- **Google Sheets** (`fetch_historico_sheets.py`): `sys.exit(1)` em falha de fetch — bloqueia pipeline em vez de usar cache. Deveria usar `historico_sheets.json` como fallback.
+- **yfinance**: 6+ locais de chamada direta em `generate_data.py` sem abstração centralizada. Cada um tem try/except ad-hoc com qualidade variável.
+- **python-bcb fallback**: `fx_utils.get_ptax()` retorna `5.20` hardcoded (linha 63) sem avisar — silencioso.
+
+### 10.3 Avaliação da Camada de Abstração
+
+| Camada | Status | Avaliação |
+|--------|--------|-----------|
+| `fx_utils.py` | Boa | Abstrai PTAX/Selic/IPCA do python-bcb. Usado em 6+ scripts. Gap: fallback PTAX=5.20 silencioso |
+| `market_data.py` | Parcial | CLI útil para dados em tempo real. Não é importado pelo pipeline (apenas manual) |
+| `ibkr_lotes.py` | Boa | Abstrai Flex Query + CSV. Único ponto de entrada para posições IBKR |
+| `ibkr_sync.py` | Boa | Wrapper de alto nível sobre ibkr_lotes.py |
+| yfinance (direto) | Ruim | 20+ chamadas diretas espalhadas em 12 scripts diferentes. Sem wrapper centralizado |
+| pyield (direto) | Ruim | 3 locais de chamada direta com padrões de fallback diferentes |
+| FRED CSV (direto) | OK | 2 locais idênticos — redundância mínima aceitável |
+
+### 10.4 O que Fazer Quando Cada Integração Cai
+
+#### yfinance indisponível
+
+```bash
+# Continuar sem preços (usa state existente)
+python3 scripts/generate_data.py --skip-prices
+
+# Verificar se yfinance responde
+python3 -c "import yfinance as yf; print(yf.download('SWRD.L', period='1d'))"
+
+# Verificar saúde geral
+python3 scripts/integration_health.py
+```
+
+**Impacto por seção:**
+- `get_posicoes_precos`: câmbio cai para `CAMBIO_FALLBACK` (config.py) — patrimônio estimado
+- `build_factor_rolling`, `compute_factor_loadings`: usam `factor_cache.json` existente
+- `get_bitcoin_usd`: usa state existente
+- `backtest_portfolio.py` (subprocess): falha silenciosa, usa dados do state
+
+#### pyield/ANBIMA indisponível
+
+```bash
+# ntnb_history_cache.json é usado automaticamente
+# Verificar staleness do cache
+ls -la dados/ntnb_history_cache.json
+
+# Quando ANBIMA voltar:
+python3 scripts/reconstruct_fire_data.py  # regenera drawdown_history, bond_pool, etc.
+```
+
+**Impacto:** `ntnb_history`, taxas RF no dashboard ficam com dados do último cache. `read_holdings_taxas()` não depende de pyield (lê `holdings.md` diretamente) — taxas RF do portfólio continuam OK.
+
+#### python-bcb/BCB indisponível
+
+```bash
+# fx_utils.get_ptax() retorna 5.20 como fallback (SILENCIOSO — checar logs)
+# Verificar se fallback foi ativado nos logs do pipeline:
+#   "⚠️ ATENÇÃO: câmbio=... é FALLBACK"
+
+# Reconstruir quando BCB voltar:
+python3 scripts/reconstruct_macro.py
+python3 scripts/generate_data.py
+```
+
+**Impacto:** PTAX fallback = 5.20 (pode divergir do mercado). Selic usa `SELIC_META_SNAPSHOT` de config.py.
+
+#### FRED (Fed Funds) indisponível
+
+```bash
+# Fallback automático: state.macro.fed_funds → FED_FUNDS_SNAPSHOT (config.py)
+# Sem ação necessária — impacto cosmético (macro card)
+
+# Verificar se FRED CSV está acessível:
+curl -s "https://fred.stlouisfed.org/graph/fredgraph.csv?id=FEDFUNDS" | tail -3
+```
+
+#### IBKR Flex indisponível
+
+```bash
+# Verificar staleness de lotes.json
+ls -la dados/ibkr/lotes.json
+
+# Quando IBKR Flex voltar:
+python3 scripts/ibkr_sync.py --cambio <ptax_hoje>
+
+# Alternativa manual: editar dados/ibkr/lotes.json via ibkr_lotes.py --csv
+python3 scripts/ibkr_lotes.py  # usa CSV exportado do IBKR
+```
+
+**Impacto:** posições IBKR ficam stale. Pipeline continua com lotes.json anterior — IR diferido, retornos históricos ficam desatualizados.
+
+#### Binance API indisponível
+
+```bash
+# btc_indicators.py falha silenciosamente (standalone — não está no pipeline diário)
+# binance_analysis.py usa yfinance para preços (não a API pública da Binance)
+# Impacto: mínimo — crypto legado Binance não atualiza
+ls -la dados/binance/posicoes.json
+```
+
+#### Google Sheets indisponível
+
+```bash
+# ATENÇÃO: fetch_historico_sheets.py faz sys.exit(1) se fetch falha
+# → NÃO rodar fetch_historico_sheets.py se Sheets estiver inacessível
+# → reconstruct_history.py usa historico_sheets.json existente como fallback
+
+# Verificar se cache está OK:
+ls -la dados/historico_sheets.json
+python3 -c "import json; d=json.load(open('dados/historico_sheets.json')); print(len(d.get('snapshots',[])), 'snapshots')"
+```
+
+**Impacto:** `reconstruct_history.py` falha se `historico_sheets.json` não existir — COE XP não calculado.
+
+#### Ken French (FF5) indisponível
+
+```bash
+# factor_snapshot.json é usado automaticamente como fallback
+ls -la dados/factor_snapshot.json
+
+# Quando Ken French voltar:
+python3 scripts/reconstruct_factor.py
+```
+
+**Impacto:** `factor_rolling`, `factor_loadings` ficam stale. Dashboard mostra dados do último snapshot.
+
+### 10.5 Estrutura Recomendada de Integrações
+
+**Status atual:** cada integração tem fallback ad-hoc, qualidade variável, sem retry exponencial, sem TTL explícito.
+
+**Recomendações por prioridade:**
+
+**P1 — Fix imediato:**
+- `fetch_historico_sheets.py`: substituir `sys.exit(1)` por fallback para `historico_sheets.json` existente
+- `fx_utils.get_ptax()` linha 63: logar aviso quando fallback=5.20 é ativado
+
+**P2 — Médio prazo:**
+- Implementar `fetch_with_retry()` em `fx_utils.py` (template já documentado na Seção 7)
+- Centralizar chamadas yfinance em wrapper único com: try/except padronizado, log consistente, fallback para cache
+- Adicionar TTL explícito em `ntnb_history_cache.json` e `factor_cache.json`
+
+**P3 — Baixa prioridade:**
+- `market_data.py` como importável pelo pipeline (hoje é só CLI)
+- Mock de integrações para testes unitários
+
+**Script de diagnóstico:** `integration_health.py` (implementado em XX-system-audit Fase 5)
+
+```bash
+# Verificar todas as integrações
+python3 scripts/integration_health.py
+
+# Output JSON para automação
+python3 scripts/integration_health.py --json
+
+# Ver ações corretivas
+python3 scripts/integration_health.py --fix
+
+# Verificar integração específica
+python3 scripts/integration_health.py --integration yfinance
+```

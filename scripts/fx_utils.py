@@ -58,9 +58,16 @@ def get_ptax(reference_date: date | None = None) -> float:
     try:
         series = get_ptax_series(start, end)
         return float(series.iloc[-1])
-    except Exception:
-        # Fallback: valor fixo de referência
-        return 5.20
+    except Exception as _e:
+        # Fallback: valor fixo de referência (hardcoded — python-bcb indisponível)
+        _PTAX_HARDCODED_FALLBACK = 5.20
+        print(
+            f"  ⚠️ fx_utils.get_ptax: BCB indisponível ({_e}) "
+            f"— usando fallback HARDCODED={_PTAX_HARDCODED_FALLBACK} "
+            f"(valores patrimoniais em BRL serão estimados)",
+            file=sys.stderr,
+        )
+        return _PTAX_HARDCODED_FALLBACK
 
 
 def to_brl(usd_value: float, reference_date: date | None = None) -> float:

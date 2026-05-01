@@ -106,13 +106,17 @@ def _parse_date_ddmmyyyy(s: str) -> str | None:
 
 
 # ─── Fetch CSV ───────────────────────────────────────────────────────────────
+class SheetsFetchError(RuntimeError):
+    """Raised when Google Sheets fetch fails and no cache fallback is available."""
+
+
 def fetch_csv(url: str) -> list[list[str]]:
+    """Fetch CSV from URL. Raises SheetsFetchError on failure (caller decides if fatal)."""
     try:
         with urllib.request.urlopen(url, timeout=15) as resp:
             raw = resp.read().decode("utf-8")
     except Exception as e:
-        print(f"[ERRO] Fetch falhou: {e}", file=sys.stderr)
-        sys.exit(1)
+        raise SheetsFetchError(f"Google Sheets fetch falhou: {e}") from e
 
     reader = csv.reader(StringIO(raw))
     return [row for row in reader]
@@ -440,8 +444,23 @@ def main():
     print(f"fetch_historico_sheets.py — {today}")
     print(f"Fetching {TAB_NAME} tab...")
 
-    rows = fetch_csv(GVZ_URL)
-    print(f"  {len(rows)} linhas recebidas.")
+    # Fetch com fallback para cache existente (não sys.exit — permite pipeline continuar)
+    rows: list[list[str]] = []
+    sheets_ok = True
+    try:
+        rows = fetch_csv(GVZ_URL)
+        print(f"  {len(rows)} linhas recebidas.")
+    except SheetsFetchError as e:
+        sheets_ok = False
+        print(f"  ⚠️ {e}", file=sys.stderr)
+        existing = load_existing()
+        if existing.get("snapshots"):
+            n_cached = len(existing["snapshots"])
+            print(f"  ⚠️ Google Sheets inacessível — usando cache ({n_cached} snapshots). Pipeline NÃO interrompido.")
+            print(f"  ⚠️ historico_sheets.json existente será preservado sem atualização.")
+        else:
+            print("  ❌ Google Sheets inacessível E sem cache local. reconstruct_history.py pode falhar.", file=sys.stderr)
+        return
 
     snaps = parse_all_snapshots(rows)
     print(f"  {len(snaps)} data point(s) detectados:")
@@ -452,8 +471,13 @@ def main():
 
     # Fetch daily historical tab (Histórico com acento) for COE/loan data
     print(f"\nFetching Histórico (diário) tab para COE/empréstimo XP...")
-    daily_rows = fetch_csv(GVZ_URL_DAILY)
-    print(f"  {len(daily_rows)} linhas recebidas.")
+    daily_rows: list[list[str]] = []
+    try:
+        daily_rows = fetch_csv(GVZ_URL_DAILY)
+        print(f"  {len(daily_rows)} linhas recebidas.")
+    except SheetsFetchError as e:
+        print(f"  ⚠️ Daily tab inacessível ({e}) — COE/empréstimo não será atualizado.", file=sys.stderr)
+        daily_rows = []
     coe_by_month = parse_coe_from_daily_rows(daily_rows)
     print(f"  {len(coe_by_month)} meses com posição COE/empréstimo detectados.")
 

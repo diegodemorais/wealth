@@ -75,7 +75,16 @@ Auditoria arquitetural completa do sistema de dados e dashboard, cobrindo:
 - [x] Documentar TTL de cache para cada fonte externa → Seção 6 do RUNBOOK.md
 - [ ] Tratar consultas externas uniformemente com retry unificado → Documentado como TODO no RUNBOOK.md; não implementado (MÉDIO prioridade)
 
-### Fase 5 — Limpeza (Dev)
+### Fase 5 — Integrações (Plan/Integrator)
+- [x] Inventariar todas as integrações externas: yfinance (20+ chamadas diretas em 12 scripts), pyield (3 locais diretos), python-bcb (7 scripts — maioria via fx_utils), FRED CSV (2 scripts inline), fredapi (market_data.py), IBKR Flex (ibkr_lotes.py), Binance API (btc_indicators.py), Google Sheets (fetch_historico_sheets.py), Ken French (3 scripts)
+- [x] Verificar retry/timeout/cache/fallback por integração → auditoria completa: **zero** retry exponencial em qualquer integração; timeouts em urllib direto apenas (5–30s); caches sem TTL explícito (yfinance, pyield, Ken French)
+- [x] Avaliar camada de abstração → `fx_utils.py` (boa), `ibkr_lotes.py` (boa); yfinance sem wrapper central (20+ chamadas ad-hoc); pyield com 3 padrões distintos de fallback
+- [x] **P1 Fix: `fx_utils.get_ptax()` fallback silencioso** — CORRIGIDO 2026-05-01: log explícito `⚠️ BCB indisponível — usando fallback HARDCODED=5.20` em stderr
+- [x] **P1 Fix: `fetch_historico_sheets.py` sys.exit(1)** — CORRIGIDO 2026-05-01: `SheetsFetchError` substituiu sys.exit; main() usa cache local quando Sheets inacessível (pipeline não interrompido)
+- [x] Criar `scripts/integration_health.py` → 9 integrações cobertas (OK/DEGRADED/DOWN/SKIP), latência, cache staleness; CLI com `--json`, `--fix`, `--integration`
+- [x] Documentar Seção 10 no `scripts/RUNBOOK.md` → mapa completo, avaliação retry/TTL, "O que fazer quando cada uma cai", estrutura recomendada com gaps P1/P2/P3
+
+### Fase 5b — Limpeza (Dev)
 - [x] Identificar e arquivar scripts legados → 9 scripts movidos para `scripts/archive/`
 - [x] Verificar duplicidade entre scripts → Sem duplicidade crítica; `withdrawal_engine.py` é importado por `fire_montecarlo.py` (correto)
 - [x] `spendingSensibilidade=[]` — MAPEADO: nenhum script popula `state.spending.scenarios`; TODO documentado em generate_data.py
@@ -84,7 +93,8 @@ Auditoria arquitetural completa do sistema de dados e dashboard, cobrindo:
 ### Fase 6 — Atualizar artefatos do Integrator
 - [x] Atualizar `pipeline-coverage.md` com DAG, classificação de scripts, achados da auditoria (Seção 8)
 - [x] Atualizar `dependency-map.md` com referência ao RUNBOOK.md
-- [x] Commitar e pushar tudo
+- [x] Commitar e pushar tudo (Fases 1–5b)
+- [x] Commitar e pushar Fase 5 — Integrações (integration_health.py, RUNBOOK.md Seção 10, fixes P1)
 
 ---
 
