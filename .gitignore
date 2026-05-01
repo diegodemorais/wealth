@@ -34,6 +34,7 @@ react-app/.next/
 
 # Next.js static export (build artifacts)
 dash/
+react-app/.dash/
 dashboard/audit-screenshots/
 dashboard/audit-reports/
 
