@@ -1,0 +1,56 @@
+name: Create Stable Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'RELEASE_STABLE.md'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep '"version"' react-app/package.json | head -1 | sed 's/.*"\([0-9.]*\)".*/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+
+      - name: Create tag and release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="v${{ steps.version.outputs.version }}"
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+
+          # Create and push tag
+          if git tag | grep -q "^${VERSION}$"; then
+            echo "Tag ${VERSION} already exists locally, fetching remote..."
+            git push origin "${VERSION}" || echo "Tag push skipped (may already exist on remote)"
+          else
+            git tag -a "${VERSION}" -m "Estavel Pos Quality — ${VERSION}"
+            git push origin "${VERSION}"
+          fi
+
+          # Create GitHub release
+          gh release create "${VERSION}" \
+            --title "${VERSION} — Estavel Pos Quality" \
+            --notes-file RELEASE_STABLE.md \
+            --latest || echo "Release may already exist — skipping"
+
+      - name: Summary
+        run: |
+          VERSION="v${{ steps.version.outputs.version }}"
+          echo "## Stable Release Created" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "**Name:** ${VERSION} — Estavel Pos Quality" >> $GITHUB_STEP_SUMMARY
+          echo "**Milestone:** FIRE 2040 + IIFPT + Quality Gate" >> $GITHUB_STEP_SUMMARY
