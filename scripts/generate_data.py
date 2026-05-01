@@ -5971,6 +5971,68 @@ def main():
         "realized_pnl": json.loads(REALIZED_PNL_PATH.read_text()) if REALIZED_PNL_PATH.exists() else None,
     }
 
+    # ─── Fee Impact — custo acumulado de TERs projetado 20 anos ────────────────
+    # Dados: ETF_TER (config.py), EQUITY_WEIGHTS (config.py), premissas.patrimonio_atual, premissas.aporte_mensal
+    # Retorno nominal: 7% a.a. (premissa benchmark para visualização)
+    _fi_ter_swrd = ETF_TER.get("SWRD", 0.12) / 100
+    _fi_ter_avgs = ETF_TER.get("AVGS", 0.39) / 100
+    _fi_ter_avem = ETF_TER.get("AVEM", 0.35) / 100
+    _fi_w_swrd   = EQUITY_WEIGHTS.get("SWRD", 0.50)
+    _fi_w_avgs   = EQUITY_WEIGHTS.get("AVGS", 0.30)
+    _fi_w_avem   = EQUITY_WEIGHTS.get("AVEM", 0.20)
+    _fi_ter_medio = _fi_w_swrd * _fi_ter_swrd + _fi_w_avgs * _fi_ter_avgs + _fi_w_avem * _fi_ter_avem
+    _fi_r_nominal = 0.07  # retorno nominal benchmark (7% a.a.)
+    _fi_p0 = float(premissas.get("patrimonio_atual", 3_760_000))
+    _fi_aporte = float(premissas.get("aporte_mensal", 25_000)) * 12  # anual
+
+    def _fi_portfolio(p0: float, r: float, aporte_anual: float, anos: int) -> float:
+        """Valor acumulado com aportes anuais ao final de `anos` anos."""
+        pv = p0 * ((1 + r) ** anos)
+        if abs(r) < 1e-9:
+            fv_aportes = aporte_anual * anos
+        else:
+            fv_aportes = aporte_anual * (((1 + r) ** anos - 1) / r)
+        return round(pv + fv_aportes, 0)
+
+    _fi_anos = list(range(1, 21))
+    _fi_com_ter = [_fi_portfolio(_fi_p0, _fi_r_nominal - _fi_ter_medio, _fi_aporte, t) for t in _fi_anos]
+    _fi_sem_ter = [_fi_portfolio(_fi_p0, _fi_r_nominal, _fi_aporte, t) for t in _fi_anos]
+    _fi_custo   = [round(_fi_sem_ter[i] - _fi_com_ter[i], 0) for i in range(20)]
+
+    data["fee_impact"] = {
+        "ter_medio_pct":      round(_fi_ter_medio * 100, 3),
+        "ter_swrd_pct":       round(_fi_ter_swrd * 100, 3),
+        "ter_avgs_pct":       round(_fi_ter_avgs * 100, 3),
+        "ter_avem_pct":       round(_fi_ter_avem * 100, 3),
+        "retorno_nominal_pct": round(_fi_r_nominal * 100, 1),
+        "anos":               _fi_anos,
+        "portfolio_com_ter":  _fi_com_ter,
+        "portfolio_sem_ter":  _fi_sem_ter,
+        "custo_acumulado":    _fi_custo,
+    }
+    print(f"  ✓ fee_impact: TER médio={_fi_ter_medio*100:.3f}% · custo 20a=R${_fi_custo[-1]/1e6:.1f}M")
+
+    # ─── Factor Loadings — portfolio equity ponderado ───────────────────────────
+    # Calcula portfolio_equity (média ponderada dos ETFs) e AVGS_composite
+    # Mapeamento: SWRD 50%, AVGS→(0.58×AVUV + 0.42×AVDV) 30%, AVEM→EIMI 20%
+    _fl = data.get("factor_loadings", {})
+    _fl_factors = ["hml", "smb", "rmw", "cma", "mkt_rf", "mom"]
+    _fl_swrd  = _fl.get("SWRD", {})
+    _fl_avuv  = _fl.get("AVUV", {})
+    _fl_avdv  = _fl.get("AVDV", {})
+    _fl_eimi  = _fl.get("EIMI", {})
+    if all(_fl_swrd.get(f) is not None for f in _fl_factors) and \
+       all(_fl_avuv.get(f) is not None for f in _fl_factors) and \
+       all(_fl_avdv.get(f) is not None for f in _fl_factors) and \
+       all(_fl_eimi.get(f) is not None for f in _fl_factors):
+        _avgs_comp = {f: round(0.58 * _fl_avuv[f] + 0.42 * _fl_avdv[f], 4) for f in _fl_factors}
+        _port_eq   = {f: round(0.50 * _fl_swrd[f] + 0.30 * _avgs_comp[f] + 0.20 * _fl_eimi[f], 4) for f in _fl_factors}
+        data["factor_loadings"]["AVGS_composite"]  = _avgs_comp
+        data["factor_loadings"]["portfolio_equity"] = _port_eq
+        print(f"  ✓ factor_loadings.portfolio_equity: HML={_port_eq.get('hml')} SMB={_port_eq.get('smb')} MKT_RF={_port_eq.get('mkt_rf')}")
+    else:
+        print("  ⚠️ factor_loadings: SWRD/AVUV/AVDV/EIMI incompletos — portfolio_equity não calculado")
+
     # ─── Risk Metrics — calculado após data dict completo (lê patrimônio) ────────────
     data["risk"] = compute_risk_metrics(data)
     assert data.get("risk") is not None, "risk metrics missing"
