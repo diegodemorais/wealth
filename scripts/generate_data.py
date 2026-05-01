@@ -3923,8 +3923,7 @@ def main():
     pfire_aspiracional, pfire_base, tornado = get_pfire_tornado()
 
     # RF-2: Adicionar percentis reais de MC
-    if not args.skip_scripts:
-        try:
+    try:
             print("  ▶ RF-2: Computando percentis reais de P(FIRE) via MC múltiplo ...")
             import fire_montecarlo as fm
             import numpy as np
