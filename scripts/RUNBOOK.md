@@ -10,6 +10,18 @@
 
 Venv: `~/claude/finance-tools/.venv/bin/python3`
 
+### Diagnóstico de integrações (RECOMENDADO antes de qualquer run completo)
+
+```bash
+# Verifica as 9 integrações (OK/DEGRADED/DOWN) — NÃO bloqueia, apenas diagnostica
+python3 scripts/integration_health.py
+
+# Output JSON para automação
+python3 scripts/integration_health.py --json
+```
+
+> **DIAGNÓSTICO:** `integration_health.py` não bloqueia o pipeline. Serve para detectar integrações degradadas antes de iniciar e evitar surpresas durante o run.
+
 ### Pre-requisitos opcionais (rodar antes se dados IBKR estão desatualizados)
 
 ```bash
@@ -21,6 +33,10 @@ python3 scripts/parse_carteira.py
 
 # Check-in mensal com shadows A/B/C (rodar ao final de cada mês)
 python3 scripts/checkin_mensal.py
+
+# Agregar retornos mensais em períodos trimestrais/anuais no state.shadows (CONDICIONAL)
+# Só rodar após fechar um mês de checkin_mensal — não é necessário em runs diários
+python3 scripts/reconstruct_shadows.py
 ```
 
 ### Reconstruct snapshots (quando desatualizados ou após mudança de parâmetros)
@@ -62,12 +78,16 @@ python3 scripts/generate_data.py --skip-prices
 ## 2. DAG do Pipeline (Ordem Canônica)
 
 ```
+[Diagnóstico — RECOMENDADO no início de cada run completo, NÃO bloqueia]
+integration_health.py                     → stdout (OK/DEGRADED/DOWN por integração)
+
 carteira.md
     └── parse_carteira.py                 → dados/carteira_params.json → config.py
 
 ibkr_sync.py (ou lotes.json manual)      → dados/ibkr/lotes.json
 fetch_historico_sheets.py                 → dados/historico_carteira.csv (fonte primária)
 checkin_mensal.py                         → state.shadows.{periodo} (mensal)
+reconstruct_shadows.py [CONDICIONAL]      → state.shadows.{trimestre/ano} (só após mês fechado)
 
 [Reconstruct snapshots — podem rodar em paralelo]
 reconstruct_fire_data.py                  → dados/fire_matrix.json
@@ -152,6 +172,8 @@ generate_data.py
 | Script | Propósito |
 |--------|-----------|
 | `checkin_mensal.py` | Shadow A/B/C + scorecard mensal |
+| `reconstruct_shadows.py` | Agrega retornos mensais em períodos trimestrais/anuais no state.shadows — **CONDICIONAL**: rodar após fechar mês de checkin_mensal |
+| `integration_health.py` | Verifica 9 integrações (OK/DEGRADED/DOWN) — **DIAGNÓSTICO**: não bloqueia pipeline |
 | `portfolio_analytics.py` | TWR, fronteira eficiente, stress test |
 | `multi_llm_query.py` | Decisões >5% portfolio (obrigatório CLAUDE.md) |
 | `market_data.py` | Dados macro/ETFs/fatores em tempo real |
