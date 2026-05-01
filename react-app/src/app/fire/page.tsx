@@ -33,6 +33,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
 import { BondPoolDepletionChart } from '@/components/charts/BondPoolDepletionChart';
 import { PostFireFanChart } from '@/components/charts/PostFireFanChart';
+import { SpendingTimelineChart } from '@/components/charts/SpendingTimelineChart';
 
 
 export default function FirePage() {
@@ -1423,6 +1424,20 @@ export default function FirePage() {
           </CollapsibleSection>
         );
       })()}
+
+      {/* Spending Timeline — Gastos por ano 2040–2077 (FR-spending-timeline) */}
+      {(data as any)?.spending_smile && (
+        <CollapsibleSection
+          id="section-spending-timeline"
+          title={secTitle('fire', 'spending-timeline', 'Spending Timeline — Gastos anuais por componente (2040–2077)')}
+          defaultOpen={secOpen('fire', 'spending-timeline', false)}
+        >
+          <div style={{ padding: '0 16px 16px' }}>
+            <SpendingTimelineChart data={data as any} />
+            <div className="src">Spending smile por fase · Lifestyle + Saúde (VCMH) · Linhas marcam transição Go-Go → Slow-Go → No-Go</div>
+          </div>
+        </CollapsibleSection>
+      )}
 
       {/* ── Gap N: Sensibilidade P(FIRE) ──────────────────────────────────────── */}
       {(() => {
