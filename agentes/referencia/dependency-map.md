@@ -220,3 +220,205 @@ carteira.md → premissas.pct_equity
 | 2026-05-01 | `retorno_decomposicao` bloqueia pipeline | Sem cache fallback; reconstruct_history não rodou | Cache fallback adicionado | ⚠ Não |
 | 2026-05-01 | ReverseFire aspiracional usava aporte R$25k e idadeFire=53 | build_pfire_request não usava aporte_cenario_aspiracional; setAspiracional não setava idadeFire | Corrigido em generate_data.py e ReverseFire.tsx | ⚠ Não |
 | 2026-05-01 | StressTest label "50 anos (FIRE aspiracional)" | Hardcoded; idade mudou de 50 para 49 | Hardcoded corrigido para 49 | ⚠ Não |
+
+---
+
+## 8. Cobertura Pipeline → data.json
+
+> **Auditoria**: 2026-05-01 | **Campos top-level**: 102 | **Cobertura confirmada**: 102/102 | **Detalhes**: `agentes/referencia/pipeline-coverage.md`
+
+Legenda: ✅ = assertion presente e bloqueia | ⚠ = sem assertion (falha silenciosa) | 🔴 = null/zero problemático detectado | 📌 = stale risk
+
+### Metadata / Internos
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `_generated` | `main()` datetime.now() | ⚠ | ok | BAIXO |
+| `_generated_brt` | `main()` utcnow()-3h | ⚠ | ok | BAIXO |
+| `_ibkr_sync_date` | `main()` LOTES_PATH.stat().mtime | ⚠ | ok | BAIXO |
+| `_schema_version` | `main()` hardcoded `"2.0"` | ⚠ | ok | BAIXO |
+| `_pipeline_run` | `main()` _pipeline_run_id | ⚠ | ok | BAIXO |
+| `_snapshots_metadata` | `_load_json_safe()` mtime tracker | ⚠ | `backtest_r7._generated=null`, `fire_by_profile._generated=null` | MÉDIO 📌 |
+| `_data_sources` | `main()` dict hardcoded | ⚠ | ok | BAIXO |
+| `_pfire_canonical_carteira` | `main()` config.PFIRE_CANONICAL_* | ⚠ | ok | BAIXO |
+| `_pfire_divergence_warning` | `main()` condicional | ⚠ | ok | BAIXO |
+
+### Data / Câmbio
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `date` | `main()` date.today() | ⚠ | ok | BAIXO |
+| `timestamps` | `get_source_timestamps()` | ⚠ | ok | BAIXO |
+| `cambio` | `get_posicoes_precos()` yfinance BRL/USD | ⚠ | ok (usa CAMBIO_FALLBACK se yfinance falha — sem aviso explícito) | **MÉDIO** — base de todos os cálculos sem assert |
+
+### Posições e Alocação
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `posicoes` | `get_posicoes_precos()` state + yfinance | ⚠ | ok (ter=null em 7 transitórios — design) | BAIXO |
+| `pesosTarget` | `main()` PESOS_TARGET config.py | ⚠ | ok | BAIXO |
+| `pisos` | `main()` config.py | ⚠ | ok | BAIXO |
+| `drift` | `compute_drift()` | ⚠ | ok | BAIXO |
+| `glide` | `main()` GLIDE_PATH config.py | ⚠ | ok | BAIXO |
+
+### P(FIRE) e Monte Carlo
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `pfire_aspiracional` | `get_pfire_tornado()` PFireEngine | ⚠ | ok (91.1%) | MÉDIO |
+| `pfire_base` | `get_pfire_tornado()` PFireEngine | ⚠ | ok (83.4%) | MÉDIO 📌 |
+| `pfire_cenarios_estendidos` | `compute_extended_mc_scenarios()` | ⚠ | 🔴 `stagflation.params.retorno_equity_base=0.0`; `hyperinflation.p_sucesso_pct=0.0` | **ALTO** — zeros suspeitos passam silenciosamente |
+| `pfire_by_profile` | `main()` stub | ✅ assert "atual" presente | `casado.base=null`, `filho.base=null` — design (TODO) | MÉDIO |
+| `premissas` | `main()` dict (35 sub-campos) | ✅ fire_year_base, haircut_alpha_liquido | ok | BAIXO |
+| `tornado` | `get_pfire_tornado()` --tornado subprocess | ⚠ | ok (4 variáveis) | MÉDIO 📌 |
+| `trilha_p10` | `rodar_monte_carlo_com_trajetorias()` | ⚠ | ok (38 pontos) | MÉDIO 📌 |
+| `trilha_p50` | idem | ⚠ | ok | MÉDIO 📌 |
+| `trilha_p90` | idem | ⚠ | ok | MÉDIO 📌 |
+| `trilha_datas` | idem | ⚠ | ok | BAIXO |
+
+### FIRE Section (fire.*)
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `fire.coast_fire` | `compute_coast_fire()` | ✅ not None + coast_number_base isinstance float | ok | BAIXO |
+| `fire.fire_spectrum` | `compute_fire_spectrum()` | ✅ not None + len==4 | ok | BAIXO |
+| `fire.p_quality` | fire_montecarlo via dashboard_state.json | ✅ not None, 0-100 | ok | MÉDIO 📌 |
+| `fire.p_quality_matrix` | `compute_p_quality_matrix()` | ✅ not None, keys A-E | ok | MÉDIO |
+| `fire.p_quality_aspiracional` | dashboard_state.json --by_profile | ⚠ | 🔴 **NULL** — --by_profile não calcula aspiracional | **ALTO** |
+| `fire.pat_mediano_fire` | fire_state.pat_mediano_fire53 | ⚠ | ok | BAIXO |
+| `fire.pat_mediano_fire50` | fire_state.pat_mediano_fire50 | ⚠ | 🔴 **NULL** — chave stale; MC escreve `pat_mediano_aspiracional` | ALTO |
+| `fire.plano_status` | `get_macro_data()` macro.plano_status | ⚠ | `inputs.drift_max_pp=null` (state.wellness.metrics.drift_max ausente) | MÉDIO |
+| `fire.swr_current` | `main()` rf_total / gasto_anual | ⚠ | ok | BAIXO |
+| `fire.p_quality_fav/stress/proxy/full` | dashboard_state.json | ⚠ | ok | MÉDIO 📌 |
+| `fire.bond_pool_readiness` | `main()` inline | ⚠ | ok | BAIXO |
+| `fire.bond_pool_status` | fire_montecarlo.PREMISSAS | ⚠ | ok | MÉDIO |
+| `fire.by_profile` | fire_by_profile.json + fire_matrix.json | ⚠ | ok | MÉDIO 📌 |
+
+### Cenários e Comparações
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `scenario_comparison` | `main()` dict | ⚠ | ok (pat_mediano=12.7M, swr=1.96%) | BAIXO |
+| `earliest_fire` | `compute_earliest_fire()` | ⚠ | ok | BAIXO |
+
+### Performance e Histórico
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `timeline` | `get_timeline_retornos()` CSV | ⚠ | ok | BAIXO |
+| `retornos_mensais` | dados/retornos_mensais.json (reconstruct_history.py) | ⚠ | ok | BAIXO 📌 |
+| `rolling_sharpe` | dados/rolling_metrics.json (reconstruct_history.py) | ⚠ | ok | BAIXO 📌 |
+| `backtest` | `get_backtest()` backtest_portfolio.py | ⚠ | ok | MÉDIO |
+| `backtestR5` | idem | ⚠ | ok | MÉDIO |
+| `backtest_r7` | dados/backtest_r7.json (backtest_portfolio.py --r7) | ⚠ | ok (67.4h — stale) | **MÉDIO-ALTO** 📌 |
+| `factor_rolling` | dados/factor_snapshot.json | ⚠ | ok | BAIXO 📌 |
+| `factor_signal` | dados/factor_snapshot.json | ⚠ | ok | BAIXO 📌 |
+| `factor_loadings` | dados/factor_snapshot.json | ⚠ | ok | BAIXO 📌 |
+| `factor` | `main()` factor.value_spread | ⚠ | ok | BAIXO |
+| `attribution` | `get_attribution()` | ✅ retornoUsd not None/0 | ok (por_bucket={} — possível limitação de dados) | MÉDIO |
+| `timeline_attribution` | `get_timeline_attribution()` CSV | ⚠ | ok | BAIXO 📌 |
+| `equity_attribution` | `main()` aportes.json + posicoes | ⚠ | ok | BAIXO |
+| `premissas_vs_realizado` | `compute_premissas_vs_realizado()` | ⚠ | ok | BAIXO |
+
+### RF / Renda Fixa
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `rf` | `get_rf()` state + holdings.md + nubank/resumo_td.json | ⚠ | cotas=null (design); total_resgatado_brl=0.0 (correto) | BAIXO |
+| `hodl11` | `main()` yfinance + xp/lotes.json | ⚠ | ok | BAIXO |
+| `dca_status` | `get_dca_status()` | ⚠ | ok | BAIXO |
+| `semaforo_triggers` | `get_semaforo_triggers()` | ⚠ | ok | BAIXO |
+| `guardrails_retirada` | `get_guardrails_retirada()` | ⚠ | ok | BAIXO |
+| `bond_pool` | `compute_bond_pool_gap_m()` | ✅ not None | ok | BAIXO |
+| `bond_pool_runway` | dados/bond_pool_runway.json | ⚠ | ok | BAIXO 📌 |
+| `bond_pool_runway_by_profile` | `_compute_bond_pool_runway_by_profile()` BondPoolEngine | ⚠ | ok | BAIXO |
+| `ntnb_history` | `build_ntnb_history()` pyield ANBIMA | ⚠ | ok | MÉDIO |
+
+### Macro / Mercado
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `macro` | dados/macro_snapshot.json / `get_macro_data()` | ⚠ | `plano_status.inputs.drift_max_pp=null` | MÉDIO |
+| `mercado` | `main()` yfinance + state.mercado_mtd | ⚠ | `renda2065_mtd_pp=null` (seed início de mês) | MÉDIO |
+| `shadows` | `main()` state.shadows.q1_2026 | ⚠ | 🔴 `delta_vwra/delta_ipca/delta_shadow_c=null` — chave q1_2026 nunca criada | **ALTO** |
+
+### Impostos / Passivos
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `tax` | TaxEngine + dados/tax_snapshot.json | ✅ estate_tax injetado depois | ok | BAIXO |
+| `passivos` | `get_passivos()` hipoteca_sac.json + tax_data | ⚠ | ok | BAIXO |
+| `realized_pnl` | reconstruct_realized_pnl.py | ⚠ | ok | BAIXO |
+| `coe_net_brl` | `main()` ultima linha CSV | ⚠ | ok (64081) | BAIXO |
+
+### TLH / Drift
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `tlh` | `main()` posicoes transitórios | ⚠ | ok | BAIXO |
+| `tlh_lotes` | `_load_tlh_lotes()` dados/tlh_lotes.json | ⚠ | ok | BAIXO |
+| `tlhGatilho` | `main()` TLH_GATILHO config.py | ⚠ | ok | BAIXO |
+
+### Patrimônio Holístico
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `patrimonio_holistico` | `compute_patrimonio_holistico()` | ✅ financeiro_brl > R$1M | ok | BAIXO |
+| `non_financial_assets` | `compute_non_financial_assets_projection()` | ✅ imovel e terreno not None, equity_liquido >= 0 | ok | BAIXO |
+| `concentracao_brasil` | `compute_concentracao_brasil()` | ⚠ | ok | BAIXO |
+
+### FIRE Snapshots (JSONs externos)
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `fire_matrix` | dados/fire_matrix.json (reconstruct_fire_data.py) | ⚠ | ok | BAIXO 📌 |
+| `fire_swr_percentis` | dados/fire_swr_percentis.json | ⚠ | ok | BAIXO 📌 |
+| `fire_aporte_sensitivity` | dados/fire_aporte_sensitivity.json | ⚠ | ok | BAIXO 📌 |
+| `fire_trilha` | dados/fire_trilha.json | ⚠ | ok | BAIXO 📌 |
+| `fire_montecarlo_liquido` | `run_canonical_mc_with_ir_discount()` | ⚠ | ok | BAIXO |
+| `drawdown_history` | dados/drawdown_history.json (reconstruct_fire_data.py) | ⚠ | 🔴 `crises[1].drawdown_max=0.0` — COVID drawdown registrado como 0% | **ALTO** |
+| `drawdown_extended` | `main()` inline backtest + R5 + R7 | ⚠ | ok | BAIXO |
+| `etf_composition` | dados/etf_composition.json | ⚠ | 🔴 `SWRD.aum_eur=null` (yfinance não retorna totalAssets para UCITS) | **ALTO** |
+| `lumpy_events` | dados/lumpy_events.json | ⚠ | ok (confirmado=False — design) | BAIXO |
+| `fire_by_profile` | dados/fire_by_profile.json (fire_montecarlo --by_profile) | ⚠ | ok (29.4h) | MÉDIO 📌 |
+
+### Métricas de Risco
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `risk` | `compute_risk_metrics(data)` risk_metrics.py | ✅ not None | `calmar_ratio=null` (histórico insuficiente), `semaforos.renda_plus_taxa.value=null` | MÉDIO |
+| `renda_plus_mtm` | `compute_renda_plus_mtm()` | ✅ not None | ok | BAIXO |
+| `breakeven_ipca_selic` | `compute_breakeven_ipca_selic()` | ✅ not None | ok | BAIXO |
+| `vol_realizada` | `compute_vol_realizada()` | ✅ not None (com fallback) | ok | BAIXO |
+| `retorno_decomposicao` | `compute_retorno_decomposicao()` | ✅ not None (com cache fallback) | ok | BAIXO 📌 |
+| `correlation_stress` | `compute_correlation_stress()` | ✅ not None (com cache fallback) | ok | BAIXO 📌 |
+| `spending_ceiling` | `compute_spending_ceiling_analytical()` | ✅ not None | ok | BAIXO |
+| `pfire_sensitivity` | `compute_pfire_sensitivity()` | ✅ not None | ok | BAIXO 📌 |
+| `spending_smile` | `main()` spending_smile_out de fire_montecarlo | ⚠ | ok | BAIXO |
+
+### FIRE Planner / Eventos
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `spending_guardrails` | `compute_spending_guardrails()` GuardrailEngine | ⚠ | ok | BAIXO |
+| `spending_breakdown` | dados/spending_summary.json | ⚠ | ok | BAIXO |
+| `guardrails` | `main()` guardrails_raw de fire_montecarlo | ⚠ | ok | BAIXO |
+| `gasto_piso` | `main()` GASTO_PISO de fire_montecarlo.py | ⚠ | ok | BAIXO |
+| `saude_base` | `main()` premissas_raw.saude_base | ⚠ | ok | BAIXO |
+| `eventos_vida` | `main()` hardcoded lista | ⚠ | ok | BAIXO |
+| `human_capital` | `_compute_human_capital_crossover()` | ⚠ | ok | BAIXO |
+| `contribuicao_retorno_crossover` | `compute_contribuicao_retorno_crossover()` | ⚠ | ok | BAIXO |
+| `withdraw_cenarios` | `main()` fire_matrix.perfis + config | ⚠ | ok | BAIXO |
+
+### Dashboard / Config
+
+| Campo | Gerado por | Assertion? | Status | Risco |
+|-------|-----------|-----------|--------|-------|
+| `minilog` | `_build_minilog()` XP + IBKR + Nubank + Binance | ⚠ | ok | BAIXO |
+| `wellness_config` | agentes/referencia/wellness_config.json | ⚠ | ok | BAIXO |
+| `cryptoLegado` | `load_binance_brl()` dados/binance/posicoes.json | ⚠ | ok | BAIXO |
+| `head_relay` | dados/head_relay.json | ⚠ | NULL — arquivo não existe (informativo, não crítico) | BAIXO |
+| `spendingSensibilidade` | `main()` state.spending.scenarios | ⚠ | 🔴 EMPTY LIST — state.spending.scenarios vazio | MÉDIO |
+| `priority_matrix` | agentes/contexto/priority_matrix.json | ✅ weights dict len==6 | ok | BAIXO |
+| `domain_coverage` | `main()` IIFPT_COVERAGE config.py | ✅ len==6 | ok | BAIXO |
+| `regime_vida` | `main()` hardcoded "r2_mid_career" | ✅ not None, isinstance str | ok | BAIXO |
