@@ -33,7 +33,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 | XX-system-audit | Auditoria Sistêmica Completa — Pipeline, Scripts, Dashboard, Arquitetura | Head + Integrator | 🔴 Alta |
-| DEV-risk-return-scatter | Gráfico Retorno vs. Risco por Classe de Ativos | Dev | 🟡 Média |
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -51,6 +50,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| DEV-risk-return-scatter | Gráfico Retorno vs. Risco por Classe de Ativos | 2026-05-01 | RiskReturnScatter: bubble chart por bucket (SWRD/AVGS/AVEM/RF/Crypto/Total), seletores com marcos históricos (Pós-COVID/Pós-Euro/Pós-GFC/Máximo/5a/3a), linha Sharpe=0.5, legenda flex, anti-overlap labelLayout. |
 | FR-fan-chart-mc | Fan Chart P10/P50/P90 — Trajetórias MC | 2026-05-01 | PostFireFanChart: banda P10–P90 (2038–2075), trajetória pré-FIRE verde, P50 accent, linhas FIRE Day 2040 e FIRE Number. Dados trilha_p10/p50/p90 do data.json (zero pipeline changes). |
 | FR-bond-pool-tracker | Bond Pool Depletion Tracker (2040–2055) | 2026-05-01 | BondPoolDepletionChart: projeção determinística saldo pool. Taxa 5.34% real (retorno_rf_real_bond_pool). INSS Katia 2049 + Diego 2052 reduzem saque. Meta vs Trajetória atual. |
 | FR-spending-timeline | Spending Timeline — Gastos anuais por componente | 2026-05-01 | SpendingTimelineChart: stacked bar anual 2040–2077. Lifestyle + Saúde (VCMH). Transições Go-Go/Slow-Go/No-Go marcadas. |

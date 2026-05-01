@@ -6,7 +6,8 @@
 |-------|-------|
 | **ID** | DEV-risk-return-scatter |
 | **Dono** | Dev |
-| **Status** | Doing |
+| **Status** | Done ✅ |
+| **Fechado em** | 2026-05-01 |
 | **Prioridade** | Média |
 | **Participantes** | Dev (implementação), Head (decisão de design), Bookkeeper (validação dados) |
 | **Dependencias** | backtest_portfolio.py (TWR e volatilidade por classe) |
