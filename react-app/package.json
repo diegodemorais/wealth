@@ -1,6 +1,6 @@
 {
   "name": "react-app",
-  "version": "1.250.5",
+  "version": "1.250.6",
   "private": true,
   "scripts": {
     "dev": "next dev",
