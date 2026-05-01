@@ -3799,11 +3799,13 @@ def compute_risk_return_by_bucket(backtest_data: dict, config_weights: dict) -> 
     }
 
     # Períodos (data início → chave no metrics_by_period)
+    # Alinhados aos seletores do scatter frontend (PERIODS array em RiskReturnScatter.tsx)
     periods = {
         "3y":        "2023-01-01",
         "5y":        "2021-01-01",
         "since2020": "2020-01-01",
         "since2013": "2013-01-01",
+        "since2009": "2009-01-01",   # Pós-GFC — alinhado ao backtest
         "all":       "2019-07-01",
     }
 

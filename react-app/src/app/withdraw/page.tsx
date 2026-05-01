@@ -10,7 +10,6 @@ import { IncomeProjectionChart } from '@/components/charts/IncomeProjectionChart
 import { GuardrailsRetirada } from '@/components/dashboard/GuardrailsRetirada';
 import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
-import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { SurplusGapChart } from '@/components/charts/SurplusGapChart';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
@@ -23,7 +22,7 @@ import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
 import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
 import SWRDashboard from '@/components/dashboard/SWRDashboard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
-import { BarChart3, Building2, Thermometer, ArrowRightLeft, Hospital, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { BarChart3, Building2, Thermometer, Hospital, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
@@ -764,16 +763,6 @@ export default function WithdrawPage() {
           </div>
         </div>
       </CollapsibleSection>
-
-      {/* 5. Fluxo de Caixa Atual — Receitas vs Gastos Hoje */}
-      <div data-testid="sankey-cashflow">
-      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={secOpen('withdraw', 'sankey', false)} icon={<ArrowRightLeft size={18} />}>
-        <div style={{ padding: '0 16px 16px' }}>
-          <CashFlowSankey />
-        </div>
-      </CollapsibleSection>
-      </div>
-
 
       {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
       <div data-testid="income-fases">

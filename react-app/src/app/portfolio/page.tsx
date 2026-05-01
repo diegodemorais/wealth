@@ -31,6 +31,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { EC, EC_AXIS_LABEL } from '@/utils/echarts-theme';
 import { FeeImpactChart } from '@/components/charts/FeeImpactChart';
 import { FactorProfileChart } from '@/components/charts/FactorProfileChart';
+import { StyleBoxChart } from '@/components/charts/StyleBoxChart';
 import { RollingReturnsHeatmap } from '@/components/charts/RollingReturnsHeatmap';
 
 export default function PortfolioPage() {
@@ -527,6 +528,17 @@ export default function PortfolioPage() {
           defaultOpen={secOpen('portfolio', 'factor-profile', false)}
         >
           <FactorProfileChart data={(data as any).factor_loadings} />
+        </CollapsibleSection>
+      )}
+
+      {/* 2a-ter. Style Box — grade 3×3 mercap × estilo (Morningstar-style, Opção A via factor loadings) */}
+      {(data as any)?.factor_loadings?.SWRD && (
+        <CollapsibleSection
+          id="section-style-box"
+          title={secTitle('portfolio', 'style-box', 'Style Box — Mercap × Estilo (Value · Blend · Growth)')}
+          defaultOpen={secOpen('portfolio', 'style-box', false)}
+        >
+          <StyleBoxChart data={(data as any).factor_loadings} />
         </CollapsibleSection>
       )}
 
