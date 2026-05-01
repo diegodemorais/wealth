@@ -311,6 +311,79 @@ class StringDuplicateDetector:
 
 
 # ────────────────────────────────────────────────────────────────
+# Naked Integration Detector
+# ────────────────────────────────────────────────────────────────
+
+class NakedIntegrationDetector:
+    """Detecta chamadas nuas a APIs externas fora dos wrappers canônicos.
+
+    Gera severity="warning" (não bloqueia CI) — há casos legítimos durante
+    migração gradual. Ver scripts/CLAUDE.md#integrações para padrão correto.
+    """
+
+    NAKED_PATTERNS: Dict[str, List[str]] = {
+        "yfinance_direct": [
+            r"yf\.download\s*\(",
+            r"yfinance\.download\s*\(",
+            r"yf\.Ticker\s*\(",
+        ],
+        "bcb_direct": [
+            r"Série\s*\(",
+            r"bcb\.Série\s*\(",
+            r"sidrapy\.",
+        ],
+        "requests_direct": [
+            r"requests\.get\s*\(",
+            r"urllib\.request\.urlopen\s*\(",
+        ],
+    }
+
+    # Wrappers canônicos — não reportar chamadas nesses arquivos
+    SAFE_FILES: List[str] = [
+        "fetch_utils.py",
+        "integration_health.py",
+        "market_data.py",
+    ]
+
+    def __init__(self, file: str, content: str):
+        self.file = file
+        self.content = content
+        self.lines = content.split("\n")
+        self.violations: List[Violation] = []
+
+    def _is_safe_file(self) -> bool:
+        basename = os.path.basename(self.file)
+        return basename in self.SAFE_FILES
+
+    def detect(self) -> List[Violation]:
+        if self._is_safe_file():
+            return self.violations
+        for line_num, line in enumerate(self.lines, 1):
+            stripped = line.strip()
+            if stripped.startswith("#"):
+                continue
+            # Strip inline comments before matching
+            code_part = stripped.split("#")[0]
+            for integration_type, patterns in self.NAKED_PATTERNS.items():
+                for pattern in patterns:
+                    if re.search(pattern, code_part):
+                        self.violations.append(Violation(
+                            file=self.file,
+                            line_num=line_num,
+                            violation_type="naked_integration",
+                            pattern=f"{integration_type}: {pattern}",
+                            content=(
+                                f"{stripped}  "
+                                f"→ Use fetch_utils.fetch_with_retry() — ver scripts/CLAUDE.md#integrações"
+                            ),
+                            severity="warning",
+                        ))
+                        # One violation per line per integration_type
+                        break
+        return self.violations
+
+
+# ────────────────────────────────────────────────────────────────
 # P4: Auto-Fix Suggestion Engine
 # ────────────────────────────────────────────────────────────────
 
@@ -491,6 +564,9 @@ class HardcodingDetector:
 
             string_detector = StringDuplicateDetector(file_path, content)
             self.violations.extend(string_detector.detect())
+
+            naked_detector = NakedIntegrationDetector(file_path, content)
+            self.violations.extend(naked_detector.detect())
         except SyntaxError:
             pass
 

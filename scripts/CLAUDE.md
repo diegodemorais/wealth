@@ -55,6 +55,35 @@ Nunca editar `config.py` diretamente para parâmetros financeiros.
 - Constantes numéricas financeiras hardcoded são bug — devem ser extraídas do data.json ou ter fallback explícito documentado com origem (ex: `# fallback carteira.md 2026-04-28`)
 - Todo campo gerado para o dashboard precisa de assertion de schema em `generate_data.py` (bloqueia se nulo)
 - Outputs são JSON — validar estrutura antes de salvar
+- `fetch_with_retry` obrigatório para toda chamada externa — nunca `yf.download()` ou `Série()` direto fora dos wrappers canônicos
+
+## Integrações Externas
+
+**Regra:** toda chamada a API externa usa `fetch_with_retry` de `fetch_utils.py`. Chamadas nuas são detectadas por `detect_hardcoding.py` (warning).
+
+```python
+from fetch_utils import fetch_with_retry
+
+resultado = fetch_with_retry(
+    fn=lambda: some_api_call(),
+    fallback=valor_default,      # retorna se todas as tentativas falharem
+    retries=3,                   # 1s → 2s → 4s entre tentativas
+    cache_key="chave_unica",     # opcional: persiste em dados/fetch_cache.json
+    cache_ttl_h=4,               # TTL em horas
+)
+```
+
+**Arquivos canônicos por integração:**
+| Integração | Wrapper canônico | Não usar diretamente em |
+|-----------|-----------------|------------------------|
+| BCB/PTAX | `fx_utils.get_ptax()` | qualquer script além de fx_utils |
+| yfinance preços | `generate_data.py` (fetch unificado) | scripts auxiliares |
+| pyield/ANBIMA | `market_data.py --tesouro` | inline em outros scripts |
+| IBKR Flex | `ibkr_lotes.py` | outros scripts |
+
+**Diagnóstico:** `python3 scripts/integration_health.py` — verifica as 9 integrações (OK/DEGRADED/DOWN).
+
+**Shadows:** após fechar um mês de checkin_mensal, rodar `python3 scripts/reconstruct_shadows.py` para agregar retornos em períodos trimestrais no state.
 
 ## Qualidade (Python)
 
