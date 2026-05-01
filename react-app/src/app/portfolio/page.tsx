@@ -12,7 +12,6 @@ import { CustoBaseTable } from '@/components/portfolio/CustoBaseTable';
 import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition';
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
-import { RiskReturnScatter } from '@/components/charts/RiskReturnScatter';
 import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
 import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
 import BRLPurchasingPowerTimeline from '@/components/dashboard/BRLPurchasingPowerTimeline';
@@ -1042,18 +1041,6 @@ export default function PortfolioPage() {
 
       {/* ── R3: Risk Contribution Chart ─────────────────────────────────────── */}
       <SectionDivider label="Análise de Risco" />
-
-      {/* ── R3a: Risk/Return Scatter — DEV-risk-return-scatter ───────────────── */}
-      {(data as any)?.risk_return_scatter && (
-        <CollapsibleSection
-          id="section-risk-return-scatter"
-          title={secTitle('portfolio', 'risk-return-scatter', 'Retorno vs. Risco por Classe de Ativos')}
-          defaultOpen={secOpen('portfolio', 'risk-return-scatter', true)}
-          icon={<BarChart3 size={18} />}
-        >
-          <RiskReturnScatter data={(data as any).risk_return_scatter} />
-        </CollapsibleSection>
-      )}
 
       {/* Rolling Returns Heatmap — sequências de retorno (1a/3a/5a móveis) */}
       {(data as any)?.backtest?.dates && (

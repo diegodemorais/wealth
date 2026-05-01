@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Simulators Page', () => {
   test('simulators page loads and displays slider controls', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Check for heading
@@ -15,7 +15,7 @@ test.describe('Simulators Page', () => {
   });
 
   test('all 4 slider controls are present', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Look for slider labels
@@ -31,7 +31,7 @@ test.describe('Simulators Page', () => {
   });
 
   test('sliders can be adjusted', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Find stress level slider
@@ -50,7 +50,7 @@ test.describe('Simulators Page', () => {
   });
 
   test('slider changes trigger simulations', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Find all sliders
@@ -72,7 +72,7 @@ test.describe('Simulators Page', () => {
   });
 
   test('success rate display shows percentage', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Look for success rate percentage
@@ -83,7 +83,7 @@ test.describe('Simulators Page', () => {
   });
 
   test('drawdown distribution histogram is visible', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Look for drawdown heading
@@ -98,7 +98,7 @@ test.describe('Simulators Page', () => {
   });
 
   test('Monte Carlo trajectories update after slider change', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Wait for initial chart to load
@@ -121,7 +121,7 @@ test.describe('Simulators Page', () => {
   });
 
   test('stress level parameter affects success rate', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Get initial success rate
@@ -144,7 +144,7 @@ test.describe('Simulators Page', () => {
   });
 
   test('monthly contribution affects trajectories', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Find contribution slider (2nd slider)
@@ -167,7 +167,7 @@ test.describe('Simulators Page', () => {
 
 test.describe('Simulator State Persistence', () => {
   test('scenario parameters display current values', async ({ page }) => {
-    await page.goto('/simulators');
+    await page.goto('/assumptions');
     await page.waitForLoadState('networkidle');
 
     // Look for scenario summary

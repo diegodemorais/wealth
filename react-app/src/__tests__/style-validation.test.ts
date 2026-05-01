@@ -244,7 +244,7 @@ describe('2d. Tailwind v4 Compliance', () => {
 describe('2e. Header/Nav Structure (static scan)', () => {
   // TABS now live in dashboard.config.ts (single source of truth), Header.tsx imports them
   const CONFIG_TS = resolve(SRC_DIR, 'config/dashboard.config.ts');
-  const REQUIRED_TABS = ['DASHBOARD', 'FIRE', 'PORTFOLIO', 'PERFORMANCE', 'RETIREMENT', 'SIMULADORES', 'BACKTEST', 'CHECKLIST'];
+  const REQUIRED_TABS = ['DASHBOARD', 'FIRE', 'PORTFOLIO', 'PERFORMANCE', 'RETIREMENT', 'ANALYSIS', 'TOOLS'];
 
   it('Header.tsx must import TABS from dashboard.config', () => {
     const content = readFileSync(HEADER_TSX, 'utf-8');
@@ -253,7 +253,7 @@ describe('2e. Header/Nav Structure (static scan)', () => {
     expect(content).toContain("dashboard.config");
   });
 
-  it('dashboard.config.ts must contain all 8 required tabs', () => {
+  it('dashboard.config.ts must contain all 7 required tabs', () => {
     const content = readFileSync(CONFIG_TS, 'utf-8');
     const missing: string[] = [];
     for (const tab of REQUIRED_TABS) {

@@ -43,7 +43,7 @@ describe('Config Schema Sync (spec.json ↔ dashboard.config.ts)', () => {
   // ─────────────────────────────────────────────────────────────
 
   describe('TABS sync', () => {
-    it('all 8 tabs in spec.json exist in dashboard.config.ts::TABS', () => {
+    it('all 7 tabs in spec.json exist in dashboard.config.ts::TABS', () => {
       const specTabIds = specData.tabs.map(t => t.id);
       const configTabIds = TABS.map(t => {
         // dashboard.config.ts uses 'tab-now', 'tab-portfolio', etc.
@@ -73,9 +73,9 @@ describe('Config Schema Sync (spec.json ↔ dashboard.config.ts)', () => {
       }
     });
 
-    it('exactly 8 tabs defined', () => {
-      expect(TABS.length).toBe(8);
-      expect(specData.tabs.length).toBe(8);
+    it('exactly 7 tabs defined', () => {
+      expect(TABS.length).toBe(7);
+      expect(specData.tabs.length).toBe(7);
     });
   });
 

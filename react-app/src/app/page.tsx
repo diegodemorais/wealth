@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 import { usePageData } from '@/hooks/usePageData';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import DecisaoDoMes from '@/components/dashboard/DecisaoDoMes';
-import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
 import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { SectionLabel } from '@/components/primitives/SectionLabel';
@@ -502,12 +501,12 @@ export default function HomePage() {
         );
       })()}
 
-      {/* Fluxo de Caixa Mensal — Sankey: Renda → Impostos → Gastos → Investimentos */}
+      {/* Fluxo de Caixa — Receitas vs Gastos (Sankey) */}
       {data?.premissas && (
         <CollapsibleSection
-          id="section-cashflow-mensal"
-          title={secTitle('now', 'cashflow-mensal', 'Fluxo de Caixa Mensal')}
-          defaultOpen={secOpen('now', 'cashflow-mensal', false)}
+          id="sankey"
+          title={secTitle('now', 'sankey', 'Fluxo de Caixa — Receitas vs Gastos')}
+          defaultOpen={secOpen('now', 'sankey', false)}
         >
           <div style={{ padding: '0 16px 16px' }}>
             <CashFlowSankey />
@@ -552,20 +551,6 @@ export default function HomePage() {
           idadeAtual={(data as any)?.premissas?.idade_atual ?? 39}
         />
       </div>
-
-      {d && (
-        <PFireMonteCarloTornado
-          pfireBase={d.pfireBase}
-          pfireFav={d.pfireFav}
-          pfireStress={d.pfireStress}
-          tornadoData={d.tornadoData}
-          firePatrimonioAtual={d.firePatrimonioAtual}
-          firePatrimonioGatilho={d.firePatrimonioGatilho}
-          pQualityBase={(data as any)?.fire?.p_quality ?? null}
-          pQualityFav={(data as any)?.fire?.p_quality_fav ?? null}
-          pQualityStress={(data as any)?.fire?.p_quality_stress ?? null}
-        />
-      )}
 
       {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, CLOSED] */}
       {data?.wellness_config?.metrics && (

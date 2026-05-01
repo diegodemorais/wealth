@@ -27,9 +27,8 @@ export const TABS: TabDef[] = [
   { id: 'tab-performance', href: '/performance', label: 'PERFORMANCE' },
   { id: 'tab-fire',        href: '/fire',        label: 'FIRE' },
   { id: 'tab-withdraw',    href: '/withdraw',    label: 'RETIREMENT' },
-  { id: 'tab-backtest',    href: '/backtest',     label: 'BACKTEST' },
-  { id: 'tab-simuladores', href: '/simulators',  label: 'SIMULADORES' },
-  { id: 'tab-assumptions', href: '/assumptions',  label: 'CHECKLIST' },
+  { id: 'tab-backtest',    href: '/backtest',     label: 'ANALYSIS' },
+  { id: 'tab-assumptions', href: '/assumptions',  label: 'TOOLS' },
 ];
 
 // ─── Section definitions ──────────────────────────────────────────────────────
@@ -58,9 +57,9 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'macro',             title: 'Contexto Macro & DCA Status',                    defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
     { id: 'time-to-fire',      title: 'Time to FIRE',                                   defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
     { id: 'aporte-decision',   title: 'Próximo Aporte — Equity & Gatilhos RF',          defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
-    { id: 'tornado',           title: 'Tornado de Sensibilidade (P(FIRE) ±10%)',         defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
     { id: 'fire-progress',     title: 'Progresso FIRE + Aporte do Mês',                 defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
     // Group: Monitoramento
+    { id: 'sankey',                title: 'Fluxo de Caixa — Receitas vs Gastos',            defaultOpen: false, collapsible: true, group: 'Monitoramento' },
     { id: 'wellness',              title: 'Financial Wellness Score (indicador secundário)', defaultOpen: false, collapsible: true, group: 'Monitoramento' },
     { id: 'rf-status',             title: 'RF Status — IPCA+ & Renda+ por Instrumento',     defaultOpen: false, collapsible: true, group: 'Monitoramento' },
     { id: 'patrimonio-liquido-ir', title: 'Patrimônio Líquido de IR',                       defaultOpen: false, collapsible: true, group: 'Monitoramento' },
@@ -88,8 +87,6 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'rf-crypto',     title: 'Renda Fixa + Cripto',                      defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
     { id: 'real-yield',    title: 'Real Yield Gauge — NTN-Bs Líquido de IR',  defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
     { id: 'crypto-band',   title: 'HODL11 — Banda Criptográfica',             defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
-    // Group: Análise de Risco
-    { id: 'risk-return-scatter', title: 'Retorno vs. Risco por Classe de Ativos', defaultOpen: true, collapsible: true, group: 'Análise de Risco' },
   ],
 
   // ── PERFORMANCE (/performance) ─────────────────────────────────────────────
@@ -104,11 +101,6 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     // Group: Histórico
     { id: 'rolling-12m',     title: 'Rolling 12m — AVGS vs SWRD (retorno relativo)',            defaultOpen: false, collapsible: true,  group: 'Histórico' },
     { id: 'ir',              title: 'Information Ratio vs VWRA — Desde o Início + Rolling 36m', defaultOpen: false, collapsible: true,  group: 'Histórico' },
-    // Group: Fatores
-    { id: 'factor-waterfall',  title: 'Expected Return Waterfall — Decomposição Fatorial FF6',  defaultOpen: false, collapsible: true,  group: 'Fatores' },
-    { id: 'factor-regression', title: 'Factor Regression — Carregamentos e R²',                 defaultOpen: false, collapsible: true,  group: 'Fatores' },
-    { id: 'factor-loadings',   title: 'Factor Loadings — Regressão Fama-French SF + Momentum',  defaultOpen: false, collapsible: true,  group: 'Fatores' },
-    { id: 'ff5-regression',    title: 'FF5 Regression — Tabela Completa',                       defaultOpen: false, collapsible: true,  group: 'Fatores' },
     // Group: Análise Técnica
     { id: 'heatmap',         title: 'Retornos Mensais — Heatmap',                               defaultOpen: false, collapsible: true,  group: 'Análise Técnica' },
     { id: 'rolling-metrics', title: 'Rolling Metrics — Sharpe / Sortino / Volatilidade',        defaultOpen: false, collapsible: true,  group: 'Análise Técnica' },
@@ -131,7 +123,7 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'balanco-holistico-fire', title: 'Balanço Holístico',                                     defaultOpen: false, collapsible: true,  group: 'Contexto' },
     { id: 'capital-humano',         title: 'Capital Humano',                                         defaultOpen: false, collapsible: true,  group: 'Contexto' },
     // Group: Cenários & Risco
-    { id: 'section-surviving-spouse', title: 'Cenário: Cônjuge Sobrevivente',                       defaultOpen: false, collapsible: true,  group: 'Cenários & Risco' },
+    { id: 'tornado',                  title: 'Tornado de Sensibilidade (P(FIRE) ±10%)',             defaultOpen: false, collapsible: true,  group: 'Cenários & Risco' },
     { id: 'sequence-returns',         title: 'Sequence of Returns — Heatmap de Risco',              defaultOpen: false, collapsible: true,  group: 'Cenários & Risco' },
     { id: 'brl-fx',                   title: 'Sensibilidade Cambial — Equity USD em BRL',           defaultOpen: false, collapsible: true,  group: 'Cenários & Risco' },
     // Group: Eventos de Vida
@@ -150,12 +142,12 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'section-surplus-gap', title: 'Superávit / Déficit Anual — P10/P50/P90',                  defaultOpen: true,  collapsible: true,  group: 'Quanto gastar?' },
     { id: 'spending-breakdown-v2', title: 'Spending Breakdown — Detalhamento por Categoria',        defaultOpen: false, collapsible: true,  group: 'Quanto gastar?' },
     // Group: Proteção
-    { id: 'bond-pool',             title: 'Bond Strategy — SoRR + Pool Readiness',                  defaultOpen: false, collapsible: true,  group: 'Proteção' },
-    { id: 'sorr-heatmap',          title: 'Sequence of Returns — Heatmap de Risco',                 defaultOpen: false, collapsible: true,  group: 'Proteção' },
-    { id: 'sankey',                title: 'Fluxo de Caixa Atual — Receitas vs Gastos',              defaultOpen: false, collapsible: true,  group: 'Proteção' },
-    { id: 'fases',                 title: 'Renda na Aposentadoria — Fases Temporais',               defaultOpen: false, collapsible: true,  group: 'Proteção' },
-    { id: 'section-ltc-sensitivity', title: 'LTC — Sensibilidade Cuidados de Longo Prazo',         defaultOpen: false, collapsible: true,  group: 'Proteção' },
-    { id: 'bond-ladder',            title: 'Bond Ladder — Cronograma & Estrutura de Vencimentos',  defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'bond-pool',               title: 'Bond Strategy — SoRR + Pool Readiness',                  defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'sorr-heatmap',            title: 'Sequence of Returns — Heatmap de Risco',                 defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'section-surviving-spouse', title: 'Cenário: Cônjuge Sobrevivente',                        defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'fases',                   title: 'Renda na Aposentadoria — Fases Temporais',               defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'section-ltc-sensitivity', title: 'LTC — Sensibilidade Cuidados de Longo Prazo',           defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'bond-ladder',             title: 'Bond Ladder — Cronograma & Estrutura de Vencimentos',   defaultOpen: false, collapsible: true,  group: 'Proteção' },
   ],
 
   // ── BACKTEST (/backtest) ───────────────────────────────────────────────────
@@ -171,23 +163,25 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'longo-prazo',         title: 'Backtest Longo — Regime 7 (1995–2026)',             defaultOpen: false, collapsible: true,  group: 'Deep Dive' },
     { id: 'cagr-decada',         title: 'CAGR por Década',                                   defaultOpen: true,  collapsible: true,  group: 'Deep Dive' },
     // Group: Bitcoin
-    { id: 'btc-indicators',     title: 'Bitcoin On-Chain — Indicadores Históricos',          defaultOpen: false, collapsible: true,  group: 'Bitcoin' },
+    { id: 'btc-indicators',      title: 'Bitcoin On-Chain — Indicadores Históricos',         defaultOpen: false, collapsible: true,  group: 'Bitcoin' },
+    // Group: Factor Analysis (moved from performance)
+    { id: 'factor-waterfall',    title: 'Expected Return Waterfall — Decomposição Fatorial FF6',  defaultOpen: false, collapsible: true,  group: 'Factor Analysis' },
+    { id: 'factor-regression',   title: 'Factor Regression — Carregamentos e R²',                 defaultOpen: false, collapsible: true,  group: 'Factor Analysis' },
+    { id: 'factor-loadings',     title: 'Factor Loadings — Regressão Fama-French SF + Momentum',  defaultOpen: false, collapsible: true,  group: 'Factor Analysis' },
+    { id: 'ff5-regression',      title: 'FF5 Regression — Tabela Completa',                       defaultOpen: false, collapsible: true,  group: 'Factor Analysis' },
+    // Group: Drawdown & Risco (addition)
+    { id: 'risk-return-scatter', title: 'Retorno vs. Risco por Classe de Ativos',                 defaultOpen: false, collapsible: true,  group: 'Drawdown & Risco' },
   ],
 
-  // ── SIMULADORES (/simulators) ──────────────────────────────────────────────
-  simuladores: [
-    // Group: Simulador FIRE
-    { id: 'fire-sim',  title: 'Simulador FIRE — Cenários de Aposentadoria',      defaultOpen: true,  collapsible: false, group: 'Simulador FIRE' },
-    // Group: What-If Cenários
-    { id: 'what-if',   title: 'What-If — Sensibilidade de Variáveis',            defaultOpen: true,  collapsible: true,  group: 'What-If Cenários' },
-    // Group: Decisão de Aporte
-    { id: 'cascade',   title: 'Cascata de Aportes — DCA Mensal',                 defaultOpen: true,  collapsible: false, group: 'Decisão de Aporte' },
-    // Group: Análise Avançada
-    { id: 'stress',    title: 'Stress Test — Monte Carlo (trajectórias reais)',   defaultOpen: true,  collapsible: true,  group: 'Análise Avançada' },
-  ],
-
-  // ── CHECKLIST (/assumptions) ───────────────────────────────────────────────
+  // ── TOOLS (/assumptions) — absorves SIMULADORES + CHECKLIST ──────────────
   assumptions: [
+    // Group: Changelog
+    { id: 'dashboard-updates',             title: '📋 Changelog — Alterações do Dashboard', defaultOpen: true,  collapsible: true, group: 'Changelog' },
+    // Group: Simuladores (moved from /simulators)
+    { id: 'fire-sim',                      title: 'Simulador FIRE — Cenários de Aposentadoria',   defaultOpen: true,  collapsible: false, group: 'Simuladores' },
+    { id: 'what-if',                       title: 'What-If — Sensibilidade de Variáveis',          defaultOpen: true,  collapsible: true,  group: 'Simuladores' },
+    { id: 'cascade',                       title: 'Cascata de Aportes — DCA Mensal',               defaultOpen: true,  collapsible: false, group: 'Simuladores' },
+    { id: 'stress',                        title: 'Stress Test — Monte Carlo (trajectórias reais)', defaultOpen: true,  collapsible: true,  group: 'Simuladores' },
     // Group: Decisões & Ações
     { id: 'assumptions-decisions',         title: 'Decisões & Ações',       defaultOpen: true,  collapsible: true, group: 'Decisões & Ações' },
     // Group: Onde Estou

@@ -41,13 +41,13 @@ function hrefToPageFile(href: string): string {
 /** Map tab href to the config SECTIONS key */
 function hrefToTabKey(href: string): string {
   const map: Record<string, string> = {
-    '/':            'now',
-    '/portfolio':   'portfolio',
-    '/performance': 'performance',
-    '/fire':        'fire',
-    '/withdraw':    'withdraw',
-    '/backtest':    'backtest',
-    '/simulators':  'simuladores',
+    '/':             'now',
+    '/portfolio':    'portfolio',
+    '/performance':  'performance',
+    '/fire':         'fire',
+    '/withdraw':     'withdraw',
+    '/backtest':     'backtest',
+    '/assumptions':  'assumptions',
   };
   return map[href] ?? href.replace(/^\//, '');
 }
@@ -110,7 +110,7 @@ describe('SECTIONS integrity', () => {
   const tabKeys = Object.keys(SECTIONS);
 
   it('SECTIONS has entries for all 7 tabs', () => {
-    const expected = ['now', 'portfolio', 'performance', 'fire', 'withdraw', 'backtest', 'simuladores'];
+    const expected = ['now', 'portfolio', 'performance', 'fire', 'withdraw', 'backtest', 'assumptions'];
     for (const key of expected) {
       expect(SECTIONS[key], `SECTIONS["${key}"] is missing`).toBeDefined();
     }
@@ -230,7 +230,7 @@ describe('page files use config helpers (not hardcoded defaultOpen)', () => {
     { file: 'fire/page.tsx',        tab: 'fire' },
     { file: 'withdraw/page.tsx',    tab: 'withdraw' },
     { file: 'backtest/page.tsx',    tab: 'backtest' },
-    { file: 'simulators/page.tsx',  tab: 'simuladores' },
+    { file: 'assumptions/page.tsx', tab: 'assumptions' },
   ];
 
   for (const { file, tab } of PAGE_FILES) {

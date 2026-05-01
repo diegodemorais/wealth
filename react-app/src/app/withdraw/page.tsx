@@ -22,7 +22,7 @@ import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
 import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
 import SWRDashboard from '@/components/dashboard/SWRDashboard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
-import { BarChart3, Building2, Thermometer, Hospital, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { BarChart3, Building2, Thermometer, Hospital, CheckCircle, AlertCircle, XCircle, Heart } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
@@ -763,6 +763,77 @@ export default function WithdrawPage() {
           </div>
         </div>
       </CollapsibleSection>
+
+      {/* Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
+      {(safeData as any)?.premissas?.tem_conjuge === true && (
+        <>
+          <CollapsibleSection id="section-surviving-spouse" title={secTitle('withdraw', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('withdraw', 'section-surviving-spouse')} icon={<Heart size={18} />}>
+          <div style={{ padding: '0 16px 16px' }}>
+            <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: 12 }}>
+              Estimativa de sustentabilidade do plano caso {(safeData as any)?.premissas?.nome_conjuge ?? 'cônjuge'} sobreviva a Diego.
+              SWR conservador de 3% aplicado a patrimônio transferido.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="kpi" style={{ textAlign: 'center' }}>
+                <div className="kpi-label">Gasto Katia (solo)</div>
+                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
+                  {fmtPrivacy(((safeData as any)?.premissas?.gasto_katia_solo ?? 160000) / 1000 * 1000, privacyMode) + '/ano'}
+                </div>
+              </div>
+              <div className="kpi" style={{ textAlign: 'center' }}>
+                <div className="kpi-label">INSS Katia</div>
+                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
+                  {fmtPrivacy(((safeData as any)?.premissas?.inss_katia_anual ?? 93600) / 1000 * 1000, privacyMode) + '/ano'}
+                </div>
+              </div>
+              <div className="kpi" style={{ textAlign: 'center' }}>
+                <div className="kpi-label">PGBL Katia (FIRE Day)</div>
+                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
+                  {fmtPrivacy(((safeData as any)?.premissas?.pgbl_katia_saldo_fire ?? 490000) / 1000 * 1000, privacyMode)}
+                </div>
+              </div>
+            </div>
+            {(() => {
+              const gastoKatia = (safeData as any)?.premissas?.gasto_katia_solo ?? 160_000;
+              const inssKatia = (safeData as any)?.premissas?.inss_katia_anual ?? 93_600;
+              const pgblKatia = (safeData as any)?.premissas?.pgbl_katia_saldo_fire ?? 490_000;
+              // Area D fix: Use FIRE Day patrimônio (trilha_p50[-1]) instead of patrimonio_atual for spouse scenario
+              // Spouse analysis assumes evaluation at FIRE Day when patrimônio will be larger from growth/aportes
+              const trilha = (safeData as any)?.trilha?.p50 ?? [];
+              const patrimonioFireDay = trilha.length > 0 ? trilha[trilha.length - 1] : 0;
+              const patrimonioBase = patrimonioFireDay > 0 ? patrimonioFireDay : ((safeData as any)?.premissas?.patrimonio_atual ?? 0);
+              const gastoLiquido = Math.max(0, gastoKatia - inssKatia);
+              const swrKatia = (safeData as any)?.premissas?.swr_gatilho ?? 0.03;
+              const patrimonioNecessario = gastoLiquido > 0 ? gastoLiquido / swrKatia : 0;
+              const patrimonioTotal = patrimonioBase + pgblKatia;
+              const cobertura = patrimonioNecessario > 0 ? (patrimonioTotal / patrimonioNecessario) * 100 : 100;
+              const cor = cobertura >= 100 ? 'var(--green)' : cobertura >= 80 ? 'var(--yellow)' : 'var(--red)';
+              return (
+                <div style={{ marginTop: 14, padding: '12px', background: 'var(--card2)', borderRadius: 'var(--radius-sm)', borderLeft: `3px solid ${cor}` }}>
+                  <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gasto líquido (− INSS)</div>
+                      <div style={{ fontWeight: 700 }}>{fmtPrivacy(Math.round(gastoLiquido / 1000) * 1000, privacyMode) + '/ano'}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio necessário (3% SWR)</div>
+                      <div style={{ fontWeight: 700 }}>{fmtPrivacy(patrimonioNecessario, privacyMode)}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cobertura estimada</div>
+                      <div style={{ fontWeight: 700, color: cor }}>{`${cobertura.toFixed(0)}%`}</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8 }}>
+                    SWR 3% (conservador solo). Patrimônio = portfólio atual + PGBL Katia. INSS Katia: {fmtPrivacy(inssKatia, privacyMode, { decimals: 0 })}/ano deduzido do gasto.
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </CollapsibleSection>
+        </>
+      )}
 
       {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
       <div data-testid="income-fases">

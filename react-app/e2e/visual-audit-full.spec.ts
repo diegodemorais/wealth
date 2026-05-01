@@ -12,8 +12,8 @@ const TABS = [
   { name: 'performance', url: `${BASE}/wealth/performance` },
   { name: 'fire',        url: `${BASE}/wealth/fire` },
   { name: 'withdraw',    url: `${BASE}/wealth/withdraw` },
-  { name: 'simulators',  url: `${BASE}/wealth/simulators` },
   { name: 'backtest',    url: `${BASE}/wealth/backtest` },
+  { name: 'assumptions', url: `${BASE}/wealth/assumptions` },
 ];
 
 test.describe('Visual Audit — Full Dashboard', () => {

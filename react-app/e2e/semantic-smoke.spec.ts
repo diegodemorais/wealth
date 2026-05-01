@@ -16,7 +16,7 @@
  * NOTE: Range assertions (e.g. P(FIRE) > 50%) may need recalibration if portfolio
  * changes significantly. Review when patrimônio crosses major thresholds.
  *
- * Coverage: 67 blocks across 7 tabs (NOW, FIRE, Performance, Portfolio, Backtest, Withdraw, Simulators)
+ * Coverage: 67 blocks across 7 tabs (NOW, FIRE, Performance, Portfolio, Backtest, Withdraw, Tools/Assumptions)
  * Priority: P1 = value not "—" and contains digits, P2 = visible and not empty, P3 = visible only
  */
 
@@ -60,7 +60,7 @@ const ROUTES = {
   portfolio:   '/wealth/portfolio',
   backtest:    '/wealth/backtest',
   withdraw:    '/wealth/withdraw',
-  simulators:  '/wealth/simulators',
+  assumptions: '/wealth/assumptions',
 };
 
 async function gotoAndWait(page: Page, route: string) {
@@ -511,7 +511,7 @@ test.describe('Withdraw — semantic values', () => {
 
 test.describe('Simulators — semantic values', () => {
   test.beforeEach(async ({ page }) => {
-    await gotoAndWait(page, ROUTES.simulators);
+    await gotoAndWait(page, ROUTES.assumptions);
   });
 
   // P1: value not "—" and contains digits
@@ -851,7 +851,7 @@ test.describe('Footer — version and data timestamp visible', () => {
     { path: ROUTES.portfolio,   label: 'Portfolio' },
     { path: ROUTES.backtest,    label: 'Backtest' },
     { path: ROUTES.withdraw,    label: 'Withdraw' },
-    { path: ROUTES.simulators,  label: 'Simulators' },
+    { path: ROUTES.assumptions, label: 'Tools' },
   ];
 
   for (const route of routes) {

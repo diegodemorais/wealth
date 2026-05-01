@@ -21,8 +21,7 @@
         "Alocação & Drift",
         "Holdings",
         "Tax & Atividade",
-        "Renda Fixa & Cripto",
-        "Análise de Risco"
+        "Renda Fixa & Cripto"
       ]
     },
     {
@@ -33,7 +32,6 @@
         "Visão Geral",
         "Alpha & Benchmark",
         "Histórico",
-        "Fatores",
         "Análise Técnica"
       ]
     },
@@ -61,31 +59,23 @@
     },
     {
       "id": "backtest",
-      "label": "BACKTEST",
+      "label": "ANALYSIS",
       "job": "Análise histórica contrafactual e validação de estratégia",
       "groups": [
         "Backtest Principal",
         "Drawdown & Risco",
         "Deep Dive",
-        "Bitcoin"
-      ]
-    },
-    {
-      "id": "simuladores",
-      "label": "SIMULADORES",
-      "job": "What-if, stress test, sensibilidade — explorar cenários alternativos",
-      "groups": [
-        "Simulador FIRE",
-        "What-If Cenários",
-        "Decisão de Aporte",
-        "Análise Avançada"
+        "Bitcoin",
+        "Factor Analysis"
       ]
     },
     {
       "id": "assumptions",
-      "label": "CHECKLIST",
-      "job": "Visão geral do plano e ações pendentes",
+      "label": "TOOLS",
+      "job": "Simuladores, what-if, stress test e checklist do plano",
       "groups": [
+        "Changelog",
+        "Simuladores",
         "Decisões & Ações",
         "Onde Estou",
         "Alocação & Regras",
@@ -471,7 +461,7 @@
     },
     {
       "id": "calc-aporte",
-      "tab": "simuladores",
+      "tab": "assumptions",
       "label": "Calculadora de Aporte",
       "type": "slider",
       "purpose": "Permite inserir valor de aporte e calcular a distribuição por ETF seguindo as regras de rebalanceamento para otimizar cada aporte sem vender",
@@ -959,7 +949,7 @@
     },
     {
       "id": "stress-test-mc",
-      "tab": "simuladores",
+      "tab": "assumptions",
       "label": "Stress Test MC — Bear Market",
       "type": "slider",
       "purpose": "Mostra impacto de choque de mercado no P(FIRE) para responder quanto de queda o plano suporta sem comprometer a aposentadoria",
@@ -1475,7 +1465,7 @@
     },
     {
       "id": "sim-pquality",
-      "tab": "simulators",
+      "tab": "assumptions",
       "label": "P(Quality) — Simuladores",
       "type": "kpi",
       "purpose": "P(quality) exibido na tela de simuladores para o perfil e condição ativos — precomputed lookup do by_profile MC",

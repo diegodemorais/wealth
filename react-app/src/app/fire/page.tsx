@@ -22,7 +22,7 @@ import { ScenarioCompareCards } from '@/components/fire/ScenarioCompareCards';
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
-import { Landmark, Building2, Heart, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { Landmark, Building2, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { FloorUpsideFire } from './FloorUpsideFire';
 import { ContributionReturnsCrossover } from './ContributionReturnsCrossover';
@@ -34,6 +34,7 @@ import { EC } from '@/utils/echarts-theme';
 import { BondPoolDepletionChart } from '@/components/charts/BondPoolDepletionChart';
 import { SpendingTimelineChart } from '@/components/charts/SpendingTimelineChart';
 import { WithdrawalRateChart } from '@/components/charts/WithdrawalRateChart';
+import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
 
 
 export default function FirePage() {
@@ -750,8 +751,8 @@ export default function FirePage() {
                 const pfireColor = pfireColorFn(pfire);
                 const accentColor = isAspir ? 'var(--yellow)' : 'var(--accent)';
                 const href = isAspir
-                  ? '/simulators?preset=aspiracional'
-                  : `/simulators?cond=${cond}&mkt=${mkt}`;
+                  ? '/assumptions?preset=aspiracional'
+                  : `/assumptions?cond=${cond}&mkt=${mkt}`;
 
                 return (
                   <div key={label} data-testid={isAspir ? 'earliest-fire' : undefined} style={{
@@ -1019,6 +1020,27 @@ export default function FirePage() {
       {/* ── Cenários & Risco ───────────────────────────────────────────────── */}
       <SectionDivider label="Cenários & Risco" />
 
+      {/* Tornado de Sensibilidade — movido de DASHBOARD */}
+      {derived && (
+        <CollapsibleSection
+          id="tornado"
+          title={secTitle('fire', 'tornado', 'Tornado de Sensibilidade (P(FIRE) ±10%)')}
+          defaultOpen={secOpen('fire', 'tornado', false)}
+        >
+          <PFireMonteCarloTornado
+            pfireBase={derived.pfireBase}
+            pfireFav={derived.pfireFav}
+            pfireStress={derived.pfireStress}
+            tornadoData={derived.tornadoData}
+            firePatrimonioAtual={derived.firePatrimonioAtual}
+            firePatrimonioGatilho={derived.firePatrimonioGatilho}
+            pQualityBase={(safeData as any)?.fire?.p_quality ?? null}
+            pQualityFav={(safeData as any)?.fire?.p_quality_fav ?? null}
+            pQualityStress={(safeData as any)?.fire?.p_quality_stress ?? null}
+          />
+        </CollapsibleSection>
+      )}
+
       {/* Sequence of Returns Risk — SoRR Narrative + P(FIRE) ↔ Guardrails */}
       <CollapsibleSection
         id="sequence-returns"
@@ -1148,77 +1170,6 @@ export default function FirePage() {
           </CollapsibleSection>
         );
       })()}
-
-      {/* Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
-      {(data as any)?.premissas?.tem_conjuge === true && (
-        <>
-          <CollapsibleSection id="section-surviving-spouse" title={secTitle('fire', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('fire', 'section-surviving-spouse')} icon={<Heart size={18} />}>
-          <div style={{ padding: '0 16px 16px' }}>
-            <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: 12 }}>
-              Estimativa de sustentabilidade do plano caso {(data as any)?.premissas?.nome_conjuge ?? 'cônjuge'} sobreviva a Diego.
-              SWR conservador de 3% aplicado a patrimônio transferido.
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <div className="kpi" style={{ textAlign: 'center' }}>
-                <div className="kpi-label">Gasto Katia (solo)</div>
-                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
-                  {fmtPrivacy(((data as any)?.premissas?.gasto_katia_solo ?? 160000) / 1000 * 1000, privacyMode) + '/ano'}
-                </div>
-              </div>
-              <div className="kpi" style={{ textAlign: 'center' }}>
-                <div className="kpi-label">INSS Katia</div>
-                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
-                  {fmtPrivacy(((data as any)?.premissas?.inss_katia_anual ?? 93600) / 1000 * 1000, privacyMode) + '/ano'}
-                </div>
-              </div>
-              <div className="kpi" style={{ textAlign: 'center' }}>
-                <div className="kpi-label">PGBL Katia (FIRE Day)</div>
-                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
-                  {fmtPrivacy(((data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490000) / 1000 * 1000, privacyMode)}
-                </div>
-              </div>
-            </div>
-            {(() => {
-              const gastoKatia = (data as any)?.premissas?.gasto_katia_solo ?? 160_000;
-              const inssKatia = (data as any)?.premissas?.inss_katia_anual ?? 93_600;
-              const pgblKatia = (data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490_000;
-              // Area D fix: Use FIRE Day patrimônio (trilha_p50[-1]) instead of patrimonio_atual for spouse scenario
-              // Spouse analysis assumes evaluation at FIRE Day when patrimônio will be larger from growth/aportes
-              const trilha = (data as any)?.trilha?.p50 ?? [];
-              const patrimonioFireDay = trilha.length > 0 ? trilha[trilha.length - 1] : 0;
-              const patrimonioBase = patrimonioFireDay > 0 ? patrimonioFireDay : ((data as any)?.premissas?.patrimonio_atual ?? 0);
-              const gastoLiquido = Math.max(0, gastoKatia - inssKatia);
-              const swrKatia = (data as any)?.premissas?.swr_gatilho ?? 0.03;
-              const patrimonioNecessario = gastoLiquido > 0 ? gastoLiquido / swrKatia : 0;
-              const patrimonioTotal = patrimonioBase + pgblKatia;
-              const cobertura = patrimonioNecessario > 0 ? (patrimonioTotal / patrimonioNecessario) * 100 : 100;
-              const cor = cobertura >= 100 ? 'var(--green)' : cobertura >= 80 ? 'var(--yellow)' : 'var(--red)';
-              return (
-                <div style={{ marginTop: 14, padding: '12px', background: 'var(--card2)', borderRadius: 'var(--radius-sm)', borderLeft: `3px solid ${cor}` }}>
-                  <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
-                    <div>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gasto líquido (− INSS)</div>
-                      <div style={{ fontWeight: 700 }}>{fmtPrivacy(Math.round(gastoLiquido / 1000) * 1000, privacyMode) + '/ano'}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio necessário (3% SWR)</div>
-                      <div style={{ fontWeight: 700 }}>{fmtPrivacy(patrimonioNecessario, privacyMode)}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cobertura estimada</div>
-                      <div style={{ fontWeight: 700, color: cor }}>{`${cobertura.toFixed(0)}%`}</div>
-                    </div>
-                  </div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8 }}>
-                    SWR 3% (conservador solo). Patrimônio = portfólio atual + PGBL Katia. INSS Katia: {fmtPrivacy(inssKatia, privacyMode, { decimals: 0 })}/ano deduzido do gasto.
-                  </div>
-                </div>
-              );
-            })()}
-          </div>
-        </CollapsibleSection>
-        </>
-      )}
 
       <SectionDivider label="Eventos de Vida" />
       {/* Eventos de Vida — collapsed (detalhe de sensibilidade) */}

@@ -199,7 +199,7 @@ export function StressTestSection() {
 
   return (
     <div data-testid="stress-test-mc">
-    <CollapsibleSection id="sim-stress" title={secTitle('simuladores', 'stress', 'Stress Test Monte Carlo — Bear Market Interativo')} defaultOpen={secOpen('simuladores', 'stress', false)}>
+    <CollapsibleSection id="sim-stress" title={secTitle('assumptions', 'stress', 'Stress Test Monte Carlo — Bear Market Interativo')} defaultOpen={secOpen('assumptions', 'stress', false)}>
       {/* Slider + Age selector */}
       <div style={{ background: 'var(--card2)', borderRadius: '10px', padding: '16px', border: '1px solid var(--border)', marginBottom: '14px' }}>
         <div className="slider-row">

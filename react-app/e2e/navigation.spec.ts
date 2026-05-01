@@ -10,8 +10,8 @@ test.describe('Tab Navigation', () => {
       { href: '/performance', label: 'Performance' },
       { href: '/fire', label: 'FIRE' },
       { href: '/withdraw', label: 'Withdraw' },
-      { href: '/simulators', label: 'Simulators' },
-      { href: '/backtest', label: 'Backtest' },
+      { href: '/backtest', label: 'Analysis' },
+      { href: '/assumptions', label: 'Tools' },
     ];
 
     for (const tab of tabs) {
@@ -67,7 +67,7 @@ test.describe('Page Loading', () => {
   });
 
   test('all tabs load without errors', async ({ page }) => {
-    const tabs = ['/dashboard', '/portfolio', '/performance', '/fire', '/withdraw', '/simulators', '/backtest'];
+    const tabs = ['/dashboard', '/portfolio', '/performance', '/fire', '/withdraw', '/backtest', '/assumptions'];
 
     for (const tab of tabs) {
       await page.goto(tab);

@@ -54,12 +54,12 @@ test.describe('UX/UI Visual Audit — Dashboard Fidelity', () => {
     console.log('✓ WITHDRAW tab screenshotted');
   });
 
-  test('SIMULADORES tab — Forms, simulator', async ({ page }) => {
-    await page.goto('/wealth/simulators');
+  test('TOOLS tab — Simulators, Assumptions', async ({ page }) => {
+    await page.goto('/wealth/assumptions');
     await page.waitForLoadState('networkidle');
     await expandAll(page);
-    await page.screenshot({ path: 'audit-screenshots/06-simuladores-tab.png', fullPage: true });
-    console.log('✓ SIMULADORES tab screenshotted');
+    await page.screenshot({ path: 'audit-screenshots/06-tools-tab.png', fullPage: true });
+    console.log('✓ TOOLS tab screenshotted');
   });
 
   test('BACKTEST tab — Period selection, results', async ({ page }) => {

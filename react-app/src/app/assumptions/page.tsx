@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { usePageData } from '@/hooks/usePageData';
 import { useUiStore } from '@/store/uiStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
@@ -12,6 +11,13 @@ import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CheckCircle, AlertTriangle, Clock, Shield, ArrowRight } from 'lucide-react';
 import { CHANGELOG, type ChangeType } from '@/config/changelog';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { FireSimuladorSection } from '@/app/simulators/FireSimuladorSection';
+import { WhatIfSection } from '@/app/simulators/WhatIfSection';
+import { CascadeSection } from '@/app/simulators/CascadeSection';
+import { StressTestSection } from '@/app/simulators/StressTestSection';
+import { RendaVsIpcaDuracaoSection } from '@/app/simulators/RendaVsIpcaDuracaoSection';
+import { ReverseFire } from '@/app/simulators/ReverseFire';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 
@@ -697,8 +703,40 @@ export default function AssumptionsPage() {
       </div>
 
       {/* ════════════════════════════════════════════════════════════════════════ */}
-      {/* SECTION 1: DECISÕES & AÇÕES (most actionable — top of page)            */}
+      {/* Simulators — moved from /simulators tab (7-tab reorganization)          */}
       {/* ════════════════════════════════════════════════════════════════════════ */}
+
+      <SectionDivider label="Reverse FIRE Calculator" />
+      <ReverseFire />
+
+      <SectionDivider label="Simulador FIRE" />
+      <FireSimuladorSection />
+
+      <SectionDivider label="What-If Cenários" />
+      <WhatIfSection />
+
+      <SectionDivider label="Decisão de Aporte" />
+      <CascadeSection />
+
+      <SectionDivider label="Análise Avançada" />
+      <StressTestSection />
+      <RendaVsIpcaDuracaoSection />
+
+      {/* Changelog de Componentes — rastreamento de alterações visíveis */}
+      <SectionDivider label="Dashboard" />
+      <CollapsibleSection
+        id="dashboard-updates"
+        title={secTitle('assumptions', 'dashboard-updates', '📋 Changelog — Alterações do Dashboard')}
+        defaultOpen={secOpen('assumptions', 'dashboard-updates')}
+      >
+        <ChangelogTable />
+      </CollapsibleSection>
+
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+      {/* SECTION 1: DECISÕES & AÇÕES (most actionable)                           */}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+
+      <SectionDivider label="Checklist do Plano" />
 
       <CollapsibleSection
         id="assumptions-decisions"
@@ -1094,15 +1132,6 @@ export default function AssumptionsPage() {
           </div>
         </CollapsibleSection>
       )}
-
-      {/* Changelog de Componentes — rastreamento de alterações visíveis */}
-      <CollapsibleSection
-        id="dashboard-updates"
-        title={secTitle('assumptions', 'dashboard-updates', '📋 Changelog — Alterações do Dashboard')}
-        defaultOpen={secOpen('assumptions', 'dashboard-updates')}
-      >
-        <ChangelogTable />
-      </CollapsibleSection>
 
       {/* Footer */}
     </div>
