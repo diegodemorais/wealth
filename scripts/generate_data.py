@@ -28,14 +28,21 @@ import sys, json, subprocess, csv, math, argparse, re, importlib.util
 from pathlib import Path
 from datetime import date, datetime, timedelta
 
+ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+
+# DEV-pipeline-fail-fast (P4): validar ambiente ANTES de qualquer cálculo.
+# Faltar pacote core → RuntimeError com mensagem clara em <1s, sem produzir
+# data.json corrompido. Rodar pelo Python do sistema (sem venv canônico)
+# falha aqui, não silenciosamente lá em baixo.
+from validate_env import validate_pipeline_env, assert_optional_pkg
+validate_pipeline_env()
+
 # Centralized engines (Lei 14.754/2023 and bond pool)
 from tax_engine import TaxEngine, TaxRequest
 from bond_pool_engine import BondPoolEngine, BondPoolRequest
 from guardrail_engine import GuardrailEngine, GuardrailRequest
 from swr_engine import SWREngine, SWRRequest
-
-ROOT = Path(__file__).parent.parent
-sys.path.insert(0, str(ROOT / "scripts"))
 
 # Import PFireEngine for centralized P(FIRE) calculations
 from pfire_engine import PFireEngine, PFireRequest
@@ -4009,44 +4016,57 @@ def compute_risk_return_by_bucket(backtest_data: dict, config_weights: dict) -> 
 
 
 # ─── Gap U: Factor Value Spread (AQR HML Devil + KF SMB) ─────────────────────
-def get_factor_value_spread() -> dict | None:
+def get_factor_value_spread() -> dict:
     """Carrega factor value spread de factor_cache.json ou computa via market_data.
 
     Salva resultado em factor_cache.json sob chave 'factor_value_spread'.
-    Retorna None em caso de falha (sem bloquear pipeline).
+
+    Fail-fast (DEV-pipeline-fail-fast / P2): em ambiente sem `getfactormodels`
+    ou `market_data.factor_value_spread` indisponível, levanta RuntimeError.
+    Antes (bug): retornava None silenciosamente, deixando spec contract 344/345
+    e widget de value spread sumir sem warning.
     """
-    # Tentar cache primeiro
+    import logging
+    _log = logging.getLogger(__name__)
+
+    # Tentar cache primeiro (cache é fallback legítimo — warning visível em falha).
     if FACTOR_CACHE.exists():
         try:
             cache = json.loads(FACTOR_CACHE.read_text())
             if "factor_value_spread" in cache:
                 print("  ✓ factor_value_spread (cache)")
                 return cache["factor_value_spread"]
-        except Exception:
-            pass
+        except Exception as e:
+            _log.warning("factor_value_spread cache read falhou: %s — recomputando", e)
 
     print("  ▶ factor value spread (AQR HML Devil + KF SMB) ...")
+    # P2: dependência obrigatória — pipeline em ambiente errado falha aqui,
+    # não silenciosamente. validate_env upfront já deveria ter pego.
+    assert_optional_pkg("getfactormodels", fn_name="get_factor_value_spread")
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from market_data import factor_value_spread as _compute
+    result = _compute()
+    if not isinstance(result, dict) or not result:
+        raise RuntimeError(
+            "get_factor_value_spread: market_data.factor_value_spread "
+            f"retornou resultado vazio/inválido ({type(result).__name__}). "
+            "Verifique conexão AQR + Ken French (DEV-pipeline-fail-fast)."
+        )
+
+    # Persistir no cache (write opcional — warning, não fatal).
     try:
-        sys.path.insert(0, str(ROOT / "scripts"))
-        from market_data import factor_value_spread as _compute
-        result = _compute()
-
-        # Persistir no cache
-        try:
-            cache: dict = {}
-            if FACTOR_CACHE.exists():
-                cache = json.loads(FACTOR_CACHE.read_text())
-            cache["factor_value_spread"] = result
-            FACTOR_CACHE.parent.mkdir(exist_ok=True)
-            FACTOR_CACHE.write_text(json.dumps(cache, indent=2))
-            print(f"  ✓ factor_value_spread salvo → {FACTOR_CACHE.relative_to(ROOT)}")
-        except Exception as e:
-            print(f"  ⚠️ factor_value_spread cache write: {e}")
-
-        return result
+        cache_w: dict = {}
+        if FACTOR_CACHE.exists():
+            cache_w = json.loads(FACTOR_CACHE.read_text())
+        cache_w["factor_value_spread"] = result
+        FACTOR_CACHE.parent.mkdir(exist_ok=True)
+        FACTOR_CACHE.write_text(json.dumps(cache_w, indent=2))
+        print(f"  ✓ factor_value_spread salvo → {FACTOR_CACHE.relative_to(ROOT)}")
     except Exception as e:
-        print(f"  ⚠️ factor_value_spread: {e}")
-        return None
+        _log.warning("factor_value_spread cache write falhou: %s", e)
+
+    return result
 
 
 # ─── G9: Historical IPCA+2040 yield (NTN-B) ─────────────────────────────────
