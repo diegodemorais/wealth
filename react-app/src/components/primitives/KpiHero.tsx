@@ -2,7 +2,7 @@
 
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct, fmtBrlCompact } from '@/utils/formatters';
-import { fmtPrivacy, fmtPrivacyUsd } from '@/utils/privacyTransform';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import { decimalYearsToYearsMonths } from '@/utils/time';
 import { canonicalizePFire } from '@/utils/pfire-canonical';
 
@@ -96,10 +96,10 @@ export function KpiHero({
       <div className="kpi kpi-fire text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
         <div className="kpi-label">Patrimônio Total</div>
         <div className="kpi-value text-4xl font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }} data-testid="patrimonio-total">
-          {privacyMode ? fmtPrivacy(networth, true) : networthCompact}
+          {privacyMode ? 'R$ ••••' : networthCompact}
         </div>
         <div className="kpi-sub">
-          {usdPct != null ? `${usdPct}% em USD` : (privacyMode ? fmtPrivacyUsd(networthUsd, true) : `${networthUsdCompact ? networthUsdCompact : '—'} em USD`)}
+          {usdPct != null ? `${usdPct}% em USD` : (privacyMode ? '$ ••••' : `${networthUsdCompact ? networthUsdCompact : '—'} em USD`)}
         </div>
       </div>
 

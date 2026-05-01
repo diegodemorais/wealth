@@ -15,6 +15,7 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  { datetime: '2026-05-01T22:00:00-03:00', type: 'fix', component: 'KpiHero', tab: 'now', anchor: '', de: 'Privacy mode em patrimônio-total mostrava valor numericamente transformado (R$245k) — leak de ordem de grandeza', para: 'Patrimônio total mascarado como "R$ ••••" em privacy mode (USD igual: "$ ••••"); 5 testes semânticos pré-existentes corrigidos (3 testids órfãos removidos, stress-cenarios movido NOW→FIRE)' },
   { datetime: '2026-05-01T18:00:00Z', type: 'layout', component: 'Tab Reorganização 8→7', tab: 'assumptions', anchor: '', de: '8 abas: DASHBOARD/FIRE/PORTFOLIO/PERFORMANCE/RETIREMENT/SIMULADORES/BACKTEST/CHECKLIST', para: '7 abas: DASHBOARD/FIRE/PORTFOLIO/PERFORMANCE/RETIREMENT/ANALYSIS/TOOLS — simuladores→assumptions, backtest vira ANALYSIS, /simulators redireciona' },
   { datetime: '2026-05-01T13:30:00Z', type: 'layout', component: 'FloorUpsideFire', tab: 'fire', anchor: 'floor-upside-fire', de: 'Cards empilhados por fase (FIRE Day / Pós-INSS) com EChart bar e 3 mini-cards cada', para: 'Tabela 2 colunas estilo ScenarioCompare: Floor RF, Gap equity, Pat. necessário, Cobertura (barra + %) — mais compacto e comparável' },
   { datetime: '2026-05-01T13:30:00Z', type: 'dado', component: 'ScenarioCompareCards', tab: 'fire', anchor: 'section-scenario-compare-cards', de: 'P(FIRE) casado/filho = — (pipeline TODO)', para: 'P(FIRE) casado=83.0%/filho=81.2% populados via MC 5k sims; patrimônio e SWR derivados para todos os perfis' },

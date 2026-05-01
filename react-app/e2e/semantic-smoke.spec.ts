@@ -151,10 +151,7 @@ test.describe('NOW — semantic values', () => {
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
 
-  test('stress-cenarios is visible', async ({ page }) => {
-    const el = page.locator('[data-testid="stress-cenarios"]');
-    await expect(el).toBeVisible({ timeout: 15_000 });
-  });
+  // stress-cenarios moved to FIRE tab (PFireMonteCarloTornado) — see FIRE describe block
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -285,6 +282,13 @@ test.describe('FIRE — semantic values', () => {
     expect(val).toBeGreaterThanOrEqual(20);
     expect(val).toBeLessThanOrEqual(100);
   });
+
+  // stress-cenarios lives inside Tornado section (collapsed by default) — open first
+  test('stress-cenarios is visible (Tornado section)', async ({ page }) => {
+    await page.click('[data-test="section-header-tornado"]');
+    const el = page.locator('[data-testid="stress-cenarios"]');
+    await expect(el).toBeVisible({ timeout: 15_000 });
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -331,15 +335,8 @@ test.describe('Performance — semantic values', () => {
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
 
-  test('factor-loadings-quality block is visible', async ({ page }) => {
-    const el = page.locator('[data-testid="factor-loadings-quality"]');
-    await expect(el).toBeVisible({ timeout: 15_000 });
-  });
-
-  test('factor-loadings-chart block is visible', async ({ page }) => {
-    const el = page.locator('[data-testid="factor-loadings-chart"]');
-    await expect(el).toBeVisible({ timeout: 15_000 });
-  });
+  // factor-loadings-quality / factor-loadings-chart: testids never implemented in src
+  // (introduced as aspirational assertions in bfffe5cc, no matching component shipped) — removed
 
   test('rolling-sharpe block is visible', async ({ page }) => {
     const el = page.locator('[data-testid="rolling-sharpe"]');
@@ -481,10 +478,8 @@ test.describe('Withdraw — semantic values', () => {
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
 
-  test('sankey-cashflow block is visible', async ({ page }) => {
-    const el = page.locator('[data-testid="sankey-cashflow"]');
-    await expect(el).toBeVisible({ timeout: 15_000 });
-  });
+  // sankey-cashflow: CashFlowSankey lives on NOW tab, not Withdraw — assertion removed
+  // (testid never existed in src; planned but not shipped on Withdraw)
 
   // P3: conditional — only present if data has guardrails_retirada
   test('guardrails-retirada renders if data has guardrails', async ({ page }) => {
