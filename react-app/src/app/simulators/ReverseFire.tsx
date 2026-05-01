@@ -367,10 +367,12 @@ export function ReverseFire() {
     ],
   }), [growthData, metaFire, metaAtingida, idadeFire, idadeAtual, anoAtual, privacyMode, pv, pvLabel]);
 
-  // Aspiracional handler
+  // Aspiracional handler — reflete cenário real: idade 49, aporte aspiracional
   const setAspiracional = () => {
     setMkt('aspiracional');
-    const aspiracionalAporte = premissas.aporte_mensal;
+    const aspiracionalIdade: number = premissas.idade_cenario_aspiracional ?? 49;
+    setIdadeFire(aspiracionalIdade);
+    const aspiracionalAporte = premissas.aporte_mensal_aspiracional ?? premissas.aporte_mensal;
     if (aspiracionalAporte != null) setAporte(aspiracionalAporte);
   };
 

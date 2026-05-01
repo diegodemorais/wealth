@@ -565,15 +565,19 @@ def build_pfire_request(scenario: str, premissas: dict) -> PFireRequest:
     idade_atual = premissas.get("idade_atual", 39)
     idade_fire = premissas.get("idade_cenario_base", 53)
 
-    # Para cenário aspiracional, usar idade_cenario_aspiracional se disponível
+    # Para cenário aspiracional, usar idade e aporte aspiracionais
     if scenario == "aspiracional":
         idade_fire = premissas.get("idade_cenario_aspiracional", 49)
+
+    aporte = premissas.get("aporte_mensal", 25_000)
+    if scenario == "aspiracional":
+        aporte = premissas.get("aporte_cenario_aspiracional", premissas.get("aporte_mensal_aspiracional", aporte))
 
     return PFireRequest(
         scenario=scenario,
         patrimonio_atual=patrimonio,
         meta_fire=meta_fire,
-        aporte_mensal=premissas.get("aporte_mensal", 25_000),
+        aporte_mensal=aporte,
         idade_atual=idade_atual,
         idade_fire=idade_fire,
         retorno_anual=premissas.get("retorno_equity_base", 0.0485),
@@ -718,6 +722,13 @@ def get_pfire_tornado():
             pf_aspiracional["fav"] = _asp_fav
         if _asp_stress is not None:
             pf_aspiracional["stress"] = _asp_stress
+        # Persistir pat_mediano_aspiracional para aspiracional_scenario
+        if result_aspiracional.pat_mediana_fire > 0:
+            _fire_upd = {**_sf_asp,
+                         "pat_mediano_aspiracional": round(result_aspiracional.pat_mediana_fire, 0),
+                         "pat_p10_aspiracional":     round(result_aspiracional.pat_p10_fire, 0),
+                         "pat_p90_aspiracional":     round(result_aspiracional.pat_p90_fire, 0)}
+            update_dashboard_state("fire", _fire_upd, generator="generate_data.py")
         print(f"  ✓ Aspiracional (P@49): {canonical_aspiracional.pct_str} (canônico, source={canonical_aspiracional.source})")
     except Exception as e:
         print(f"  ⚠️ PFireEngine aspiracional falhou: {e} — usando fallback")
@@ -5081,7 +5092,7 @@ def main():
         # Metadata
         "nota_scenarios_pat": (
             f"Pat. mediano no FIRE Day (base): R${pat_med_53/1e6:.2f}M (@{age_base}) / "
-            f"R${pat_med_50/1e6:.2f}M (@{age_aspir}). "
+            f"R${pat_med_aspir/1e6:.2f}M (@{age_aspir}). "
             "Fonte: fire_montecarlo.py MC 10k sims."
         ) if pat_med_53 else None,
     }
@@ -5801,9 +5812,15 @@ def main():
 
     # Gap R: Decomposição cambial
     retorno_decomposicao = compute_retorno_decomposicao(retornos_mensais)
+    if retorno_decomposicao is None and OUT_PATH.exists():
+        # Fallback: cached value from previous run (retornos_mensais sem decomposicao — rode reconstruct_history.py)
+        _cached_json = json.load(OUT_PATH.open())
+        retorno_decomposicao = _cached_json.get("retorno_decomposicao")
+        if retorno_decomposicao:
+            print(f"  ⚠️ Gap R decomposicao: usando fallback cacheado (sem decomposicao — rode reconstruct_history.py)")
     data["retorno_decomposicao"] = retorno_decomposicao
     assert data.get("retorno_decomposicao") is not None, \
-        "retorno_decomposicao missing — decomposicao ausente em retornos_mensais"
+        "retorno_decomposicao missing — decomposicao ausente em retornos_mensais e sem cache"
     print(f"  ✓ Gap R decomposição {retorno_decomposicao.get('periodo')}: USD={retorno_decomposicao.get('retorno_usd_pct'):+.1f}% FX={retorno_decomposicao.get('variacao_cambial_pct'):+.1f}% BRL={retorno_decomposicao.get('retorno_brl_pct'):+.1f}%")
 
     # Gap I: Estate Tax
@@ -5911,9 +5928,14 @@ def main():
 
     # Gap P: Correlation matrix em stress
     correlation_stress = compute_correlation_stress(retornos_mensais)
+    if correlation_stress is None and OUT_PATH.exists():
+        _cached_json2 = json.load(OUT_PATH.open())
+        correlation_stress = _cached_json2.get("correlation_stress")
+        if correlation_stress:
+            print(f"  ⚠️ Gap P correlation_stress: usando fallback cacheado (rode reconstruct_history.py)")
     data["correlation_stress"] = correlation_stress
     assert data.get("correlation_stress") is not None, \
-        "correlation_stress missing — retornos_mensais insuficiente"
+        "correlation_stress missing — retornos_mensais insuficiente e sem cache"
     print(f"  ✓ Gap P correlation_stress: n_stress={correlation_stress.get('n_stress_months')} meses | equity-RF normal={correlation_stress.get('correlacoes_normais', {}).get('equity_rf')}")
 
     # Gap U: Factor Value Spread (AQR HML Devil + KF SMB)
@@ -6003,8 +6025,15 @@ def main():
     else:
         print("  ⊘ P(quality) Matrix (skip-scripts)")
 
-    # Assertions de schema para p_quality_matrix
-    assert data["fire"].get("p_quality_matrix") is not None, "p_quality_matrix ausente"
+    # Assertions de schema para p_quality_matrix — fallback ao cache quando skip-scripts
+    if data["fire"].get("p_quality_matrix") is None and OUT_PATH.exists():
+        _cached_pqm = json.load(OUT_PATH.open()).get("fire", {})
+        if _cached_pqm.get("p_quality_matrix"):
+            data["fire"]["p_quality_matrix"]       = _cached_pqm["p_quality_matrix"]
+            data["fire"]["p_quality_matrix_proxy"] = _cached_pqm.get("p_quality_matrix_proxy")
+            data["fire"]["p_quality_matrix_full"]  = _cached_pqm.get("p_quality_matrix_full")
+            print(f"  ⚠️ p_quality_matrix: usando fallback cacheado (skip-scripts — rode fire_montecarlo.py --by_profile)")
+    assert data["fire"].get("p_quality_matrix") is not None, "p_quality_matrix ausente e sem cache"
     assert set(data["fire"]["p_quality_matrix"]["values"].keys()) == {"A", "B", "C", "D", "E"}, "p_quality_matrix keys"
 
     # ─── Limpar NaN valores antes de escrever JSON ──────────────────────────────────

@@ -80,6 +80,9 @@ class PFireResult:
     percentile_90: float  # 0-1
     final_wealth_dist: list[float] = field(default_factory=list)
     trajectories: list[list[float]] = field(default_factory=list)
+    pat_mediana_fire: float = 0.0   # mediana do patrimônio no FIRE Day (acumulação)
+    pat_p10_fire: float = 0.0       # P10 do patrimônio no FIRE Day
+    pat_p90_fire: float = 0.0       # P90 do patrimônio no FIRE Day
 
     def __post_init__(self):
         """Validação invariante — se falhar, cálculo foi corrompido."""
@@ -154,6 +157,9 @@ class PFireEngine:
             percentile_90=min(1.0, p_sucesso + 0.03),  # Aproximação: P50 + 3pp
             final_wealth_dist=[],
             trajectories=[],
+            pat_mediana_fire=mc_result.get("pat_mediana_fire", 0.0),
+            pat_p10_fire=mc_result.get("pat_p10_fire_acum", 0.0),
+            pat_p90_fire=mc_result.get("pat_p90_fire_acum", 0.0),
         )
 
         # ✓ Validação invariante (falha se resultado é inválido)

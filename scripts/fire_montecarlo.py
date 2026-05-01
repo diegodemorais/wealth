@@ -997,6 +997,10 @@ def rodar_monte_carlo_com_trajetorias(premissas: dict, n_sim: int = 10_000,
         "cenario": cenario,
         "p_sucesso": float(p_sucesso),
         "retorno_equity_usado": r_equity,
+        # Patrimônio no FIRE Day — percentis da distribuição de acumulação
+        "pat_mediana_fire": float(np.median(pat_fire_trajetorias)),
+        "pat_p10_fire_acum": float(np.percentile(pat_fire_trajetorias, 10)),
+        "pat_p90_fire_acum": float(np.percentile(pat_fire_trajetorias, 90)),
     }
 
 

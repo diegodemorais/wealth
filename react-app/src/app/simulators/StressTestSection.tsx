@@ -29,7 +29,7 @@ const STRESS_AGES = [
   { value: 39, label: '39 anos (hoje)' },
   { value: 42, label: '42 anos' },
   { value: 45, label: '45 anos' },
-  { value: 50, label: '50 anos (FIRE aspiracional)' },
+  { value: 49, label: '49 anos (FIRE aspiracional)' },
   { value: 53, label: '53 anos (FIRE base)' },
   // Pós-FIRE — desacumulação
   { value: 54, label: '54 anos (ano 1 pós-FIRE — sequence risk)' },
