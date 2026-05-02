@@ -41,8 +41,7 @@
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-
-(vazio)
+| DEV-release-gate-checklist | Release Gate — checklist técnico mecânico pre-push | Dev (+ QA mandato) | 🟡 Média |
 
 ### Blocked
 > Issues aguardando dependências externas
