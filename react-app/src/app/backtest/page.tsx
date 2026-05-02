@@ -25,6 +25,7 @@ import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { fmtBrlPrivate } from '@/utils/formatters';
 import { useConfig } from '@/hooks/useConfig';
+import { yearsFrom } from '@/utils/time';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -76,14 +77,21 @@ type ShadowPeriod = 'since2009' | 'since2013' | 'since2020' | '5y' | '3y' | 'all
 const _hoje = new Date();
 const _ateLabel = _hoje.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }).replace(' de ', '/');
 
+// Anos calculados dinamicamente em runtime — `5y`/`3y` mantêm label sem sufixo (já é auto-explicativo)
+const _yR7        = yearsFrom('1989-07-01', _hoje);
+const _yAll       = yearsFrom('2005-01-01', _hoje);
+const _ySince2009 = yearsFrom('2009-01-01', _hoje);
+const _ySince2013 = yearsFrom('2013-01-01', _hoje);
+const _ySince2020 = yearsFrom('2020-01-01', _hoje);
+
 const BACKTEST_PERIODS: { key: BacktestPeriod; label: string; title: string }[] = [
-  { key: 'r7',        label: 'Acadêmico (37a)',  title: `jul/1989–${_ateLabel} (37 anos) · proxies acadêmicos Ken French + MSCI` },
-  { key: 'all',       label: 'Completo (21a)',   title: `jan/2005–${_ateLabel} (21 anos)` },
-  { key: 'since2009', label: 'Pós-GFC (17a)',    title: `jan/2009–${_ateLabel} (17 anos) · desde o fundo da crise de 2008` },
-  { key: 'since2013', label: 'Pós-Euro (13a)',   title: `jan/2013–${_ateLabel} (13 anos) · pós-crise da dívida europeia` },
-  { key: 'since2020', label: 'Pós-COVID (6a)',   title: `jan/2020–${_ateLabel} (6 anos) · desde o fundo de março 2020` },
-  { key: '5y',        label: '5 anos',           title: `jan/2021–${_ateLabel} (5 anos)` },
-  { key: '3y',        label: '3 anos',           title: `jan/2023–${_ateLabel} (3 anos)` },
+  { key: 'r7',        label: `Acadêmico (${_yR7} anos)`,       title: `jul/1989–${_ateLabel} (${_yR7} anos) · proxies acadêmicos Ken French + MSCI` },
+  { key: 'all',       label: `Completo (${_yAll} anos)`,       title: `jan/2005–${_ateLabel} (${_yAll} anos)` },
+  { key: 'since2009', label: `Pós-GFC (${_ySince2009} anos)`,  title: `jan/2009–${_ateLabel} (${_ySince2009} anos) · desde o fundo da crise de 2008` },
+  { key: 'since2013', label: `Pós-Euro (${_ySince2013} anos)`, title: `jan/2013–${_ateLabel} (${_ySince2013} anos) · pós-crise da dívida europeia` },
+  { key: 'since2020', label: `Pós-COVID (${_ySince2020} anos)`,title: `jan/2020–${_ateLabel} (${_ySince2020} anos) · desde o fundo de março 2020` },
+  { key: '5y',        label: '5 anos',                          title: `jan/2021–${_ateLabel} (5 anos)` },
+  { key: '3y',        label: '3 anos',                          title: `jan/2023–${_ateLabel} (3 anos)` },
 ];
 
 const SHADOW_PERIODS: { key: ShadowPeriod; label: string }[] = [

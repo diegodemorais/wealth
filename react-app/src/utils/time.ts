@@ -1,3 +1,16 @@
+/**
+ * Calcula anos inteiros entre `startISO` (data ISO, ex: '2020-01-01') e `today`.
+ * Arredonda para inteiro mais próximo. Usa 365.25 para considerar bissextos.
+ *
+ * Usado em rótulos de períodos históricos no dashboard (Pós-COVID, Pós-GFC, etc.)
+ * — `today` opcional para testes determinísticos.
+ */
+export function yearsFrom(startISO: string, today: Date = new Date()): number {
+  const start = new Date(startISO);
+  const ms = today.getTime() - start.getTime();
+  return Math.round(ms / (365.25 * 24 * 60 * 60 * 1000));
+}
+
 export interface YearsMonths {
   years: number;
   months: number;

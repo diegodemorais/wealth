@@ -1,5 +1,50 @@
 import { describe, it, expect } from 'vitest';
-import { formatBrt, formatBrtCompact, decimalYearsToYearsMonths } from '../time';
+import { formatBrt, formatBrtCompact, decimalYearsToYearsMonths, yearsFrom } from '../time';
+
+describe('yearsFrom — anos inteiros entre datas', () => {
+  // `today` é parametrizado para garantir testes determinísticos.
+  const today = new Date('2026-05-01T12:00:00Z');
+
+  it('Pós-COVID (jan/2020 → mai/2026) ≈ 6 anos', () => {
+    expect(yearsFrom('2020-01-01', today)).toBe(6);
+  });
+
+  it('Pós-Euro (jan/2013 → mai/2026) ≈ 13 anos', () => {
+    expect(yearsFrom('2013-01-01', today)).toBe(13);
+  });
+
+  it('Pós-GFC (jan/2009 → mai/2026) ≈ 17 anos', () => {
+    expect(yearsFrom('2009-01-01', today)).toBe(17);
+  });
+
+  it('Acadêmico R7 (jul/1989 → mai/2026) ≈ 37 anos', () => {
+    expect(yearsFrom('1989-07-01', today)).toBe(37);
+  });
+
+  it('Completo (jan/2005 → mai/2026) ≈ 21 anos', () => {
+    expect(yearsFrom('2005-01-01', today)).toBe(21);
+  });
+
+  it('5 anos (jan/2021 → mai/2026) ≈ 5 anos', () => {
+    expect(yearsFrom('2021-01-01', today)).toBe(5);
+  });
+
+  it('3 anos (jan/2023 → mai/2026) ≈ 3 anos', () => {
+    expect(yearsFrom('2023-01-01', today)).toBe(3);
+  });
+
+  it('arredonda para inteiro mais próximo (5.7 → 6)', () => {
+    // 2020-08-01 → 2026-05-01 ≈ 5.75 anos → 6
+    expect(yearsFrom('2020-08-01', today)).toBe(6);
+  });
+
+  it('usa data atual como default quando today omitido', () => {
+    // Apenas valida que retorna um inteiro >= 0; não asserta valor exato.
+    const yrs = yearsFrom('2020-01-01');
+    expect(Number.isInteger(yrs)).toBe(true);
+    expect(yrs).toBeGreaterThanOrEqual(0);
+  });
+});
 
 describe('time formatters — BRT (America/Sao_Paulo)', () => {
   // BRT = UTC−3 (no DST since 2019). Tests below assume that fact.

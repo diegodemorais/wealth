@@ -14,6 +14,7 @@ import { useState, useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useChartResize } from '@/hooks/useChartResize';
 import { EC, EC_TOOLTIP, EC_AXIS_LABEL, EC_SPLIT_LINE } from '@/utils/echarts-theme';
+import { yearsFrom } from '@/utils/time';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 
@@ -34,15 +35,27 @@ export interface RiskReturnScatterProps {
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
-// Alinhados ao backtest page — mesmo vocabulário de marcos históricos
-const PERIODS: Array<{ id: string; label: string; title: string }> = [
-  { id: 'since2020', label: 'Pós-COVID',  title: 'Jan/2020→hoje (6a) · desde o fundo de março 2020' },
-  { id: 'since2013', label: 'Pós-Euro',   title: 'Jan/2013→hoje (13a) · pós-crise da dívida europeia' },
-  { id: 'since2009', label: 'Pós-GFC',    title: 'Jan/2009→hoje (17a) · desde o fundo da crise 2008' },
-  { id: 'all',       label: 'Máximo',     title: 'Jan/2005→hoje (21a) · histórico completo com proxies' },
-  { id: '5y',        label: '5 anos',     title: 'Jan/2021→hoje (5a)' },
-  { id: '3y',        label: '3 anos',     title: 'Jan/2023→hoje (3a)' },
+// Alinhados ao backtest page e ao pipeline (compute_risk_return_by_bucket em generate_data.py)
+// startISO segue as datas-fonte do pipeline; anos calculados dinamicamente em runtime.
+// Sufixo "(N anos)" só para períodos onde "anos" não está no label-base.
+const PERIODS: Array<{ id: string; baseLabel: string; startISO: string; titleBase: string; suffix: boolean }> = [
+  { id: 'since2020', baseLabel: 'Pós-COVID', startISO: '2020-01-01', titleBase: 'jan/2020→hoje · desde o fundo de março 2020',     suffix: true  },
+  { id: 'since2013', baseLabel: 'Pós-Euro',  startISO: '2013-01-01', titleBase: 'jan/2013→hoje · pós-crise da dívida europeia',     suffix: true  },
+  { id: 'since2009', baseLabel: 'Pós-GFC',   startISO: '2009-01-01', titleBase: 'jan/2009→hoje · desde o fundo da crise 2008',      suffix: true  },
+  { id: 'all',       baseLabel: 'Máximo',    startISO: '2019-07-01', titleBase: 'histórico completo com proxies',                    suffix: true  },
+  { id: '5y',        baseLabel: '5 anos',    startISO: '2021-01-01', titleBase: 'jan/2021→hoje',                                     suffix: false },
+  { id: '3y',        baseLabel: '3 anos',    startISO: '2023-01-01', titleBase: 'jan/2023→hoje',                                     suffix: false },
 ];
+
+function periodLabel(p: { baseLabel: string; startISO: string; suffix: boolean }, today: Date = new Date()): string {
+  if (!p.suffix) return p.baseLabel;
+  return `${p.baseLabel} (${yearsFrom(p.startISO, today)} anos)`;
+}
+
+function periodTitle(p: { baseLabel: string; startISO: string; titleBase: string; suffix: boolean }, today: Date = new Date()): string {
+  const yrs = yearsFrom(p.startISO, today);
+  return `${p.titleBase} (${yrs} anos)`;
+}
 
 // since2020 = início operacional da carteira; fallback para primeiro disponível
 const DEFAULT_PERIOD = 'since2020';
@@ -203,7 +216,7 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
           <button
             key={p.id}
             onClick={() => setPeriod(p.id)}
-            title={p.title}
+            title={periodTitle(p)}
             style={{
               padding: '4px 12px',
               borderRadius: 4,
@@ -217,7 +230,7 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
               flexShrink: 0,
             }}
           >
-            {p.label}
+            {periodLabel(p)}
           </button>
         ))}
       </div>
