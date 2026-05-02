@@ -22,7 +22,7 @@ import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
 import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
 import SWRDashboard from '@/components/dashboard/SWRDashboard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
-import { BarChart3, Building2, Thermometer, Hospital, CheckCircle, AlertCircle, XCircle, Heart } from 'lucide-react';
+import { BarChart3, Building2, Thermometer, Hospital, CheckCircle, AlertCircle, XCircle, Heart, Landmark } from 'lucide-react';
 import { fmtPrivacy, pvText, maskMoneyValues } from '@/utils/privacyTransform';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
@@ -78,7 +78,7 @@ function FloorUpsideWithdraw({
         type: 'bar',
         stack: 'total',
         data: [gapCobertoPct],
-        itemStyle: { color: '#22c55e' },
+        itemStyle: { color: EC.positive },
         barMaxWidth: 40,
       },
       {
@@ -86,7 +86,7 @@ function FloorUpsideWithdraw({
         type: 'bar',
         stack: 'total',
         data: [gapDescobertoPct],
-        itemStyle: { color: '#ef4444' },
+        itemStyle: { color: EC.negative },
         barMaxWidth: 40,
       },
     ],
@@ -113,9 +113,12 @@ function FloorUpsideWithdraw({
           marginBottom: '12px',
           marginTop: 0,
           color: 'var(--text)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
         }}
       >
-        🏦 Cobertura por Camadas — Floor vs Upside
+        <Landmark size={18} /> Cobertura por Camadas — Floor vs Upside
       </h3>
 
       <EChart option={option} style={{ height: 56 }} />
@@ -131,8 +134,8 @@ function FloorUpsideWithdraw({
       >
         {[
           { color: EC.accent, label: 'Floor garantido' },
-          { color: '#22c55e', label: 'Gap coberto (equity)' },
-          { color: '#ef4444', label: 'Gap descoberto' },
+          { color: EC.positive, label: 'Gap coberto (equity)' },
+          { color: EC.negative, label: 'Gap descoberto' },
         ].map(l => (
           <div
             key={l.label}

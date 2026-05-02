@@ -682,7 +682,7 @@ export default function AssumptionsPage() {
     <div>
       {/* Header */}
       <div style={{ marginBottom: 14, paddingBottom: 12, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
-        <h1 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: 'var(--text)' }}>Checklist do Plano</h1>
+        <h1 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: 'var(--text)' }}>Tools</h1>
         <span style={{ fontSize: 11, color: 'var(--muted)' }}>Visão geral e ações pendentes</span>
         <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--muted)', fontFamily: 'monospace' }}>
           {generatedLabel}

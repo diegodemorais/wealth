@@ -901,8 +901,7 @@ export default function BacktestPage() {
 
   return (
     <div>
-      <SectionDivider label="Backtest Principal" />
-      {/* 1. Backtest Histórico — Target vs VWRA */}
+      {/* 1. Backtest Histórico — Target vs VWRA (entrada da aba; sem divider redundante) */}
       <BacktestHistoricoSection />
 
       <SectionDivider label="Drawdown & Risco" />

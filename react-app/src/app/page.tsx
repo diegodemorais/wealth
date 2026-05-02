@@ -152,7 +152,6 @@ export default function HomePage() {
 
   return (
     <div>
-      <SectionDivider label="Status" />
       {/* 1. HERO STRIP — Patrimônio Total | Anos até FIRE | Progresso FIRE */}
       <KpiHero
         networth={d.networth}
