@@ -23,6 +23,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtBrlPrivate } from '@/utils/formatters';
 import { useConfig } from '@/hooks/useConfig';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
@@ -597,6 +598,7 @@ function BacktestLongoSection() {
 
 function BondTentAnalysisSection() {
   const data = useDashboardStore(s => s.data);
+  const { privacyMode } = useEChartsPrivacy();
 
   const patrimonio: number = (data as any)?.premissas?.patrimonio_atual ?? 0;
   const bondPool: { atual_brl?: number; cobertura_anos?: number; meta_anos?: number; meta_brl?: number } =
@@ -621,11 +623,7 @@ function BondTentAnalysisSection() {
   const pctMeta       = patrimonio > 0 ? (bondPoolAtual / rfNecessaria) * 100 : 0;
   const coberturaTent = custoAnual > 0 ? rfNecessaria / custoAnual : 0;
 
-  const fmtBrl = (v: number) => {
-    if (v >= 1_000_000) return `R$${(v / 1_000_000).toFixed(2)}M`;
-    if (v >= 1_000)     return `R$${(v / 1_000).toFixed(0)}k`;
-    return `R$${v.toFixed(0)}`;
-  };
+  const fmtBrl = (v: number) => fmtBrlPrivate(v, privacyMode);
   const fmtAnos = (v: number) => `${v.toFixed(1)} anos`;
 
   const gapColor = gapRf <= 0 ? 'var(--green)' : gapRf < rfNecessaria * 0.5 ? 'var(--yellow)' : 'var(--red)';
@@ -747,15 +745,6 @@ interface TimelineAttribution {
   cambio: number[];
 }
 
-/** Format BRL value in compact notation */
-function fmtBRL(v: number): string {
-  const abs = Math.abs(v);
-  const sign = v < 0 ? '−' : '';
-  if (abs >= 1_000_000) return `${sign}R$${(abs / 1_000_000).toFixed(2)}M`;
-  if (abs >= 1_000) return `${sign}R$${(abs / 1_000).toFixed(0)}k`;
-  return `${sign}R$${abs.toFixed(0)}`;
-}
-
 /** Aggregate monthly series into yearly totals */
 function aggregateByYear(dates: string[], values: number[]): { years: string[]; totals: number[] } {
   const map = new Map<string, number>();
@@ -795,7 +784,7 @@ function TimelineAttributionChart() {
       formatter: (params: Array<{ seriesName: string; value: number; color: string }>) => {
         const year = (params[0] as unknown as { axisValueLabel?: string; name?: string }).name ?? '';
         const rows = params.map(p => {
-          const val = privacyMode ? fmtPrivacy(p.value, true) : fmtBRL(p.value);
+          const val = fmtBrlPrivate(p.value, privacyMode);
           return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${p.color};margin-right:4px"></span>${p.seriesName}: <b>${val}</b>`;
         }).join('<br/>');
         return `<b>${year}</b><br/>${rows}`;

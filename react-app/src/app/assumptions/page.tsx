@@ -11,7 +11,8 @@ import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CheckCircle, AlertTriangle, Clock, Shield, ArrowRight } from 'lucide-react';
 import { CHANGELOG, type ChangeType } from '@/config/changelog';
 import { formatBrtCompact } from '@/utils/time';
-import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtPrivacy, maskMoneyValues, pvText } from '@/utils/privacyTransform';
+import { fmtBrlPrivate } from '@/utils/formatters';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { FireSimuladorSection } from '@/app/simulators/FireSimuladorSection';
 import { WhatIfSection } from '@/app/simulators/WhatIfSection';
@@ -21,12 +22,6 @@ import { RendaVsIpcaDuracaoSection } from '@/app/simulators/RendaVsIpcaDuracaoSe
 import { ReverseFire } from '@/app/simulators/ReverseFire';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
-
-function fmtBrl(v: number): string {
-  if (v >= 1_000_000) return `R$${(v / 1_000_000).toFixed(2)}M`;
-  if (v >= 1_000) return `R$${(v / 1_000).toFixed(0)}k`;
-  return `R$${v.toFixed(0)}`;
-}
 
 function fmtPct(v: number): string {
   return `${(v * 100).toFixed(2)}%`;
@@ -117,6 +112,7 @@ const fmtDatetime = formatBrtCompact;
 
 function ChangelogTable() {
   const entries = CHANGELOG.slice(0, 30);
+  const privacyMode = useUiStore(s => s.privacyMode);
   return (
     <div style={{ padding: '0 16px 16px' }}>
       <div style={{ overflowX: 'auto' }}>
@@ -157,8 +153,8 @@ function ChangelogTable() {
                       {TAB_LABELS[e.tab] ?? e.tab}
                     </span>
                   </td>
-                  <td style={{ padding: '6px 8px', color: 'var(--muted)', maxWidth: 220, lineHeight: 1.35 }}>{e.de}</td>
-                  <td style={{ padding: '6px 8px', color: 'var(--text)', maxWidth: 220, lineHeight: 1.35 }}>{e.para}</td>
+                  <td style={{ padding: '6px 8px', color: 'var(--muted)', maxWidth: 220, lineHeight: 1.35 }}>{maskMoneyValues(e.de, privacyMode)}</td>
+                  <td style={{ padding: '6px 8px', color: 'var(--text)', maxWidth: 220, lineHeight: 1.35 }}>{maskMoneyValues(e.para, privacyMode)}</td>
                 </tr>
               );
             })}
@@ -441,7 +437,7 @@ export default function AssumptionsPage() {
     { label: 'Cenários', value: '', separator: true } as Row,
     { label: 'FIRE Base — 2040, idade 53', value: `P ${(pfire.base ?? 0).toFixed(1)}%`, accent: (pfire.base ?? 0) >= 90 },
     { label: `FIRE Aspiracional — 2035, idade 48`, value: `P ${(pfireA.base ?? 0).toFixed(1)}%`, accent: (pfireA.base ?? 0) >= 90 },
-    { label: `  → requer aporte extra`, value: fmtBrl((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0)) + '/mês', muted: true },
+    { label: `  → requer aporte extra`, value: fmtBrlPrivate((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0), privacyMode) + '/mês', muted: true },
     { label: `FIRE Possível @${d.earliest_fire?.idade ?? 49} (${d.earliest_fire?.ano ?? 2036})`, value: `P ${(d.earliest_fire?.pfire ?? 0).toFixed(1)}%`, accent: (d.earliest_fire?.pfire ?? 0) >= 85 },
     { label: 'Projeções P50', value: '', separator: true } as Row,
     { label: 'Pat. Mediano @48 (P50)', value: mask(sc.aspiracional?.pat_mediano ?? fire.pat_mediano_fire50 ?? 0, privacyMode) },
@@ -457,12 +453,12 @@ export default function AssumptionsPage() {
     { label: 'IPCA Premissa (MC)', value: fmtPct(p.ipca_anual ?? 0) + '/ano' },
     { label: 'Taxa IPCA+ Longa (Renda+)', value: fmtPctRaw(p.taxa_ipca_plus_longa ?? 0) + '/ano' },
     { label: 'Horizonte de Vida', value: `${p.horizonte_vida ?? 90} anos` },
-    { label: 'Long-Term Care (70+)', value: 'R$100k/ano', warn: true },
+    { label: 'Long-Term Care (70+)', value: pvText('R$100k/ano', privacyMode), warn: true },
     { label: 'Contexto Macro', value: '', separator: true } as Row,
     ...(macro.ipca_12m != null ? [{ label: 'IPCA 12m Realizado', value: fmtPctRaw(macro.ipca_12m) + '/ano', muted: true }] : []),
     { label: 'Depreciação BRL (base)', value: `${((macro.depreciacao_brl_premissa ?? 0.5)).toFixed(1)}%/ano`, muted: true },
     ...(macro.selic_meta != null ? [{ label: 'Selic Meta (BCB)', value: fmtPct(macro.selic_meta / 100) + '/ano', muted: true }] : []),
-    ...(d?.cambio != null ? [{ label: 'Câmbio BRL/USD', value: `R$${Number(d.cambio).toFixed(4)}`, muted: true }] : []),
+    ...(d?.cambio != null ? [{ label: 'Câmbio BRL/USD', value: privacyMode ? 'R$ ••••' : `R$${Number(d.cambio).toFixed(4)}`, muted: true }] : []),
     ...(macro.fed_funds != null ? [{ label: 'Fed Funds', value: fmtPctRaw(macro.fed_funds) + '/ano', muted: true }] : []),
     ...(macro.spread_selic_ff != null ? [{ label: 'Spread Selic–FF', value: `${macro.spread_selic_ff.toFixed(1)}pp`, muted: true }] : []),
   ];
@@ -554,10 +550,10 @@ export default function AssumptionsPage() {
     { label: 'Alíquota (alienação)', value: '15% flat sobre ganho nominal BRL', muted: true },
     ...(tax.estate_tax?.us_situs_total_usd != null ? [
       { label: 'Estate Tax (US-situs)', value: '', separator: true } as Row,
-      { label: 'Exposição US-situs', value: fmtPrivacy(tax.estate_tax.us_situs_total_usd * 1000, privacyMode, { prefix: '$', compact: true }) + ' (lim. $60k)', warn: true },
+      { label: 'Exposição US-situs', value: fmtPrivacy(tax.estate_tax.us_situs_total_usd * 1000, privacyMode, { prefix: '$', compact: true }) + (privacyMode ? ' (lim. $ ••••)' : ' (lim. $60k)'), warn: true },
       { label: 'Imposto Estimado', value: mask(tax.estate_tax.imposto_estimado_brl ?? 0, privacyMode), warn: true },
     ] : []),
-    ...(tax.ptax_atual != null ? [{ label: 'PTAX Atual', value: `R$${tax.ptax_atual?.toFixed(4)}`, muted: true }] : []),
+    ...(tax.ptax_atual != null ? [{ label: 'PTAX Atual', value: privacyMode ? 'R$ ••••' : `R$${tax.ptax_atual?.toFixed(4)}`, muted: true }] : []),
   ];
 
   // ── Withdrawal Guardrails rows ──
@@ -857,7 +853,7 @@ export default function AssumptionsPage() {
               P(FIRE) = {(pfire.base ?? 0).toFixed(1)}% assume <strong>patrimônio financeiro isolado</strong> sem renda futura.
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5 }}>
-              <strong>Renda Garantida (não incluída):</strong> Katia R$113.8k/ano de INSS + PGBL a partir de 2049 (idade 62).
+              <strong>Renda Garantida (não incluída):</strong> Katia {pvText('R$113.8k', privacyMode)}/ano de INSS + PGBL a partir de 2049 (idade 62).
               <br />
               <strong>Por quê?</strong> Conservadorismo deliberado. P(FIRE) real é estimado 4-7pp maior com renda garantida.
               <br />
@@ -874,9 +870,9 @@ export default function AssumptionsPage() {
               <strong>Definição Atual:</strong> P(FIRE) = probabilidade de <strong>patrimônio não zerar</strong> em 40 anos com guardrails ativos.
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5 }}>
-              <strong>Nuance:</strong> Guardrails reduzem gasto de R$250k para R$180k em drawdowns &gt;35% (28% degradação de vida). MC reporta como "sucesso".
+              <strong>Nuance:</strong> Guardrails reduzem gasto de {pvText('R$250k', privacyMode)} para {pvText('R$180k', privacyMode)} em drawdowns &gt;35% (28% degradação de vida). MC reporta como "sucesso".
               <br />
-              <strong>Realidade:</strong> P(FIRE) {(pfire.base ?? 0).toFixed(1)}% é <strong>conservador</strong>. Com restrição gasto ≥ R$220k: ~82% (vs 78.8%).
+              <strong>Realidade:</strong> P(FIRE) {(pfire.base ?? 0).toFixed(1)}% é <strong>conservador</strong>. Com restrição gasto ≥ {pvText('R$220k', privacyMode)}: ~82% (vs 78.8%).
               <br />
               <strong>Implicação:</strong> Margem de segurança implícita. Sem guardrails seria ~72%. Com guardrails = proteção contra falha catastrófica.
             </div>
@@ -906,16 +902,16 @@ export default function AssumptionsPage() {
                   <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderTop: '2px solid var(--border)', borderRadius: 7, padding: '10px 12px' }}>
                     <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>Piso go-go</div>
                     <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', fontFamily: 'monospace' }}>
-                      {sm.go_go?.gasto != null ? `R$${(sm.go_go.gasto * 0.8 / 1000).toFixed(0)}k` : '—'}
+                      {sm.go_go?.gasto != null ? (privacyMode ? 'R$ ••••' : `R$${(sm.go_go.gasto * 0.8 / 1000).toFixed(0)}k`) : '—'}
                     </div>
-                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>80% de R${sm.go_go?.gasto != null ? `${(sm.go_go.gasto / 1000).toFixed(0)}k` : '—'}</div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>80% de {sm.go_go?.gasto != null ? (privacyMode ? 'R$ ••••' : `R$${(sm.go_go.gasto / 1000).toFixed(0)}k`) : '—'}</div>
                   </div>
                   <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderTop: '2px solid var(--border)', borderRadius: 7, padding: '10px 12px' }}>
                     <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>Piso slow-go</div>
                     <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', fontFamily: 'monospace' }}>
-                      {sm.slow_go?.gasto != null ? `R$${(sm.slow_go.gasto * 0.8 / 1000).toFixed(0)}k` : '—'}
+                      {sm.slow_go?.gasto != null ? (privacyMode ? 'R$ ••••' : `R$${(sm.slow_go.gasto * 0.8 / 1000).toFixed(0)}k`) : '—'}
                     </div>
-                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>80% de R${sm.slow_go?.gasto != null ? `${(sm.slow_go.gasto / 1000).toFixed(0)}k` : '—'}</div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>80% de {sm.slow_go?.gasto != null ? (privacyMode ? 'R$ ••••' : `R$${(sm.slow_go.gasto / 1000).toFixed(0)}k`) : '—'}</div>
                   </div>
                 </div>
                 <p style={{ margin: 0, padding: '7px 9px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 5, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
@@ -944,17 +940,17 @@ export default function AssumptionsPage() {
                     <td style={{ padding: '6px 4px', color: 'var(--text)', fontWeight: 600 }}>Base</td>
                     <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace' }}>53</td>
                     <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--green)', fontWeight: 600 }}>{(pfire.base ?? 0).toFixed(1)}%</td>
-                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--muted)' }}>{fmtBrl(p.aporte_mensal ?? 0)}</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--muted)' }}>{fmtBrlPrivate(p.aporte_mensal ?? 0, privacyMode)}</td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     <td style={{ padding: '6px 4px', color: 'var(--text)', fontWeight: 600 }}>Aspiracional</td>
                     <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace' }}>48</td>
                     <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', color: (pfireA.base ?? 0) >= 90 ? 'var(--green)' : 'var(--yellow)', fontWeight: 600 }}>{(pfireA.base ?? 0).toFixed(1)}%</td>
-                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', fontWeight: 600 }}>{fmtBrl(p.aporte_mensal_aspiracional ?? 0)}</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'monospace', fontWeight: 600 }}>{fmtBrlPrivate(p.aporte_mensal_aspiracional ?? 0, privacyMode)}</td>
                   </tr>
                   <tr>
                     <td colSpan={4} style={{ padding: '8px 4px', fontSize: 11, color: 'var(--muted)', fontStyle: 'italic' }}>
-                      Diferença: 5 anos antes, +{fmtBrl((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0))}/mês, -7.6pp P(FIRE). Trade-off entre tempo-para-FIRE e risco.
+                      Diferença: 5 anos antes, +{fmtBrlPrivate((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0), privacyMode)}/mês, -7.6pp P(FIRE). Trade-off entre tempo-para-FIRE e risco.
                     </td>
                   </tr>
                 </tbody>

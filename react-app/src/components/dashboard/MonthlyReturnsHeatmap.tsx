@@ -114,7 +114,7 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
                   }
                   const pct = val * 100;
                   return (
-                    <td key={month} title={`${year}-${String(month).padStart(2,'0')}: ${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`}>
+                    <td key={month} title={privacyMode ? `${year}-${String(month).padStart(2,'0')}: ••` : `${year}-${String(month).padStart(2,'0')}: ${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`}>
                       <div style={{ ...cellStyle, background: getColor(val), color: Math.abs(val) < 0.005 ? 'var(--muted)' : '#fff' }}>
                         {privacyMode ? '·' : `${pct >= 0 ? '+' : ''}${pct.toFixed(1)}`}
                       </div>

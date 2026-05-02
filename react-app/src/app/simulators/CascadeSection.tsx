@@ -97,7 +97,7 @@ export function CascadeSection() {
             onChange={e => setAporte(+e.target.value * 1000)}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            <span>R$ 1k</span><span>R$ 1M</span>
+            <span>{privacyMode ? 'R$ ••••' : 'R$ 1k'}</span><span>{privacyMode ? 'R$ ••••' : 'R$ 1M'}</span>
           </div>
         </div>
         {cambio > 0 && (

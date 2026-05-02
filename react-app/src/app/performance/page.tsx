@@ -19,7 +19,7 @@ import RollingMetricsChart from '@/components/dashboard/RollingMetricsChart';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import PerformanceSummary from '@/components/dashboard/PerformanceSummary';
 import { BarChart3 } from 'lucide-react';
-import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtPrivacy, pvText } from '@/utils/privacyTransform';
 import { EC } from '@/utils/echarts-theme';
 
 // Period buttons for timeline
@@ -86,7 +86,7 @@ export default function PerformancePage() {
               Drawdown Ativo: {privacyMode ? '••%' : `${ddAtual.toFixed(1)}%`}
             </div>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-              Ação: {ddAtualAbs >= 35 ? 'corte de 28% (piso R$180k)' : ddAtualAbs >= 25 ? 'corte 20%' : ddAtualAbs >= 15 ? 'corte 10%' : 'monitorar · hold'}
+              Ação: {ddAtualAbs >= 35 ? `corte de 28% (piso ${pvText('R$180k', privacyMode)})` : ddAtualAbs >= 25 ? 'corte 20%' : ddAtualAbs >= 15 ? 'corte 10%' : 'monitorar · hold'}
             </div>
           </div>
         </div>

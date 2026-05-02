@@ -28,8 +28,7 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
   const rendaPlusPct = totalBrl > 0 ? rendaPlusBrl / totalBrl : 0;
   const cryptoPct   = totalBrl > 0 ? cryptoBrl    / totalBrl : 0;
 
-  const fmtBrl = (val: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
+  const fmtBrl = (val: number) => fmtPrivacy(val, privacyMode);
 
   const assets = [
     { label: 'Equity',       value: equityBrl,    pct: equityPct,    color: 'var(--accent)' },

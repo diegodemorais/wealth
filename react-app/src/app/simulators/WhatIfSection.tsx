@@ -329,7 +329,7 @@ export function WhatIfSection() {
             onChange={e => setCustoB(+e.target.value)}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            <span>R$150k</span><span>R$500k</span>
+            <span>{privacyMode ? 'R$ ••••' : 'R$150k'}</span><span>{privacyMode ? 'R$ ••••' : 'R$500k'}</span>
           </div>
         </div>
         <div className="slider-row">
@@ -344,7 +344,7 @@ export function WhatIfSection() {
             onChange={e => setAporteB(+e.target.value)}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            <span>R$5k</span><span>R$60k</span>
+            <span>{privacyMode ? 'R$ ••••' : 'R$5k'}</span><span>{privacyMode ? 'R$ ••••' : 'R$60k'}</span>
           </div>
         </div>
       </div>
@@ -583,7 +583,7 @@ export function WhatIfSection() {
               <div style={{ position: 'relative', height: '24px', borderRadius: '6px', overflow: 'hidden', background: 'var(--card)', display: 'flex' }}>
                 <div
                   style={{ width: `${floorPct}%`, background: 'var(--accent)', transition: 'width .3s' }}
-                  title={`Floor garantido: R$${(floorTotal / 1000).toFixed(0)}k`}
+                  title={privacyMode ? 'Floor garantido: R$ ••••' : `Floor garantido: R$${(floorTotal / 1000).toFixed(0)}k`}
                 />
                 <div
                   style={{ width: `${gapPct * (coveredPct / 100)}%`, background: 'var(--green)', transition: 'width .3s' }}

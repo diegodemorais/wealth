@@ -102,7 +102,7 @@ export default function PortfolioPage() {
         />
         {showEstateAlert && (
           <MetricCard
-            label="US-Situs >$60k"
+            label={privacyMode ? 'US-Situs (limite)' : 'US-Situs >$60k'}
             value={fmtPrivacy(usSitusUsd / 1000, privacyMode, { prefix: '$' })}
             valueColor="text-red"
             size="sm"
@@ -1350,8 +1350,8 @@ export default function PortfolioPage() {
                     <thead>
                       <tr style={{ borderBottom: '2px solid var(--border)' }}>
                         <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Ano</th>
-                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>IPCA+ líq R$1</th>
-                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Selic líq R$1</th>
+                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>IPCA+ líq por R$ inv.</th>
+                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Selic líq por R$ inv.</th>
                         <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Vantagem</th>
                       </tr>
                     </thead>

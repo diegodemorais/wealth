@@ -6,11 +6,12 @@ import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { EC, EC_SPLIT_LINE, EC_AXIS_LINE } from '@/utils/echarts-theme';
+import { pvText } from '@/utils/privacyTransform';
 
 
-// privacy-ok: percentage-only chart, no monetary values displayed
+// privacy-ok: percentage-only chart, monetary copy uses pvText for masking
 export function GuardrailsMechanismChart() {
-  const { theme } = useEChartsPrivacy();
+  const { theme, privacyMode } = useEChartsPrivacy();
   const chartRef = useChartResize();
 
 
@@ -118,7 +119,7 @@ export function GuardrailsMechanismChart() {
           <li>0–15%: nenhum corte (absorver volatilidade)</li>
           <li>15–25%: cortar 10% do gasto (austeridade branda)</li>
           <li>25–35%: cortar 20% do gasto (austeridade moderada)</li>
-          <li>35%+: cortar até R$180k/ano (piso de segurança)</li>
+          <li>35%+: cortar até {pvText('R$180k', privacyMode)}/ano (piso de segurança)</li>
         </ul>
         Permite que a carteira se adapte sem falhar, mantendo qualidade de vida degradada mas segura.
       </div>

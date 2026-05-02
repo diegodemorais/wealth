@@ -166,7 +166,7 @@ export function RFCryptoComposition() {
                     {fmtPrivacy(data.hodl11.qty, privacyMode, { prefix: '', decimals: 0, compact: false })}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
-                    {`R$ ${data.hodl11.preco.toFixed(2)}`}
+                    {privacyMode ? 'R$ ••••' : `R$ ${data.hodl11.preco.toFixed(2)}`}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
                     {formatCurrency(data.hodl11.valor)}

@@ -94,6 +94,53 @@ describe('No Hardcoded Financial Values', () => {
   }
 });
 
+describe('No Local fmtBrl Declarations', () => {
+  // DEV-privacy-deep-fix: enforce single source of truth for BRL formatting.
+  // Local fmtBrl/fmtBRL declarations must use fmtBrlPrivate from formatters.ts
+  // to ensure privacy mode is honored. Allowed only in formatters.ts itself.
+  it('should not declare local fmtBrl/fmtBRL functions outside formatters.ts', () => {
+    // Patterns that indicate a local declaration (heuristic):
+    //   function fmtBrl(...   |   function fmtBRL(...
+    //   const fmtBrl = (...    |   const fmtBRL = (...
+    // Allow when the body delegates to fmtPrivacy or fmtBrlPrivate (privacy-aware wrapper)
+    const NAMED_PATTERN = /(?:function\s+(?:fmtBrl|fmtBRL)\s*\(|(?:const|let)\s+(?:fmtBrl|fmtBRL|fmtBrlK|fmtBRLfire)\s*=\s*(?:\(|function))/;
+    const violators: string[] = [];
+
+    for (const filePath of allSourceFiles) {
+      const rel = filePath.replace(SRC_DIR + '/', '');
+      if (rel.includes('utils/formatters.ts')) continue; // canonical source
+      if (rel.includes('.test.') || rel.includes('.spec.')) continue;
+
+      const content = readFileSync(filePath, 'utf-8');
+      const lines = content.split('\n');
+
+      lines.forEach((line, idx) => {
+        if (!NAMED_PATTERN.test(line)) return;
+
+        // Look ahead a few lines to see if the body is privacy-aware.
+        // Allowed forms:
+        //   - delegates to fmtPrivacy / fmtBrlPrivate
+        //   - takes a `priv` / `privacyMode` / `pm` boolean and branches on it
+        //   - returns 'R$ ••••' (the canonical privacy mask)
+        const lookahead = lines.slice(idx, idx + 12).join('\n');
+        if (
+          /fmtPrivacy\s*\(|fmtBrlPrivate\s*\(|fmtBrlM\s*\(/.test(lookahead) ||
+          /R\$\s*•••/.test(lookahead) ||
+          /\b(priv|pm|privacyMode)\s*[:?)]/.test(lookahead)
+        ) return;
+
+        violators.push(`${rel}:${idx + 1}`);
+      });
+    }
+
+    if (violators.length > 0) {
+      throw new Error(
+        `Local fmtBrl/fmtBRL declarations without privacy wrapping:\n${violators.map(f => '  ' + f).join('\n')}\n\nUse fmtBrlPrivate from @/utils/formatters instead.`
+      );
+    }
+  });
+});
+
 describe('Privacy Mode Completeness', () => {
   it('components that show BRL values should import privacyMode or PrivacyMask', () => {
     // Components that render R$ values must handle privacy mode

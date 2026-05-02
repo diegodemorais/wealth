@@ -21,7 +21,7 @@ import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
-import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtPrivacy, pvText } from '@/utils/privacyTransform';
 import { pfireColor } from '@/utils/fire';
 
 interface SequenceOfReturnsRiskProps {
@@ -34,12 +34,12 @@ interface SequenceOfReturnsRiskProps {
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 /** Given P(FIRE), returns the guardrail tier label and spending reduction. */
-function pfireToGuardrailTier(pfire: number): {
+function pfireToGuardrailTier(pfire: number, privacyMode: boolean): {
   tier: string;
   action: string;
   color: string;
 } {
-  if (pfire > 90) return { tier: 'Expansão', action: 'R$250k → R$300k permanente', color: EC.green };
+  if (pfire > 90) return { tier: 'Expansão', action: `${pvText('R$250k', privacyMode)} → ${pvText('R$300k', privacyMode)} permanente`, color: EC.green };
   if (pfire >= 85) return { tier: 'Manter', action: 'Guardrails atuais — nenhuma ação', color: EC.accent };
   return { tier: 'Revisão', action: 'Apertar limiares drawdown — abrir issue', color: EC.red };
 }
@@ -85,7 +85,7 @@ export function SequenceOfReturnsRisk({
   const floorKatia2049: number = inssKatiaAnual + pgblKatia * 0.04; // SWR 4% no PGBL
 
   // P(FIRE) gate tier
-  const gateTier = pfireToGuardrailTier(pfireBase);
+  const gateTier = pfireToGuardrailTier(pfireBase, privacyMode);
 
   // ── Scenario example: P(FIRE) 95% → 80%, drawdown bands ────────────────
   // Cenário hipotético para narrar a interação
@@ -241,7 +241,7 @@ export function SequenceOfReturnsRisk({
           mesmo quando o mercado sobe depois (Karsten, ERN Part 28).
         </p>
         <p style={{ margin: 0 }}>
-          Defesa em duas camadas: (1) <strong>bond pool</strong> — TD 2040 ~R$1,9M cobre os
+          Defesa em duas camadas: (1) <strong>bond pool</strong> — TD 2040 ~{pvText('R$1,9M', privacyMode)} cobre os
           saques dos primeiros 7 anos sem tocar equity; (2) <strong>guardrails de drawdown</strong>
           cortam spending automaticamente se o equity cair, com o P(FIRE) gate anual
           (janeiro) recalibrando os thresholds quando P{"<"}80%.
@@ -260,7 +260,7 @@ export function SequenceOfReturnsRisk({
           Mecanismo de Guardrails — Como Drawdown Ajusta Spending
         </div>
         <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 12 }}>
-          Curva mostra: 0–15% queda = nenhum corte · 15–25% = 10% redução · 25–35% = 20% redução · 35%+ = piso essencial (R${Math.round(pisoEssencial / 1000)}k)
+          Curva mostra: 0–15% queda = nenhum corte · 15–25% = 10% redução · 25–35% = 20% redução · 35%+ = piso essencial ({privacyMode ? 'R$ ••••' : `R$${Math.round(pisoEssencial / 1000)}k`})
         </div>
         <EChart option={useMemo(() => {
           const fmt = (v: number) => fmtPrivacy(v, privacyMode);
@@ -409,7 +409,7 @@ export function SequenceOfReturnsRisk({
             {fmtBrl(pisoEssencial)}<span style={{ fontSize: 'var(--text-xs)', fontWeight: 400, marginLeft: 2 }}>/ano</span>
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-            Hipoteca R$60k + Saúde R$24k + Essencial R$100k
+            Hipoteca {pvText('R$60k', privacyMode)} + Saúde {pvText('R$24k', privacyMode)} + Essencial {pvText('R$100k', privacyMode)}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             Discricionário: {fmtBrl(discrecionario)}/ano (compressível até 50%)
@@ -479,7 +479,7 @@ export function SequenceOfReturnsRisk({
           </table>
         </div>
         <div className="src" style={{ marginTop: 8 }}>
-          P{'>'}90%: guardrail expandido (R$300k base) · P 80–90%: guardrails padrão (R$250k base) · Piso essencial: R$184k (inelástico)
+          P{'>'}90%: guardrail expandido ({pvText('R$300k', privacyMode)} base) · P 80–90%: guardrails padrão ({pvText('R$250k', privacyMode)} base) · Piso essencial: {pvText('R$184k', privacyMode)} (inelástico)
         </div>
       </div>
 
@@ -499,8 +499,8 @@ export function SequenceOfReturnsRisk({
         </div>
         <EChart option={heatmapOption} style={{ height: 180 }} />
         <div className="src">
-          Piso essencial R$184k: hipoteca + saúde + alimentação/moradia (inelástico).
-          Discricionário (R$66k) = primeira linha de corte nos guardrails.
+          Piso essencial {pvText('R$184k', privacyMode)}: hipoteca + saúde + alimentação/moradia (inelástico).
+          Discricionário ({pvText('R$66k', privacyMode)}) = primeira linha de corte nos guardrails.
         </div>
       </div>
 
@@ -527,7 +527,7 @@ export function SequenceOfReturnsRisk({
               {fmtBrl(inssKatiaAnual)}<span style={{ fontSize: 'var(--text-xs)', fontWeight: 400 }}>/ano</span>
             </div>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-              R$7.800/mês bruto (100% do SB, 39a contr.)
+              {pvText('R$7.800/mês', privacyMode)} bruto (100% do SB, 39a contr.)
             </div>
           </div>
           <div style={{ background: 'var(--card)', borderRadius: 8, padding: '10px 12px', border: '1px solid var(--border)' }}>

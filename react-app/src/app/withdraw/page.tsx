@@ -23,7 +23,7 @@ import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHe
 import SWRDashboard from '@/components/dashboard/SWRDashboard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { BarChart3, Building2, Thermometer, Hospital, CheckCircle, AlertCircle, XCircle, Heart } from 'lucide-react';
-import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtPrivacy, pvText, maskMoneyValues } from '@/utils/privacyTransform';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
 interface FloorUpsideWithdrawProps {
@@ -519,7 +519,7 @@ export default function WithdrawPage() {
               <GuardrailsMechanismChart />
             </div>
             <div style={{ marginTop: 10, fontSize: 'var(--text-sm)', background: 'rgba(34,197,94,.07)', borderRadius: 6, padding: 8, borderLeft: '3px solid var(--green)' }}>
-              <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto R$350k)
+              <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto {pvText('R$350k', privacyMode)})
             </div>
           </div>
         </CollapsibleSection>
@@ -561,7 +561,7 @@ export default function WithdrawPage() {
                   <div style={{ position: 'absolute', left: '95%', top: 0, fontSize: 'var(--text-xs)', color: 'var(--green)', transform: 'translateX(-50%)' }}>95%</div>
                 </div>
                 {sg.nota && (
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>{sg.nota}</div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>{maskMoneyValues(sg.nota, privacyMode)}</div>
                 )}
                 {/* C14: guardrail cut category — cortes recaem sobre lifestyle, não saúde */}
                 {(() => {
@@ -892,8 +892,8 @@ export default function WithdrawPage() {
 
             const ltcCenarios = [
               { label: 'Sem LTC', saude_extra: 0 },
-              { label: 'LTC moderado', saude_extra: 72_000, nota: '~R$6k/mês × 12 meses' },
-              { label: 'LTC intensivo', saude_extra: 216_000, nota: '~R$18k/mês × 12 meses (asilo)' },
+              { label: 'LTC moderado', saude_extra: 72_000, nota: privacyMode ? '~R$ ••••/mês × 12 meses' : '~R$6k/mês × 12 meses' },
+              { label: 'LTC intensivo', saude_extra: 216_000, nota: privacyMode ? '~R$ ••••/mês × 12 meses (asilo)' : '~R$18k/mês × 12 meses (asilo)' },
             ];
 
             return (

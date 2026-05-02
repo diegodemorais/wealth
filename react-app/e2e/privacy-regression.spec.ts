@@ -1,20 +1,15 @@
 /**
  * Privacy Mode Regression Tests — E2E
  *
- * Context: DEV-privacy-audit-react fixed 25 privacy leaks (2026-04-30).
- * These tests prevent regression by verifying that:
- *   1. Enabling privacyMode masks financial values in the NOW tab
- *   2. Percentage values show '••' markers when privacy is on
- *   3. Disabling privacyMode restores real values
+ * Context: DEV-privacy-deep-fix (2026-05-01) abolished FACTOR transformation
+ * and replaced it with `R$ ••••` / `$ ••••` puro. These tests verify that
+ * privacy mode masks every monetary literal across all 7 tabs.
  *
  * Strategy: Inject privacyMode into localStorage (Zustand persist store)
- * then reload the page. This bypasses the need to click the toggle button
- * and ensures the store is in the correct state before any render.
+ * then load each tab and scan body innerText for R$/USD digit patterns.
  *
  * Requires: Next.js dev server at localhost:3002 (basePath /wealth)
  * Run: npx playwright test --project=semantic e2e/privacy-regression.spec.ts
- *
- * Issue: QA-test-plan-audit (CR-1, CR-3)
  */
 
 import { test, expect, Page } from '@playwright/test';
@@ -48,11 +43,15 @@ async function setAuthCookie(page: Page) {
   }]);
 }
 
-// basePath /wealth
-const ROUTES = {
+// All 7 tabs — basePath /wealth
+const ROUTES: Record<string, string> = {
   now:         '/wealth',
   performance: '/wealth/performance',
   fire:        '/wealth/fire',
+  withdraw:    '/wealth/withdraw',
+  portfolio:   '/wealth/portfolio',
+  backtest:    '/wealth/backtest',  // ANALYSIS
+  assumptions: '/wealth/assumptions', // TOOLS
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -63,8 +62,6 @@ const ROUTES = {
 async function gotoWithPrivacy(page: Page, route: string, privacyMode: boolean) {
   await setAuthCookie(page);
 
-  // Pre-set localStorage before the page loads so the store hydrates with correct state.
-  // The store name is 'dashboard-ui-store' (see src/store/uiStore.ts line 83).
   await page.addInitScript((enabled: boolean) => {
     const key = 'dashboard-ui-store';
     const existing = localStorage.getItem(key);
@@ -81,154 +78,106 @@ async function gotoWithPrivacy(page: Page, route: string, privacyMode: boolean) 
   );
 }
 
+/** Pattern that matches a leaked R$ value (digit follows R$). */
+const BRL_LEAK = /R\$\s*\d+([.,]\d+)?\s*[kKMm]?(\/\w+)?/;
+/** Pattern that matches a leaked USD value. */
+const USD_LEAK = /\$\s*\d+([.,]\d+)?\s*[kKMm]?(\/\w+)?/;
+
 // ─────────────────────────────────────────────────────────────────────────────
-// Privacy ON — NOW tab
+// Universal regression — all 7 tabs in privacy ON
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Privacy Mode ON — NOW tab', () => {
-  test.beforeEach(async ({ page }) => {
-    await gotoWithPrivacy(page, ROUTES.now, true);
+for (const [tab, route] of Object.entries(ROUTES)) {
+  test.describe(`Privacy ON — ${tab.toUpperCase()} tab`, () => {
+    test.beforeEach(async ({ page }) => {
+      await gotoWithPrivacy(page, route, true);
+    });
+
+    test(`${tab}: body must NOT leak R$<digits> when privacyMode=true`, async ({ page }) => {
+      const content = await page.locator('body').innerText();
+      const m = content.match(BRL_LEAK);
+      if (m) {
+        // Find a 200-char window around the match for diagnostic
+        const idx = content.indexOf(m[0]);
+        const window = content.slice(Math.max(0, idx - 80), Math.min(content.length, idx + 120));
+        throw new Error(`R$ leak in ${tab}: "${m[0]}"\nContext: ...${window}...`);
+      }
+      expect(m).toBeNull();
+    });
+
+    test(`${tab}: body must NOT leak $<digits> when privacyMode=true`, async ({ page }) => {
+      const content = await page.locator('body').innerText();
+      // Skip USD literals that are already masked (•••• after $)
+      // The regex requires digits immediately after $.
+      const m = content.match(USD_LEAK);
+      if (m) {
+        const idx = content.indexOf(m[0]);
+        const window = content.slice(Math.max(0, idx - 80), Math.min(content.length, idx + 120));
+        throw new Error(`$ leak in ${tab}: "${m[0]}"\nContext: ...${window}...`);
+      }
+      expect(m).toBeNull();
+    });
+
+    test(`${tab}: page renders without JS crash in privacy mode`, async ({ page }) => {
+      const errors: string[] = [];
+      page.on('pageerror', err => errors.push(err.message));
+      await page.waitForTimeout(500);
+      expect(
+        errors.filter(e => /TypeError|Cannot read|is not a function/.test(e)),
+        `JS errors on ${tab}:\n${errors.join('\n')}`
+      ).toHaveLength(0);
+    });
   });
+}
 
-  test('patrimônio-total contains •• and does NOT show R$+digits (privacy leak)', async ({ page }) => {
+// ─────────────────────────────────────────────────────────────────────────────
+// Targeted assertions kept from previous suite (data-testid based)
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Privacy ON — targeted testids', () => {
+  test('NOW: patrimonio-total renders with mask, not real digits', async ({ page }) => {
+    await gotoWithPrivacy(page, ROUTES.now, true);
     const el = page.locator('[data-testid="patrimonio-total"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
     const text = (await el.textContent()) ?? '';
-
-    // In privacy mode, monetary values are transformed (not blanked), but should not
-    // show the real magnitude. The value must contain a visible formatted number OR ••.
-    // Key assertion: no "R$" followed immediately by a 7+ digit number (real patrimônio leaking)
-    // Current patrimônio: ~R$3.5M — in privacy mode it shows ~R$245k (FACTOR=0.07)
-    // So we verify the text doesn't contain "R$3" or "R$4" at 7-digit magnitude.
-    // NOTE: The dashboard uses fmtPrivacy (monetary transform), not •• blanking for patrimônio-total.
-    // This test verifies the transformed value is visible and plausible.
     expect(text.trim()).not.toBe('');
-    expect(text.trim()).not.toBe('—');
-    expect(text, 'patrimônio-total must contain a number in privacy mode').toMatch(/[\d]/);
+    expect(text).toMatch(/••••|••/);
+    expect(text).not.toMatch(BRL_LEAK);
   });
 
-  test('savings-rate shows •• markers when privacyMode=true', async ({ page }) => {
-    const el = page.locator('[data-testid="savings-rate"]');
-    await expect(el).toBeVisible({ timeout: 15_000 });
-    const text = (await el.textContent()) ?? '';
-
-    // savings-rate uses '••%' pattern in privacyMode
-    // It should NOT show a normal XX% pattern (which would be a privacy leak)
-    expect(text, 'savings-rate should be visible with some content').not.toBe('');
-
-    // Either the whole block shows •• or it shows a transformed value
-    // Key: it must NOT expose a raw savings rate like "45%" or "60%"
-    // (raw savings rate would reveal income/savings level)
-    // We check that if there's a % sign, it's masked with ••
-    if (text.includes('%') && !text.includes('••')) {
-      // This would be a leak — savings rate visible without masking
-      throw new Error(`savings-rate leaks percentage value in privacy mode: "${text}"`);
-    }
-  });
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Privacy ON — Performance tab
-// ─────────────────────────────────────────────────────────────────────────────
-
-test.describe('Privacy Mode ON — Performance tab (PerformanceSummary KPI)', () => {
-  test.beforeEach(async ({ page }) => {
-    await gotoWithPrivacy(page, ROUTES.performance, true);
-  });
-
-  test('PerformanceSummary KPI block is visible and does not show raw percentage', async ({ page }) => {
-    // The KPI strip in PerformanceSummary shows CAGR real, alpha, max drawdown
-    // In privacy mode, all these should show '••%' (per PerformanceSummary.tsx fmtPct function)
-    // retorno-usd block is in this page
-    const el = page.locator('[data-testid="retorno-usd"]');
-    await expect(el).toBeVisible({ timeout: 15_000 });
-    const text = (await el.textContent()) ?? '';
-
-    // retorno-usd shows a monetary value — in privacy mode it's transformed (not ••)
-    // The key is it should not show the real USD return number unchanged
-    expect(text.trim()).not.toBe('—');
-    expect(text.trim()).not.toBe('');
-  });
-
-  test('Performance page renders without crash in privacy mode', async ({ page }) => {
-    // Catch render crashes introduced by privacy mode handling
-    const errors: string[] = [];
-    page.on('pageerror', err => errors.push(err.message));
-
-    await page.waitForTimeout(1000); // wait for any deferred errors
-
-    expect(
-      errors.filter(e => /TypeError|Cannot read|is not a function/.test(e)),
-      `JS errors in privacy mode:\n${errors.join('\n')}`
-    ).toHaveLength(0);
-  });
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Privacy ON — FIRE tab
-// ─────────────────────────────────────────────────────────────────────────────
-
-test.describe('Privacy Mode ON — FIRE tab', () => {
-  test.beforeEach(async ({ page }) => {
+  test('FIRE: pfire-hero is masked', async ({ page }) => {
     await gotoWithPrivacy(page, ROUTES.fire, true);
-  });
-
-  test('pfire-hero shows •• when privacyMode=true (P(FIRE) is masked)', async ({ page }) => {
     const el = page.locator('[data-testid="pfire-hero"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
     const text = (await el.textContent()) ?? '';
-
-    // pfire-hero in privacy mode: the FIRE page uses `privacyMode ? '••%' : ...` pattern
-    // (see src/app/fire/page.tsx line 649)
-    // The text should contain '••' and NOT show a bare percentage like '86.4%'
-    expect(text, 'pfire-hero must contain content in privacy mode').not.toBe('');
-
-    // If it shows a percentage without masking, that's a leak
+    expect(text).not.toBe('');
     if (text.match(/\d+\.\d+%/) && !text.includes('••')) {
-      throw new Error(`pfire-hero leaks P(FIRE) value in privacy mode: "${text}"`);
+      throw new Error(`pfire-hero leaks P(FIRE) value: "${text}"`);
     }
-  });
-
-  test('FIRE page renders without crash in privacy mode', async ({ page }) => {
-    const errors: string[] = [];
-    page.on('pageerror', err => errors.push(err.message));
-
-    await page.waitForTimeout(1000);
-
-    expect(
-      errors.filter(e => /TypeError|Cannot read|is not a function/.test(e)),
-      `JS errors in FIRE page privacy mode:\n${errors.join('\n')}`
-    ).toHaveLength(0);
   });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Privacy OFF — verify values return to normal (regression: disable clears mask)
+// Privacy OFF — sanity (real values restored)
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('Privacy Mode OFF — values visible normally', () => {
+test.describe('Privacy OFF — values visible normally', () => {
   test.beforeEach(async ({ page }) => {
     await gotoWithPrivacy(page, ROUTES.now, false);
   });
 
-  test('patrimônio-total shows a real value (not masked) when privacyMode=false', async ({ page }) => {
+  test('patrimonio-total shows R$ + digits when privacy is off', async ({ page }) => {
     const el = page.locator('[data-testid="patrimonio-total"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
     const text = (await el.textContent()) ?? '';
-
-    // Without privacy mode, should show actual patrimônio
-    expect(text.trim()).not.toBe('—');
-    expect(text).toMatch(/[\d]/);
-    // Should contain R$ prefix for the BRL value
-    expect(text).toContain('R$');
+    expect(text).toMatch(BRL_LEAK);
+    expect(text).not.toContain('••••');
   });
 
-  test('pfire-aspiracional shows a real percentage when privacyMode=false', async ({ page }) => {
+  test('pfire-aspiracional shows real percentage when privacy is off', async ({ page }) => {
     const el = page.locator('[data-testid="pfire-aspiracional"] .font-black');
     await expect(el).toBeVisible({ timeout: 15_000 });
     const text = (await el.textContent()) ?? '';
-
-    // Should show a real percentage (not ••%)
     expect(text).toMatch(/\d+%/);
     expect(text).not.toContain('••');
   });

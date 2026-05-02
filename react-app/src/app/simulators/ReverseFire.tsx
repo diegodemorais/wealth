@@ -507,7 +507,7 @@ export function ReverseFire() {
                 style={{ opacity: 0.85 }}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-                <span>R$5k</span><span>R$100k</span>
+                <span>{privacyMode ? 'R$ ••••' : 'R$5k'}</span><span>{privacyMode ? 'R$ ••••' : 'R$100k'}</span>
               </div>
             </div>
 
@@ -527,7 +527,7 @@ export function ReverseFire() {
                 style={{ opacity: 0.85 }}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-                <span>R$5k</span><span>R$50k</span>
+                <span>{privacyMode ? 'R$ ••••' : 'R$5k'}</span><span>{privacyMode ? 'R$ ••••' : 'R$50k'}</span>
               </div>
             </div>
 

@@ -23,7 +23,7 @@ import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Landmark, Building2, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
-import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtPrivacy, pvText, maskMoneyValues } from '@/utils/privacyTransform';
 import { FloorUpsideFire } from './FloorUpsideFire';
 import { ContributionReturnsCrossover } from './ContributionReturnsCrossover';
 import { CoastFireCard } from './CoastFireCard';
@@ -945,7 +945,7 @@ export default function FirePage() {
         </div>
         <NetWorthProjectionChart data={safeData} />
         <div style={{ marginTop: 4, padding: '6px 10px', background: 'color-mix(in srgb, var(--yellow) 8%, transparent)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-sm)' }}>
-          <AlertTriangle size={14} style={{ display: 'inline', verticalAlign: '-2px', flexShrink: 0 }} /> Portfólio financeiro apenas. Aportes futuros de R$25k/mês já estão modelados trajetória a trajetória (proxy de capital humano). O modelo não captura risco de interrupção de renda — doença, invalidez ou queda de receita PJ.{' '}
+          <AlertTriangle size={14} style={{ display: 'inline', verticalAlign: '-2px', flexShrink: 0 }} /> Portfólio financeiro apenas. Aportes futuros de {pvText('R$25k', privacyMode)}/mês já estão modelados trajetória a trajetória (proxy de capital humano). O modelo não captura risco de interrupção de renda — doença, invalidez ou queda de receita PJ.{' '}
           Pré-FIRE: dados reais de fire_trilha (realizado + projeção mensal). Pós-FIRE: percentis P10/P50/P90 das 10k trajetórias MC — inclui spending smile (Go-Go/Slow-Go/No-Go), VCMH, guardrails, bond pool isolation e INSS.
         </div>
         <div className="src">
@@ -1302,7 +1302,7 @@ export default function FirePage() {
               <div className="src">
                 Aproximação analítica (anuidade ajustada por risco). Aportes=0 (conservador).
                 Patrimônio base: {fmtBRLfire(patrimonioBase)}. Usar MC completo para valores definitivos.
-                Nota: piso &lt; gasto atual (R$250k) pois aportes=0 nesta estimativa — com aportes projetados, ceiling é maior.
+                Nota: piso &lt; gasto atual ({pvText('R$250k', privacyMode)}) pois aportes=0 nesta estimativa — com aportes projetados, ceiling é maior.
               </div>
             </div>
           </CollapsibleSection>
@@ -1324,7 +1324,7 @@ export default function FirePage() {
         });
         const lifestyle = fases.map(f => sm[f].gasto_lifestyle);
         const saude    = fases.map(f => sm[f].gasto_saude_mid);
-        const fmt = (v: number) => `R$${(v / 1000).toFixed(0)}k`;
+        const fmt = (v: number) => privacyMode ? 'R$ ••••' : `R$${(v / 1000).toFixed(0)}k`;
         const option = {
           backgroundColor: 'transparent',
           grid: { left: 60, right: 16, top: 16, bottom: 60 },
@@ -1343,7 +1343,7 @@ export default function FirePage() {
           xAxis: { type: 'category', data: labels, axisLabel: { color: EC.muted, fontSize: 11 }, axisLine: { lineStyle: { color: EC.border } } },
           yAxis: {
             type: 'value', min: 0, max: 350000,
-            axisLabel: { color: EC.muted, fontSize: 10, formatter: (v: number) => `R$${v / 1000}k` },
+            axisLabel: { color: EC.muted, fontSize: 10, formatter: (v: number) => privacyMode ? 'R$ ••••' : `R$${v / 1000}k` },
             axisLine: { show: false }, splitLine: { lineStyle: { color: EC.border, type: 'dashed' } },
           },
           series: [
@@ -1361,7 +1361,7 @@ export default function FirePage() {
               <EChart option={option} style={{ height: 260 }} />
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8, lineHeight: 1.5 }}>
                 Lifestyle = gastos ex-saúde (FR-spending-smile 2026-03-27) ·
-                Saúde = estimativa ponto médio da fase (base R${(sm.go_go?.gasto_saude_mid ?? 0) / 1000 | 0}k, +3.5%/a) ·
+                Saúde = estimativa ponto médio da fase (base {privacyMode ? 'R$ ••••' : `R$${(sm.go_go?.gasto_saude_mid ?? 0) / 1000 | 0}k`}, +3.5%/a) ·
                 Componente saúde sobe com a idade mesmo quando lifestyle cai — padrão &ldquo;smile&rdquo;
               </div>
             </div>
@@ -1378,7 +1378,7 @@ export default function FirePage() {
         >
           <div style={{ padding: '0 16px 16px' }}>
             <WithdrawalRateChart data={data as any} />
-            <div className="src">SWR bruta vs líquida pós-INSS · INSS Katia 2049 (R$93.6k) + Diego 2052 (R$18k) · Linha pontilhada = gatilho SWR {((data as any)?.premissas?.swr_gatilho ?? 0.03) * 100}%</div>
+            <div className="src">SWR bruta vs líquida pós-INSS · INSS Katia 2049 ({pvText('R$93.6k', privacyMode)}) + Diego 2052 ({pvText('R$18k', privacyMode)}) · Linha pontilhada = gatilho SWR {((data as any)?.premissas?.swr_gatilho ?? 0.03) * 100}%</div>
           </div>
         </CollapsibleSection>
       )}
@@ -1427,8 +1427,8 @@ export default function FirePage() {
                       return (
                         <tr key={i} style={{ borderBottom: '1px solid var(--card2)' }}>
                           <td style={{ padding: '6px 8px', fontWeight: 600 }}>{row.variable}</td>
-                          <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)' }}>{row.base_value}</td>
-                          <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.stressed_value}</td>
+                          <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)' }}>{maskMoneyValues(String(row.base_value ?? ''), privacyMode)}</td>
+                          <td style={{ textAlign: 'right', padding: '6px 8px' }}>{maskMoneyValues(String(row.stressed_value ?? ''), privacyMode)}</td>
                           <td style={{ textAlign: 'right', padding: '6px 8px' }}>
                             {privacyMode ? '••%' : `${row.pfire_base?.toFixed(1) ?? '—'}%`}
                           </td>

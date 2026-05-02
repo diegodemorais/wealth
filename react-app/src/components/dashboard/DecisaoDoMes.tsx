@@ -363,7 +363,7 @@ export default function DecisaoDoMes({
             </div>
             <div data-testid="cambio-mercado" className="bg-slate-700/40 rounded p-2.5 text-center">
               <div className="text-lg font-bold text-text">
-                {cambio != null ? `R$${cambio.toFixed(2)}` : '—'}
+                {cambio != null ? (privacyMode ? 'R$ ••••' : `R$${cambio.toFixed(2)}`) : '—'}
               </div>
               <div className="text-xs text-muted mt-1">
                 BRL/USD

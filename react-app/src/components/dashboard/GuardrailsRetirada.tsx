@@ -1,6 +1,7 @@
 "use client"
 
-import { fmtPrivacy } from '@/utils/privacyTransform';
+import { useUiStore } from '@/store/uiStore';
+import { maskMoneyValues } from '@/utils/privacyTransform';
 
 interface Guardrail {
   id: string
@@ -22,6 +23,7 @@ const priorityStyle = {
 } as const
 
 export function GuardrailsRetirada({ guardrails }: GuardrailsRetiradaProps) {
+  const privacyMode = useUiStore(s => s.privacyMode);
   return (
     <div style={{ overflowX: 'auto' }}>
       <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '8px', marginTop: 0 }}>
@@ -41,9 +43,9 @@ export function GuardrailsRetirada({ guardrails }: GuardrailsRetiradaProps) {
             const style = priorityStyle[guardrail.prioridade]
             return (
               <tr key={guardrail.id} style={{ borderBottom: '1px solid var(--border)', backgroundColor: style.rowBg }}>
-                <td style={{ padding: '6px 8px', fontWeight: 500 }}>{guardrail.guardrail}</td>
-                <td style={{ padding: '6px 8px', fontFamily: 'monospace' }}>{guardrail.condicao}</td>
-                <td style={{ padding: '6px 8px' }}>{guardrail.acao}</td>
+                <td style={{ padding: '6px 8px', fontWeight: 500 }}>{maskMoneyValues(guardrail.guardrail, privacyMode)}</td>
+                <td style={{ padding: '6px 8px', fontFamily: 'monospace' }}>{maskMoneyValues(guardrail.condicao, privacyMode)}</td>
+                <td style={{ padding: '6px 8px' }}>{maskMoneyValues(guardrail.acao, privacyMode)}</td>
                 <td style={{ padding: '6px 8px', textAlign: 'right' }}>
                   <span
                     style={{

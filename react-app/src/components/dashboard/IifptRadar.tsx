@@ -18,7 +18,7 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { EChart } from '@/components/primitives/EChart';
 import { EC, EC_TOOLTIP } from '@/utils/echarts-theme';
 import { useUiStore } from '@/store/uiStore';
-import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtPrivacy, pvText } from '@/utils/privacyTransform';
 import { useChartResize } from '@/hooks/useChartResize';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 

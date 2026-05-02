@@ -36,7 +36,8 @@ export interface FeeImpactChartProps {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function fmtBRL(v: number, priv: boolean): string {
-  if (priv) return `${((v / 1e6)).toFixed(1)}M (%)`; // relative shape preserved
+  // DEV-privacy-deep-fix: privacy mode masks instead of transforming
+  if (priv) return 'R$ ••••';
   if (v >= 1e9) return `R$${(v / 1e9).toFixed(2)}B`;
   if (v >= 1e6) return `R$${(v / 1e6).toFixed(1)}M`;
   return `R$${(v / 1e3).toFixed(0)}k`;
@@ -44,8 +45,7 @@ function fmtBRL(v: number, priv: boolean): string {
 
 function fmtAxisBRL(v: number, priv: boolean): string {
   if (priv) {
-    // Show % of max to preserve shape without revealing amounts
-    return `${(v / 1e6).toFixed(0)}M`;
+    return 'R$ ••••';
   }
   if (v >= 1e9) return `${(v / 1e9).toFixed(1)}B`;
   if (v >= 1e6) return `${(v / 1e6).toFixed(1)}M`;

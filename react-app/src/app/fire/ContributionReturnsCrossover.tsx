@@ -13,7 +13,7 @@ import { useMemo } from 'react';
 import { EC, EC_AXIS_LABEL, EC_AXIS_LINE, EC_SPLIT_LINE, EC_TOOLTIP } from '@/utils/echarts-theme';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EChart } from '@/components/primitives/EChart';
-import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtPrivacy, pvText } from '@/utils/privacyTransform';
 
 interface CrossoverTooltipParam {
   axisValue?: string;
@@ -141,7 +141,9 @@ export function ContributionReturnsCrossover({
           } else if (pt?.capital_inicial_brl) {
             const cap = pt.capital_inicial_brl.toLocaleString('pt-BR');
             const dca = (pt.aporte_dca_brl ?? 0).toLocaleString('pt-BR');
-            extraNote = `<div style="color:${EC.muted};margin-top:4px;font-size:11px">Capital inicial: R$${cap} | DCA: R$${dca}</div>`;
+            extraNote = privacyMode
+              ? `<div style="color:${EC.muted};margin-top:4px;font-size:11px">Capital inicial: R$ •••• | DCA: R$ ••••</div>`
+              : `<div style="color:${EC.muted};margin-top:4px;font-size:11px">Capital inicial: R$${cap} | DCA: R$${dca}</div>`;
           }
           return `<div style="font-size:12px"><b>${year}</b><br/>${lines}${extraNote}</div>`;
         },
@@ -275,8 +277,8 @@ export function ContributionReturnsCrossover({
       {/* Notes */}
       <div style={{ marginTop: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
         Linha sólida = histórico real. Linha tracejada = projeção. Banda = cenários {(crc.taxa_nominal_stress * 100).toFixed(0)}%–{(crc.taxa_nominal_fav * 100).toFixed(0)}% nominal.
-        Diamante amarelo = aporte inclui capital inicial não-DCA (2021: conversão XP R$252k; 2022: FIIs Jan R$72k).
-        † 2026 = Jan–Abr realizado + Mai–Dez estimado @ R$25.000/mês e 9% nominal.
+        Diamante amarelo = aporte inclui capital inicial não-DCA (2021: conversão XP {pvText('R$252k', privacyMode)}; 2022: FIIs Jan {pvText('R$72k', privacyMode)}).
+        † 2026 = Jan–Abr realizado + Mai–Dez estimado @ {pvText('R$25.000', privacyMode)}/mês e 9% nominal.
       </div>
     </div>
   );

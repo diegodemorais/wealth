@@ -45,7 +45,11 @@ export default defineConfig({
       // Includes interactive specs (e.g. fire-simulator-sliders) that need
       // full JS hydration, only available against the dev server.
       name: 'semantic',
-      testMatch: ['**/semantic-smoke.spec.ts', '**/fire-simulator-sliders.spec.ts'],
+      testMatch: [
+        '**/semantic-smoke.spec.ts',
+        '**/fire-simulator-sliders.spec.ts',
+        '**/privacy-regression.spec.ts',
+      ],
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'http://localhost:3002',

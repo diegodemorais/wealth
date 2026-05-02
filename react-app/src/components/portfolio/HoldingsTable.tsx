@@ -52,7 +52,7 @@ export function HoldingsTable() {
   const fmtUsd = (v: number) => (fmtPrivacy(v / 1000, privacyMode, { prefix: '$' }));
   const fmtBrl = (v: number) => (fmtPrivacy(v / 1000, privacyMode));
   const fmtPct = (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
-  const fmtPm  = (v: number) => `$${v.toFixed(2)}`;
+  const fmtPm  = (v: number) => privacyMode ? '$ ••••' : `$${v.toFixed(2)}`;
 
   const bucketColors: Record<string, string> = {
     SWRD: 'var(--accent)',

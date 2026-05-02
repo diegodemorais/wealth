@@ -4,6 +4,7 @@ import React from 'react';
 import { CheckCircle, AlertTriangle, AlertCircle } from 'lucide-react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { fmtBrlPrivate } from '@/utils/formatters';
 
 interface RunwayYear {
   year: number;
@@ -33,13 +34,7 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
 }) => {
   const { privacyMode } = useUiStore();
 
-  const fmtBrl = (val: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      maximumFractionDigits: 0,
-    }).format(val);
-  };
+  const fmtBrl = (val: number) => fmtBrlPrivate(val, privacyMode);
 
   const runwayData: RunwayYear[] = [];
   let currentBalance = poolCurrentValue;

@@ -502,7 +502,7 @@ export function FireSimuladorSection() {
             onChange={e => { setAporte(+e.target.value); onSliderChange(); }}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            <span>R$5k</span><span>R$100k</span>
+            <span>{privacyMode ? 'R$ ••••' : 'R$5k'}</span><span>{privacyMode ? 'R$ ••••' : 'R$100k'}</span>
           </div>
         </div>
         <div className="slider-row">
@@ -528,7 +528,7 @@ export function FireSimuladorSection() {
             onChange={e => { setCusto(+e.target.value); onSliderChange(); }}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            <span>R$150k</span><span>R$500k</span>
+            <span>{privacyMode ? 'R$ ••••' : 'R$150k'}</span><span>{privacyMode ? 'R$ ••••' : 'R$500k'}</span>
           </div>
         </div>
       </div>

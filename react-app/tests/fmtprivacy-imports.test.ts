@@ -52,8 +52,9 @@ function analyzeComponentFile(filePath: string): ComponentAnalysis {
   const fileName = filePath.split('/').pop() || 'unknown';
   const componentName = fileName.replace('.tsx', '').replace('.ts', '');
 
-  // Check for import statement
+  // Check for import statement (any privacy helper from privacyTransform counts)
   const hasImport =
+    /import\s+{\s*[^}]*\b(fmtPrivacy|fmtPrivacyUsd|maskMoneyValues|pvText|pvMoney|pvAxisLabel|pvArray)\b[^}]*}\s*from\s*['"]@\/utils\/privacyTransform['"]/.test(content) ||
     /import\s+{\s*fmtPrivacy/.test(content) ||
     /import\s+{\s*[^}]*fmtPrivacy[^}]*}/.test(content);
 
@@ -90,6 +91,8 @@ function analyzeComponentFile(filePath: string): ComponentAnalysis {
     /fmtPrivacy\s*\(/.test(content) ||
     /fmtPrivacyUsd\s*\(/.test(content) ||
     /pvMoney\s*\(/.test(content) ||
+    /maskMoneyValues\s*\(/.test(content) ||
+    /pvText\s*\(/.test(content) ||
     /privacyMode/.test(content) ||
     /useEChartsPrivacy/.test(content);
 

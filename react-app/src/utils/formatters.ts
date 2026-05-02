@@ -139,6 +139,22 @@ export function fmtBrlCompact(value: number, mFraction = 1): string {
 }
 
 /**
+ * Privacy-aware compact BRL formatter.
+ * Privacy on → "R$ ••••". Privacy off → "R$3.5M" / "−R$25k".
+ *
+ * Use this instead of declaring local fmtBrl in components — see DEV-privacy-deep-fix.
+ */
+export function fmtBrlPrivate(value: number, privacyMode: boolean): string {
+  if (privacyMode) return 'R$ ••••';
+  if (value === null || value === undefined || Number.isNaN(value)) return '—';
+  const abs = Math.abs(value);
+  const sign = value < 0 ? '−' : '';
+  if (abs >= 1e6) return `${sign}R$${(abs / 1e6).toFixed(2)}M`;
+  if (abs >= 1e3) return `${sign}R$${(abs / 1e3).toFixed(0)}k`;
+  return `${sign}R$${abs.toFixed(0)}`;
+}
+
+/**
  * Abbreviate large numbers
  * @example fmtShort(1234567) => "1,2M"
  */
