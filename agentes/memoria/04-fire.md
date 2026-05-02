@@ -178,3 +178,20 @@ FIRE deve participar de qualquer decisão de renda fixa que envolva vencimento d
 | 2026-03-20 | FR-001 v4 (HD-006) | Retornos com fontes academicas + BRL: acum 5,84% / desacum 4,57%-5,00%. Pat R$10,96M. Limite R$384k/ano. IPCA+ 10% (nao 20%). |
 | 2026-04-07 | FR-withdrawal-engine | 5 estratégias testadas (10k sims). Guardrails 90.4%, GK 91.0%, GK Hybrid 91.0%. Guardrails aprovados: vol R$41k vs GK R$189k |
 | 2026-04-07 | FR-rebalance-desacumulacao | Opção D: spending-based trimestral aprovada. Safety valve 10pp. Nunca venda com lucro para rebalancear |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Erros conhecidos (retro 2026-03-19)
+- Nao recalculou Monte Carlo com IPCA+ 10% (delta imaterial, mas deveria ter calculado)
+- Deveria ter aberto issue proativamente para atualizar projecoes
+
+### Erros conhecidos (retro 2026-03-27)
+- VCMH 7% aceito sem questionar — Diego teve que puxar a sensibilidade com dado real
+- Guardrails nos scripts (R$220k, R$180k) nao alinhados com carteira.md aprovada — model risk silencioso
+
+### Retro 2026-04-22 (nota: 8.0/10 — melhor agente analítico)
+- **Bem:** SWR revisado com 3 fontes (ERN/Pfau/Blanchett). Filho-drawdown proativo. IR desacumulação modelado.
+- **Mal:** Double-count saúde no MC não detectado — pego na auditoria.
+- **Cross-feedback recebido:** Advocate: "double-count/IR cancelaram por coincidência" → ACEITA monitorar.

@@ -278,3 +278,14 @@ Dado crítico para FR-currency-mismatch-fire. Atualizado 2026-04-03 via FRED DEX
 | 2026-03-18 | RF-001: cenario macro para Renda+ | Base (50-55%): gatilho 6,0% em 12-18m. Pessimista (25-30%): 8%+ se fiscal deteriorar. Risco: eleicoes 2026 |
 | 2026-03-20 | Revalidacao profunda da carteira | Carteira bem posicionada. 13% soberano BR adequado. IPCA+ 2040 ~7% no percentil 80-85. Renda+ gatilho 6,0% prob ~40-45%. Riscos: Iran/petroleo, desancoragem, fiscal pre-eleitoral. Nenhuma mudanca de estrategia recomendada |
 | 2026-03-20 | Contexto macro para 4 debates do time | CAPE EUA ~38 (caro), EM ~12-14 (barato). Fiscal BR: divida 95%->99% (IMF). Confisco prob <2%, friccao cambial 8-12%. Bear global prolongado: improvavel para carteira diversificada. Value spread ~p70-80 (favoravel). 89% equity defensavel se diversificado |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Erros conhecidos (retro 2026-03-19)
+- Nao emitiu alerta proativo pos-corte Selic — regra corrigida
+
+### Retro 2026-04-22 (nota: 2.0/10 — pior performance)
+- **Mal:** Snapshot abril pendente 3 retros consecutivas. Escalado como obrigatório na retro 04/03 e não executado.
+- **Ação OBRIGATÓRIA:** Executar snapshot na próxima sessão. Qualquer atraso = revisão do perfil.

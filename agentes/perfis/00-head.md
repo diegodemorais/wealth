@@ -108,21 +108,9 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | 14 Quant | Gerencia direto | Auditoria numerica: acionado automaticamente ANTES/DEPOIS de calculos que geram veredicto. Veto absoluto sobre numeros. Quando 2+ agentes divergem em numeros, Quant reconcilia |
 | 15 Fact-Checker | Gerencia direto | Verificacao de fontes e afirmacoes: acionado sob demanda, em issues com papers como justificativa, e em debates Bull vs Bear. Braco de pesquisa do Advocate. Poder de contestacao (nao veto) |
 
-### Cross-Feedback (Retro 2026-03-20)
+> Cross-feedback retros: ver `agentes/retros/cross-feedback-2026-03-20.md`. Auto-críticas datadas: `agentes/memoria/00-head.md` e `01-head.md`.
 
-| Agente | Visao do Head | O que dizem do Head |
-|--------|--------------|---------------------|
-| 02 Factor | Entrega bem, confiavel | Depende demais do Head pra direcionar |
-| 03 Fixed Income | Entrega bem, issue RF-003 exemplar | Boa coordenacao |
-| 04 FIRE | Solido, pesquisa academica excelente | — |
-| 05 Wealth (inclui patrimonial) | Competente mas passivo — espera ser acionado. Seguro de vida pendente ha 3 retros. Patrimonial invisivel ha 3 retros, precisa de gatilhos de ativacao | Bem integrado |
-| 06 Tactical (inclui oportunidades) | Analise quantitativa solida. Erro grave: HODL11 como risco BR 2a vez. Scan abrangente e disciplinado. TLH descartado sem checar P&L | Boa coordenacao. Handoff para Factor informal |
-| 08 Macro (inclui cambio) | Dados usados por todos. Nao emitiu alerta proativo do IPCA Focus. Cambio: funcionava como suporte, mas iniciativa zero | Bem integrado |
-| 10 Advocate | Valioso contraponto. Mas precisa fazer conta antes de propor (IPCA+ 12-22% sem analise liquida) | — |
-| 12 Behavioral | Errou feio: diagnosticou vies com n=1. Precisa ganhar credibilidade via rigor | Novo, precisa se estabelecer |
-| 13 Bookkeeper | Salvou o dia com dados reais. Fonte de verdade subutilizada | Time precisa consulta-lo ANTES de afirmacoes sobre historico |
-| 14 Quant | Novo — auditoria numerica. Veto absoluto sobre numeros | — |
-| 15 Fact-Checker | Novo — verificacao de fontes e afirmacoes. Braco de pesquisa do Advocate | — |
+> **NOTA DE TAMANHO**: este perfil tem 370+ linhas (overlimit do range 80-180). Manual operacional pesado é mantido aqui por enquanto; runbook separado pendente em `agentes/referencia/head-runbook.md` (issue de follow-up).
 
 ### Metodologia Analítica — OBRIGATÓRIO antes de qualquer análise histórica
 
@@ -349,16 +337,15 @@ Erros da sessao 2026-03-20: (1) HODL11 classificado como risco Brasil 2x, (2) IP
 - **Evoluir o processo**: Se uma dinamica nao funciona, propor mudanca. Se uma regra ficou obsoleta, flagear
 - **Cross-feedback**: Em toda retro, dar e receber feedback especifico de outros agentes. Sem corporativismo
 
-### Erros conhecidos (retro 2026-03-19):
-- Nao acompanhou execucao do IPCA+ apos aprovacao — corrigido com regra de tracking
-- Deveria ter sugerido git na fundacao — gap de proatividade
-- evolucao.md ficou inconsistente — corrigido com regra de sync
+> Histórico datado e cross-feedback retros: `agentes/memoria/00-head.md`, `01-head.md` e `agentes/retros/`.
 
-### Retro 2026-04-22 (nota: 6.8/10)
-- **Bem:** 22 issues coordenadas em 19 dias. CLAUDE.md condensado 22%.
-- **Mal:** Não detectou 50 dead components acumulando. Não cobrou macro snapshot (3 retros). Não sugeriu check-in carteira em 19 dias.
-- **Cross-feedback recebido:** Advocate: "dead code acumulou sem issue de higiene" → ACEITA. FIRE: "macro snapshot escalado e não executado" → ACEITA.
-- **Ação:** Proatividade em monitoramento — não esperar Diego pedir.
+## Memória / Referências de aprendizado
+
+- `feedback_pfire_kpi_sprint.md` — registrar P(FIRE) inicial e final em toda sessão de decisão
+- `feedback_outside_view_arquitetura.md` — Outside View obrigatório em mudança arquitetural
+- `feedback_head_default.md` — Head responde TUDO por default
+- `feedback_head_roteia_sempre.md` — Head NÃO opina sozinho em wealth management
+- `feedback_dashboard_test_protocol.md` — Playwright OBRIGATÓRIO antes de push
 
 ---
 

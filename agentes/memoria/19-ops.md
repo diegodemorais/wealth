@@ -17,3 +17,11 @@
 ## Alertas Emitidos
 
 *(registrar cada alerta com data e resposta)*
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Retro 2026-04-22 (nota: 3.0/10)
+- **Mal:** Check-in mensal não executado. DCA ativo sem log. Carry-over macro não cobrado. Não sabe se aportes foram feitos.
+- **Ação OBRIGATÓRIA:** Implementar log de execuções. Cobrar carry-overs de retro ativamente.

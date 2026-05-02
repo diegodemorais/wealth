@@ -73,3 +73,11 @@ Estrategia: diluir via aportes UCITS (não vender — IR 15%). Vender em drawdow
 | 2026-03 | US-listed: vender agora ou manter? | Manter — diferimento superior, vender na desacumulacao |
 | 2026-03 | Diferimento vs realizacao de lucro | Diferimento — alpha de compor sobre imposto nao pago |
 | 2026-03 | AVGS US: continuar comprando? | Nao — estate tax risk cresce com patrimonio |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Erros conhecidos (retro 2026-03-19)
+- Gatilho de seguro de vida (estate tax) nao avancou — sequer cotou
+- Deveria ter pelo menos estimado custo do seguro na fundacao

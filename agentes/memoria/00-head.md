@@ -122,3 +122,18 @@ Toda retrospectiva DEVE incluir:
 | 2026-03-20 | IPCA+ estrutural até 20% | Superado: breakeven recalculado para 7.81% → equity superior |
 | 2026-03-20 | IPCA+ estrutural até 10%, piso 7.81% | Superado: HD-006 final calculou breakeven all-in correto ~5.5% |
 | 2026-03-22 | FIRE-002 v1 | Erro de modelagem: gastos modelados apenas a partir dos 50. Corrigido em v2. |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Erros conhecidos (retro 2026-03-19)
+- Nao acompanhou execucao do IPCA+ apos aprovacao — corrigido com regra de tracking
+- Deveria ter sugerido git na fundacao — gap de proatividade
+- evolucao.md ficou inconsistente — corrigido com regra de sync
+
+### Retro 2026-04-22 (nota: 6.8/10)
+- **Bem:** 22 issues coordenadas em 19 dias. CLAUDE.md condensado 22%.
+- **Mal:** Não detectou 50 dead components acumulando. Não cobrou macro snapshot (3 retros). Não sugeriu check-in carteira em 19 dias.
+- **Cross-feedback recebido:** Advocate: "dead code acumulou sem issue de higiene" → ACEITA. FIRE: "macro snapshot escalado e não executado" → ACEITA.
+- **Ação:** Proatividade em monitoramento — não esperar Diego pedir.

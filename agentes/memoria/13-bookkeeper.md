@@ -196,3 +196,12 @@ Diego e executor consistente acima da meta. Critica de "gap de execucao" feita e
 | 2026-03-30 | Check-in semanal | Equity $585,371 USD (-1,7% vs 23/Mar). Total ~R$3,372k (-3,4%). Câmbio R$5,25. Renda+ 2065 ~R$99,673 (MtM -11% em março, taxa subiu). HODL11 ~R$103,400 (BTC $67,822). IPCA+ DCA: 0/? tranches — leve atraso. Sem gatilhos atingidos. Sem operacoes novas. Não é M1 (mesmo mês que 23/Mar). |
 | 2026-04-25 | AUDITORIA FASE 2 — Integridade de Dados (Dashboard Health Score) | ✓ PASSED: Freshness SLA, Patrimônio reconciliado (R$3.472.335 = zero drift), P(FIRE) 86.3% > 85%. ⚠ ALERTAS: Drift IPCA+ -8.2pp (alvo 15%, atual 6.8%), gap R$396k a aportar. Drift equity +11.4pp. ✗ CRÍTICO: lotes.json não calcula valor_atual_brl (100% do equity = R$3.137k não reconcilia). Impacto: TLH reports e ir_diferido não confiáveis. Detalhes: `/tmp/auditoria_bookkeeper_fase2.txt`. Recomendações: (1) Consertar ibkr_sync.py (CRÍTICO), (2) Executar DCA T3 (ALTO), (3) Cron diário (MÉDIO). |
 | 2026-05-01 | RECONCILIAÇÃO PÓS-SCAN — Atualização de Macro e RF | ✓ Scan completado. Divergências encontradas: IPCA+ 2040 +19bps (7.21% → 7.40%), Renda+ 2065 +3pp (6.93% → 6.96%), Câmbio -3.8% (R$5.156 → R$4.96, BRL apreciado), BTC +8.8% ($71.8k → $78.1k). Status gatilhos: IPCA+ continua ativo (7.40% > 6.0% piso), Renda+ não compra novo (6.96% < 6.5%), sem alertas críticos (CDS 138bps < 300bps). Carteira.md atualizado. |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Retro 2026-04-22 (nota: 6.5/10)
+- **Bem:** CORE-portfolio-history completo e correto.
+- **Mal:** carteira.md desatualizado há 21 dias (última: 04/01).
+- **Ação:** Reconciliar patrimônio na próxima sessão.

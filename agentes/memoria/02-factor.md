@@ -147,3 +147,12 @@ Dados: Dev ex-US e EM 5-factor (fev/2026). Global apenas até jun/2019 (Bloomber
 | 2026-04-01 | Redistributicao JPGL→equity | Zero-based: JPGL 0%. Slash por redundancia (corr 0.95 com SWRD) e TER extra 11bps |
 | 2026-03 | AVGC vs JPGL vs DDGC (FI-003) | JPGL confirmado historicamente — mas eliminado 2026-04-01 por redundancia |
 | 2026-03 | IPCA+ vs equity nos proximos 11 anos | Equity after-tax superior (calculado com premissas antigas — recalcular com 4.85% base) |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Retro 2026-04-22 (nota: 7.7/10)
+- **Bem:** Multi-model validou 5 fontes. Zero-Based convergiu independente a 50/30/20.
+- **Mal:** Passivo quando não acionado. ETF radar scan não executado no período.
+- **Ação:** Monitoramento proativo de ETF radar.

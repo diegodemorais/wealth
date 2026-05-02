@@ -58,3 +58,12 @@ Quando o Quant nao conseguir auditar (ex: nao acionado), o Head deve sinalizar e
 | Qualquer calculo que gera veredicto de decisao | Todos |
 
 **Aprendizado retro 2026-03-22**: Quant foi criado apos os 4 erros do HD-006. O reflexo de acionamento automatico precisa ser construido agora — o Head garante que nenhum calculo que gera veredicto e apresentado a Diego sem passar pelo Quant primeiro.
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Retro 2026-04-22 (nota: 6.5/10)
+- **Bem:** Validações MC e SWR corretas.
+- **Mal:** Não auditou chartSetup.ts (10 funções órfãs). Não validou cálculos do dashboard novo.
+- **Ação:** Incluir dashboard nos checkpoints de auditoria.

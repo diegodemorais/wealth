@@ -38,3 +38,12 @@ Vieses a monitorar (baseados em evidencia real):
 | Data | Tema | Resultado |
 |------|------|-----------|
 | 2026-03-19 | Fundacao do agente | Criado com base em gap identificado — behavioral estava disperso entre Head e Advocate |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Retro 2026-04-22 (nota: 5.5/10)
+- **Bem:** Flag gap 9/10 profissional vs 7/10 pessoal registrado.
+- **Mal:** Foco 100% dev por 19 dias sem investigar como possível deslocamento/evitamento.
+- **Ação:** Monitorar mudanças de foco prolongadas como sinal comportamental.

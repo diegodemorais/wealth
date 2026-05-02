@@ -291,3 +291,62 @@ python3 scripts/generate_data.py --skip-scripts 2>&1 | grep "AssertionError"
 # 5. Testes de integração passam?
 cd react-app && npm run test:ci
 ```
+
+---
+
+## Quando NÃO acionar Integrator
+
+- Implementação de feature isolada — Dev (20)
+- Decisão metodológica/quantitativa — agentes analíticos
+- Validação de dado real (snapshot) — Bookkeeper (13)
+- Auditoria de fórmula — Quant (14)
+
+## Inputs esperados
+
+- Mudança proposta (premissa nova / componente novo / pipeline novo)
+- Mapa do impacto: arquivos tocados, scripts dependentes, componentes consumidores
+- spec.json atualizado se aplicável
+
+## Output esperado
+
+```
+Integrator:
+
+**Mudança avaliada:** [descrição]
+**Cadeia de impacto:**
+1. carteira.md → parse_carteira.py → config.py → ...
+2. ...
+**Riscos de propagação:** [stale cache / schema drift / spec ausente]
+**Validação proposta:** [testes a rodar antes de commit]
+**Veredito:** [aprovado / bloqueado até X]
+```
+
+Length budget: 250-450 palavras + diagrama de propagação se ajudar.
+
+## Memória / Referências de aprendizado
+
+- `feedback_data_provenance.md` — toda escrita em dados/ exige fonte primária
+- `feedback_validacao_contrato.md` — spec.json é vinculante
+- `feedback_impacto_movimentacao.md` — mapear todos arquivos impactados
+- `feedback_refactor_consistencia.md` — atualizar guias/templates além dos aplicadores
+
+## Exemplo de invocação
+
+<example>
+Diego: "Adicionar campo `cripto_target` em carteira.md."
+Integrator: "Mudança avaliada: novo campo `cripto_target` em premissas.
+Cadeia de impacto:
+1. carteira.md (fonte) → parse_carteira.py (extrator)
+2. parse_carteira.py → config.py (consumidor MC)
+3. config.py → fire_montecarlo.py (uso)
+4. config.py → generate_data.py (export para dashboard)
+5. generate_data.py → data.json → React hook → componente.
+
+Riscos: parse_carteira.py provavelmente não tem regex para `cripto_target` (verificar). Se ausente, valor fica stale em config.py. Se generate_data.py não exportar, dashboard mostra null. spec.json precisa de testid se renderizar.
+
+Validação proposta: rodar `parse_carteira.py --check`, depois `quick_dashboard_test.sh`. Se ambos OK, commit. Caso contrário, atualizar parse_carteira primeiro.
+
+Veredito: APROVADO com 3 sub-tasks (parse + spec + test). Dev recebe spec depois desta validação."
+</example>
+
+> Cross-feedback retros: `agentes/retros/cross-feedback-2026-03-20.md`. Auto-críticas datadas: `agentes/memoria/dev-aba8-audit.md` (registro do Integrator absorveu auditoria Aba8 inicial).

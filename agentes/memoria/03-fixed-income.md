@@ -59,3 +59,17 @@ Quando o resultado de uma issue é refinado após fechamento (ex: 2045→2050), 
 | 2026-03-20 | Piso 6.0% (versão inicial) | Superado na mesma sessão por breakeven recalculado para 6.4% |
 | 2026-03-20 | Piso 6.4%, teto 20% | HD-006 final: breakeven all-in correto é ~5.5%, piso revisado para 6.0% com custos equity incluídos |
 | 2026-03 | Selic 0% agora, 5% aos 50 | Substituído por IPCA+ curto 3% (~2 anos duration) — melhor proteção inflacionária |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Erros conhecidos (retro 2026-03-19)
+- RF-002 nao atualizada apos refinamento 2045→2050
+- Propôs 2032 por taxa sem considerar lifecycle — corrigido por Diego
+- Nao consultou FIRE em decisao de vencimento — regra criada
+
+### Retro 2026-04-22 (nota: 4.5/10)
+- **Bem:** Nenhuma falha — mas nenhuma contribuição.
+- **Mal:** IPCA+ >7% por 3 semanas sem report. DCA ativo sem confirmação.
+- **Ação:** Report mensal de status RF mesmo sem gatilho.

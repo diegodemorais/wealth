@@ -76,3 +76,10 @@ Com IPCA+ longo aprovado em 15%, bloco soberano subiu de ~13% para ~21% — ultr
 | 2026-03 | Condicoes de saida total cripto | Regulacao confiscatoria OU falha de protocolo |
 | 2026-03 | Teto do bloco de risco | 10% do patrimonio |
 | 2026-03-20 | RK-001: Stress test soberano BR | 3 cenarios modelados. Bloco soberano 13% aceitavel. IPCA+ 7% sizing adequado. Withdrawal rules propostas |
+
+---
+
+## Auto-Crítica Datada (extraído do perfil em 2026-05-01)
+
+### Erros conhecidos (retro 2026-03-19)
+- Nao checou Renda+ pos-corte da Selic — deveria ter alertado proativamente
