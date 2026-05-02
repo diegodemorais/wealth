@@ -55,6 +55,14 @@ def test_fixture_macro_invalid_fails():
     assert "Selic" in out
 
 
+def test_fixture_sortino_outlier_fails():
+    """Fixture com Sortino 19.259 (bug 2026-05-02) deve falhar no gate."""
+    fixture = FIXTURES / "data_sortino_outlier.json"
+    code, out = run_gate(fixture)
+    assert code == 1, f"gate deveria falhar com Sortino outlier:\n{out}"
+    assert "rolling_sharpe.sortino" in out
+
+
 def test_anti_cliff_logic_unit():
     """Threshold conjunto (rel E abs) — não deve falsar em séries pequenas."""
     sys.path.insert(0, str(ROOT / "scripts"))
@@ -100,6 +108,7 @@ def test_all_fixtures_exist():
         "data_drawdown_cliff.json",
         "data_pfire_invalid.json",
         "data_macro_invalid.json",
+        "data_sortino_outlier.json",
     ]
     for name in expected:
         assert (FIXTURES / name).exists(), \

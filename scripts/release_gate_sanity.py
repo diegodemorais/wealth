@@ -136,6 +136,16 @@ SANITY_ASSERTIONS: list[tuple[str, Callable[[Any], bool], str]] = [
         lambda v: isinstance(v, (int, float)) and -1 <= v <= 3,
         "Sharpe backtest target em [-1, 3]",
     ),
+    # Sortino rolling — todas as observações finitas em [-10, 10]
+    # Origem: bug 2026-05-02 (sortino[2024-11] = 19,259, janela sem downside).
+    (
+        "rolling_sharpe.sortino",
+        lambda v: isinstance(v, list) and all(
+            x is None or (isinstance(x, (int, float)) and -10 <= x <= 10)
+            for x in v
+        ),
+        "rolling_sharpe.sortino: todos os valores finitos em [-10, 10] (None = janela degenerada)",
+    ),
 ]
 
 

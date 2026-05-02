@@ -39,7 +39,7 @@ from append_only import (
 #   - rolling_metrics.json   (Sharpe/Sortino/Vol/MaxDD rolling 12-mo)
 METODOLOGIA_VERSION_HISTORICO = "twr-md-v1"
 METODOLOGIA_VERSION_RETORNOS = "twr-md-v1"
-METODOLOGIA_VERSION_ROLLING = "rolling-12m-v1"
+METODOLOGIA_VERSION_ROLLING = "rolling-12m-v2"  # v2: Sortino cap [-10,10] + None em downside_dev~0
 
 ROOT = Path(__file__).parent.parent
 IBKR_CSV = ROOT / "analysis" / "raw" / "U5947683.TRANSACTIONS.20210408.20260331.csv"
@@ -1663,10 +1663,24 @@ def _generate_core_jsons(rows: list[dict], rebuild: bool = False):
             sharpe_usd = None
 
         # Sortino (BRL, downside deviation only)
+        # Cap [-10, 10] e None quando downside_dev é pequeno demais para ser estatisticamente
+        # significativo (janela sem retornos negativos suficientes → ratio explode).
+        # Origem: bug 2026-05-02 (sortino[2024-11] = 19,259) — janela sem retorno negativo
+        # produzia dd_std ~ 0 e Sortino → ∞ truncado arbitrariamente.
+        # Threshold 0.001% ao mês: ruído de ponto flutuante / janela praticamente sem downside.
+        DD_STD_MIN = 1e-3  # %ao mês; abaixo disso, Sortino não é confiável
         downside = [v for v in excess if v < 0]
         dd_sq = sum(v ** 2 for v in downside) / WINDOW
         dd_std = math.sqrt(dd_sq)
-        sortino = round(mean_ex / dd_std * math.sqrt(12), 3) if dd_std > 0 else 0
+        if dd_std < DD_STD_MIN:
+            sortino = None
+        else:
+            sortino_raw = mean_ex / dd_std * math.sqrt(12)
+            # Cap absoluto [-10, 10]: valores fora desse range indicam window degenerada.
+            if abs(sortino_raw) > 10:
+                sortino = None
+            else:
+                sortino = round(sortino_raw, 3)
 
         # Volatilidade anualizada (BRL, retornos totais)
         mean_ret = sum(win) / WINDOW
