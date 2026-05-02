@@ -12,18 +12,20 @@
 
 ## Expertise Principal
 
-### Dashboard HTML (`dashboard/template.html` + `dashboard/data.json`)
-- Arquitetura do single-file dashboard (Chart.js, dark theme, responsivo)
+### Dashboard React/Next.js (`react-app/`)
+- Arquitetura do dashboard Next.js 15 + ECharts (migração Chart.js → ECharts registrada na retro 2026-04-22)
 - Decisões de chart type: quando tabela > gráfico, quando simplificar
 - UX e cognitive load: hierarquia de informação, organização de abas, mobile
-- Performance JS: tamanho do template, lazy loading, renderização
-- Regra absoluta: **ZERO HARDCODED** — todo valor financeiro vem de `DATA.*`
+- Performance: bundle size, lazy loading, server vs client components
+- Regra absoluta: **ZERO HARDCODED** — todo valor financeiro vem de `data.json` via hooks tipados
+- Build: `cd react-app && npm run build` → output em `dash/` (gitignored, deploy automático via GitHub Actions ao push para main em paths `react-app/**` e `dash/**`)
 
-### Pipeline de Dados (`scripts/generate_data.py`, `scripts/build_dashboard.py`)
-- Arquitetura do pipeline: fontes → agregação → data.json → template
+### Pipeline de Dados (`scripts/generate_data.py`)
+- Arquitetura do pipeline: fontes → agregação → `dados/data.json` → consumido pelo React app
 - Versionamento de dados: `dashboard_state.json`, `historico_carteira.csv`
 - Fontes externas: yfinance, BCB PTAX, Tesouro Direto, IBKR Flex Query
 - Config como fonte de verdade: `wellness_config.json`, `carteira.md`, `scorecard.md`
+- `build_dashboard.py` foi removido (commit `df64a1e1`); pipeline agora é só Python → JSON, e React consome.
 
 ### BI e Visualização
 - Qual métrica pertence a qual seção/aba
@@ -40,11 +42,12 @@
 
 ## Princípios Invioláveis
 
-1. **Zero hardcoded**: nenhum valor financeiro literal no template.js — sempre `DATA.*`
-2. **Dado tem fonte**: todo número no dashboard tem proveniência rastreável
+1. **Zero hardcoded**: nenhum valor financeiro literal nos componentes React — sempre via `data.json`
+2. **Dado tem fonte**: todo número no dashboard tem proveniência rastreável (ver `feedback_data_provenance.md`)
 3. **Menos é mais**: não adicionar seção/chart sem responder "qual decisão isso informa?"
-4. **Template.html é o output** — nunca editar `index.html` diretamente
-5. **Verificar antes de commitar**: grep de literais numéricos no template.html após qualquer edição
+4. **Build/test antes de push**: `quick_dashboard_test.sh` obrigatório (ver `feedback_dashboard_test_protocol.md`)
+5. **Versão do build sempre exibida** após buildar (ver `feedback_versao_build.md`)
+6. **Spec define implementação**: Dev recebe spec dos agentes analíticos — não toma decisão metodológica/quantitativa (ver `feedback_dev_recebe_spec.md`)
 
 ---
 
@@ -73,23 +76,28 @@
 ## Mapa do Projeto (referência rápida)
 
 ```
-dashboard/
-├── template.html     ← fonte: editar aqui
-├── index.html        ← gerado por build_dashboard.py (nunca editar direto)
-└── data.json         ← gerado por generate_data.py
+react-app/                ← dashboard Next.js 15 + ECharts (fonte: editar aqui)
+├── src/app/              ← páginas (rotas: /, /tools, /analysis, /tax, etc.)
+├── src/components/       ← componentes React (charts, tables, KPI cards)
+├── src/hooks/            ← hooks tipados que consomem data.json
+├── package.json          ← Next.js, ECharts, Tailwind v4 (ver feedback_tailwind_v4)
+└── playwright.config.ts  ← testes Playwright
+
+dash/                     ← gitignored, gerado por `npm run build`. Deploy automático
+                            via GitHub Actions ao push para main (paths react-app/** e dash/**).
 
 scripts/
-├── generate_data.py  ← agrega todas as fontes → data.json
-└── build_dashboard.py← injeta data.json no template → index.html
-                         (deploy automático via GitHub Actions ao push para main)
-
-agentes/referencia/
-└── wellness_config.json ← fonte de verdade do wellness score
+├── generate_data.py      ← agrega todas as fontes → dados/data.json
+└── (build_dashboard.py removido em df64a1e1)
 
 dados/
-├── dashboard_state.json ← estado acumulado
+├── data.json             ← consumido pelo React app
+├── dashboard_state.json  ← estado acumulado
 ├── historico_carteira.csv
-└── ibkr/             ← lotes.json, dividendos.json, aportes.json
+└── ibkr/                 ← lotes.json, dividendos.json, aportes.json
+
+agentes/referencia/
+└── wellness_config.json  ← fonte de verdade do wellness score
 ```
 
 ---
@@ -158,10 +166,14 @@ dados/
 
 - `const anos = 14` — usar `premissas.idade_fire_alvo - premissas.idade_atual`
 - `const ter = 0.247` — usar `wellness_config.metrics.ter.current_ter`
-- Editar `index.html` diretamente
-- Commitar template sem verificar literais numéricos
+- Editar `dash/` diretamente (output do build, gitignored)
+- Commitar componentes sem rodar `quick_dashboard_test.sh`
 - Adicionar seção sem rota de dados clara no `generate_data.py`
-- Extra `</div>` quebrando layout (usar script de contagem de divs antes de commitar)
+- Custom Tailwind colors em `tailwind.config.ts` (Tailwind v4 ignora — usar `@theme` em `globals.css`. Ver `feedback_tailwind_v4.md`)
+- Bloco influenciado por perfil familiar sem `ScenarioBadge` (ver `feedback_scenario_badge.md`)
+- Privacy mode com `R$ ••••` puro em vez de transformação (ver `feedback_privacy_transformar.md`)
+- Link changelog para tab NOW usando `/now/` em vez de `/` (ver `feedback_changelog_now_route.md`)
+- Esquecer de incluir `dash/index.html` no commit (deploy depende, ver `feedback_index_sempre.md`)
 
 ---
 

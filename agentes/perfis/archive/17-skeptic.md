@@ -1,3 +1,9 @@
+---
+deprecated: true
+deprecated_em: 2026-04-01
+sucessores: ["10-advocate", "15-fact-checker"]
+---
+
 # Perfil: Skeptic (Cético) — ⚠️ DEPRECIADO 2026-04-01
 
 > **Absorvido pelo Advocate (10) + Fact-Checker (15).** Função de "literatura contrária" delegada ao Advocate; função de verificação de fontes ao Fact-Checker. Não acionar mais este agente.
