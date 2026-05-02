@@ -1,37 +1,30 @@
 /**
- * privacyTransform.ts — Transforma valores monetários em modo privacy
+ * privacyTransform.ts — Mascaramento de valores monetários em modo privacy
  *
- * Em vez de mostrar "••••", mostra valores transformados que:
- * - Preservam proporções e tendências (gráficos mantêm forma)
- * - Não revelam o valor real
- * - Parecem números plausíveis
+ * Decisão (DEV-privacy-deep-fix, 2026-05-01):
+ * Abandonamos transformação matemática (FACTOR=0.07) — era reversível por
+ * inspeção do source-map. Agora mascaramos com `R$ ••••` / `$ ••••` puro.
  *
- * Regras:
- * - Valores monetários (R$, USD): transformados com fator oculto
- * - Percentuais (P(FIRE), drift, SWR, yields): mostrados como estão (não sensíveis)
- * - Gráficos: eixo Y transformado, forma preservada
- * - Tabelas de posições/lotes: valores transformados
- *
- * O fator é derivado internamente e NÃO é exposto na UI, no código-fonte
- * visível ao usuário, ou nos dados. Nenhuma informação na tela permite
- * reverter a transformação.
+ * Princípio: elemento visível, valor mascarado.
+ * - R$/USD absolutos → `R$ ••••` ou `$ ••••`
+ * - Percentuais (P(FIRE), drift, SWR, yields) → mostrados como estão
+ * - Charts: forma preservada (números reais), eixos/labels/tooltips mascarados
+ * - Tabelas: valores mascarados
  */
 
-// Fator fixo entre 5% e 10% do valor real.
-// Muda a ordem de grandeza (R$3.5M → R$245k), impossível inferir sem saber a escala.
-// Proporções preservadas — gráficos mantêm forma.
-const FACTOR = 0.07;
+const MASK_BRL = 'R$ ••••';
+const MASK_USD = '$ ••••';
 
 /**
- * Transform a monetary value for privacy display.
- * Returns a number that preserves relative proportions but hides absolute value.
+ * Identity transform — kept for API compatibility.
+ * In privacy mode, charts keep real shape; only labels/tooltips mask.
  */
 export function pvMoney(value: number): number {
-  return value * FACTOR;
+  return value;
 }
 
 /**
- * Format a monetary value for display, applying privacy transform if needed.
+ * Format a monetary value for display, returning a mask in privacy mode.
  */
 export function fmtPrivacy(value: number, privacyMode: boolean, opts?: {
   prefix?: string;
@@ -41,7 +34,15 @@ export function fmtPrivacy(value: number, privacyMode: boolean, opts?: {
 }): string {
   const { prefix = 'R$', suffix = '', decimals = 0, compact = true } = opts ?? {};
 
-  const v = privacyMode ? pvMoney(value) : value;
+  if (privacyMode) {
+    // Use prefix-aware mask (R$/USD/etc.)
+    const baseMask = prefix.trim().startsWith('$')
+      ? `${prefix} ••••`
+      : `${prefix} ••••`;
+    return suffix ? `${baseMask}${suffix}` : baseMask;
+  }
+
+  const v = value;
   const isNegative = v < 0;
   const absV = Math.abs(v);
 
@@ -65,22 +66,45 @@ export function fmtPrivacyUsd(value: number, privacyMode: boolean): string {
 }
 
 /**
- * Transform an array of values (for chart data).
- * Preserves shape, hides scale.
+ * Chart data passthrough — preserves shape in privacy mode.
+ * Labels/tooltips are masked separately via pvLabel/pvAxisLabel.
  */
-export function pvArray(values: number[], privacyMode: boolean): number[] {
-  if (!privacyMode) return values;
-  return values.map(v => v * FACTOR);
+export function pvArray(values: number[], _privacyMode: boolean): number[] {
+  return values;
 }
 
 /**
- * For chart axis labels — transform the tick value.
+ * For chart axis labels — returns mask in privacy mode, formatted value otherwise.
  */
 export function pvAxisLabel(value: number, privacyMode: boolean): string {
-  const v = privacyMode ? pvMoney(value) : value;
-  if (Math.abs(v) >= 1_000_000) return `R$${(v / 1_000_000).toFixed(1)}M`;
-  if (Math.abs(v) >= 1_000) return `R$${(v / 1_000).toFixed(0)}k`;
-  return `R$${v.toFixed(0)}`;
+  if (privacyMode) return MASK_BRL;
+  if (Math.abs(value) >= 1_000_000) return `R$${(value / 1_000_000).toFixed(1)}M`;
+  if (Math.abs(value) >= 1_000) return `R$${(value / 1_000).toFixed(0)}k`;
+  return `R$${value.toFixed(0)}`;
+}
+
+/**
+ * Generic privacy-aware text helper — for hardcoded copy strings.
+ * Returns •••• in privacy mode, original text otherwise.
+ *
+ * Use for copy strings like "Guardrails cortam de R$250k para R$180k" where
+ * the value is hardcoded (not from data). Wrap each literal: pvText("R$250k", priv).
+ */
+export function pvText(text: string, privacyMode: boolean): string {
+  return privacyMode ? '••••' : text;
+}
+
+/**
+ * Mask all monetary values in a string (regex) — for changelog and rich-text copy.
+ * Catches R$X, R$X.X, R$Xk, R$XM, R$X/mês, etc.
+ */
+export function maskMoneyValues(s: string, privacyMode: boolean): string {
+  if (!privacyMode) return s;
+  return s
+    // R$ values: R$1, R$1.5, R$1,5k, R$10k/mês, R$1.5M, etc.
+    .replaceAll(/R\$\s*[\d.,]+\s*[kKMm]?(\/\w+)?/g, 'R$ ••••')
+    // USD values: $1, $1.5, $1k, $1.5M
+    .replaceAll(/\$\s*[\d.,]+\s*[kKMm]?(\/\w+)?/g, '$ ••••');
 }
 
 /**

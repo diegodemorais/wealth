@@ -240,26 +240,19 @@ describe('Coast FIRE — output object shape', () => {
 // ─── 5. Privacy — monetary values masked in privacy mode ─────────────────────
 
 describe('Coast FIRE — privacy mode', () => {
-  it('pvMoney masks the coast number (not real value)', () => {
-    // In privacy mode, the displayed value must differ from the real one
-    const real = CN_BASE;
-    const masked = pvMoney(real);
-    expect(masked).not.toBeCloseTo(real, -2); // differ by more than hundreds
+  // DEV-privacy-deep-fix (2026-05-01): pvMoney is now identity (charts keep
+  // shape, labels mask via fmtPrivacy / pvLabel). What matters is that the
+  // FORMATTED output in privacy mode contains no digits — see
+  // privacy-mode.test.ts and privacy-magnitude.test.ts.
+
+  it('pvMoney is identity (data passthrough)', () => {
+    expect(pvMoney(CN_BASE)).toBe(CN_BASE);
   });
 
-  it('pvMoney masks gap_base', () => {
-    const gap = CN_BASE - PREMISSAS.patrimonio_atual;
-    const masked = pvMoney(gap);
-    expect(masked).not.toBeCloseTo(gap, -2);
-  });
-
-  it('pvMoney preserves proportions (fav/base ratio preserved)', () => {
-    // Ratio of masked values equals ratio of real values
-    const maskedBase = pvMoney(CN_BASE);
-    const maskedFav  = pvMoney(CN_FAV);
+  it('pvMoney preserves proportions (ratios unchanged)', () => {
     const realRatio   = CN_FAV / CN_BASE;
-    const maskedRatio = maskedFav / maskedBase;
-    expect(maskedRatio).toBeCloseTo(realRatio, 5);
+    const passedRatio = pvMoney(CN_FAV) / pvMoney(CN_BASE);
+    expect(passedRatio).toBeCloseTo(realRatio, 6);
   });
 
   it('boolean passou_base is NOT masked (it is not a monetary value)', () => {
