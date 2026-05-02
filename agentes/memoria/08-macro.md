@@ -22,12 +22,61 @@
 
 ---
 
-## Snapshot Abril/2026 (revalidado 25/04/2026 — Auditoria Fase 2 Macro)
+## Snapshot Maio/2026 (atualizado 01/05/2026)
 
-> **Data do snapshot original:** 2026-04-03
-> **Revalidacao anterior:** 2026-04-22
-> **Revalidacao atual:** 2026-04-25 (WebSearch: TradingEconomics, RioTimesOnline/BCB Focus, Investidor10, COPOM agenda)
-> **Resultado:** PTAX atualizado ~4.997 (lag reduzido). Renda+ 6.86% (23/abr). IPCA+ 2040 7.10% (10/abr). Focus IPCA 4.80% (6a semana acima teto). COPOM 29/abr: nao decidido ainda.
+> **Data do snapshot anterior:** 2026-04-25
+> **Atualizacao atual:** 2026-05-01 (WebSearch: BCB, Agencia Brasil, InfoMoney, Investidor10, FRED, BLS, TradingEconomics)
+> **Resultado:** COPOM 29/abr cortou 0,25pp → Selic 14,50%. IPCA abril: 0,58%, acumulado 12m 5,12% (acima do teto 4,5%). Focus IPCA 2026: 4,86% (7a semana consecutiva). Selic terminal 2026: 13,00%. BRL tocou 4,9548 (máxima BRL em 2026). Renda+ 2065: ~6,96% (fechamento abr). IPCA+ 2040: ~7,40% (alta em 2026). FOMC 29/abr: manteve 3,50–3,75%. CPI EUA mar: 3,3% (alta energia por guerra). TIPS 10y: 1,90%.
+
+### Delta vs Snapshot 25/Abr/2026 → 01/Mai/2026
+
+| Indicador | 25/abr/2026 | 01/mai/2026 | Variacao | Impacto |
+|-----------|------------|------------|---------|---------|
+| Selic Meta | 14,75% | **14,50%** | -25 bps | COPOM 29/abr: corte 0,25pp unanime. Proximo: jun/2026 |
+| IPCA 12m | 4,14% (mar) | **5,12% (abr)** | +98 bps | Acima do teto 4,5% — desancoragem confirmada. IPCA-15 abr: 0,89%. Principal driver: energia/petroleo (guerra Oriente Medio) |
+| IPCA mensal abr | — | **0,58%** | — | Abaixo IPCA-15 0,89% — algum arrefecimento |
+| Focus IPCA 2026 | 4,80% | **4,86%** | +6 bps | 7a semana consecutiva de alta. 36 bps acima teto |
+| Focus IPCA 2027 | 3,84% | **3,80%** | -4 bps | Estavel — ancora longa segura |
+| Focus Selic terminal 2026 | 13,00% | **13,00%** | 0 bps | Estavel: mercado projeta mais 1,25pp de cortes ate dez/26 |
+| Focus Selic 2027 | 10,50% | **11,00%** | +50 bps | Revisao relevante — ciclo de cortes mais curto |
+| BRL/USD | ~4,97 | **~4,96** | -10 bps | BRL continua forte; tocou 4,9548 (minima USD maxima BRL 2026). YTD BRL +9,35% vs USD |
+| IPCA+ 2040 | ~7,10% (ref. 22/abr) | **~7,40%** | +30 bps | Alta significativa — DCA reconfirmado |
+| IPCA+ 2050 | ~6,85% | **dado pendente — verificar proxima sessao** | — | — |
+| Renda+ 2065 | ~6,72% (22/abr) / ~6,96% (fechamento abr) | **~6,96%** | +24 bps vs 22/abr | Recuperou da minima de abr (6,71%). Margem vs gatilho compra (6,5%): ~46 bps |
+| Fed Funds | 3,50–3,75% | **3,50–3,75%** | 0 bps | FOMC 29/abr: manteve. Voto 8-4 (4 dissidentes — historico desde 1992). Mercado projeta ZERO cortes em 2026 |
+| US 10y Treasury | ~4,30% | **~4,40%** | +10 bps | Pressionado por energia/inflacao. Testou 4,45% (maximo 9m) |
+| US 10y Real (TIPS) | ~2,00% | **1,90%** | -10 bps | Queda com aversao a risco |
+| CPI EUA 12m | 3,3% (mar) | **3,3% (mar)** | 0 bps | Abr: divulgacao 12/mai/2026. Energia +12,5%, gasolina +18,9% (guerra Iran) |
+| CDS Brasil 5y | dado pendente | **~135–140 bps** (ref. marco/2026) | — | Sem dados abr/mai confirmados. Faixa segura — longe do gatilho 300 bps |
+
+### Leituras de Gatilhos (2026-05-01)
+
+| Gatilho | Condicao | Status Atual | Acao |
+|---------|----------|-------------|------|
+| DCA IPCA+ longo ativo | Taxa >= 6,0% | **~7,40% (2040)** — VERDE solido (margem 140 bps) | DCA ativo em TD 2040 (80%) + TD 2050 (20%). Alta de taxa = DCA mais atrativo |
+| Pausar DCA IPCA+ | Taxa < 6,0% | Nao atingido — margem 140 bps | — |
+| Renda+ 2065 compra DCA | Taxa >= 6,5% | **~6,96%** — VERDE (margem ~46 bps) | DCA ativo ate 5% de posicao |
+| Renda+ 2065 pausa compra | Taxa < 6,5% | Nao atingido — margem 46 bps | MONITORAR mensalmente |
+| Renda+ 2065 venda total | Taxa <= 6,0% | Nao atingido (margem ~96 bps) | — |
+| Panico Renda+ (segurar) | Taxa >= 9,0% | Nao atingido | — |
+| CDS stress | CDS > 300 bps | **~135–140 bps** — VERDE. Longe do gatilho | — |
+| CDS gatilho soberano | CDS > 400 bps sustentado 6m | Nao atingido | — |
+
+### Implicacoes para a Carteira (2026-05-01)
+
+1. **IPCA+ longo**: taxa a ~7,40% — +30 bps vs snapshot anterior. Margem de 140 bps acima do piso 6,0%. **DCA ativo com convicao renovada**. Spread BR/EUA (IPCA+ vs TIPS): 7,40% - 1,90% = **~550 bps** — excepcional, acima do snapshot anterior (525 bps).
+
+2. **Renda+ 2065**: recuperou de 6,71% (minima abr, 13/abr) para ~6,96% (fechamento abr). Margem vs gatilho de pausa (6,5%) agora ~46 bps — melhorou vs 22 bps do snapshot anterior. **Probabilidade de atingir 6,0% em 12m: revisada para ~35-40%** (vs 50-55% no pior momento de abr). DCA ativo ate 5%.
+
+3. **Ciclo de cortes — nova leitura pos-COPOM 29/abr**: Selic agora 14,50%. Focus projeta terminal 13,00% em dez/2026 (mais 1,25pp de cortes). Selic 2027: revisada para 11,00% (+50 bps vs snapshot anterior). IPCA 2026 a 4,86% (teto 4,5% ultrapassado) e IPCA 12m a 5,12% complicam ciclo. COPOM comunicado: vê inflacao "se afastando da meta". Proximo corte jun/2026 — "porta aberta" debatida. Risco: guerra Oriente Medio acelera petroleo → IPCA → pausa prematura em cortes. **Consequencia para IPCA+**: lag de 3-6 meses entre corte Selic e compressao de IPCA+ longo. Taxa a ~7,40% pode comprir para 6,5-7,0% em 6-12m se IPCA arrefecer.
+
+4. **BRL/USD**: ~4,96. BRL atingiu maxima de 2026 (4,9548 em 20/abr). Carry: Selic 14,50% - Fed 3,625% = **~1.088 bps**. BRL forte sustentado por carry. Ciclo de cortes mais lento no Fed (zero cortes esperados) mantem diferencial alto. Premissa 0,5% dep. real/ano permanece — BRL atual (YTD +9%) e outlier vs media secular de 10%+/ano.
+
+5. **Fed/EUA**: FOMC pausou em 3,50-3,75%. Voto incomum 8-4 (quatro dissidentes) — divisao interna sobre proximo passo. Mercado projeta zero cortes em 2026. CPI EUA a 3,3% (guerra energia). TIPS 10y caiu para 1,90% — spread BR/EUA se ampliou. Proximo CPI EUA: 12/mai/2026. Proximo FOMC: jun/2026.
+
+6. **Risco fiscal BR**: sem novos dados desde ultimo snapshot. IFI projetava deficit primario R$90,6bi. Divida/PIB ~83,8% (UBS). CDS ~135-140 bps — longe de stress. Ano eleitoral (out/2026): pressao crescente. Mantem premio de risco nas taxas longas.
+
+7. **Alerta proativo para agentes**: COPOM cortou 0,25pp → (a) RF: IPCA+ longo a ~7,40% — DCA mais atrativo que anterior, sem mudanca de estrategia mas reconfirmando compra; (b) Risco: Renda+ 2065 recuperou para ~6,96%, margem 46 bps vs gatilho de pausa 6,5% — DCA ativo; (c) FIRE: IPCA 5,12% acima meta pode pressionar premissas de retorno real — acompanhar.
 
 ### Delta vs Snapshot 03/Abr/2026 → 22/Abr/2026
 

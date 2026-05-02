@@ -1,8 +1,8 @@
 # Carteira Diego Morais — Contexto Compartilhado
 
-> Atualizado em: 2026-04-26
+> Atualizado em: 2026-05-01
 > Este arquivo e a fonte de verdade para todos os agentes.
-> Cambio de referencia: R$ 5,156 (PTAX BCB 2026-04-22, dashboard_state.json)
+> Cambio de referencia: R$ 4,960 (PTAX BCB 2026-05-01, scan mercado)
 
 ---
 
@@ -91,7 +91,7 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 | IPCA+ longo | **6,1%** | **15%** | R$ 124.675,79 (2040: R$113.015 + 2050: R$11.660 após liq. 13/04) | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity SEMPRE.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para equity. Gatilho de venda: NENHUM (exceto risco soberano extremo). Posicao estrutural — nao vender por MtM |
 | IPCA+ curto | 0% | **3%** | — | TD curto ~2 anos | SoRR buffer. **Comprar perto dos 50**, nao agora. Substitui Selic no plano original (melhor protecao inflacionaria, MtM baixo com ~2 anos duration) |
 | Renda+ 2065 | 3,4% | <=5% | R$ 117.832,62 | Renda+ 2065 (NTN-B1) | Duration 46,24 (business years, pyield ANBIMA-compliant, 2026-04-25, YTM 6,93%). NOTA: Renda+ é instrumento híbrido (zero-coupon acumulação 2026-2065 + annuity diferida 240 parcelas 2065-2085), não NTN-B com cupons. Em anos corridos: ~67 anos. Taxa atual: 6,93% (2026-04-22). Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. **Gatilho soberano: CDS 5Y Brasil > 400bps sustentado por 6 meses → avaliar venda IPCA+/Renda+ (pré-crise 2015 = ~350bps).** Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
-| Cripto | 2,9% | **3%** | R$ 100.208 | HODL11 + spot legado | BTC $71.877 (22/Apr). Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer. **Classificação: Global/Cripto — NÃO Brasil.** BTC precificado em USD; wrapper B3 tem risco operacional XP/B3, mas sem risco soberano BR. Exposto à variação BTC/USD, não ao real. |
+| Cripto | 2,9% | **3%** | R$ 100.208 | HODL11 + spot legado | BTC $78.178 (01/May). Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer. **Classificação: Global/Cripto — NÃO Brasil.** BTC precificado em USD; wrapper B3 tem risco operacional XP/B3, mas sem risco soberano BR. Exposto à variação BTC/USD, não ao real. |
 | COE + Empréstimo XP | ~1,7% | — | ~R$ 64k net | COE XP0121A3C3W (ativo ~R$172k) + Empréstimo XP (passivo ~-R$108k) | Produto estruturado BRL na XP. **Fonte de verdade**: aba Histórico da Carteira Viva (Google Sheets) — pipeline lê via gviz API automaticamente. Atualizar no Sheets; rodar `reconstruct_history.py` + `generate_data.py` para refletir no dash. Classificação: Brasil (risco operacional XP, BRL soberano). |
 
 ---
@@ -386,7 +386,7 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | piso_taxa_renda_plus | 6.5 | carteira.md §Renda+ tático |
 | piso_venda_renda_plus | 6.0 | carteira.md §Renda+ gatilho saída |
 | renda_plus_ano_venc | 2065 | Tesouro Renda+ 2065 |
-| renda_plus_taxa_default | 6.93 | snapshot carteira.md 2026-04-22 |
+| renda_plus_taxa_default | 6.96 | snapshot taxa Tesouro Renda+ (2026-05-01: 6.96%) |
 | idade_atual | 39 | Diego (nasc. 1987) |
 | ano_nascimento | 1987 | Diego |
 | renda_estimada | 45000 | estimativa mensal (×12 = R$540k/ano) |
@@ -417,9 +417,9 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | adj_favoravel | 0.010 | +1.0pp ajuste retorno equity cenário favorável |
 | adj_stress | -0.005 | -0.5pp ajuste retorno equity cenário stress |
 | ipca_anual | 0.04 | 4%/ano estimado |
-| cambio_fallback | 5.156 | PTAX BCB 22/04/2026 — fallback offline |
+| cambio_fallback | 4.960 | PTAX BCB 01/05/2026 — fallback offline |
 | ipca_cagr_fallback | 6.14 | IPCA CAGR Abr/2021–Mar/2026 (BCB série 433) |
-| selic_meta_snapshot | 14.75 | Selic meta Abr/2026 |
+| selic_meta_snapshot | 14.50 | Selic meta Mai/2026 (reducao de 25bps) |
 | fed_funds_snapshot | 3.64 | Fed Funds Mar/2026 |
 | depreciacao_brl_base | 0.5 | % a.a. premissa plano FIRE |
 | pfire_permanece_min | 0.85 | P(FIRE) > 85% → PLANO_PERMANECE |
@@ -449,7 +449,7 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | saude_decay | 0.15 | FR-saude-modelo-custo 2026-04-29 — redução de 15% após No-Go (anterior 50% causava descontinuidade abrupta sem justificativa clínica) |
 | ipca_longo_atual_brl | 124675.79 | posição IPCA+ longo atual (2040+2050) — atualizar após cada DCA |
 | bond_pool_isolation_threshold | 0.80 | fração do target para habilitar bond pool isolation no MC |
-| ipca_plus_taxa_anual | 0.0716 | snapshot taxa bruta Tesouro IPCA+ (atualizar quando taxa mudar) |
+| ipca_plus_taxa_anual | 0.0740 | snapshot taxa bruta Tesouro IPCA+ (2026-05-01: 7.40%) |
 | ipca_plus_custodia | 0.0020 | custódia B3 0.20%/ano sobre Tesouro Direto |
 | pfire_canonical_base   | 83.7   | P(FIRE) base canônico (MC 10k, VCMH 3.5%, SAUDE_DECAY 15%, RF 5.34%) |
 | pfire_canonical_fav    | 91.0   | P(FIRE) favorável canônico |
