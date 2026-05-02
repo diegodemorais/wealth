@@ -1,0 +1,80 @@
+{
+  "date": "2026-05-01",
+  "window": "1d",
+  "session_type": "wealth_management_retro",
+  "metrics": {
+    "issues_fechadas": 12,
+    "commits_diego": 30,
+    "commits_total_with_bots": 187,
+    "insertions": 89478,
+    "deletions": 48405,
+    "net_loc": 41073,
+    "ai_assisted_pct": 0.97,
+    "ai_assisted_breakdown": {
+      "claude_sonnet_4_6": 24,
+      "claude_opus_4_7": 5
+    },
+    "version_range": ["1.252.0", "1.286.0"],
+    "auto_deploy_bumps": 17,
+    "suite_final": "101 Playwright + 744 Vitest + 6 pipeline E2E",
+    "active_hours_estimate": 11
+  },
+  "issues_fechadas": [
+    "DEV-overlap-chart-v2",
+    "DEV-pipeline-gaps-p2",
+    "DEV-spec-contract-fix",
+    "DEV-pipeline-fail-fast",
+    "DEV-pipeline-append-only",
+    "DEV-sector-exposure",
+    "DEV-top5-msci-benchmark",
+    "DEV-efficient-frontier",
+    "DEV-efficient-frontier-v2",
+    "DEV-spending-append-only",
+    "DEV-data-dedup",
+    "fix-dashboard-changelog-routes"
+  ],
+  "decisoes_investimento": {
+    "rebalanceamento": "NAO — fricção pós-IR aniquila ganho de Sharpe",
+    "carteira_alvo": "50/30/20 SWRD/AVGS/AVEM mantida (dentro do IC estatístico)",
+    "value_tilt_setorial": "confirmado — Financials 20.9% > Tech 18.6%",
+    "regime_value_spread": "neutro (P42)",
+    "max_sharpe_historico_bruto_vs_liquido": [0.816, 0.795],
+    "max_sharpe_bl_bruto_vs_liquido": [0.038, 0.001],
+    "ir_estimado_rebalance_max_sharpe": 190000
+  },
+  "padroes_consolidados": [
+    "append-only com _meta.metodologia_version (7 artefatos cobertos)",
+    "fail-fast contra fallbacks silenciosos (validate_env upfront)",
+    "validação multi-agente (Quant + Factor + Tax + Fact-Checker + CIO)"
+  ],
+  "notas_cross_feedback": {
+    "Quant": { "media": 9.0, "votos": [7, 9], "auto": 5 },
+    "Tax": { "media": 8.3, "votos": [9, 8, 8], "auto": null },
+    "Diego_investidor": { "media": 7.7, "votos": [8, 7, 8], "auto": null },
+    "CIO": { "media": 7.5, "votos": [7, 8], "auto": 6 },
+    "Diego_gestor": { "media": 7.3, "votos": [8, 7, 7], "auto": null },
+    "Fact_Checker": { "media": 7.0, "votos": [7, 7, 7], "auto": null },
+    "Factor": { "media": 6.5, "votos": [7, 6], "auto": 6 }
+  },
+  "auto_criticas": {
+    "CIO": "aprovei mudança de arquitetura (Forward→BL) sem forçar Outside View externo",
+    "Quant": "F1+F2 sinalizados sem exigir confirmação de correção antes de assinar BL v2",
+    "Factor": "HML +4.2% Ken French só apareceu quando acionado, não proativamente"
+  },
+  "licoes_estrategicas": [
+    "feedback_quantificar_threshold_decisao",
+    "feedback_pfire_kpi_sprint",
+    "feedback_outside_view_arquitetura",
+    "learning_rebalance_friction",
+    "feedback_factor_proativo",
+    "feedback_paper_validation_completa"
+  ],
+  "what_went_wrong": [
+    "AI batendo rate limit antes de commitar (2x na sessão)",
+    "Bookkeeper rodou rebuild silencioso em vez de append (Diego pegou)",
+    "Issues fantasma: DEV-data-dedup já mergeada antes do board fechar",
+    "Hooks violation FIRE latente desde 2026-04-29 (3 dias drift silencioso)",
+    "Drift fev/mar inadvertido na migração rebuild-forçada do spending"
+  ],
+  "tweetable": "Sessão 2026-05-01: 12 issues fechadas, +41k LOC, 97% AI-assisted, Quant 9.0/Tax 8.3/Diego inv 7.7/gestor 7.3. Decisão central: NÃO rebalancear — Max Sharpe líquido pós-IR ≈ 0."
+}
