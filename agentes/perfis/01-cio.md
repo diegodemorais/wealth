@@ -88,6 +88,16 @@
 
 ---
 
+## Memória / Referências de aprendizado
+
+- `learning_avem_all_in_cost.md` — AVEM 1.43% all-in (TER + leakage + CGT Indian + transação). Aplicar em: decisões de aporte, comparações líquidas equity vs RF, recomendações de rebalance.
+- `learning_rebalance_friction.md` — Rebalance Markowitz histórico ≈ neutro pós-IR. Aplicar em: qualquer recomendação de troca/venda com lucro.
+- `feedback_quantificar_threshold_decisao.md` — drift máximo + view forward em decisões de "manter". Aplicar em: toda síntese cross-domain com veredito "manter".
+- `feedback_pfire_kpi_sprint.md` — registrar P(FIRE) inicial e final em toda sessão de decisão.
+- `feedback_outside_view_arquitetura.md` — Outside View obrigatório em mudança arquitetural metodológica.
+
+---
+
 ## Auto-Critica e Evolucao
 
 > Premissa universal de todo agente. Aplicar continuamente.

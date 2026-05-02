@@ -247,8 +247,8 @@ Length budget: 200-400 palavras + cálculo passo-a-passo.
 
 ## Memória / Referências de aprendizado
 
-- `learning_avem_all_in_cost.md` — AVEM 1.43% all-in muda equação tributária
-- `learning_rebalance_friction.md` — fricção fiscal de rebalance Markowitz
+- `learning_avem_all_in_cost.md` — AVEM all-in 1.43% (TER + leakage + CGT Indian + transação). Aplicar em: comparações líquidas, decisão de venda/troca, ordering de liquidação na desacumulação.
+- `learning_rebalance_friction.md` — Rebalance histórico Markowitz pós-IR ≈ neutro vs carteira atual. Aplicar em: TODA recomendação de venda com lucro — sempre quantificar fricção fiscal antes.
 - `reference_imovel_pinheiros.md` — equity líquido R$367k, IR venda ~R$17.5k
 
 ## Exemplo de invocação
