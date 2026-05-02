@@ -249,10 +249,17 @@ def merge_append_parallel(
 
     merged_arrays: dict[str, list] = {k: [] for k in keys}
     divergent: list[str] = []
+    merged_dates: list[str] = []
     for d in all_dates:
         in_existing = d in existing_idx
         in_new = d in new_idx
         closed = is_period_closed(d, today=today)
+        # Período aberto que existe só em existing: drop. O gerador deliberadamente
+        # não emitiu para esse período (ex: mês corrente sem cotação month-end ainda).
+        # Manter valor antigo propagaria cliffs espúrios após upstream ser corrigido.
+        if in_existing and not in_new and not closed:
+            continue
+        merged_dates.append(d)
         for k in keys:
             if in_existing and closed:
                 old_val = existing_arrays[k][existing_idx[d]]
@@ -264,10 +271,10 @@ def merge_append_parallel(
             elif in_new:
                 merged_arrays[k].append(new_arrays[k][new_idx[d]])
             else:
-                # data existe só em existing mas é período aberto → mantém o valor antigo
-                # (não temos novo, então não há melhor opção)
+                # branch defensivo (alcançado se in_existing=True+closed=False+in_new=False
+                # já filtrado acima). Mantido como fallback.
                 merged_arrays[k].append(existing_arrays[k][existing_idx[d]])
-    return all_dates, merged_arrays, divergent
+    return merged_dates, merged_arrays, divergent
 
 
 __all__ = [

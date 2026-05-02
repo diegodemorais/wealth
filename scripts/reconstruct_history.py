@@ -716,6 +716,20 @@ def main(rebuild: bool = False):
         # IBKR equity (USD → BRL)
         ibkr_pos = ibkr_positions.get(month, {})
         equity_usd = 0.0
+        # Detectar mês incompleto: ao menos uma posição USD com qty > 0 não tem
+        # cotação month-end no yfinance. Tipicamente o mês corrente — mercados
+        # diferentes (LSE/Xetra/NYSE) fecham em horários distintos, ou o mês
+        # mal começou. Aceitar parcial gera equity subestimado → cliff espúrio
+        # de -50% a -91% em drawdown_history. A proteção exige cobertura total.
+        # Exceção: símbolos delisted/discontinuados (sem nenhum preço em todo o
+        # range) são ignorados — não há como obter dados, e teriam quebrado
+        # meses passados também.
+        missing_usd_syms = [
+            sym for sym, qty in ibkr_pos.items()
+            if sym not in BRL_TICKERS and qty > 0.001
+            and prices_usd.get(sym, {}).get(month) is None
+            and bool(prices_usd.get(sym))  # symbol tem ALGUM preço histórico
+        ]
         for sym, qty in ibkr_pos.items():
             if sym in BRL_TICKERS:
                 continue
@@ -732,6 +746,13 @@ def main(rebuild: bool = False):
             price = prices_brl.get(sym, {}).get(month)
             if price:
                 xp_brl += qty * price
+
+        # Skip mês incompleto: faltam cotações month-end de >=1 ticker USD.
+        # Sem skip, equity é parcial e patrimônio despenca, contaminando
+        # drawdown_history (cliff -50%..-91%) e séries derivadas.
+        if missing_usd_syms:
+            print(f"  {month}: SKIP (mês incompleto — sem month-end de {missing_usd_syms})")
+            continue
 
         # Nubank RF (BRL — applied amount proxy)
         rf_brl = nubank_rf.get(month, 0)
@@ -862,7 +883,22 @@ def main(rebuild: bool = False):
         for r in existing_rows:
             r["mes"] = r["data"][:7]
         new_rows_normalized = [dict(r, mes=r["data"][:7]) for r in rows]
-        merged_with_mes = merge_append(existing_rows, new_rows_normalized, key="mes")
+        # Períodos abertos (mês corrente) que existem no CSV mas NÃO foram
+        # produzidos pelo run atual: drop. Caso típico — primeiro dia do mês,
+        # yfinance ainda não tem month-end; geração anterior gravou row com
+        # equity=0 (cliff espúrio). Skip pelo gerador remove o row stale.
+        new_meses = {r["mes"] for r in new_rows_normalized}
+        existing_filtered = [
+            r for r in existing_rows
+            if is_period_closed(r["mes"]) or r["mes"] in new_meses
+        ]
+        dropped_open = [
+            r["mes"] for r in existing_rows
+            if not is_period_closed(r["mes"]) and r["mes"] not in new_meses
+        ]
+        if dropped_open:
+            print(f"   drop {len(dropped_open)} row(s) abertos sem regeneração: {dropped_open}")
+        merged_with_mes = merge_append(existing_filtered, new_rows_normalized, key="mes")
         # Diagnóstico: detectar divergências em meses fechados
         divergences = []
         ex_by_mes = {r["mes"]: r for r in existing_rows}

@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-05-01T18:59:51",
-  "_window_id": "20260501T185951",
+  "_generated": "2026-05-02T00:13:45",
+  "_window_id": "20260502T001345",
   "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
   "anos_pre_fire": [
     2026,
@@ -71,7 +71,7 @@
     898439.0
   ],
   "alvo_pool_pct": 0.15,
-  "alvo_pool_brl_2040": 928255.0,
+  "alvo_pool_brl_2040": 1813253.0,
   "anos_cobertura_pos_fire": [
     1,
     2,

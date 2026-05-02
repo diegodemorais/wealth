@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-05-01T19:05:40",
+  "_generated": "2026-05-02T00:17:53",
   "_source": "reconstruct_history.py",
   "window": 12,
   "rf_brl_atual": {
@@ -125,8 +125,7 @@
     "2026-01",
     "2026-02",
     "2026-03",
-    "2026-04",
-    "2026-05"
+    "2026-04"
   ],
   "sharpe_brl": [
     -1.432,
@@ -177,8 +176,7 @@
     0.336,
     0.507,
     0.452,
-    -0.367,
-    -1.173
+    -0.367
   ],
   "sharpe_usd": [
     -1.22,
@@ -229,8 +227,7 @@
     1.064,
     1.258,
     1.02,
-    0.704,
-    -0.921
+    0.704
   ],
   "sortino": [
     -1.457,
@@ -281,8 +278,7 @@
     0.585,
     0.888,
     0.779,
-    -0.4,
-    -1.114
+    -0.4
   ],
   "volatilidade": [
     16.954,
@@ -333,8 +329,7 @@
     30.029,
     29.692,
     29.968,
-    18.964,
-    88.978
+    18.964
   ],
   "max_dd": [
     -24.35,
@@ -385,17 +380,16 @@
     -15.01,
     -15.01,
     -15.01,
-    -15.01,
-    -91.59
+    -15.01
   ],
   "information_ratio": {
     "benchmark": "VWRA.L",
     "base": "USD",
     "itd": {
-      "ir": -0.3946,
-      "tracking_error_pct": 47.2869,
-      "active_return_anual_pct": -18.6582,
-      "n_meses": 61
+      "ir": 0.0817,
+      "tracking_error_pct": 15.1083,
+      "active_return_anual_pct": 1.2346,
+      "n_meses": 60
     },
     "rolling_36m": {
       "dates": [
@@ -423,8 +417,7 @@
         "2026-01",
         "2026-02",
         "2026-03",
-        "2026-04",
-        "2026-05"
+        "2026-04"
       ],
       "values": [
         -0.7877,
@@ -451,17 +444,16 @@
         0.1498,
         0.1941,
         0.2394,
-        0.2495,
-        -0.4553
+        0.2495
       ],
-      "nota": "N=26 pontos — baixa robustez estatística"
+      "nota": "N=25 pontos — baixa robustez estatística"
     }
   },
   "_meta": {
     "metodologia_version": "rolling-12m-v1",
     "schema_version": "1.0",
-    "last_period_appended": "2026-05",
-    "last_appended_at": "2026-05-01T19:05:42-03:00",
+    "last_period_appended": "2026-04",
+    "last_appended_at": "2026-05-02T00:17:56-03:00",
     "rebuild_reason": null
   }
 }

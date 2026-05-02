@@ -278,6 +278,56 @@ class TestDrawdownExtremoValidation:
         assert abs(max_dd_meta - actual_min) < tolerance, \
             f"max_drawdown meta {max_dd_meta:.4f} should be close to actual minimum {actual_min:.4f}"
 
+    def test_no_terminal_cliff(self):
+        """Regressão: detectar cliff espúrio no último ponto da série.
+
+        Caso conhecido (2026-05-01): mês corrente sem cotação month-end gera
+        equity=0 → patrimonio cai para ~10% → drawdown -91%. Aborta build.
+
+        Heurística: o último ponto não pode divergir do penúltimo em mais de
+        50pp. Crashes históricos reais raramente excedem isso em 1 mês mensal.
+        """
+        data = self._load_data_json()
+        dd_hist = data.get("drawdown_history", {})
+        dd_values = dd_hist.get("drawdown_pct", []) if isinstance(dd_hist, dict) else []
+        if len(dd_values) < 2:
+            return
+
+        last = dd_values[-1]
+        prev = dd_values[-2]
+        if not (isinstance(last, (int, float)) and isinstance(prev, (int, float))):
+            return
+
+        diff = abs(last - prev)
+        # Tolerância: 50pp se valores em %, 0.5 se em decimal.
+        tolerance_pp = 50.0 if abs(prev) > 1.0 or abs(last) > 1.0 else 0.5
+        assert diff <= tolerance_pp, (
+            f"Cliff detectado: drawdown último ({last}) divergiu do penúltimo "
+            f"({prev}) em {diff:.2f} pp — provável bug de mês incompleto. "
+            f"Verificar reconstruct_history.py SKIP de meses sem month-end."
+        )
+
+    def test_max_drawdown_realistic_range(self):
+        """Regressão: max_drawdown ≥ -50% (carteira diversificada nunca despencou tanto).
+
+        Carteira Diego (2021-presente) viveu rate-shock 2022 (~-30%) e tariffs
+        2025 (~-15%). Drawdown histórico real <= 35%. Se max_drawdown < -50%,
+        é forte sinal de bug de dados — nunca houve crash real desse calibre.
+        """
+        data = self._load_data_json()
+        dd_hist = data.get("drawdown_history", {})
+        if not isinstance(dd_hist, dict):
+            return
+        max_dd = dd_hist.get("max_drawdown")
+        if max_dd is None:
+            return
+        # Detecta % vs decimal
+        threshold = -50.0 if abs(max_dd) > 1.0 else -0.50
+        assert max_dd >= threshold, (
+            f"max_drawdown={max_dd} excede limite realista ({threshold}) — "
+            f"provável bug de dados (cliff espúrio em mês incompleto)."
+        )
+
 
 if __name__ == "__main__":
     print("Para rodar os testes, use:")

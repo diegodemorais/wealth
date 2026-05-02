@@ -1,38 +1,38 @@
 {
   "fire": {
-    "pfire_base": 54.4,
-    "pfire_fav": 71.4,
-    "pfire_stress": 45.0,
-    "pat_mediano_fire": 6188368.0,
-    "pat_p10_fire": 4148858.0,
-    "pat_p90_fire": 8966955.0,
-    "mc_date": "2026-05-01",
-    "pfire_base_base": 54.4,
-    "pfire_base_fav": 71.4,
-    "pfire_base_stress": 45.0,
-    "pat_mediano_base": 6188368.0,
-    "pat_p10_base": 4148858.0,
-    "pat_p90_base": 8966955.0,
+    "pfire_base": 85.5,
+    "pfire_fav": 91.6,
+    "pfire_stress": 80.5,
+    "pat_mediano_fire": 12088351.0,
+    "pat_p10_fire": 7342262.0,
+    "pat_p90_fire": 19106942.0,
+    "mc_date": "2026-05-02",
+    "pfire_base_base": 85.5,
+    "pfire_base_fav": 91.6,
+    "pfire_base_stress": 80.5,
+    "pat_mediano_base": 12088351.0,
+    "pat_p10_base": 7342262.0,
+    "pat_p90_base": 19106942.0,
     "tornado": [
       {
         "variavel": "Volatilidade equity (+/-10%)",
-        "mais10": -4.1,
-        "menos10": 4.3
+        "mais10": -6.1,
+        "menos10": 4.8
       },
       {
         "variavel": "Custo de vida (+/-10%)",
-        "mais10": -3.9,
-        "menos10": 3.1
+        "mais10": -1.0,
+        "menos10": 0.2
       },
       {
         "variavel": "Retorno equity (+/-10%)",
-        "mais10": 9.0,
-        "menos10": -10.3
+        "mais10": 2.7,
+        "menos10": -5.2
       },
       {
         "variavel": "Aporte mensal (+/-10%)",
-        "mais10": 6.5,
-        "menos10": -8.6
+        "mais10": 0.9,
+        "menos10": -2.2
       }
     ],
     "by_profile": [
@@ -112,36 +112,36 @@
         "p_quality_full": 60.3
       }
     ],
-    "p_quality": 65.5,
+    "p_quality": 78.7,
     "pfire_aspiracional_base": 74.0,
     "pfire_aspiracional_fav": 83.7,
     "pfire_aspiracional_stress": 67.5,
-    "pat_mediano_aspiracional": 6582607.0,
-    "pat_p10_aspiracional": 4402656.0,
-    "pat_p90_aspiracional": 9554920.0,
+    "pat_mediano_aspiracional": 13166854.0,
+    "pat_p10_aspiracional": 7985292.0,
+    "pat_p90_aspiracional": 20828838.0,
     "p_quality_aspiracional": 55.0,
-    "p_quality_fav": 78.0,
-    "p_quality_stress": 57.2,
-    "p_quality_proxy": 52.8,
-    "p_quality_full": 65.5,
+    "p_quality_fav": 84.8,
+    "p_quality_stress": 74.9,
+    "p_quality_proxy": 75.7,
+    "p_quality_full": 89.6,
     "bond_pool_status": {
       "enabled": true,
-      "fully_enabled": true,
-      "completion_pct": 251.8,
-      "completion_fraction": 1.0,
+      "fully_enabled": false,
+      "completion_pct": 22.7,
+      "completion_fraction": 0.227,
       "ipca_longo_atual_brl": 124676.0,
-      "target_brl": 49517.0,
+      "target_brl": 549265.0,
       "threshold_pct": 80.0,
-      "threshold_brl": 39614.0,
-      "underestimation_warning": false
+      "threshold_brl": 439412.0,
+      "underestimation_warning": true
     },
     "bond_pool_isolation_enabled": true,
-    "bond_pool_completion_pct": 251.8,
-    "bond_pool_fully_enabled": true,
-    "bond_pool_completion_fraction": 1.0
+    "bond_pool_completion_pct": 22.7,
+    "bond_pool_fully_enabled": false,
+    "bond_pool_completion_fraction": 0.227
   },
   "_meta": {
-    "generated": "2026-05-01",
+    "generated": "2026-05-02",
     "last_update_section": "spending",
     "last_update_generator": "generate_data.py",
     "version": 1
@@ -188,23 +188,23 @@
       {
         "label": "Solteiro/FIRE Day",
         "custo": 250000,
-        "base": 54.4,
-        "fav": 71.4,
-        "stress": 45.0
+        "base": 85.5,
+        "fav": 91.6,
+        "stress": 80.5
       },
       {
         "label": "Pós-casamento",
         "custo": 270000,
-        "base": 51.3,
-        "fav": 68.2,
-        "stress": 42.1
+        "base": 84.3,
+        "fav": 91.4,
+        "stress": 79.8
       },
       {
         "label": "Casamento+filho",
         "custo": 300000,
-        "base": 46.6,
-        "fav": 63.4,
-        "stress": 38.0
+        "base": 83.3,
+        "fav": 90.4,
+        "stress": 78.6
       }
     ]
   }

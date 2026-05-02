@@ -1,16 +1,16 @@
 {
-  "_generated": "2026-05-01T18:59:51",
-  "_window_id": "20260501T185951",
+  "_generated": "2026-05-02T00:13:45",
+  "_window_id": "20260502T001345",
   "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
   "custo_vida_base": 250000,
-  "patrimonio_p10_2040": 4148858.0,
-  "patrimonio_p50_2040": 6188368.0,
-  "patrimonio_p90_2040": 8966955.0,
-  "swr_p10": 0.0603,
-  "swr_p50": 0.0404,
-  "swr_p90": 0.0279,
-  "swr_p10_pct": 6.03,
-  "swr_p50_pct": 4.04,
-  "swr_p90_pct": 2.79,
-  "mc_date": "2026-05-01"
+  "patrimonio_p10_2040": 7342262.0,
+  "patrimonio_p50_2040": 12088351.0,
+  "patrimonio_p90_2040": 19106942.0,
+  "swr_p10": 0.034,
+  "swr_p50": 0.0207,
+  "swr_p90": 0.0131,
+  "swr_p10_pct": 3.4,
+  "swr_p50_pct": 2.07,
+  "swr_p90_pct": 1.31,
+  "mc_date": "2026-05-02"
 }

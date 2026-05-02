@@ -75,13 +75,13 @@
       "total": 25399
     }
   ],
-  "updated_at": "2026-05-01",
+  "updated_at": "2026-05-02",
   "fonte": "All-Accounts-Abril26.csv",
   "_meta": {
     "metodologia_version": "spending-actual-v1",
     "schema_version": "1.0",
     "last_period_appended": "2026-04",
-    "last_appended_at": "2026-05-01T19:05:45-03:00",
+    "last_appended_at": "2026-05-02T00:17:59-03:00",
     "rebuild_reason": null
   }
 }
