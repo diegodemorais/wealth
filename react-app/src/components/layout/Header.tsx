@@ -7,23 +7,7 @@ import { useAuthStore } from '@/store/authStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 import { TABS } from '@/config/dashboard.config';
 import { RefreshCw, Eye, EyeOff, LogOut, ClipboardList, Hammer } from 'lucide-react';
-
-// Format ISO UTC timestamp → "DD/MM/AA HH:mm BRT"
-function formatBrt(iso: string): string {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleString('pt-BR', {
-      timeZone: 'America/Sao_Paulo',
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    }) + ' BRT';
-  } catch {
-    return iso;
-  }
-}
+import { formatBrt } from '@/utils/time';
 
 // Format ISO UTC timestamp → "28/4 10:07" (compact)
 function formatBuildCompact(iso: string): string {

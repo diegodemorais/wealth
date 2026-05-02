@@ -6,23 +6,7 @@ import { useMemo } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
-
-// Shared formatter — same format as Header
-function formatBrt(iso: string): string {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleString('pt-BR', {
-      timeZone: 'America/Sao_Paulo',
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    }) + ' BRT';
-  } catch {
-    return iso;
-  }
-}
+import { formatBrt } from '@/utils/time';
 
 export function Footer() {
   const data = useDashboardStore(s => s.data);

@@ -10,6 +10,7 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CheckCircle, AlertTriangle, Clock, Shield, ArrowRight } from 'lucide-react';
 import { CHANGELOG, type ChangeType } from '@/config/changelog';
+import { formatBrtCompact } from '@/utils/time';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { FireSimuladorSection } from '@/app/simulators/FireSimuladorSection';
@@ -109,19 +110,10 @@ const TAB_LABELS: Record<string, string> = {
   simuladores: 'Tools',
 };
 
-function fmtDatetime(iso: string): string {
-  try {
-    return new Date(iso).toLocaleString('pt-BR', {
-      timeZone: 'America/Sao_Paulo',
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return iso;
-  }
-}
+// Use the shared BRT formatter — same TZ pattern as Footer/Header.
+// Compact variant (no year) keeps the table dense; ' BRT' suffix avoids
+// any ambiguity between local-zone display and the UTC string in the source.
+const fmtDatetime = formatBrtCompact;
 
 function ChangelogTable() {
   const entries = CHANGELOG.slice(0, 30);
