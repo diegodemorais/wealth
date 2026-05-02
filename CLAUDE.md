@@ -58,8 +58,9 @@ Reutilizar via SendMessage antes de spawnar novo. Múltiplos em paralelo quando 
 | CIO | `cio` | Auto quando 3+ agentes |
 | Outside View | `outside-view` | Obrigatório em decisão >5% portfolio |
 | Validação | `quant`, `fact-checker` | |
-| QA técnico | `qa` (perfil 22) | **Gate obrigatório antes de TODO push** que toca react-app/, scripts/, dados/. 9 checks (build, TS, vitest, Playwright, pipeline E2E, privacy, sanity numérico, anti-cliff, versão). Veto absoluto se falhar. |
-| Validador funcional | role dinâmico (agente do domínio) | **Gate semântico após QA técnico aprovar.** Factor valida feature factor; FIRE valida MC/premissas; Tax valida método tributário; Bookkeeper valida snapshots; etc. |
+| Tester (gate mecânico) | `tester` (perfil 22) | **Automático antes de TODO push** que toca react-app/, scripts/, dados/. Executa 9 checks pré-definidos (build, TS, vitest, Playwright, pipeline E2E, privacy, sanity numérico, anti-cliff, versão). Veto absoluto se falhar. NÃO desenha checks novos. |
+| QA (qualidade ampla) | `qa` (perfil 23) | **Mensal + após incidentes.** Exploratory testing manual, métricas de qualidade ao longo do tempo, post-mortem de bugs em prod, design de novos checks pro Tester, sign-off semântico em feature >5% portfolio. |
+| Validador funcional | role dinâmico (agente do domínio) | **Gate semântico após Tester aprovar.** Factor valida feature factor; FIRE valida MC/premissas; Tax valida método tributário; Bookkeeper valida snapshots; etc. |
 
 ## Decisões
 

@@ -50,14 +50,16 @@ Se um cenário abaixo ocorrer, executar a resposta **sem debate**. O debate já 
 
 ---
 
-## Dashboard / Build
+## Dashboard / Build (Tester gate — perfil 22)
 
 | Cenário | Resposta | Origem |
 |---------|----------|--------|
-| **Build concluído** | Rodar `python scripts/test_dashboard.py` antes de qualquer commit. | DEV-tester |
-| **CRITICAL ou HIGH fail no tester** | NÃO commitar. Voltar ao `dev` para correção. Re-testar. | DEV-tester |
-| **Mesmo bloco CRITICAL falha 3 ciclos** | `ESCALATE_TO_DIEGO`. Não prosseguir até decisão explícita. | DEV-tester |
-| **Tester verde (0 CRITICAL, 0 HIGH)** | Autorizado para commit + push. | DEV-tester |
+| **Pre-push em react-app/, scripts/, dados/** | Rodar `./scripts/release_gate.sh` (9 checks: build, TS, vitest, Playwright, pipeline E2E, privacy, sanity numérico, anti-cliff, versão). | DEV-tester (2026-04) + DEV-release-gate-checklist (2026-05) |
+| **Falha em qualquer check** | NÃO commitar. Voltar ao `dev` para correção. Re-rodar gate. | Tester (perfil 22) |
+| **Mesmo check falha 3 ciclos** | `ESCALATE_TO_DIEGO`. Não prosseguir até decisão explícita. | Tester (perfil 22) |
+| **Gate verde** | Autorizado para commit + push. | Tester (perfil 22) |
+| **Bug escapou em produção (Diego pegou)** | Acionar QA (perfil 23) — root cause + regression test pro Tester. | QA (perfil 23) |
+| **Sessão mensal QA** | Exploratory testing + métricas + post-mortem + revisão de cobertura. Output: novos checks pro Tester. | QA (perfil 23) |
 
 ## Dashboard / Tailwind v4 — Armadilhas conhecidas
 
