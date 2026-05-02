@@ -146,6 +146,17 @@ SANITY_ASSERTIONS: list[tuple[str, Callable[[Any], bool], str]] = [
         ),
         "rolling_sharpe.sortino: todos os valores finitos em [-10, 10] (None = janela degenerada)",
     ),
+    # P(FIRE) aspiracional — fav DEVE ser > base (definição). bug 2026-05-02: idênticos (91.6).
+    (
+        "pfire_aspiracional",
+        lambda v: (
+            isinstance(v, dict)
+            and v.get("base") is not None
+            and v.get("fav") is not None
+            and float(v["fav"]) > float(v["base"])
+        ),
+        "pfire_aspiracional.fav > base (cenário favorável tem premissas mais otimistas)",
+    ),
 ]
 
 

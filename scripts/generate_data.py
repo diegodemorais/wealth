@@ -695,13 +695,25 @@ def get_pfire_tornado():
             "source": canonical_aspiracional.source,
             "is_canonical": canonical_aspiracional.is_canonical,
         }
+        # Bug fix 2026-05-02: state keys ESPECÍFICAS do aspiracional (pfire_aspiracional_*).
+        # Antes: caía em pfire_fav (= base.fav, não aspiracional) → fav == base.
         _sf_asp = load_state().get("fire", {})
-        _asp_fav = _sf_asp.get("pfire49_fav") or _sf_asp.get("pfire_fav")
-        _asp_stress = _sf_asp.get("pfire49_stress") or _sf_asp.get("pfire_stress")
+        _asp_fav = (
+            _sf_asp.get("pfire49_fav")
+            or _sf_asp.get("pfire_aspiracional_fav")
+        )
+        _asp_stress = (
+            _sf_asp.get("pfire49_stress")
+            or _sf_asp.get("pfire_aspiracional_stress")
+        )
         if _asp_fav is not None:
             pf_aspiracional["fav"] = _asp_fav
         if _asp_stress is not None:
             pf_aspiracional["stress"] = _asp_stress
+        # Garantia definicional: fav DEVE ser > base. Se sobrescrita ainda igual,
+        # forçar heurística (+3pp), mantendo cap 100.
+        if pf_aspiracional["fav"] <= pf_aspiracional["base"]:
+            pf_aspiracional["fav"] = min(100, pf_aspiracional["base"] + 3)
         # Persistir pat_mediano_aspiracional para aspiracional_scenario
         if result_aspiracional.pat_mediana_fire > 0:
             _fire_upd = {**_sf_asp,
