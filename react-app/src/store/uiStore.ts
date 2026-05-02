@@ -28,6 +28,10 @@ export interface UIState {
   // Withdraw scenario selector
   withdrawScenario: 'atual' | 'casado' | 'filho';
   setWithdrawScenario: (s: 'atual' | 'casado' | 'filho') => void;
+
+  // Fire scenario selector — espelha withdrawScenario (mesmo perfil familiar)
+  fireScenario: 'atual' | 'casado' | 'filho';
+  setFireScenario: (s: 'atual' | 'casado' | 'filho') => void;
 }
 
 export const useUiStore = create<UIState>()(
@@ -78,6 +82,12 @@ export const useUiStore = create<UIState>()(
       setWithdrawScenario: (s: 'atual' | 'casado' | 'filho') => {
         set({ withdrawScenario: s });
       },
+
+      // Fire scenario (same family-profile semantics as withdraw)
+      fireScenario: 'atual',
+      setFireScenario: (s: 'atual' | 'casado' | 'filho') => {
+        set({ fireScenario: s });
+      },
     }),
     {
       name: 'dashboard-ui-store',
@@ -87,6 +97,7 @@ export const useUiStore = create<UIState>()(
         activeSimulator: state.activeSimulator,
         activePeriod: state.activePeriod,
         withdrawScenario: state.withdrawScenario,
+        fireScenario: state.fireScenario,
       }),
     }
   )

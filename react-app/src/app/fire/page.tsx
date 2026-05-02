@@ -19,6 +19,7 @@ import { HumanCapitalCrossover } from '@/components/dashboard/HumanCapitalCrosso
 import { PFireDistribution } from '@/components/fire/PFireDistribution';
 import { PQualityMatrix } from '@/components/fire/PQualityMatrix';
 import { ScenarioCompareCards } from '@/components/fire/ScenarioCompareCards';
+import { useUiStore } from '@/store/uiStore';
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
@@ -39,6 +40,7 @@ import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornad
 
 export default function FirePage() {
   const { data, derived, isLoading, dataError, privacyMode } = usePageData();
+  const fireScenario = useUiStore(s => s.fireScenario);
 
   // Must be before early returns — Rules of Hooks require unconditional hook calls
   // Compute approximate retirement age for each fire_matrix patrimônio row
@@ -128,6 +130,19 @@ export default function FirePage() {
   const bondPoolCompletionPct: number = (data as any)?.fire?.bond_pool_completion_pct ?? 0;
   const modelUncertainty = (data as any)?.pfire_base?.model_uncertainty as { low: number; high: number } | null ?? null;
   const prem = (data as any)?.premissas ?? {};
+
+  // Scenario configs from data.json (compartilhado com withdraw page).
+  // activeScenarioCfg.label e .custo_vida_base alimentam os ScenarioBadges
+  // dos blocos abaixo — substituem os valores hardcoded "Solteiro" / 250000
+  // que apareciam mesmo quando Diego selecionava Casado/Filho.
+  type ScenarioKey = 'atual' | 'casado' | 'filho';
+  const fireCenarios: Record<ScenarioKey, { label: string; custo_vida_base: number; tem_conjuge: boolean; inss_katia_anual: number }> = (safeData as any).withdraw_cenarios ?? {
+    atual:  { label: 'Solteiro',         custo_vida_base: 250_000, tem_conjuge: false, inss_katia_anual: 0 },
+    casado: { label: 'Casado',           custo_vida_base: 270_000, tem_conjuge: true,  inss_katia_anual: 93_600 },
+    filho:  { label: 'Casado + Filho',   custo_vida_base: 300_000, tem_conjuge: true,  inss_katia_anual: 93_600 },
+  };
+  const activeScenarioCfg = fireCenarios[fireScenario as ScenarioKey] ?? fireCenarios.atual;
+
   const fireYearHero: number | null = (() => {
     const p0 = (data as any)?.fire_matrix?.by_profile?.[0];
     const y = p0?.fire_age_53 ?? prem.ano_cenario_base;
@@ -474,7 +489,7 @@ export default function FirePage() {
       {/* P(FIRE) Distribution — Percentiles & Tail Risks */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
         <h2 style={{ margin: 0 }}>P(FIRE) Distribuição Monte Carlo — Percentis</h2>
-        <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+        <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
       </div>
       <PFireDistribution
         base={pfireHero}
@@ -574,7 +589,7 @@ export default function FirePage() {
             return (
               <>
                 <div style={{ marginBottom: 8 }}>
-                  <ScenarioBadge label="Solteiro" gasto={custoVida} privacyMode={privacyMode} />
+                  <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
                 </div>
                 <FloorUpsideFire
                   gastoPiso={gastoPiso}
@@ -697,7 +712,7 @@ export default function FirePage() {
       <section className="section" id="trackingFireSection">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
           <h2 style={{ margin: 0 }}>Tracking FIRE — Realizado vs Projeção</h2>
-          <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+          <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
         </div>
         <TrackingFireChart data={safeData} />
         <div className="src">
@@ -941,7 +956,7 @@ export default function FirePage() {
       <section className="section" id="netWorthProjectionSection">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
           <h2 style={{ margin: 0 }}>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
-          <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+          <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
         </div>
         <NetWorthProjectionChart data={safeData} />
         <div style={{ marginTop: 4, padding: '6px 10px', background: 'color-mix(in srgb, var(--yellow) 8%, transparent)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-sm)' }}>
@@ -972,13 +987,7 @@ export default function FirePage() {
       {safeData.fire_matrix && (
         <CollapsibleSection id="section-fire-matrix" title={secTitle('fire', 'fire-matrix')} defaultOpen={secOpen('fire', 'fire-matrix')}>
           <div data-testid="fire-matrix" style={{ padding: '0 16px 16px' }}>
-            {(() => {
-              const profiles = (safeData as any)?.fire_matrix?.by_profile ?? [];
-              const atual = profiles.find((p: any) => p.profile === 'atual');
-              const label = 'Solteiro';
-              const gasto = atual?.gasto_anual ?? (safeData as any)?.premissas?.custo_vida_base ?? 250000;
-              return <ScenarioBadge label={label} gasto={gasto} privacyMode={privacyMode} />;
-            })()}
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
             <FireMatrixTable
               data={safeData.fire_matrix}
               idades={fireMatrixIdades}
@@ -1187,7 +1196,7 @@ export default function FirePage() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
             <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cenário</span>
-            <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
           </div>
           <EventosVidaChart data={safeData} />
           <div className="src">
@@ -1203,7 +1212,7 @@ export default function FirePage() {
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
             <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cenário</span>
-            <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
           </div>
           <GlidePathChart data={safeData} />
           <div className="src">
