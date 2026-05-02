@@ -229,6 +229,63 @@ describe('setMktPreset exclui aspiracional — tipo Exclude<FireMkt, aspiraciona
   });
 });
 
+// ── Regression: sliders ficam mortos após Aspiracional (bug 2026-05-01) ──────
+//
+// Bug: isPresetMode = !custom || retornoMatchesPreset.
+// Quando Aspiracional usa retorno=favRetorno (5.85) e o usuário arrasta o slider
+// de aporte, custom=true e retornoMatchesPreset também = true (retorno não mudou),
+// então isPresetMode permanece true → FIRE year usa pré-computado, ignorando slider.
+//
+// Fix: isPresetMode = !custom (qualquer interação sai do preset).
+//
+// Replica a função pura corrigida.
+
+function isPresetMode(state: SimState): boolean {
+  return !state.custom;
+}
+
+describe('Regression — sliders após Aspiracional (2026-05-01)', () => {
+  it('arrastar aporte slider sai do preset mode (custom=true) mesmo se retorno=favRetorno', () => {
+    const aspir = applyAspiracional(DEFAULT_STATE);
+    expect(isPresetMode(aspir)).toBe(true); // antes do drag
+
+    // Simula drag do aporte (só mexe em aporte e custom)
+    const afterDrag: SimState = { ...aspir, aporte: 50_000, custom: true };
+    expect(isPresetMode(afterDrag)).toBe(false); // sai de preset → recalcula com slider
+  });
+
+  it('arrastar custo slider sai do preset mode após Aspiracional', () => {
+    const aspir = applyAspiracional(DEFAULT_STATE);
+    const afterDrag: SimState = { ...aspir, custo: 350_000, custom: true };
+    expect(isPresetMode(afterDrag)).toBe(false);
+  });
+
+  it('arrastar retorno slider sai do preset mode (já funcionava antes do fix)', () => {
+    const aspir = applyAspiracional(DEFAULT_STATE);
+    const afterDrag: SimState = { ...aspir, retorno: 7.0, custom: true };
+    expect(isPresetMode(afterDrag)).toBe(false);
+  });
+
+  it('clique em Stress/Base/Fav após Aspiracional volta ao preset mode', () => {
+    let s = applyAspiracional(DEFAULT_STATE);
+    s = { ...s, custom: true }; // user dragged
+    expect(isPresetMode(s)).toBe(false);
+    // Click base preset
+    s = applyMktPreset(s, 'base');
+    expect(isPresetMode(s)).toBe(true);
+  });
+
+  it('regressão: o heurístico antigo `retornoMatchesPreset` está fora — não permite preset com slider movido', () => {
+    // Esta regra documenta a decisão de design: não tem "soft preset mode".
+    // Se custom=true, sempre interativo. Sem exceções.
+    const aspir = applyAspiracional(DEFAULT_STATE);
+    const afterDrag: SimState = { ...aspir, aporte: 99_000, custom: true };
+    // retorno ainda = favRetorno, mas estamos em interativo
+    expect(afterDrag.retorno).toBeCloseTo(5.85, 1);
+    expect(isPresetMode(afterDrag)).toBe(false);
+  });
+});
+
 describe('Fluxo completo: perfil → aspiracional → perfil', () => {
   it('casado → aspir (preserva casado) → filho (sai de aspir, custo=filho)', () => {
     let s = applyCondPreset(DEFAULT_STATE, 'casamento');

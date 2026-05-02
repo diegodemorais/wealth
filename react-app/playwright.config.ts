@@ -42,8 +42,10 @@ export default defineConfig({
       // Semantic smoke — validates that critical fields render real values.
       // Uses Next.js dev server (basePath /wealth resolves correctly).
       // Run: SEMANTIC_ONLY=1 npx playwright test --project=semantic
+      // Includes interactive specs (e.g. fire-simulator-sliders) that need
+      // full JS hydration, only available against the dev server.
       name: 'semantic',
-      testMatch: '**/semantic-smoke.spec.ts',
+      testMatch: ['**/semantic-smoke.spec.ts', '**/fire-simulator-sliders.spec.ts'],
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'http://localhost:3002',

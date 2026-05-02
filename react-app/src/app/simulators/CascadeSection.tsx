@@ -86,7 +86,7 @@ export function CascadeSection() {
                 min="1000"
                 max="1000000"
                 step="1000"
-                value={aporte}
+                value={aporte ?? ''}
                 onChange={e => setAporte(+e.target.value)}
                 style={{ width: '90px', fontSize: 'var(--text-base)', textAlign: 'right' }}
               />

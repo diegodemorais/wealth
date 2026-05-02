@@ -204,14 +204,15 @@ export function FireSimuladorSection() {
   const isCambioDinamico = fireMkt === 'cambio_dinamico';
   const isAspirPreset = !custom && fireMkt === 'aspiracional';
 
-  // Detect if custom mode value matches a preset — use preset mode in that case
-  const preset = MKT_PRESETS[fireMkt];
-  const retornoMatchesPreset = custom && retorno !== undefined && preset.retorno !== undefined
-    ? Math.abs(retorno - preset.retorno) < 0.01 // within rounding tolerance
-    : false;
-
-  // Preset mode indicator (for UI label)
-  const isPresetMode = !custom || retornoMatchesPreset;
+  // Preset mode indicator: any slider movement (custom=true) exits preset mode.
+  // Bug 2026-05-01: previously `!custom || retornoMatchesPreset` — when retorno
+  // happened to match a preset value (e.g. after clicking Aspiracional), aporte
+  // and custo sliders silently kept preset MC results, ignoring user input.
+  // Diego report: "sliders param de funcionar". Root cause: aporte/custo changes
+  // set custom=true but retorno still matched preset → isPresetMode stayed true →
+  // result branched into precomputed by_profile threshold, ignoring slider deltas.
+  // Fix: any user interaction (custom=true) → deterministic calc with current sliders.
+  const isPresetMode = !custom;
 
   // P(FIRE) com Câmbio Dinâmico — computa ao vivo quando botão ativo (DEV-mc-regime-switching-fx)
   const pfireCambio = useMemo(() => {
