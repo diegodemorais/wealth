@@ -547,6 +547,29 @@
 
 ---
 
+## Novos lançamentos identificados (2026-05-01)
+
+### WIMI — Xtrackers MSCI World IMI UCITS ETF (DWS, abr/2026)
+
+| Campo | Valor |
+|-------|-------|
+| Ticker | WIMI (LSE) |
+| ISIN | IE000X1GW0A7 |
+| TER | 0.15% |
+| AUM | ~EUR 8M (lançamento abril/2026) |
+| Universo | MSCI World IMI (large + mid + small DM) |
+| Status | **Monitorar** — primeiro UCITS rastreando MSCI World IMI a TER 0.15% |
+| Razão para monitorar | Mais barato que AVWC (0.22%) sem factor premium. Não ameaça AVGS (factor) mas serve como referência de custo passivo all-cap. Aguardar AUM > EUR 100M antes de considerar como candidato real. |
+| Próxima revisão | 2027-04-01 (12 meses) ou em scan trimestral |
+
+### Outros lançamentos (descartados de cara)
+
+- **ALLW** (Xtrackers FTSE All-World UCITS, 0.12%) — competidor passivo VWRA. Sem tilt fatorial. Descartar.
+- **AWEX** (Xtrackers FTSE ex-US, 0.15%) — passivo ex-US. Sem tilt. Descartar.
+- **AVUS/AVEU/AVPE** (Avantis regionais, fev/2026) — já mapeados em "Descartados" desde abr/2026. Confirmação de lançamento oficial.
+
+---
+
 ## Como Usar
 
 **Adicionar candidato:** mencionado positivamente por glimz/afstand/Ben_Felix no RR ou Bogleheads por usuário estabelecido, OU novo produto da família Avantis/Dimensional UCITS, OU TER potencialmente inferior a equivalente na carteira.
