@@ -159,6 +159,54 @@ run). Equivalência matemática: FIFO determinístico na ordem cronológica.
 **Teste E2E:** `scripts/test_pipeline_idempotency.py` — roda 2× consecutivas
 e verifica que artefatos não mudam (ignorando `_meta`/`_generated`).
 
+## Release Gate (pre-push)
+
+Mandato QA (perfil `agentes/perfis/22-qa.md`): toda mudança em `react-app/`,
+`scripts/` ou `dados/` passa pelo release gate **antes de `git push`**. Origem:
+DEV-release-gate-checklist (2026-05-01) após 4 bugs visuais escaparem em sessão
+única (cliff -91% drawdown, timezone errada, sliders FIRE quebrados, AVEM 1.43%).
+
+```bash
+./scripts/release_gate.sh              # 9 checks; exit 1 se falhar
+./scripts/release_gate.sh --no-render  # sem Playwright (debug only)
+./scripts/quick_dashboard_test.sh      # alias do gate (back-compat)
+```
+
+**9 checks executados em ordem (curto-circuita na 1ª falha):**
+
+| # | Check | Ferramenta |
+|---|-------|------------|
+| 1 | TypeScript zero novos erros | `tsc --noEmit` + allowlist |
+| 2 | Build limpo | `npm run build` |
+| 3 | Playwright local render | `LOCAL_RENDER_ONLY=1` |
+| 4 | Playwright semantic smoke | `SEMANTIC_ONLY=1` |
+| 5 | Pipeline E2E (spec contract) | `pytest test_pipeline_e2e.py` |
+| 6 | Vitest 100% pass | `npm run test --run` |
+| 7 | **Sanity numérico** | `release_gate_sanity.py` |
+| 8 | **Anti-cliff em séries** | `release_gate_sanity.py` |
+| 9 | Versão dashboard (warning soft) | git diff package.json |
+
+**Checks 7+8 — `scripts/release_gate_sanity.py`:**
+
+- 13 assertions de range plausível: P(FIRE) base/fav/stress ∈ [0,100],
+  Selic ∈ [5,25]%, IPCA 12m ∈ [0,15]%, USD/BRL ∈ [3,10], IPCA+ 2040/Renda+
+  2065 taxa real ∈ [3,12]%, max_drawdown ∈ [-80,0]%, SWR ∈ (0,10)%, Sharpe
+  backtest target ∈ [-1,3], patrimônio financeiro ∈ [R$1M, R$50M], total
+  holístico ∈ [R$1M, R$100M].
+- 8 séries vigiadas anti-cliff: drawdown_pct, twr_pct, twr_usd_pct,
+  acumulado_pct/usd, rolling_sharpe.values, fire_trilha.trilha_p50_brl/brl.
+- **Threshold conjunto** (relativo E absoluto): -2% → -3% no drawdown é
+  50% relativo mas só 1pp absoluto — NÃO é cliff. -7% → -91% (84pp +
+  1200%) é cliff. Evita falso-positivo em séries pequenas.
+
+**Fixtures de teste negativo:** `dados/test_fixtures/data_*.json` —
+data.json válido com defeitos injetados (cliff -91%, P(FIRE) 145%, Selic
+145%) para validar que o gate falha quando deve. Tests:
+`scripts/tests/test_release_gate.py` (7/7 pass).
+
+**Tempo medido:** ~2 min (Playwright dominante). Sem `--no-render`: alvo.
+Com `--no-render`: ~30s.
+
 ## Qualidade (Python)
 
 - Funções: 4–20 linhas, responsabilidade única
