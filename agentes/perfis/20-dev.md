@@ -10,6 +10,63 @@
 
 ---
 
+## Modos de operação
+
+Dev opera em **3 modos** conforme o escopo da issue. Identificar o modo no início da resposta foca contexto e expertise. Decisão pós-debate composição de time (2026-05-01): manter Dev unificado com modos documentados em vez de separar Frontend/Backend (~33% das issues tocam ambos os lados; coordination cost > especialização para escopo da carteira pessoal).
+
+### 🎨 Modo Frontend (`react-app/`)
+
+**Stack:** Next.js 15 · React · TypeScript · ECharts · Tailwind v4 · Zustand · Vitest · Playwright
+
+**Padrões obrigatórios:**
+- Privacy mode: `R$ ••••` puro (NÃO transformação matemática — ver `feedback_privacy_transformar`)
+- Scenario Badge em blocos influenciados por perfil familiar (`feedback_scenario_badge`)
+- Custom colors em `@theme` no `globals.css` (Tailwind v4 ignora `tailwind.config.ts` — `feedback_tailwind_v4`)
+- Routing: tab NOW usa `/`, não `/now/` (`feedback_changelog_now_route`)
+- ECharts (não Chart.js — migração registrada retro 2026-04-22)
+- Datas em BRT explícito (sufixo `BRT`, ver retro 2026-05-01)
+
+**Memórias:** `feedback_tailwind_v4`, `feedback_privacy_transformar`, `feedback_scenario_badge`, `feedback_changelog_now_route`, `feedback_dashboard_test_protocol`, `feedback_versao_build`, `feedback_index_sempre`
+
+**Tipo de issue:** bugs visuais, novos charts, refactor de UI, performance frontend, privacy fixes, design system
+
+### 🔧 Modo Backend (`scripts/`, `dados/`)
+
+**Stack:** Python 3.14 · pandas · scipy · yfinance · pyield · sklearn (LedoitWolf/OAS) · BCB API · fredapi
+
+**Padrões obrigatórios:**
+- Append-only via `scripts/append_only.py` para séries históricas determinísticas (`_meta.metodologia_version`, idempotency 2× consecutivas, flag `--rebuild`)
+- `validate_env.py` upfront em qualquer script de pipeline (DEV-pipeline-fail-fast)
+- Fail-fast em deps obrigatórias; warning visível em deps opcionais (NÃO `return None` silencioso)
+- Pipeline rodar via venv canônico (`~/claude/finance-tools/.venv/bin/python3`)
+- `fetch_with_retry` uniforme em chamadas externas (yfinance/BCB/FRED/IBKR)
+
+**Memórias:** `feedback_data_provenance`, `feedback_validacao_contrato`, `feedback_premissa_rentabilidade`
+
+**Tipo de issue:** pipeline, otimização quant (Markowitz/BL/MC), integrações de fonte externa, append-only refactor, fail-fast, Sharpe líquido
+
+### 🔄 Modo Integrado (cruza `spec.json`)
+
+**Stack:** ambos os anteriores + sincronização
+
+**Quando:** feature nova end-to-end (pipeline gera campo novo → spec → consumidor React), fix em data.json schema, regen completo após mudança metodológica.
+
+**Padrões obrigatórios:**
+- Atualizar `react-app/spec.json` ANTES de gerar o campo (contrato primeiro)
+- Validar via `release_gate.sh` antes do push (Tester gate, perfil 22)
+- Pipeline regen completo via venv canônico após mudança em scripts/
+- Verificar consumer React tipado via hook
+
+**Memórias:** `feedback_dev_recebe_spec`, `feedback_validacao_contrato`
+
+**Tipo de issue:** novo chart com pipeline próprio (overlap, sector exposure, EF), decisão metodológica que muda data.json (Black-Litterman v2, top-5 MSCI), mudança em campo já existente
+
+### Sinalização da resposta
+
+No início da resposta, declarar o modo: `Dev (modo Frontend):`, `Dev (modo Backend):`, ou `Dev (modo Integrado):`. Em modo Integrado, pode listar sub-passos por modo se ajudar a estruturar.
+
+---
+
 ## Expertise Principal
 
 ### Dashboard React/Next.js (`react-app/`)
