@@ -1,27 +1,27 @@
 {
-  "_generated": "2026-05-02T00:17:53",
+  "_generated": "2026-05-02T19:41:59",
   "_source": "reconstruct_history.py",
   "periodo": {
     "inicio": "2021-04-28",
-    "fim": "2026-04-28",
-    "meses": 60,
-    "anos": 5.0
+    "fim": "2026-05-28",
+    "meses": 61,
+    "anos": 5.08
   },
   "patrimonio": {
     "inicio_brl": 257684.36,
-    "fim_brl": 3661765.61,
+    "fim_brl": 3585095.1,
     "total_aportes_brl": 2400060.35,
-    "ganho_mercado_brl": 1004020.9
+    "ganho_mercado_brl": 927350.39
   },
   "retorno_twr": {
-    "acumulado_pct": 58.53,
-    "cagr_pct": 9.66,
-    "media_mensal_pct": 0.91
+    "acumulado_pct": 55.22,
+    "cagr_pct": 9.04,
+    "media_mensal_pct": 0.86
   },
   "risco": {
     "max_drawdown_pct": -30.27,
     "max_drawdown_date": "2022-09",
-    "volatilidade_anual_pct": 18.61
+    "volatilidade_anual_pct": 18.5
   },
   "distribuicao": {
     "melhor_mes": {
@@ -33,7 +33,7 @@
       "twr_pct": -15.01
     },
     "meses_positivos": 35,
-    "meses_negativos": 25,
-    "hit_rate_pct": 58.3
+    "meses_negativos": 26,
+    "hit_rate_pct": 57.4
   }
 }

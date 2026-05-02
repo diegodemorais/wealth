@@ -157,6 +157,13 @@ SANITY_ASSERTIONS: list[tuple[str, Callable[[Any], bool], str]] = [
         ),
         "pfire_aspiracional.fav > base (cenário favorável tem premissas mais otimistas)",
     ),
+    # Selic vigente — rolling_sharpe.rf_brl.taxa_anual em range plausível.
+    # Origem: bug 2026-05-02 (rolling tinha 14.75 stale, Selic vigente 14.50 após Copom 29/abr).
+    (
+        "rolling_sharpe.rf_brl.taxa_anual",
+        lambda v: isinstance(v, (int, float)) and 5 <= v <= 25,
+        "rolling rf_brl.taxa_anual em [5,25]% (Selic plausível)",
+    ),
 ]
 
 
@@ -267,6 +274,33 @@ def run_cliff_checks(data: dict) -> list[str]:
     return failures
 
 
+def run_cross_field_checks(data: dict) -> list[str]:
+    """Cross-field assertions: consistência entre campos relacionados.
+
+    Origem: bug 2026-05-02 — rolling_sharpe.rf_brl tinha 14.75 (Selic anterior)
+    enquanto macro.selic_meta já mostrava 14.50 (corte Copom 29/abr). Causa:
+    rolling_metrics.json persistido sem rebuild após mudança da Selic.
+    Tolerância 0.50pp (= um corte/alta típico) absorve um run defasado;
+    >0.50pp indica rolling stale e exige `--rebuild`.
+    """
+    failures: list[str] = []
+
+    rolling_rf = get_nested(data, "rolling_sharpe.rf_brl.taxa_anual")
+    selic_meta = get_nested(data, "macro.selic_meta")
+    if (
+        isinstance(rolling_rf, (int, float))
+        and isinstance(selic_meta, (int, float))
+        and abs(rolling_rf - selic_meta) > 0.50
+    ):
+        failures.append(
+            f"❌ rolling_sharpe.rf_brl.taxa_anual ({rolling_rf}) divergente de "
+            f"macro.selic_meta ({selic_meta}) — Δ>0.50pp. "
+            "Rolling pode estar stale (rebuild com --rebuild)."
+        )
+
+    return failures
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Release gate sanity + anti-cliff")
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA,
@@ -287,19 +321,23 @@ def main() -> int:
 
     sanity_fails = run_sanity_checks(data)
     cliff_fails = run_cliff_checks(data)
-    all_fails = sanity_fails + cliff_fails
+    cross_fails = run_cross_field_checks(data)
+    all_fails = sanity_fails + cliff_fails + cross_fails
 
     if all_fails:
         print("Release gate sanity: FALHOU")
         for line in all_fails:
             print(f"  {line}")
-        print(f"\nTotal: {len(sanity_fails)} sanity + {len(cliff_fails)} cliff")
+        print(
+            f"\nTotal: {len(sanity_fails)} sanity + {len(cliff_fails)} cliff + "
+            f"{len(cross_fails)} cross-field"
+        )
         return 1
 
     if not args.quiet:
-        n = len(SANITY_ASSERTIONS) + len(ANTI_CLIFF_SERIES)
+        n = len(SANITY_ASSERTIONS) + len(ANTI_CLIFF_SERIES) + 1
         print(f"✅ sanity numérico OK ({n} checks: "
-              f"{len(SANITY_ASSERTIONS)} sanity + {len(ANTI_CLIFF_SERIES)} anti-cliff)")
+              f"{len(SANITY_ASSERTIONS)} sanity + {len(ANTI_CLIFF_SERIES)} anti-cliff + 1 cross-field)")
     return 0
 
 

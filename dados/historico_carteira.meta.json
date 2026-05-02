@@ -2,9 +2,9 @@
   "_meta": {
     "metodologia_version": "twr-md-v1",
     "schema_version": "1.0",
-    "last_period_appended": "2026-04",
-    "last_appended_at": "2026-05-02T00:17:53-03:00",
-    "rebuild_reason": null,
+    "last_period_appended": "2026-05",
+    "last_appended_at": "2026-05-02T19:41:59-03:00",
+    "rebuild_reason": "cli-flag",
     "artefact": "historico_carteira.csv"
   }
 }

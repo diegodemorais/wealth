@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-05-02T00:17:53",
+  "_generated": "2026-05-02T19:41:59",
   "_source": "reconstruct_history.py → TWR (Modified Dietz, temporal-weighted inflows)",
   "dates": [
     "2021-05",
@@ -61,7 +61,8 @@
     "2026-01",
     "2026-02",
     "2026-03",
-    "2026-04"
+    "2026-04",
+    "2026-05"
   ],
   "twr_pct": [
     0.29,
@@ -123,7 +124,8 @@
     -0.34,
     2.65,
     -4.95,
-    4.27
+    4.27,
+    -2.09
   ],
   "twr_usd_pct": [
     2.14,
@@ -185,7 +187,8 @@
     5.14,
     3.76,
     -7.67,
-    9.87
+    9.87,
+    0.58
   ],
   "acumulado_pct": [
     0.29,
@@ -247,7 +250,8 @@
     55.83,
     59.96,
     52.04,
-    58.53
+    58.53,
+    55.22
   ],
   "acumulado_usd_pct": [
     2.14,
@@ -309,7 +313,8 @@
     59.13,
     65.11,
     52.44,
-    67.49
+    67.49,
+    68.46
   ],
   "decomposicao": {
     "equity_usd": [
@@ -372,7 +377,8 @@
       5.06,
       3.68,
       -7.61,
-      8.96
+      8.96,
+      0.51
     ],
     "fx": [
       -1.84,
@@ -434,7 +440,8 @@
       -5.14,
       -0.99,
       2.43,
-      -4.25
+      -4.25,
+      -0.85
     ],
     "rf_xp": [
       -0.0,
@@ -496,15 +503,16 @@
       0.0,
       -0.0,
       0.41,
-      -0.02
+      -0.02,
+      -1.75
     ]
   },
-  "twr_real_brl_pct": 3.54,
-  "twr_nominal_brl_cagr": 9.65,
-  "twr_usd_cagr": 10.87,
-  "vwra_usd_cagr": 10.58,
+  "twr_real_brl_pct": 2.96,
+  "twr_nominal_brl_cagr": 9.03,
+  "twr_usd_cagr": 10.8,
+  "vwra_usd_cagr": 10.62,
   "ipca_cagr_periodo_pct": 5.9,
-  "periodo_anos": 5.0,
+  "periodo_anos": 5.08,
   "annual_returns": [
     {
       "year": 2021,
@@ -568,13 +576,13 @@
     },
     {
       "year": 2026,
-      "months": 4,
+      "months": 5,
       "ytd": true,
-      "twr_nominal_brl": 1.39,
-      "twr_real_brl": -0.52,
-      "twr_usd": 10.67,
-      "vwra_usd": 5.86,
-      "alpha_pp": 4.81,
+      "twr_nominal_brl": -0.73,
+      "twr_real_brl": -2.6,
+      "twr_usd": 11.31,
+      "vwra_usd": 6.94,
+      "alpha_pp": 4.37,
       "ipca": 1.92,
       "cdi": 4.54
     }
@@ -582,8 +590,8 @@
   "_meta": {
     "metodologia_version": "twr-md-v1",
     "schema_version": "1.0",
-    "last_period_appended": "2026-04",
-    "last_appended_at": "2026-05-02T00:17:55-03:00",
-    "rebuild_reason": null
+    "last_period_appended": "2026-05",
+    "last_appended_at": "2026-05-02T19:42:01-03:00",
+    "rebuild_reason": "cli-flag"
   }
 }
