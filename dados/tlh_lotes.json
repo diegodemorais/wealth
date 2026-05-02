@@ -1,6 +1,6 @@
 {
   "_window_id": null,
-  "_source": "U5947683.TRANSACTIONS.20210408.20260331.csv",
+  "_source": "U5947683.TRANSACTIONS.20210408.20260331.csv + Flex Query",
   "_period": "2021-04-08 → 2026-03-13",
   "_ptax_atual": 4.9886,
   "summary": {
@@ -9199,7 +9199,7 @@
     "metodologia_version": "fifo-ibkr-v1",
     "schema_version": "1.0",
     "last_period_appended": "2026-03-09",
-    "last_appended_at": "2026-05-02T00:17:59-03:00",
+    "last_appended_at": "2026-05-02T07:56:03-03:00",
     "rebuild_reason": null
   }
 }
