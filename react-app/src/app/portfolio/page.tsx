@@ -29,8 +29,7 @@ import { fmtPrivacy } from '@/utils/privacyTransform';
 import { EChart } from '@/components/primitives/EChart';
 import { EC, EC_AXIS_LABEL } from '@/utils/echarts-theme';
 import { FeeImpactChart } from '@/components/charts/FeeImpactChart';
-import { FactorProfileChart } from '@/components/charts/FactorProfileChart';
-import { StyleBoxChart } from '@/components/charts/StyleBoxChart';
+import { FactorAnalysisPanel } from '@/components/portfolio/FactorAnalysisPanel';
 import { RollingReturnsHeatmap } from '@/components/charts/RollingReturnsHeatmap';
 import { EfficientFrontierChart } from '@/components/charts/EfficientFrontierChart';
 import { OverlapChart } from '@/components/charts/OverlapChart';
@@ -436,115 +435,9 @@ export default function PortfolioPage() {
         );
       })()}
 
-      {/* B6: Factor Loadings Panel — FF5 por ETF com barra visual e threshold neutro */}
-      {(() => {
-        const factorLoadings = (data as any)?.factor_loadings ?? {};
-        const etfKeys = ['SWRD', 'AVUV', 'AVDV', 'DGS'].filter(k => factorLoadings[k] != null);
-        if (!etfKeys.length) return null;
-        const factors = ['smb', 'hml', 'rmw', 'cma'];
-        const factorColors: Record<string, string> = {
-          smb: 'var(--accent)',
-          hml: 'var(--green)',
-          rmw: 'var(--yellow)',
-          cma: 'var(--purple)',
-        };
-        const factorLabels: Record<string, string> = {
-          smb: 'SMB (Size)',
-          hml: 'HML (Value)',
-          rmw: 'RMW (Profitability)',
-          cma: 'CMA (Investment)',
-        };
-        return (
-          <div data-testid="factor-loadings-panel">
-          <CollapsibleSection id="section-factor-loadings" title="Factor Loadings FF5 — por ETF (vs neutro=0)" defaultOpen={secOpen('portfolio', 'factor-loadings', false)}>
-            <div style={{ padding: '0 16px 16px' }}>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 12 }}>
-                Loadings FF5 (Fama-French 5-factor) por regressão mensal. Barra acima de 0 = tilt positivo (desejável para SMB/HML/RMW). Abaixo = tilt negativo vs mercado.
-              </div>
-              {etfKeys.map(etfKey => {
-                const fl = factorLoadings[etfKey];
-                if (!fl) return null;
-                const n: number = fl.n_months ?? 0;
-                return (
-                  <div key={etfKey} style={{ marginBottom: 14, background: 'var(--card2)', borderRadius: 6, padding: '10px 12px', border: '1px solid var(--border)' }}>
-                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text)', marginBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
-                      <span>{etfKey}</span>
-                      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 400 }}>R²={fl.r2?.toFixed(2)} · {n}m</span>
-                    </div>
-                    {factors.map(fk => {
-                      const loading: number = fl[fk] ?? 0;
-                      const tStat: number = fl.t_stats?.[fk] ?? 0;
-                      const isSignificant = Math.abs(tStat) >= 1.96;
-                      const color = factorColors[fk];
-                      // Scale: [-1, +1] range → bar width
-                      const maxRange = 0.8;
-                      const clipped = Math.max(-maxRange, Math.min(maxRange, loading));
-                      const pct50 = 50; // center = 0
-                      const barPct = Math.abs(clipped) / maxRange * 50; // max 50% from center
-                      const isPositive = clipped >= 0;
-                      return (
-                        <div key={fk} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                          <div style={{ flexShrink: 0, width: 120, fontSize: 9, color: 'var(--muted)' }}>
-                            {factorLabels[fk]}
-                          </div>
-                          <div style={{ flex: 1, height: 14, background: 'var(--bg)', borderRadius: 3, overflow: 'hidden', position: 'relative' }}>
-                            {/* Center line */}
-                            <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1, background: 'var(--border)', opacity: 0.7 }} />
-                            {/* Loading bar */}
-                            <div style={{
-                              position: 'absolute',
-                              top: 0, bottom: 0,
-                              left: isPositive ? `${pct50}%` : `${pct50 - barPct}%`,
-                              width: `${barPct}%`,
-                              background: `${color}${isSignificant ? 'cc' : '66'}`,
-                              borderRadius: 2,
-                            }} />
-                          </div>
-                          <div style={{
-                            flexShrink: 0, width: 48, textAlign: 'right',
-                            fontSize: 9, fontWeight: isSignificant ? 700 : 400,
-                            color: isSignificant ? color : 'var(--muted)',
-                            fontFamily: 'monospace',
-                          }}>
-                            {loading >= 0 ? '+' : ''}{loading.toFixed(3)}
-                            {isSignificant && <span style={{ color: 'var(--green)', fontSize: 7 }}>*</span>}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-              <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 4 }}>
-                * = t-stat ≥ 1.96 (95% conf.) · Barras mais opacas = significativo · Neutro = 0 (linha central)
-              </div>
-            </div>
-          </CollapsibleSection>
-          </div>
-        );
-      })()}
+      {/* B6 + 2a-bis + 2a-ter — consolidados via FactorAnalysisPanel (DEV-factor-views-tab-toggle 2026-05-02) */}
+      <FactorAnalysisPanel factorLoadings={(data as any)?.factor_loadings} />
 
-      {/* 2a-bis. Factor Profile Comparativo — SWRD vs AVGS vs AVEM (Morningstar-style) */}
-      {(data as any)?.factor_loadings && (
-        <CollapsibleSection
-          id="section-factor-profile"
-          title={secTitle('portfolio', 'factor-profile', 'Factor Profile Comparativo — SWRD · AVGS · AVEM')}
-          defaultOpen={secOpen('portfolio', 'factor-profile', false)}
-        >
-          <FactorProfileChart data={(data as any).factor_loadings} />
-        </CollapsibleSection>
-      )}
-
-      {/* 2a-ter. Style Box — grade 3×3 mercap × estilo (Morningstar-style, Opção A via factor loadings) */}
-      {(data as any)?.factor_loadings?.SWRD && (
-        <CollapsibleSection
-          id="section-style-box"
-          title={secTitle('portfolio', 'style-box', 'Style Box — Mercap × Estilo (Value · Blend · Growth)')}
-          defaultOpen={secOpen('portfolio', 'style-box', false)}
-        >
-          <StyleBoxChart data={(data as any).factor_loadings} />
-        </CollapsibleSection>
-      )}
 
       {/* 2a-quater. Overlap Detection — SWRD / AVGS / AVEM (DEV-overlap-detection 2026-05-01) */}
       {(data as any)?.overlap_detection && (
