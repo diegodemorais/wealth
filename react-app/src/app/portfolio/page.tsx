@@ -36,6 +36,7 @@ import { EfficientFrontierChart } from '@/components/charts/EfficientFrontierCha
 import { OverlapChart } from '@/components/charts/OverlapChart';
 import { SectorExposureChart } from '@/components/charts/SectorExposureChart';
 import { DiagnosticBanner } from '@/components/banners/DiagnosticBanner';
+import { AllInCostTable } from '@/components/portfolio/AllInCostTable';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -1100,6 +1101,7 @@ export default function PortfolioPage() {
           title={secTitle('portfolio', 'fee-impact', 'Impacto das Taxas (TER) — Custo Acumulado 20 anos')}
           defaultOpen={secOpen('portfolio', 'fee-impact', true)}
         >
+          <AllInCostTable />
           <FeeImpactChart data={(data as any).fee_impact} />
         </CollapsibleSection>
       )}
