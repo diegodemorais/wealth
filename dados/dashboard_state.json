@@ -6,7 +6,7 @@
     "pat_mediano_fire": 11950216.0,
     "pat_p10_fire": 7277772.0,
     "pat_p90_fire": 18868920.0,
-    "mc_date": "2026-05-02",
+    "mc_date": "2026-05-03",
     "pfire_base_base": 84.8,
     "pfire_base_fav": 91.4,
     "pfire_base_stress": 80.1,
@@ -141,7 +141,7 @@
     "bond_pool_completion_fraction": 0.2318
   },
   "_meta": {
-    "generated": "2026-05-02",
+    "generated": "2026-05-03",
     "last_update_section": "spending",
     "last_update_generator": "generate_data.py",
     "version": 1

@@ -12,7 +12,7 @@ import { useMemo } from 'react';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
-import { interpolatePtsByMin, interpolatePtsByMax } from '@/utils/scoreInterpolation';
+import { tierByMin, tierByMax, promoteTier, type WellnessStatus } from '@/utils/wellnessTier';
 import { Trophy, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 
 interface NowWellnessScoreProps {
@@ -35,22 +35,30 @@ export function NowWellnessScore({ data, derived }: NowWellnessScoreProps) {
     const terAtual = data?.drift?.['Custo']?.atual ?? (terCfg?.current_ter ?? 0.247);
     const humanStatus = wc.metrics.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
     const pfireBase = derived?.pfireBase ?? null;
-    // Interpolação linear entre tiers + arredondamento no display (cf. scoreInterpolation.ts).
-    // Bug Diego 2026-05-03: 84.8 caía em ≥75→10 em vez de ≥85→22 por 0.2pp.
-    const pfirePts = interpolatePtsByMin(pfireBase, wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [], 1);
-    const srPts = interpolatePtsByMin(savingsRate, (wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? []).map((t: any) => ({ min: t.min_pct, pts: t.pts })), 1);
-    const driftPts = interpolatePtsByMax(maxDriftVal, wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [], 'max_pp', 1);
-    const ipcaPts = ipcaGapPp == null ? 5 : interpolatePtsByMax(ipcaGapPp, wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [], 'max_pp', 1);
+    // Boldin-style 3 tiers (G/Y/R) + arredondamento. Sem interpolação.
+    // Cf. wellnessTier.ts e wellness_config.json v3.0.
+    const pfireCfg = wc.metrics.find((m: any) => m.id === 'pfire');
+    const pfireR = tierByMin(pfireBase, pfireCfg?.thresholds ?? [], 'min', pfireCfg?.decimals ?? 1);
+    const srCfg = wc.metrics.find((m: any) => m.id === 'savings_rate');
+    const srR = tierByMin(savingsRate, srCfg?.thresholds ?? [], 'min_pct', srCfg?.decimals ?? 1);
+    const driftCfg = wc.metrics.find((m: any) => m.id === 'drift');
+    const driftR = tierByMax(maxDriftVal, driftCfg?.thresholds ?? [], 'max_pp', driftCfg?.decimals ?? 1);
+    const ipcaCfg = wc.metrics.find((m: any) => m.id === 'ipca_gap');
+    const ipcaRaw = ipcaGapPp == null
+      ? { status: 'yellow' as WellnessStatus, pts: ipcaCfg?.thresholds?.find((t: any) => t.status === 'yellow')?.pts ?? 6 }
+      : tierByMax(ipcaGapPp, ipcaCfg?.thresholds ?? [], 'max_pp', ipcaCfg?.decimals ?? 1);
+    const ipcaR = promoteTier(ipcaRaw, ipcaCfg?.thresholds ?? [], dcaAtivo && ipcaCfg?.dca_promotes_tier === true);
     const reservaBrl = data?.rf?.ipca2029?.valor ?? 0;
     const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
-    const emergPts = interpolatePtsByMin(months, (wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? []).map((t: any) => ({ min: t.min_months, pts: t.pts })), 1);
+    const emergCfg = wc.metrics.find((m: any) => m.id === 'emergency_fund');
+    const emergR = tierByMin(months, emergCfg?.thresholds ?? [], 'min_months', emergCfg?.decimals ?? 1);
     const terDelta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22);
-    const terPts = interpolatePtsByMax(terDelta, terCfg?.thresholds ?? [], 'max_delta_pp', 2);
+    const terR = tierByMax(terDelta, terCfg?.thresholds ?? [], 'max_delta_pp', terCfg?.decimals ?? 2);
     const humanPts = (wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? []).find((t: any) => t.status === humanStatus)?.pts ?? 5;
-    const total = pfirePts + srPts + driftPts + ipcaPts + 7 + emergPts + terPts + humanPts;
-    const maxScores = [35, 15, 15, 10, 10, 5, 5, 5];
-    const allPts = [pfirePts, srPts, driftPts, ipcaPts, 7, emergPts, terPts, humanPts];
-    const badCount = allPts.filter((p, i) => p / maxScores[i] < 0.85).length;
+    const execNeutral = wc.metrics.find((m: any) => m.id === 'execution_fidelity')?.neutral_pts_when_insufficient ?? 6;
+    const total = pfireR.pts + srR.pts + driftR.pts + ipcaR.pts + execNeutral + emergR.pts + terR.pts + humanPts;
+    const statuses = [pfireR.status, srR.status, driftR.status, ipcaR.status, emergR.status, terR.status];
+    const badCount = statuses.filter((s) => s !== 'green').length;
     return { total, badCount };
   }, [data, derived]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -103,61 +111,45 @@ function WellnessDetail({ data, derived }: { data: any; derived: any }) {
   const terAtual = data.drift?.['Custo']?.atual ?? (data.wellness_config?.metrics?.find((m: any) => m.id === 'ter')?.current_ter ?? 0.247);
   const humanCapitalStatus = data.wellness_config?.metrics?.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
 
-  // Interpolação + arredondamento no display (cf. scoreInterpolation.ts).
-  // Substitui degraus rígidos que causavam saltos grandes (Diego 2026-05-03).
-  const pfirePts = interpolatePtsByMin(
-    pfireBaseVal,
-    wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [],
-    1,
-  );
-  const savingsRatePts = interpolatePtsByMin(
-    savingsRate,
-    (wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? []).map((t: any) => ({ min: t.min_pct, pts: t.pts })),
-    1,
-  );
-  const driftPts = interpolatePtsByMax(
-    maxDriftVal,
-    wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [],
-    'max_pp',
-    1,
-  );
-  const ipcaGapPts = ipcaGapPp == null
-    ? 5
-    : interpolatePtsByMax(ipcaGapPp, wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [], 'max_pp', 1);
-  const execPts = 7;
-  const emergencyPts = (() => {
-    const reservaBrl = data.rf?.ipca2029?.valor ?? 0;
-    const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
-    return interpolatePtsByMin(
-      months,
-      (wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? []).map((t: any) => ({ min: t.min_months, pts: t.pts })),
-      1,
-    );
-  })();
-  const terPts = (() => {
-    const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
-    const benchmarkTer = terCfg?.benchmark_ter ?? 0.22;
-    const currentTer = terCfg?.current_ter ?? terAtual;
-    const delta = currentTer - benchmarkTer;
-    return interpolatePtsByMax(delta, terCfg?.thresholds ?? [], 'max_delta_pp', 2);
-  })();
+  // Boldin-style 3 tiers (G/Y/R) + arredondamento — sem interpolação.
+  // Cf. wellnessTier.ts e wellness_config.json v3.0.
+  const pfireCfg = wc.metrics.find((m: any) => m.id === 'pfire');
+  const pfireR = tierByMin(pfireBaseVal, pfireCfg?.thresholds ?? [], 'min', pfireCfg?.decimals ?? 1);
+  const srCfg = wc.metrics.find((m: any) => m.id === 'savings_rate');
+  const srR = tierByMin(savingsRate, srCfg?.thresholds ?? [], 'min_pct', srCfg?.decimals ?? 1);
+  const driftCfg = wc.metrics.find((m: any) => m.id === 'drift');
+  const driftR = tierByMax(maxDriftVal, driftCfg?.thresholds ?? [], 'max_pp', driftCfg?.decimals ?? 1);
+  const ipcaCfg = wc.metrics.find((m: any) => m.id === 'ipca_gap');
+  const ipcaRaw: { status: WellnessStatus; pts: number } = ipcaGapPp == null
+    ? { status: 'yellow', pts: ipcaCfg?.thresholds?.find((t: any) => t.status === 'yellow')?.pts ?? 6 }
+    : tierByMax(ipcaGapPp, ipcaCfg?.thresholds ?? [], 'max_pp', ipcaCfg?.decimals ?? 1);
+  const ipcaR = promoteTier(ipcaRaw, ipcaCfg?.thresholds ?? [], dcaAtivo && ipcaCfg?.dca_promotes_tier === true);
+  const execCfg = wc.metrics.find((m: any) => m.id === 'execution_fidelity');
+  const execPts = execCfg?.neutral_pts_when_insufficient ?? 6;
+  const execStatus: WellnessStatus = 'yellow'; // sem dados suficientes
+  const reservaBrl = data.rf?.ipca2029?.valor ?? 0;
+  const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
+  const emergCfg = wc.metrics.find((m: any) => m.id === 'emergency_fund');
+  const emergR = tierByMin(months, emergCfg?.thresholds ?? [], 'min_months', emergCfg?.decimals ?? 1);
+  const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
+  const terDelta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22);
+  const terR = tierByMax(terDelta, terCfg?.thresholds ?? [], 'max_delta_pp', terCfg?.decimals ?? 2);
 
-  const humanPts = (() => {
-    const thresholds = wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? [];
-    const match = thresholds.find((t: any) => t.status === humanCapitalStatus);
-    return match ? match.pts : 5;
-  })();
+  const humanThresh = wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? [];
+  const humanMatch = humanThresh.find((t: any) => t.status === humanCapitalStatus);
+  const humanPts = humanMatch?.pts ?? 5;
+  const humanStatus: WellnessStatus = humanMatch?.tier ?? 'green';
 
   const allMetrics = [
-    { id: 'pfire', label: 'P(FIRE) base', pts: pfirePts, max: 35, detail: `${pfireBaseVal.toFixed(1)}%`, description: wc.metrics.find((m: any) => m.id === 'pfire')?.description ?? '' },
-    { id: 'savings_rate', label: 'Savings rate', pts: savingsRatePts, max: 15, detail: `${savingsRate.toFixed(1)}%`, description: wc.metrics.find((m: any) => m.id === 'savings_rate')?.description ?? '' },
-    { id: 'drift', label: 'Drift máximo', pts: driftPts, max: 15, detail: `${maxDriftVal.toFixed(1)}pp`, description: wc.metrics.find((m: any) => m.id === 'drift')?.description ?? '' },
-    { id: 'ipca_gap', label: 'IPCA+ gap vs alvo', pts: ipcaGapPts, max: 10, detail: ipcaGapPp != null ? `${ipcaGapPp.toFixed(1)}pp` : 'n/d', description: wc.metrics.find((m: any) => m.id === 'ipca_gap')?.description ?? '' },
-    { id: 'execution_fidelity', label: 'Exec. aportes', pts: execPts, max: 10, detail: 'dados insuf.', description: wc.metrics.find((m: any) => m.id === 'execution_fidelity')?.description ?? '' },
-    { id: 'emergency_fund', label: 'Fundo emergência', pts: emergencyPts, max: 5, detail: `${(data.rf?.ipca2029?.valor ?? 0) > 0 ? (((data.rf?.ipca2029?.valor ?? 0) / custoMensal)).toFixed(1) : '?'}m`, description: wc.metrics.find((m: any) => m.id === 'emergency_fund')?.description ?? '' },
-    { id: 'ter', label: 'TER vs VWRA', pts: terPts, max: 5, detail: (() => { const terCfg = wc.metrics.find((m: any) => m.id === 'ter'); const delta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22); return `${delta >= 0 ? '+' : ''}${(delta * 100).toFixed(1)}bp`; })(), description: wc.metrics.find((m: any) => m.id === 'ter')?.description ?? '' },
-    { id: 'human_capital', label: 'Capital humano', pts: humanPts, max: 5, detail: humanCapitalStatus.replaceAll('_', ' '), description: wc.metrics.find((m: any) => m.id === 'human_capital')?.description ?? '' },
-  ].map(m => ({ ...m, isOk: m.pts / m.max >= 0.85 }));
+    { id: 'pfire', label: 'P(FIRE) base', pts: pfireR.pts, max: 35, status: pfireR.status, detail: `${pfireBaseVal.toFixed(1)}%`, description: pfireCfg?.description ?? '' },
+    { id: 'savings_rate', label: 'Savings rate', pts: srR.pts, max: 15, status: srR.status, detail: `${savingsRate.toFixed(1)}%`, description: srCfg?.description ?? '' },
+    { id: 'drift', label: 'Drift máximo', pts: driftR.pts, max: 15, status: driftR.status, detail: `${maxDriftVal.toFixed(1)}pp`, description: driftCfg?.description ?? '' },
+    { id: 'ipca_gap', label: 'IPCA+ gap vs alvo', pts: ipcaR.pts, max: 10, status: ipcaR.status, detail: ipcaGapPp != null ? `${ipcaGapPp.toFixed(1)}pp${dcaAtivo ? ' (DCA ativo)' : ''}` : 'n/d', description: ipcaCfg?.description ?? '' },
+    { id: 'execution_fidelity', label: 'Exec. aportes', pts: execPts, max: 10, status: execStatus, detail: 'dados insuf.', description: execCfg?.description ?? '' },
+    { id: 'emergency_fund', label: 'Fundo emergência', pts: emergR.pts, max: 5, status: emergR.status, detail: `${reservaBrl > 0 ? (reservaBrl / custoMensal).toFixed(1) : '?'}m`, description: emergCfg?.description ?? '' },
+    { id: 'ter', label: 'TER vs VWRA', pts: terR.pts, max: 5, status: terR.status, detail: `${terDelta >= 0 ? '+' : ''}${(terDelta * 100).toFixed(1)}bp`, description: terCfg?.description ?? '' },
+    { id: 'human_capital', label: 'Capital humano', pts: humanPts, max: 5, status: humanStatus, detail: humanCapitalStatus.replaceAll('_', ' '), description: wc.metrics.find((m: any) => m.id === 'human_capital')?.description ?? '' },
+  ].map(m => ({ ...m, isOk: m.status === 'green' }));
 
   const totalScore = allMetrics.reduce((sum, m) => sum + m.pts, 0);
   const badMetrics = allMetrics.filter(m => !m.isOk);
@@ -179,9 +171,8 @@ function WellnessDetail({ data, derived }: { data: any; derived: any }) {
     .sort((a, b) => (b.max - b.pts) - (a.max - a.pts))
     .slice(0, 3);
 
-  const renderBar = (pts: number, max: number) => {
-    const ratio = pts / max;
-    const bg = ratio >= 0.85 ? 'var(--green)' : ratio >= 0.5 ? 'var(--yellow)' : 'var(--red)';
+  const renderBar = (pts: number, max: number, status: WellnessStatus) => {
+    const bg = status === 'green' ? 'var(--green)' : status === 'yellow' ? 'var(--yellow)' : 'var(--red)';
     return (
       <div className="flex-1 bg-slate-700/40 rounded-sm h-1.5 relative overflow-hidden min-w-16">
         <div className="h-full rounded-sm" style={{ width: `${(pts / max) * 100}%`, background: bg }} />
@@ -191,9 +182,9 @@ function WellnessDetail({ data, derived }: { data: any; derived: any }) {
 
   const renderMetricRow = (m: typeof allMetrics[0]) => (
     <div key={m.id} className="flex items-center gap-2 mb-1.5">
-      <div className="text-xs w-4 flex-shrink-0">{m.isOk ? <CheckCircle size={14} className="text-green" /> : <AlertCircle size={14} className="text-yellow" />}</div>
+      <div className="text-xs w-4 flex-shrink-0">{m.status === 'green' ? <CheckCircle size={14} className="text-green" /> : <AlertCircle size={14} className={m.status === 'yellow' ? 'text-yellow' : 'text-red'} />}</div>
       <div className="text-xs text-muted w-36 flex-shrink-0 truncate">{m.label}</div>
-      {renderBar(m.pts, m.max)}
+      {renderBar(m.pts, m.max, m.status)}
       <div className="text-xs text-muted w-28 flex-shrink-0 text-right">{m.detail}</div>
       <div className="text-xs text-muted w-10 flex-shrink-0 text-right">{m.pts}/{m.max}</div>
     </div>

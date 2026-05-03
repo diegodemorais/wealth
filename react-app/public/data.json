@@ -1,68 +1,68 @@
 {
-  "_generated": "2026-05-02T19:45:42",
-  "_generated_brt": "2026-05-02T19:45:42-03:00",
+  "_generated": "2026-05-03T07:59:39",
+  "_generated_brt": "2026-05-03T07:59:39-03:00",
   "_ibkr_sync_date": "2026-04-25T16:52:09",
   "_schema_version": "2.0",
-  "_pipeline_run": "20260502T194226",
+  "_pipeline_run": "20260503T075618",
   "_snapshots_metadata": {
     "backtest_r7": {
       "file": "backtest_r7.json",
       "mtime": "2026-05-01T15:50:32",
-      "age_h": 27.9,
+      "age_h": 40.1,
       "_generated": null
     },
     "fire_matrix": {
       "file": "fire_matrix.json",
-      "mtime": "2026-05-02T19:44:19",
+      "mtime": "2026-05-03T07:58:12",
       "age_h": 0.0,
-      "_generated": "2026-05-02T19:42:26"
+      "_generated": "2026-05-03T07:56:18"
     },
     "fire_swr_percentis": {
       "file": "fire_swr_percentis.json",
-      "mtime": "2026-05-02T19:42:26",
+      "mtime": "2026-05-03T07:56:18",
       "age_h": 0.1,
-      "_generated": "2026-05-02T19:42:26"
+      "_generated": "2026-05-03T07:56:18"
     },
     "fire_aporte_sensitivity": {
       "file": "fire_aporte_sensitivity.json",
-      "mtime": "2026-05-02T19:42:32",
-      "age_h": 0.0,
-      "_generated": "2026-05-02T19:42:26"
+      "mtime": "2026-05-03T07:56:23",
+      "age_h": 0.1,
+      "_generated": "2026-05-03T07:56:18"
     },
     "fire_trilha": {
       "file": "fire_trilha.json",
-      "mtime": "2026-05-02T19:42:26",
+      "mtime": "2026-05-03T07:56:18",
       "age_h": 0.1,
-      "_generated": "2026-05-02T19:42:26"
+      "_generated": "2026-05-03T07:56:18"
     },
     "drawdown_history": {
       "file": "drawdown_history.json",
-      "mtime": "2026-05-02T19:42:26",
+      "mtime": "2026-05-03T07:56:18",
       "age_h": 0.1,
-      "_generated": "2026-05-02T19:42:26"
+      "_generated": "2026-05-03T07:56:18"
     },
     "etf_composition": {
       "file": "etf_composition.json",
-      "mtime": "2026-05-02T19:42:26",
+      "mtime": "2026-05-03T07:56:18",
       "age_h": 0.1,
-      "_generated": "2026-05-02T19:42:26"
+      "_generated": "2026-05-03T07:56:18"
     },
     "bond_pool_runway": {
       "file": "bond_pool_runway.json",
-      "mtime": "2026-05-02T19:42:26",
+      "mtime": "2026-05-03T07:56:18",
       "age_h": 0.1,
-      "_generated": "2026-05-02T19:42:26"
+      "_generated": "2026-05-03T07:56:18"
     },
     "lumpy_events": {
       "file": "lumpy_events.json",
-      "mtime": "2026-05-02T19:42:34",
-      "age_h": 0.0,
-      "_generated": "2026-05-02T19:42:26"
+      "mtime": "2026-05-03T07:56:26",
+      "age_h": 0.1,
+      "_generated": "2026-05-03T07:56:18"
     },
     "fire_by_profile": {
       "file": "fire_by_profile.json",
       "mtime": "2026-05-01T15:00:04",
-      "age_h": 28.8,
+      "age_h": 41.0,
       "_generated": null
     }
   },
@@ -81,17 +81,17 @@
     "stress": 78.9
   },
   "_pfire_divergence_warning": "pfire_base em data.json pode diferir de _pfire_canonical_carteira se state.json está desatualizado. Rode fire_montecarlo.py para sincronizar.",
-  "date": "2026-05-02",
+  "date": "2026-05-03",
   "timestamps": {
     "posicoes_ibkr": "2026-04-25",
-    "precos_yfinance": "2026-05-02",
+    "precos_yfinance": "2026-05-03",
     "historico_csv": "2026-05-28",
     "holdings_md": "2026-04-25",
-    "fire_mc": "2026-05-02",
-    "geral": "2026-05-02",
-    "ptax_updated": "2026-05-02",
+    "fire_mc": "2026-05-03",
+    "geral": "2026-05-03",
+    "ptax_updated": "2026-05-03",
     "rf_updated": "2026-04-25",
-    "hodl11_updated": "2026-05-02"
+    "hodl11_updated": "2026-05-03"
   },
   "cambio": 4.957,
   "posicoes": {
@@ -193,8 +193,8 @@
   },
   "pfire_base": {
     "base": 84.8,
-    "fav": 91.6,
-    "stress": 80.5,
+    "fav": 91.4,
+    "stress": 80.1,
     "source": "mc",
     "is_canonical": true,
     "percentiles": {
@@ -242,8 +242,8 @@
   "pfire_by_profile": {
     "atual": {
       "base": 84.8,
-      "fav": 91.6,
-      "stress": 80.5
+      "fav": 91.4,
+      "stress": 80.1
     },
     "casado": {
       "base": 83.9,
@@ -403,26 +403,27 @@
         "ipca2029": 86555
       }
     },
-    "pat_mediano_fire": 12088351.0,
+    "pat_mediano_fire": 11950216.0,
     "pat_mediano_fire50": null,
     "mc_date": "2026-05-02",
     "plano_status": {
-      "status": "PLANO_PERMANECE",
-      "gatilho_ativo": "DCA IPCA+ ativo — 7.07% ≥ 6.0%",
+      "status": "MONITORAR",
+      "gatilho_ativo": "P(FIRE) 84.8% entre 80–85% — MONITORAR",
       "todos_gatilhos": [
+        "P(FIRE) 84.8% entre 80–85% — MONITORAR",
         "DCA IPCA+ ativo — 7.07% ≥ 6.0%"
       ],
       "inputs": {
-        "pfire": 0.855,
+        "pfire": 0.848,
         "drift_max_pp": null,
         "ipca_taxa_pct": 7.07
       }
     },
     "swr_current": 1.32,
-    "p_quality": 78.7,
-    "p_quality_fav": 84.8,
-    "p_quality_stress": 74.9,
-    "p_quality_proxy": 75.7,
+    "p_quality": 78.5,
+    "p_quality_fav": 84.3,
+    "p_quality_stress": 74.8,
+    "p_quality_proxy": 76.3,
     "p_quality_full": 89.6,
     "p_quality_aspiracional": 55.0,
     "bond_pool_status": {
@@ -967,48 +968,48 @@
     "base": {
       "idade": 53,
       "base": 84.8,
-      "fav": 91.6,
-      "stress": 80.5,
-      "pat_mediano": 12088351.0,
-      "pat_p10": 7342262.0,
-      "pat_p90": 19106942.0,
+      "fav": 91.4,
+      "stress": 80.1,
+      "pat_mediano": 11950216.0,
+      "pat_p10": 7277772.0,
+      "pat_p90": 18868920.0,
       "gasto_anual": 250000,
-      "swr": 2.07
+      "swr": 2.09
     },
     "aspiracional": {
       "idade": 49,
       "base": 91.4,
       "fav": 94.4,
       "stress": 67.5,
-      "pat_mediano": 13166854.0,
-      "pat_p10": 7985292.0,
-      "pat_p90": 20828838.0,
+      "pat_mediano": 13011997.0,
+      "pat_p10": 7904211.0,
+      "pat_p90": 20572930.0,
       "gasto_anual": 250000,
-      "swr": 1.9
+      "swr": 1.92
     },
     "fire53": {
       "idade": 53,
       "base": 84.8,
-      "fav": 91.6,
-      "stress": 80.5,
-      "pat_mediano": 12088351.0,
-      "pat_p10": 7342262.0,
-      "pat_p90": 19106942.0,
+      "fav": 91.4,
+      "stress": 80.1,
+      "pat_mediano": 11950216.0,
+      "pat_p10": 7277772.0,
+      "pat_p90": 18868920.0,
       "gasto_anual": 250000,
-      "swr": 2.07
+      "swr": 2.09
     },
     "fire50": {
       "idade": 49,
       "base": 91.4,
       "fav": 94.4,
       "stress": 67.5,
-      "pat_mediano": 13166854.0,
-      "pat_p10": 7985292.0,
-      "pat_p90": 20828838.0,
+      "pat_mediano": 13011997.0,
+      "pat_p10": 7904211.0,
+      "pat_p90": 20572930.0,
       "gasto_anual": 250000,
-      "swr": 1.9
+      "swr": 1.92
     },
-    "nota_scenarios_pat": "Pat. mediano no FIRE Day (base): R$12.09M (@53) / R$13.17M (@49). Fonte: fire_montecarlo.py MC 10k sims."
+    "nota_scenarios_pat": "Pat. mediano no FIRE Day (base): R$11.95M (@53) / R$13.01M (@49). Fonte: fire_montecarlo.py MC 10k sims."
   },
   "trilha_p10": [
     7277772.129219372,
@@ -3379,7 +3380,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -3520,7 +3521,7 @@
     "avgs_launch_date": "2024-10-14",
     "meses_desde_launch": 18.6,
     "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
-    "updated": "2026-05-02"
+    "updated": "2026-05-03"
   },
   "factor_loadings": {
     "SWRD": {
@@ -3749,7 +3750,7 @@
     "preco_medio": 79.03,
     "pnl_brl": -25709.84,
     "pnl_pct": -19.41,
-    "_updated": "2026-05-02",
+    "_updated": "2026-05-03",
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
@@ -3758,23 +3759,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 78658.93,
+      "btc_atual_usd": 78404.77,
       "hodl11_brl_atual": 106744,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.02,
-          "valor_fire_brl": 108564
+          "valor_fire_brl": 108916
         },
         "base": {
           "btc_target_usd": 250000,
-          "upside_factor": 3.18,
-          "valor_fire_brl": 339264
+          "upside_factor": 3.19,
+          "valor_fire_brl": 340363
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.36,
-          "valor_fire_brl": 678527
+          "upside_factor": 6.38,
+          "valor_fire_brl": 680727
         }
       }
     }
@@ -8846,7 +8847,7 @@
     "pct_retorno": 40.3,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
-    "updated": "2026-05-02"
+    "updated": "2026-05-03"
   },
   "shadows": {
     "delta_vwra": null,
@@ -8861,15 +8862,16 @@
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 88.1,
     "cds_brazil_5y_bps": 118.9,
-    "bitcoin_usd": 78658.93,
+    "bitcoin_usd": 78404.77,
     "plano_status": {
-      "status": "PLANO_PERMANECE",
-      "gatilho_ativo": "DCA IPCA+ ativo — 7.07% ≥ 6.0%",
+      "status": "MONITORAR",
+      "gatilho_ativo": "P(FIRE) 84.8% entre 80–85% — MONITORAR",
       "todos_gatilhos": [
+        "P(FIRE) 84.8% entre 80–85% — MONITORAR",
         "DCA IPCA+ ativo — 7.07% ≥ 6.0%"
       ],
       "inputs": {
-        "pfire": 0.855,
+        "pfire": 0.848,
         "drift_max_pp": null,
         "ipca_taxa_pct": 7.07
       }
@@ -8879,14 +8881,14 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.957,
-    "btc_usd": 78658.93,
+    "btc_usd": 78404.77,
     "cambio_mtd_pct": 0.04,
-    "btc_mtd_pct": 0.55,
+    "btc_mtd_pct": 0.22,
     "ipca2040_mtd_pp": 0.0,
     "renda2065_mtd_pp": 0.0,
     "ref_mes": "2026-05",
     "fonte": "yfinance BTC-USD + PTAX BCB",
-    "updated": "2026-05-02"
+    "updated": "2026-05-03"
   },
   "minilog": [
     {
@@ -8962,189 +8964,175 @@
   ],
   "wellness_config": {
     "_doc": "Fonte de verdade do Wellness Score. Lido por generate_data.py e embutido em data.json. Dashboard lê de DATA.wellness_config.",
-    "version": "2.1",
-    "updated": "2026-04-17",
+    "version": "3.0",
+    "updated": "2026-05-03",
     "rationale": "Score mede disciplina operacional + saúde financeira — não duplica P(FIRE). P(FIRE) é o KPI terminal standalone. Wellness captura o que o MC não captura: comportamento, proteção, execução, alavancagem.",
+    "method": "Boldin-style 3 tiers (green/yellow/red = excelling/progressing/vulnerable). Cada métrica tem 3 thresholds discretos por status. Sem interpolação (evita precisão falsa). Valor é arredondado com a precisão do display antes de comparar (alinha cor com número exibido). Pts: green = 100% do max, yellow = 60%, red = 20%.",
+    "method_history": [
+      "v2.x (até 2026-05-02): 5 tiers com saltos rígidos (35/28/22/10/0 pra pfire). Bug: pfire=84.8 caía em ≥75→10pts em vez de ≥85→22pts por 0.2pp.",
+      "v3.0 (2026-05-03): após pesquisa Boldin (NewRetirement) — método oficial usa 3 tiers G/Y/R discretos sem interpolação. Adotado aqui. Arredondamento com precisão do display antes de comparar."
+    ],
     "total_max": 110,
     "metrics": [
       {
         "id": "pfire",
         "label": "P(FIRE) base",
         "max": 35,
+        "decimals": 1,
         "description": "Métrica terminal — incorpora patrimônio, aportes, retorno, inflação, spending via MC 10k sims. Peso dominante porque responde a única pergunta que importa.",
         "thresholds": [
           {
-            "min": 95,
+            "status": "green",
+            "min": 85,
             "pts": 35
           },
           {
-            "min": 90,
-            "pts": 28
+            "status": "yellow",
+            "min": 70,
+            "pts": 21
           },
           {
-            "min": 85,
-            "pts": 22
-          },
-          {
-            "min": 75,
-            "pts": 10
-          },
-          {
+            "status": "red",
             "min": 0,
-            "pts": 0
+            "pts": 7
           }
-        ],
-        "colors": {
-          "good": 28,
-          "warn": 10
-        }
+        ]
       },
       {
         "id": "savings_rate",
         "label": "Savings rate",
         "max": 15,
-        "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / custo_vida_mensal — múltiplo de cobertura. Mais significativo que % da renda quando renda PJ é volátil.",
-        "_note_thresholds": "Thresholds em % — definição padrão: aporte/(aporte+custo_vida). Ex: R$25k/(R$25k+R$20.8k) = 54.6%. ≥50% = excelente, ≥40% = ok, ≥25% = atenção.",
+        "decimals": 1,
+        "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / (aporte_mensal + custo_vida_mensal). Mais significativo que % da renda quando renda PJ é volátil.",
         "thresholds": [
           {
+            "status": "green",
             "min_pct": 50,
             "pts": 15
           },
           {
-            "min_pct": 40,
-            "pts": 10
+            "status": "yellow",
+            "min_pct": 30,
+            "pts": 9
           },
           {
-            "min_pct": 25,
-            "pts": 5
-          },
-          {
+            "status": "red",
             "min_pct": 0,
-            "pts": 0
+            "pts": 3
           }
-        ],
-        "colors": {
-          "good": 15,
-          "warn": 5
-        }
+        ]
       },
       {
         "id": "drift",
         "label": "Drift máximo",
         "max": 15,
+        "decimals": 1,
         "description": "Maior desvio absoluto entre % atual e % alvo (SWRD 50/AVGS 30/AVEM 20). Única métrica 100% actionable — Diego pode corrigir via próximo aporte.",
         "thresholds": [
           {
+            "status": "green",
             "max_pp": 5,
             "pts": 15
           },
           {
+            "status": "yellow",
             "max_pp": 10,
-            "pts": 10
+            "pts": 9
           },
           {
-            "max_pp": 15,
-            "pts": 5
-          },
-          {
+            "status": "red",
             "max_pp": 999,
-            "pts": 0
+            "pts": 3
           }
-        ],
-        "colors": {
-          "good": 15,
-          "warn": 10
-        }
+        ]
       },
       {
         "id": "ipca_gap",
         "label": "IPCA+ gap vs alvo",
         "max": 10,
-        "description": "Gap entre % IPCA+ atual e alvo. DCA ativo (taxa >= piso) atenua penalidade — gap se fecha com o tempo, comportamento correto.",
+        "decimals": 1,
+        "description": "Gap entre % IPCA+ atual e alvo (15%). DCA ativo (taxa >= piso) atenua penalidade — gap se fecha com o tempo. Lógica: se DCA ativo, sobe 1 tier (R→Y, Y→G).",
+        "dca_promotes_tier": true,
         "thresholds": [
           {
-            "max_pp": 2,
+            "status": "green",
+            "max_pp": 3,
             "pts": 10
           },
           {
-            "max_pp": 5,
-            "pts": 7
+            "status": "yellow",
+            "max_pp": 8,
+            "pts": 6
           },
           {
+            "status": "red",
             "max_pp": 999,
-            "pts_if_dca": 5,
-            "pts": 3
+            "pts": 2
           }
-        ],
-        "colors": {
-          "good": 7,
-          "warn": 3
-        }
+        ]
       },
       {
         "id": "execution_fidelity",
         "label": "Fidelidade de execução",
         "max": 10,
+        "decimals": 0,
         "description": "Dos últimos 6 meses, quantos tiveram aporte >= 80% do target mensal. Mede comportamento real, não intenção.",
         "target_aporte_mensal": "DATA.premissas.aporte_mensal",
         "lookback_months": 6,
         "threshold_pct": 0.8,
         "thresholds": [
           {
-            "min_months": 6,
+            "status": "green",
+            "min_months": 5,
             "pts": 10
           },
           {
-            "min_months": 5,
-            "pts": 7
-          },
-          {
+            "status": "yellow",
             "min_months": 4,
-            "pts": 4
+            "pts": 6
           },
           {
+            "status": "red",
             "min_months": 0,
-            "pts": 0
+            "pts": 2
           }
         ],
-        "colors": {
-          "good": 7,
-          "warn": 4
-        },
-        "_note": "Fonte: ibkr/aportes.json. Se dados insuficientes (<3 meses), usar 7pts (neutro)."
+        "neutral_pts_when_insufficient": 6,
+        "_note": "Fonte: ibkr/aportes.json. Se dados insuficientes (<3 meses), usar neutral_pts_when_insufficient (6 = entre yellow e green)."
       },
       {
         "id": "emergency_fund",
         "label": "Fundo de emergência",
         "max": 5,
+        "decimals": 1,
         "description": "Meses de cobertura em ativos líquidos (Tesouro IPCA+ curto + conta corrente). Renda PJ volátil exige 6+ meses (Vanguard 2021). Choque sem reserva = venda ETF em drawdown + IR.",
         "custo_vida_mensal": 20833,
         "_custo_nota": "R$250k/ano FIRE base ÷ 12 = R$20.8k. Usar config.py CUSTO_VIDA_BASE como fonte. Atualizar ao revisar spending.",
         "thresholds": [
           {
+            "status": "green",
             "min_months": 6,
             "pts": 5
           },
           {
+            "status": "yellow",
             "min_months": 3,
             "pts": 3
           },
           {
+            "status": "red",
             "min_months": 0,
-            "pts": 0
+            "pts": 1
           }
         ],
-        "colors": {
-          "good": 5,
-          "warn": 3
-        },
         "_note": "Reserva atual: Tesouro IPCA+ 2029 (~R$87k). Custo vida mensal: R$215k/12 = ~R$17.9k. Atualizar custo_vida_mensal ao revisar spending."
       },
       {
         "id": "ter",
         "label": "Custo total (TER)",
         "max": 5,
-        "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
+        "decimals": 2,
+        "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters'). Decimals=2 (delta em pp).",
         "benchmark_ter": 0.22,
         "current_ter": 0.211,
         "equity_block_ter": 0.247,
@@ -9152,108 +9140,113 @@
         "alpha_anual": 0.0016,
         "thresholds": [
           {
+            "status": "green",
             "max_delta_pp": 0,
             "pts": 5
           },
           {
+            "status": "yellow",
             "max_delta_pp": 0.1,
             "pts": 3
           },
           {
+            "status": "red",
             "max_delta_pp": 999,
-            "pts": 0
+            "pts": 1
           }
         ],
-        "colors": {
-          "good": 5,
-          "warn": 3
-        },
         "_note": "current_ter (0.211%) = full portfolio TER (SWRD 39.5% × 0.12% + AVGS 23.7% × 0.39% + AVEM 15.8% × 0.35% + HODL11 3% × 0.20% + RF ~6.1% × 0.10%). equity_block_ter (0.247%) = equity holdings only. Atualizar se composição mudar."
       },
       {
         "id": "human_capital",
         "label": "Proteção capital humano",
         "max": 5,
-        "description": "Seguro de vida/DI adequado. P(FIRE) assume Diego vivo e trabalhando até 2037. Sem seguro com casamento iminente + filho ~2028, o plano familiar depende de premissa frágil que o MC ignora.",
+        "description": "Seguro de vida/DI adequado. P(FIRE) assume Diego vivo e trabalhando até 2037. Sem seguro com casamento iminente + filho ~2028, o plano familiar depende de premissa frágil que o MC ignora. Métrica categórica — sem decimals.",
         "status": "solteiro_sem_dependentes",
         "thresholds": [
           {
+            "type": "categorical",
             "status": "solteiro_sem_dependentes",
+            "tier": "green",
             "pts": 5,
             "note": "Grátis enquanto solteiro sem dependentes. Muda ao casar."
           },
           {
+            "type": "categorical",
             "status": "casado_com_seguro",
+            "tier": "green",
             "pts": 5
           },
           {
+            "type": "categorical",
             "status": "casado_sem_seguro",
-            "pts": 0
+            "tier": "red",
+            "pts": 1
           },
           {
+            "type": "categorical",
             "status": "filho_com_seguro",
+            "tier": "green",
             "pts": 5
           },
           {
+            "type": "categorical",
             "status": "filho_sem_seguro",
-            "pts": 0
+            "tier": "red",
+            "pts": 1
           }
         ],
-        "colors": {
-          "good": 5,
-          "warn": 0
-        },
         "_note": "Atualizar status ao casar (2026-2027 estimado). Seguro adequado = cobertura 10x renda anual ou patrimônio suficiente para sustento família até FIRE."
       },
       {
         "id": "debt_ratio",
         "label": "Ratio dívida/patrimônio",
         "max": 5,
+        "decimals": 1,
         "description": "Passivos totais (hipoteca + IR diferido) como % do patrimônio financeiro. Alto nível de dívida vs patrimônio aumenta risco de distress em drawdown.",
         "_fonte": "data.passivos.total_brl / data.patrimonio.total_brl",
         "thresholds": [
           {
+            "status": "green",
             "max_pct": 10,
             "pts": 5
           },
           {
+            "status": "yellow",
             "max_pct": 20,
             "pts": 3
           },
           {
+            "status": "red",
             "max_pct": 999,
-            "pts": 0
+            "pts": 1
           }
-        ],
-        "colors": {
-          "good": 5,
-          "warn": 3
-        }
+        ]
       },
       {
         "id": "housing_ratio",
         "label": "Hipoteca/Patrimônio",
         "max": 5,
+        "decimals": 1,
         "description": "Saldo devedor hipoteca como % do patrimônio financeiro. Housing ratio alto = concentração de risco em ativo ilíquido financiado.",
         "_fonte": "data.passivos.hipoteca_brl / data.patrimonio.total_brl",
         "thresholds": [
           {
+            "status": "green",
             "max_pct": 10,
             "pts": 5
           },
           {
+            "status": "yellow",
             "max_pct": 15,
             "pts": 3
           },
           {
+            "status": "red",
             "max_pct": 999,
-            "pts": 0
+            "pts": 1
           }
-        ],
-        "colors": {
-          "good": 5,
-          "warn": 3
-        }
+        ]
       }
     ],
     "removed_metrics": [
@@ -9610,13 +9603,13 @@
         "total": 25399
       }
     ],
-    "updated_at": "2026-05-02",
+    "updated_at": "2026-05-03",
     "fonte": "All-Accounts-Abril26.csv",
     "_meta": {
       "metodologia_version": "spending-actual-v1",
       "schema_version": "1.0",
       "last_period_appended": "2026-04",
-      "last_appended_at": "2026-05-02T19:42:26-03:00",
+      "last_appended_at": "2026-05-03T07:56:18-03:00",
       "rebuild_reason": null
     }
   },
@@ -10856,11 +10849,11 @@
     "seed": 42,
     "cenario": "base",
     "metodologia": "IR diferido descontado antes de simulação per Lei 14.754/2023. patrimonio_liquido = patrimonio_atual - ir_diferido_total_brl (fonte: tax_snapshot.json). Todas as demais premissas idênticas ao MC canônico (seed=42, 10k sims, spending smile, guardrails, bond tent, INSS R$18k/ano@65, VCMH 3.5%).",
-    "_generated": "2026-05-02"
+    "_generated": "2026-05-03"
   },
   "fire_matrix": {
-    "_generated": "2026-05-02T19:42:26",
-    "_window_id": "20260502T194226",
+    "_generated": "2026-05-03T07:56:18",
+    "_window_id": "20260503T075618",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -11171,24 +11164,24 @@
     "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
-    "_generated": "2026-05-02T19:42:26",
-    "_window_id": "20260502T194226",
+    "_generated": "2026-05-03T07:56:18",
+    "_window_id": "20260503T075618",
     "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
     "custo_vida_base": 250000,
-    "patrimonio_p10_2040": 7342262.0,
-    "patrimonio_p50_2040": 12088351.0,
-    "patrimonio_p90_2040": 19106942.0,
-    "swr_p10": 0.034,
-    "swr_p50": 0.0207,
-    "swr_p90": 0.0131,
-    "swr_p10_pct": 3.4,
-    "swr_p50_pct": 2.07,
-    "swr_p90_pct": 1.31,
+    "patrimonio_p10_2040": 7277772.0,
+    "patrimonio_p50_2040": 11950216.0,
+    "patrimonio_p90_2040": 18868920.0,
+    "swr_p10": 0.0344,
+    "swr_p50": 0.0209,
+    "swr_p90": 0.0132,
+    "swr_p10_pct": 3.44,
+    "swr_p50_pct": 2.09,
+    "swr_p90_pct": 1.32,
     "mc_date": "2026-05-02"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-05-02T19:42:26",
-    "_window_id": "20260502T194226",
+    "_generated": "2026-05-03T07:56:18",
+    "_window_id": "20260503T075618",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
@@ -11212,8 +11205,8 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-05-02T19:42:26",
-    "_window_id": "20260502T194226",
+    "_generated": "2026-05-03T07:56:18",
+    "_window_id": "20260503T075618",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -12821,13 +12814,13 @@
       "metodologia_version": "trilha-v1",
       "schema_version": "1.0",
       "last_period_appended": "2026-05",
-      "last_appended_at": "2026-05-02T19:42:26-03:00",
+      "last_appended_at": "2026-05-03T07:56:18-03:00",
       "rebuild_reason": null
     }
   },
   "drawdown_history": {
-    "_generated": "2026-05-02T19:42:26",
-    "_window_id": "20260502T194226",
+    "_generated": "2026-05-03T07:56:18",
+    "_window_id": "20260503T075618",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-05",
@@ -12980,7 +12973,7 @@
       "metodologia_version": "dd-peak-trough-v1",
       "schema_version": "1.0",
       "last_period_appended": "2026-05",
-      "last_appended_at": "2026-05-02T19:42:26-03:00",
+      "last_appended_at": "2026-05-03T07:56:18-03:00",
       "rebuild_reason": null
     }
   },
@@ -13186,8 +13179,8 @@
     "_fonte": "generate_data.py: drawdown_history + backtest + backtestR5 + backtest_r7"
   },
   "etf_composition": {
-    "_generated": "2026-05-02T19:42:26",
-    "_window_id": "20260502T194226",
+    "_generated": "2026-05-03T07:56:18",
+    "_window_id": "20260503T075618",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -13259,8 +13252,8 @@
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-05-02T19:42:26",
-    "_window_id": "20260502T194226",
+    "_generated": "2026-05-03T07:56:18",
+    "_window_id": "20260503T075618",
     "_source": "reconstruct_fire_data.py (pre-FIRE via BondPoolEngine)",
     "anos_pre_fire": [
       2026,
@@ -13331,7 +13324,7 @@
       898439.0
     ],
     "alvo_pool_pct": 0.15,
-    "alvo_pool_brl_2040": 1813253.0,
+    "alvo_pool_brl_2040": 1792532.0,
     "anos_cobertura_pos_fire": [
       1,
       2,
@@ -13394,8 +13387,8 @@
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-05-02T19:42:26",
-    "_window_id": "20260502T194226",
+    "_generated": "2026-05-03T07:56:18",
+    "_window_id": "20260503T075618",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.8456,
@@ -15971,7 +15964,7 @@
         "msci_world_note": "fora do MSCI World (Coreia — apenas MSCI EM/ACWI)"
       }
     ],
-    "last_updated": "2026-05-02",
+    "last_updated": "2026-05-03",
     "data_source": "synthetic_proxy"
   },
   "sector_exposure": {
@@ -16055,7 +16048,7 @@
       }
     },
     "dominant": "Financials",
-    "as_of": "2026-05-02",
+    "as_of": "2026-05-03",
     "data_source": "synthetic_proxy",
     "benchmark": "MSCI World (factsheet abr/2026)"
   },
@@ -17041,12 +17034,12 @@
           "haircut_anual": 0.004485,
           "rebalance_delta": {
             "delta_brl": [
-              393784.02,
-              -888826.79,
-              157513.61,
-              562548.6,
-              -112509.72,
-              -112509.72
+              387055.51,
+              -873639.59,
+              154822.21,
+              552936.45,
+              -110587.29,
+              -110587.29
             ],
             "delta_pp": [
               0.105,
@@ -17056,17 +17049,17 @@
               -0.03,
               -0.03
             ],
-            "spread_total_brl": 1113.85,
-            "ir_total_brl": 167076.93,
+            "spread_total_brl": 1094.81,
+            "ir_total_brl": 164222.13,
             "ir_per_asset_brl": [
               0.0,
-              133324.02,
+              131045.94,
               0.0,
               0.0,
-              16876.46,
-              16876.46
+              16588.09,
+              16588.09
             ],
-            "total_cost_brl": 168190.78
+            "total_cost_brl": 165316.94
           }
         },
         "max_sharpe": {
@@ -17086,12 +17079,12 @@
           "haircut_anual": 0.002667,
           "rebalance_delta": {
             "delta_brl": [
-              137261.86,
-              -364156.46,
-              -298150.76,
-              187516.2,
-              262522.68,
-              75006.48
+              134916.49,
+              -357934.2,
+              -293056.32,
+              184312.15,
+              258037.01,
+              73724.86
             ],
             "delta_pp": [
               0.0366,
@@ -17101,17 +17094,17 @@
               0.07,
               0.02
             ],
-            "spread_total_brl": 662.31,
-            "ir_total_brl": 99346.08,
+            "spread_total_brl": 650.99,
+            "ir_total_brl": 97648.58,
             "ir_per_asset_brl": [
               0.0,
-              54623.47,
-              44722.61,
+              53690.13,
+              43958.45,
               0.0,
               0.0,
               0.0
             ],
-            "total_cost_brl": 100008.39
+            "total_cost_brl": 98299.57
           }
         },
         "n_portfolios": 60,
@@ -18114,12 +18107,12 @@
           "haircut_anual": 0.004485,
           "rebalance_delta": {
             "delta_brl": [
-              393784.02,
-              -888826.79,
-              157513.61,
-              562548.6,
-              -112509.72,
-              -112509.72
+              387055.51,
+              -873639.59,
+              154822.21,
+              552936.45,
+              -110587.29,
+              -110587.29
             ],
             "delta_pp": [
               0.105,
@@ -18129,17 +18122,17 @@
               -0.03,
               -0.03
             ],
-            "spread_total_brl": 1113.85,
-            "ir_total_brl": 167076.93,
+            "spread_total_brl": 1094.81,
+            "ir_total_brl": 164222.13,
             "ir_per_asset_brl": [
               0.0,
-              133324.02,
+              131045.94,
               0.0,
               0.0,
-              16876.46,
-              16876.46
+              16588.09,
+              16588.09
             ],
-            "total_cost_brl": 168190.78
+            "total_cost_brl": 165316.94
           }
         },
         "max_sharpe": {
@@ -18159,12 +18152,12 @@
           "haircut_anual": 0.002839,
           "rebalance_delta": {
             "delta_brl": [
-              214893.57,
-              40128.47,
-              -592551.19,
-              187516.2,
-              262522.68,
-              -112509.72
+              211221.72,
+              39442.8,
+              -582426.39,
+              184312.15,
+              258037.01,
+              -110587.29
             ],
             "delta_pp": [
               0.0573,
@@ -18174,17 +18167,17 @@
               0.07,
               -0.03
             ],
-            "spread_total_brl": 705.06,
-            "ir_total_brl": 105759.14,
+            "spread_total_brl": 693.01,
+            "ir_total_brl": 103952.05,
             "ir_per_asset_brl": [
               0.0,
               0.0,
-              88882.68,
+              87363.96,
               0.0,
               0.0,
-              16876.46
+              16588.09
             ],
-            "total_cost_brl": 106464.2
+            "total_cost_brl": 104645.07
           }
         },
         "n_portfolios": 60,
@@ -18272,7 +18265,7 @@
           0.3
         ]
       },
-      "as_of": "2026-05-02",
+      "as_of": "2026-05-03",
       "metodologia_version": "ef-historica-v1",
       "panel": {
         "n_months": 80,
@@ -18304,7 +18297,7 @@
         },
         "rf_real_brl": 0.0534
       },
-      "patrimonio_total_brl": 3750324.0,
+      "patrimonio_total_brl": 3686243.0,
       "transaction_spread": 0.0005,
       "tax_rates": {
         "SWRD": 0.15,
@@ -19195,8 +19188,8 @@
               "HODL11": 0.0023
             },
             "sharpe_net": -0.0034,
-            "ret_net": 0.05295,
-            "haircut_anual": 0.004907
+            "ret_net": 0.052949,
+            "haircut_anual": 0.004908
           },
           {
             "vol": 0.133925,
@@ -19211,8 +19204,8 @@
               "HODL11": 0.0118
             },
             "sharpe_net": -0.002,
-            "ret_net": 0.053129,
-            "haircut_anual": 0.004907
+            "ret_net": 0.053128,
+            "haircut_anual": 0.004908
           },
           {
             "vol": 0.1354,
@@ -19227,8 +19220,8 @@
               "HODL11": 0.0214
             },
             "sharpe_net": -0.0007,
-            "ret_net": 0.053309,
-            "haircut_anual": 0.004907
+            "ret_net": 0.053308,
+            "haircut_anual": 0.004908
           },
           {
             "vol": 0.137068,
@@ -19296,12 +19289,12 @@
           "haircut_anual": 0.004485,
           "rebalance_delta": {
             "delta_brl": [
-              393784.02,
-              -888826.79,
-              157513.61,
-              562548.6,
-              -112509.72,
-              -112509.72
+              387055.51,
+              -873639.59,
+              154822.21,
+              552936.45,
+              -110587.29,
+              -110587.29
             ],
             "delta_pp": [
               0.105,
@@ -19311,17 +19304,17 @@
               -0.03,
               -0.03
             ],
-            "spread_total_brl": 1113.85,
-            "ir_total_brl": 167076.93,
+            "spread_total_brl": 1094.81,
+            "ir_total_brl": 164222.13,
             "ir_per_asset_brl": [
               0.0,
-              133324.02,
+              131045.94,
               0.0,
               0.0,
-              16876.46,
-              16876.46
+              16588.09,
+              16588.09
             ],
-            "total_cost_brl": 168190.78
+            "total_cost_brl": 165316.94
           }
         },
         "max_sharpe": {
@@ -19341,12 +19334,12 @@
           "haircut_anual": 0.00521,
           "rebalance_delta": {
             "delta_brl": [
-              -1293861.78,
-              423786.61,
-              345029.81,
-              187516.2,
-              262522.68,
-              75006.48
+              -1271753.84,
+              416545.46,
+              339134.36,
+              184312.15,
+              258037.01,
+              73724.86
             ],
             "delta_pp": [
               -0.345,
@@ -19356,17 +19349,17 @@
               0.07,
               0.02
             ],
-            "spread_total_brl": 1293.86,
-            "ir_total_brl": 194079.27,
+            "spread_total_brl": 1271.75,
+            "ir_total_brl": 190763.08,
             "ir_per_asset_brl": [
-              194079.27,
+              190763.08,
               0.0,
               0.0,
               0.0,
               0.0,
               0.0
             ],
-            "total_cost_brl": 195373.13
+            "total_cost_brl": 192034.83
           }
         },
         "n_portfolios": 60,
@@ -20348,8 +20341,8 @@
               "HODL11": 0.0
             },
             "sharpe_net": -0.0037,
-            "ret_net": 0.052906,
-            "haircut_anual": 0.004907
+            "ret_net": 0.052905,
+            "haircut_anual": 0.004908
           }
         ],
         "min_vol": {
@@ -20369,12 +20362,12 @@
           "haircut_anual": 0.004485,
           "rebalance_delta": {
             "delta_brl": [
-              393784.02,
-              -888826.79,
-              157513.61,
-              562548.6,
-              -112509.72,
-              -112509.72
+              387055.51,
+              -873639.59,
+              154822.21,
+              552936.45,
+              -110587.29,
+              -110587.29
             ],
             "delta_pp": [
               0.105,
@@ -20384,17 +20377,17 @@
               -0.03,
               -0.03
             ],
-            "spread_total_brl": 1113.85,
-            "ir_total_brl": 167076.93,
+            "spread_total_brl": 1094.81,
+            "ir_total_brl": 164222.13,
             "ir_per_asset_brl": [
               0.0,
-              133324.02,
+              131045.94,
               0.0,
               0.0,
-              16876.46,
-              16876.46
+              16588.09,
+              16588.09
             ],
-            "total_cost_brl": 168190.78
+            "total_cost_brl": 165316.94
           }
         },
         "max_sharpe": {
@@ -20410,16 +20403,16 @@
             "HODL11": 0.0
           },
           "sharpe_net": -0.0037,
-          "ret_net": 0.052907,
-          "haircut_anual": 0.004907,
+          "ret_net": 0.052906,
+          "haircut_anual": 0.004908,
           "rebalance_delta": {
             "delta_brl": [
-              -1106345.58,
-              423786.61,
-              345029.81,
-              187516.2,
-              262522.68,
-              -112509.72
+              -1087441.69,
+              416545.46,
+              339134.36,
+              184312.15,
+              258037.01,
+              -110587.29
             ],
             "delta_pp": [
               -0.295,
@@ -20429,17 +20422,17 @@
               0.07,
               -0.03
             ],
-            "spread_total_brl": 1218.86,
-            "ir_total_brl": 182828.29,
+            "spread_total_brl": 1198.03,
+            "ir_total_brl": 179704.35,
             "ir_per_asset_brl": [
-              165951.84,
+              163116.25,
               0.0,
               0.0,
               0.0,
               0.0,
-              16876.46
+              16588.09
             ],
-            "total_cost_brl": 184047.15
+            "total_cost_brl": 180902.38
           }
         },
         "n_portfolios": 60,
@@ -20527,7 +20520,7 @@
           0.3
         ]
       },
-      "as_of": "2026-05-02",
+      "as_of": "2026-05-03",
       "metodologia_version": "ef-bl-v2",
       "panel": {
         "n_months": 80,
@@ -20559,7 +20552,7 @@
         },
         "rf_real_brl": 0.0534
       },
-      "patrimonio_total_brl": 3750324.0,
+      "patrimonio_total_brl": 3686243.0,
       "transaction_spread": 0.0005,
       "tax_rates": {
         "SWRD": 0.15,

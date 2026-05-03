@@ -1,154 +1,154 @@
 {
   "_doc": "Fonte de verdade do Wellness Score. Lido por generate_data.py e embutido em data.json. Dashboard lê de DATA.wellness_config.",
-  "version": "2.1",
-  "updated": "2026-04-17",
+  "version": "3.0",
+  "updated": "2026-05-03",
   "rationale": "Score mede disciplina operacional + saúde financeira — não duplica P(FIRE). P(FIRE) é o KPI terminal standalone. Wellness captura o que o MC não captura: comportamento, proteção, execução, alavancagem.",
+  "method": "Boldin-style 3 tiers (green/yellow/red = excelling/progressing/vulnerable). Cada métrica tem 3 thresholds discretos por status. Sem interpolação (evita precisão falsa). Valor é arredondado com a precisão do display antes de comparar (alinha cor com número exibido). Pts: green = 100% do max, yellow = 60%, red = 20%.",
+  "method_history": [
+    "v2.x (até 2026-05-02): 5 tiers com saltos rígidos (35/28/22/10/0 pra pfire). Bug: pfire=84.8 caía em ≥75→10pts em vez de ≥85→22pts por 0.2pp.",
+    "v3.0 (2026-05-03): após pesquisa Boldin (NewRetirement) — método oficial usa 3 tiers G/Y/R discretos sem interpolação. Adotado aqui. Arredondamento com precisão do display antes de comparar."
+  ],
   "total_max": 110,
   "metrics": [
     {
       "id": "pfire",
       "label": "P(FIRE) base",
       "max": 35,
+      "decimals": 1,
       "description": "Métrica terminal — incorpora patrimônio, aportes, retorno, inflação, spending via MC 10k sims. Peso dominante porque responde a única pergunta que importa.",
       "thresholds": [
-        { "min": 95, "pts": 35 },
-        { "min": 90, "pts": 28 },
-        { "min": 85, "pts": 22 },
-        { "min": 75, "pts": 10 },
-        { "min": 0,  "pts": 0  }
-      ],
-      "colors": { "good": 28, "warn": 10 }
+        { "status": "green",  "min": 85, "pts": 35 },
+        { "status": "yellow", "min": 70, "pts": 21 },
+        { "status": "red",    "min": 0,  "pts": 7  }
+      ]
     },
     {
       "id": "savings_rate",
       "label": "Savings rate",
       "max": 15,
-      "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / custo_vida_mensal — múltiplo de cobertura. Mais significativo que % da renda quando renda PJ é volátil.",
-      "_note_thresholds": "Thresholds em % — definição padrão: aporte/(aporte+custo_vida). Ex: R$25k/(R$25k+R$20.8k) = 54.6%. ≥50% = excelente, ≥40% = ok, ≥25% = atenção.",
+      "decimals": 1,
+      "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / (aporte_mensal + custo_vida_mensal). Mais significativo que % da renda quando renda PJ é volátil.",
       "thresholds": [
-        { "min_pct": 50, "pts": 15 },
-        { "min_pct": 40, "pts": 10 },
-        { "min_pct": 25, "pts": 5  },
-        { "min_pct": 0,  "pts": 0  }
-      ],
-      "colors": { "good": 15, "warn": 5 }
+        { "status": "green",  "min_pct": 50, "pts": 15 },
+        { "status": "yellow", "min_pct": 30, "pts": 9  },
+        { "status": "red",    "min_pct": 0,  "pts": 3  }
+      ]
     },
     {
       "id": "drift",
       "label": "Drift máximo",
       "max": 15,
+      "decimals": 1,
       "description": "Maior desvio absoluto entre % atual e % alvo (SWRD 50/AVGS 30/AVEM 20). Única métrica 100% actionable — Diego pode corrigir via próximo aporte.",
       "thresholds": [
-        { "max_pp": 5,  "pts": 15 },
-        { "max_pp": 10, "pts": 10 },
-        { "max_pp": 15, "pts": 5  },
-        { "max_pp": 999,"pts": 0  }
-      ],
-      "colors": { "good": 15, "warn": 10 }
+        { "status": "green",  "max_pp": 5,   "pts": 15 },
+        { "status": "yellow", "max_pp": 10,  "pts": 9  },
+        { "status": "red",    "max_pp": 999, "pts": 3  }
+      ]
     },
     {
       "id": "ipca_gap",
       "label": "IPCA+ gap vs alvo",
       "max": 10,
-      "description": "Gap entre % IPCA+ atual e alvo. DCA ativo (taxa >= piso) atenua penalidade — gap se fecha com o tempo, comportamento correto.",
+      "decimals": 1,
+      "description": "Gap entre % IPCA+ atual e alvo (15%). DCA ativo (taxa >= piso) atenua penalidade — gap se fecha com o tempo. Lógica: se DCA ativo, sobe 1 tier (R→Y, Y→G).",
+      "dca_promotes_tier": true,
       "thresholds": [
-        { "max_pp": 2,  "pts": 10 },
-        { "max_pp": 5,  "pts": 7  },
-        { "max_pp": 999,"pts_if_dca": 5, "pts": 3 }
-      ],
-      "colors": { "good": 7, "warn": 3 }
+        { "status": "green",  "max_pp": 3,   "pts": 10 },
+        { "status": "yellow", "max_pp": 8,   "pts": 6  },
+        { "status": "red",    "max_pp": 999, "pts": 2  }
+      ]
     },
     {
       "id": "execution_fidelity",
       "label": "Fidelidade de execução",
       "max": 10,
+      "decimals": 0,
       "description": "Dos últimos 6 meses, quantos tiveram aporte >= 80% do target mensal. Mede comportamento real, não intenção.",
       "target_aporte_mensal": "DATA.premissas.aporte_mensal",
       "lookback_months": 6,
       "threshold_pct": 0.8,
       "thresholds": [
-        { "min_months": 6, "pts": 10 },
-        { "min_months": 5, "pts": 7  },
-        { "min_months": 4, "pts": 4  },
-        { "min_months": 0, "pts": 0  }
+        { "status": "green",  "min_months": 5, "pts": 10 },
+        { "status": "yellow", "min_months": 4, "pts": 6  },
+        { "status": "red",    "min_months": 0, "pts": 2  }
       ],
-      "colors": { "good": 7, "warn": 4 },
-      "_note": "Fonte: ibkr/aportes.json. Se dados insuficientes (<3 meses), usar 7pts (neutro)."
+      "neutral_pts_when_insufficient": 6,
+      "_note": "Fonte: ibkr/aportes.json. Se dados insuficientes (<3 meses), usar neutral_pts_when_insufficient (6 = entre yellow e green)."
     },
     {
       "id": "emergency_fund",
       "label": "Fundo de emergência",
       "max": 5,
+      "decimals": 1,
       "description": "Meses de cobertura em ativos líquidos (Tesouro IPCA+ curto + conta corrente). Renda PJ volátil exige 6+ meses (Vanguard 2021). Choque sem reserva = venda ETF em drawdown + IR.",
       "custo_vida_mensal": 20833,
       "_custo_nota": "R$250k/ano FIRE base ÷ 12 = R$20.8k. Usar config.py CUSTO_VIDA_BASE como fonte. Atualizar ao revisar spending.",
       "thresholds": [
-        { "min_months": 6, "pts": 5 },
-        { "min_months": 3, "pts": 3 },
-        { "min_months": 0, "pts": 0 }
+        { "status": "green",  "min_months": 6, "pts": 5 },
+        { "status": "yellow", "min_months": 3, "pts": 3 },
+        { "status": "red",    "min_months": 0, "pts": 1 }
       ],
-      "colors": { "good": 5, "warn": 3 },
       "_note": "Reserva atual: Tesouro IPCA+ 2029 (~R$87k). Custo vida mensal: R$215k/12 = ~R$17.9k. Atualizar custo_vida_mensal ao revisar spending."
     },
     {
       "id": "ter",
       "label": "Custo total (TER)",
       "max": 5,
-      "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
+      "decimals": 2,
+      "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters'). Decimals=2 (delta em pp).",
       "benchmark_ter": 0.220,
       "current_ter": 0.211,
       "equity_block_ter": 0.247,
       "shadow_c_ter": 0.207,
       "alpha_anual": 0.00160,
       "thresholds": [
-        { "max_delta_pp": 0,   "pts": 5 },
-        { "max_delta_pp": 0.1, "pts": 3 },
-        { "max_delta_pp": 999, "pts": 0 }
+        { "status": "green",  "max_delta_pp": 0,    "pts": 5 },
+        { "status": "yellow", "max_delta_pp": 0.10, "pts": 3 },
+        { "status": "red",    "max_delta_pp": 999,  "pts": 1 }
       ],
-      "colors": { "good": 5, "warn": 3 },
       "_note": "current_ter (0.211%) = full portfolio TER (SWRD 39.5% × 0.12% + AVGS 23.7% × 0.39% + AVEM 15.8% × 0.35% + HODL11 3% × 0.20% + RF ~6.1% × 0.10%). equity_block_ter (0.247%) = equity holdings only. Atualizar se composição mudar."
     },
     {
       "id": "human_capital",
       "label": "Proteção capital humano",
       "max": 5,
-      "description": "Seguro de vida/DI adequado. P(FIRE) assume Diego vivo e trabalhando até 2037. Sem seguro com casamento iminente + filho ~2028, o plano familiar depende de premissa frágil que o MC ignora.",
+      "description": "Seguro de vida/DI adequado. P(FIRE) assume Diego vivo e trabalhando até 2037. Sem seguro com casamento iminente + filho ~2028, o plano familiar depende de premissa frágil que o MC ignora. Métrica categórica — sem decimals.",
       "status": "solteiro_sem_dependentes",
       "thresholds": [
-        { "status": "solteiro_sem_dependentes", "pts": 5, "note": "Grátis enquanto solteiro sem dependentes. Muda ao casar." },
-        { "status": "casado_com_seguro",        "pts": 5 },
-        { "status": "casado_sem_seguro",        "pts": 0 },
-        { "status": "filho_com_seguro",         "pts": 5 },
-        { "status": "filho_sem_seguro",         "pts": 0 }
+        { "type": "categorical", "status": "solteiro_sem_dependentes", "tier": "green",  "pts": 5, "note": "Grátis enquanto solteiro sem dependentes. Muda ao casar." },
+        { "type": "categorical", "status": "casado_com_seguro",        "tier": "green",  "pts": 5 },
+        { "type": "categorical", "status": "casado_sem_seguro",        "tier": "red",    "pts": 1 },
+        { "type": "categorical", "status": "filho_com_seguro",         "tier": "green",  "pts": 5 },
+        { "type": "categorical", "status": "filho_sem_seguro",         "tier": "red",    "pts": 1 }
       ],
-      "colors": { "good": 5, "warn": 0 },
       "_note": "Atualizar status ao casar (2026-2027 estimado). Seguro adequado = cobertura 10x renda anual ou patrimônio suficiente para sustento família até FIRE."
     },
     {
       "id": "debt_ratio",
       "label": "Ratio dívida/patrimônio",
       "max": 5,
+      "decimals": 1,
       "description": "Passivos totais (hipoteca + IR diferido) como % do patrimônio financeiro. Alto nível de dívida vs patrimônio aumenta risco de distress em drawdown.",
       "_fonte": "data.passivos.total_brl / data.patrimonio.total_brl",
       "thresholds": [
-        { "max_pct": 10,  "pts": 5 },
-        { "max_pct": 20,  "pts": 3 },
-        { "max_pct": 999, "pts": 0 }
-      ],
-      "colors": { "good": 5, "warn": 3 }
+        { "status": "green",  "max_pct": 10,  "pts": 5 },
+        { "status": "yellow", "max_pct": 20,  "pts": 3 },
+        { "status": "red",    "max_pct": 999, "pts": 1 }
+      ]
     },
     {
       "id": "housing_ratio",
       "label": "Hipoteca/Patrimônio",
       "max": 5,
+      "decimals": 1,
       "description": "Saldo devedor hipoteca como % do patrimônio financeiro. Housing ratio alto = concentração de risco em ativo ilíquido financiado.",
       "_fonte": "data.passivos.hipoteca_brl / data.patrimonio.total_brl",
       "thresholds": [
-        { "max_pct": 10,  "pts": 5 },
-        { "max_pct": 15,  "pts": 3 },
-        { "max_pct": 999, "pts": 0 }
-      ],
-      "colors": { "good": 5, "warn": 3 }
+        { "status": "green",  "max_pct": 10,  "pts": 5 },
+        { "status": "yellow", "max_pct": 15,  "pts": 3 },
+        { "status": "red",    "max_pct": 999, "pts": 1 }
+      ]
     }
   ],
   "removed_metrics": [

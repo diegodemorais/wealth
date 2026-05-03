@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-05-02T19:42:26",
-  "_window_id": "20260502T194226",
+  "_generated": "2026-05-03T07:56:18",
+  "_window_id": "20260503T075618",
   "_source": "reconstruct_fire_data.py → historico_carteira.csv",
   "dates": [
     "2021-05",
@@ -153,7 +153,7 @@
     "metodologia_version": "dd-peak-trough-v1",
     "schema_version": "1.0",
     "last_period_appended": "2026-05",
-    "last_appended_at": "2026-05-02T19:42:26-03:00",
+    "last_appended_at": "2026-05-03T07:56:18-03:00",
     "rebuild_reason": null
   }
 }
