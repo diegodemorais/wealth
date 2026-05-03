@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
+import { interpolatePtsByMin, interpolatePtsByMax } from '@/utils/scoreInterpolation';
 import { Trophy, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 
 interface NowWellnessScoreProps {
@@ -34,21 +35,17 @@ export function NowWellnessScore({ data, derived }: NowWellnessScoreProps) {
     const terAtual = data?.drift?.['Custo']?.atual ?? (terCfg?.current_ter ?? 0.247);
     const humanStatus = wc.metrics.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
     const pfireBase = derived?.pfireBase ?? null;
-    const pts = (id: string, val: number | null, thresholds: any[], key: string) =>
-      (thresholds ?? []).find((t: any) => val != null && val >= (t[key] ?? -Infinity))?.pts ?? 0;
-    const pfirePts = pts('pfire', pfireBase, wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [], 'min');
-    const srPts = pts('sr', savingsRate, wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? [], 'min_pct');
-    const driftThresh = wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [];
-    const driftPts = driftThresh.find((t: any) => maxDriftVal <= t.max_pp)?.pts ?? 0;
-    const ipcaThresh = wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [];
-    const ipcaPts = ipcaGapPp == null ? 5 : ipcaThresh.find((t: any) => ipcaGapPp <= t.max_pp)?.pts ?? (dcaAtivo ? 5 : 3);
+    // Interpolação linear entre tiers + arredondamento no display (cf. scoreInterpolation.ts).
+    // Bug Diego 2026-05-03: 84.8 caía em ≥75→10 em vez de ≥85→22 por 0.2pp.
+    const pfirePts = interpolatePtsByMin(pfireBase, wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [], 1);
+    const srPts = interpolatePtsByMin(savingsRate, (wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? []).map((t: any) => ({ min: t.min_pct, pts: t.pts })), 1);
+    const driftPts = interpolatePtsByMax(maxDriftVal, wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [], 'max_pp', 1);
+    const ipcaPts = ipcaGapPp == null ? 5 : interpolatePtsByMax(ipcaGapPp, wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [], 'max_pp', 1);
     const reservaBrl = data?.rf?.ipca2029?.valor ?? 0;
     const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
-    const emergThresh = wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? [];
-    const emergPts = emergThresh.find((t: any) => months >= t.min_months)?.pts ?? 0;
+    const emergPts = interpolatePtsByMin(months, (wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? []).map((t: any) => ({ min: t.min_months, pts: t.pts })), 1);
     const terDelta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22);
-    const terThresh = terCfg?.thresholds ?? [];
-    const terPts = terThresh.find((t: any) => terDelta <= t.max_delta_pp)?.pts ?? 0;
+    const terPts = interpolatePtsByMax(terDelta, terCfg?.thresholds ?? [], 'max_delta_pp', 2);
     const humanPts = (wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? []).find((t: any) => t.status === humanStatus)?.pts ?? 5;
     const total = pfirePts + srPts + driftPts + ipcaPts + 7 + emergPts + terPts + humanPts;
     const maxScores = [35, 15, 15, 10, 10, 5, 5, 5];
@@ -106,63 +103,43 @@ function WellnessDetail({ data, derived }: { data: any; derived: any }) {
   const terAtual = data.drift?.['Custo']?.atual ?? (data.wellness_config?.metrics?.find((m: any) => m.id === 'ter')?.current_ter ?? 0.247);
   const humanCapitalStatus = data.wellness_config?.metrics?.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
 
-  const pfirePts = (() => {
-    const thresholds = wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [];
-    for (const t of thresholds) {
-      if (pfireBaseVal >= t.min) return t.pts;
-    }
-    return 0;
-  })();
-
-  const savingsRatePts = (() => {
-    const thresholds = wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? [];
-    for (const t of thresholds) {
-      if (savingsRate >= t.min_pct) return t.pts;
-    }
-    return 0;
-  })();
-
-  const driftPts = (() => {
-    const thresholds = wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [];
-    for (const t of thresholds) {
-      if (maxDriftVal <= t.max_pp) return t.pts;
-    }
-    return 0;
-  })();
-
-  const ipcaGapPts = (() => {
-    if (ipcaGapPp == null) return 5;
-    const thresholds = wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [];
-    for (const t of thresholds) {
-      if (ipcaGapPp <= t.max_pp) {
-        return t.pts ?? (dcaAtivo ? (t.pts_if_dca ?? t.pts ?? 5) : (t.pts ?? 3));
-      }
-    }
-    return dcaAtivo ? 5 : 3;
-  })();
-
+  // Interpolação + arredondamento no display (cf. scoreInterpolation.ts).
+  // Substitui degraus rígidos que causavam saltos grandes (Diego 2026-05-03).
+  const pfirePts = interpolatePtsByMin(
+    pfireBaseVal,
+    wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [],
+    1,
+  );
+  const savingsRatePts = interpolatePtsByMin(
+    savingsRate,
+    (wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? []).map((t: any) => ({ min: t.min_pct, pts: t.pts })),
+    1,
+  );
+  const driftPts = interpolatePtsByMax(
+    maxDriftVal,
+    wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [],
+    'max_pp',
+    1,
+  );
+  const ipcaGapPts = ipcaGapPp == null
+    ? 5
+    : interpolatePtsByMax(ipcaGapPp, wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [], 'max_pp', 1);
   const execPts = 7;
-
   const emergencyPts = (() => {
     const reservaBrl = data.rf?.ipca2029?.valor ?? 0;
     const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
-    const thresholds = wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? [];
-    for (const t of thresholds) {
-      if (months >= t.min_months) return t.pts;
-    }
-    return 0;
+    return interpolatePtsByMin(
+      months,
+      (wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? []).map((t: any) => ({ min: t.min_months, pts: t.pts })),
+      1,
+    );
   })();
-
   const terPts = (() => {
     const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
     const benchmarkTer = terCfg?.benchmark_ter ?? 0.22;
     const currentTer = terCfg?.current_ter ?? terAtual;
     const delta = currentTer - benchmarkTer;
-    const thresholds = terCfg?.thresholds ?? [];
-    for (const t of thresholds) {
-      if (delta <= t.max_delta_pp) return t.pts;
-    }
-    return 0;
+    return interpolatePtsByMax(delta, terCfg?.thresholds ?? [], 'max_delta_pp', 2);
   })();
 
   const humanPts = (() => {
