@@ -75,7 +75,7 @@ CIO definiu framing semântico (4 portfolios em alocação total). Architect map
 - [x] **Gate** `bash scripts/release_gate.sh` verde
 - [x] **Push** `git push -u origin main`
 
-Fase 1 push: <pending-sha> 2026-05-03
+Fase 1 push: 11025fe 2026-05-03
 
 ### Fase 2 — Frontend (componente + página + spec)
 
