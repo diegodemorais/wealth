@@ -240,7 +240,7 @@ export function IifptRadar({
   return (
     <CollapsibleSection
       id="section-iifpt-radar"
-      title="Interdependent Integrative Financial Planning Theory"
+      title="Cobertura de Planejamento Financeiro (IIFPT — 9 domínios)"
       defaultOpen={false}
       summary={summaryEl}
     >

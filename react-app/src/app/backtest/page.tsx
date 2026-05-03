@@ -482,7 +482,7 @@ function BacktestLongoSection() {
   if (!r7) {
     return (
       <div data-testid="backtest-regime-longo">
-      <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
+      <CollapsibleSection id="section-backtest-r7-empty" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
         <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)', fontSize: '14px' }}>
           <p>Dados de backtest R7 não carregados. Aguardando sincronização com IBKR.</p>
           <p style={{ fontSize: '12px', marginTop: '8px', fontStyle: 'italic' }}>Os dados históricos (1995-2026) serão preenchidos após a próxima execução de generate_data.py.</p>
@@ -516,7 +516,7 @@ function BacktestLongoSection() {
 
   return (
     <div data-testid="backtest-regime-longo">
-    <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
+    <CollapsibleSection id="section-backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
       {/* Metrics grid */}
       {metricCards.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2" style={{ marginBottom: '14px' }}>

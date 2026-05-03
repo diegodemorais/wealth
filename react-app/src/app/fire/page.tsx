@@ -1013,10 +1013,12 @@ export default function FirePage() {
       {/* ── Group 3: Contexto ──────────────────────────────────────────────────── */}
       <SectionDivider label="Contexto" />
 
-      {/* Balanço Holístico — Patrimônio expandido */}
+      {/* Balanço Holístico — Patrimônio expandido (movido de NOW na HD-dashboard-review-completa Onda 2.7) */}
+      <div data-testid="balanco-holistico">
       <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={secOpen('fire', 'balanco-holistico-fire', false)} icon={<Landmark size={18} />}>
         <BalancoHolistico data={data as any} showCapitalHumanoBadge />
       </CollapsibleSection>
+      </div>
 
       {/* Capital Humano vs. Financeiro — Crossover */}
       {(() => {

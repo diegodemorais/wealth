@@ -690,11 +690,8 @@ test.describe('Tier1 gaps — NOW tab', () => {
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
 
-  // Gap A: Balanço Holístico section
-  test('balanco-holistico exists in DOM', async ({ page }) => {
-    const el = page.locator('[data-testid="balanco-holistico"]');
-    await expect(el).toBeAttached({ timeout: 15_000 });
-  });
+  // Gap A: Balanço Holístico — moved to FIRE tab on HD-dashboard-review-completa Onda 2.7
+  // (test relocated to "Tier1 gaps — FIRE tab" describe block below)
 
   // Gap K: IPS Summary
   test('ips-summary exists in DOM', async ({ page }) => {
@@ -740,6 +737,12 @@ test.describe('Tier1 gaps — FIRE tab', () => {
   // Gap F: Renda Floor Katia
   test('renda-floor-katia exists in DOM', async ({ page }) => {
     const el = page.locator('[data-testid="renda-floor-katia"]');
+    await expect(el).toBeAttached({ timeout: 15_000 });
+  });
+
+  // Gap A: Balanço Holístico — relocated from NOW on HD-dashboard-review-completa Onda 2.7
+  test('balanco-holistico exists in DOM', async ({ page }) => {
+    const el = page.locator('[data-testid="balanco-holistico"]');
     await expect(el).toBeAttached({ timeout: 15_000 });
   });
 });
