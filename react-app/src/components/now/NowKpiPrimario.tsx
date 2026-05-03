@@ -11,6 +11,7 @@ import { SectionLabel } from '@/components/primitives/SectionLabel';
 import { MetricCard } from '@/components/primitives/MetricCard';
 import { KpiCard } from '@/components/primitives/KpiCard';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { cagrSemaphore } from '@/utils/cagrSemaphore';
 
 interface NowKpiPrimarioProps {
   data: any;
@@ -84,10 +85,7 @@ export function NowKpiPrimario({ data, derived, privacyMode, maxDrift }: NowKpiP
           const twrReal: number | null = data?.retornos_mensais?.twr_real_brl_pct ?? null;
           const premissa: number = data?.premissas_vs_realizado?.retorno_equity?.premissa_real_brl_pct ?? 4.5;
           const periodoAnos: number | null = data?.retornos_mensais?.periodo_anos ?? null;
-          const accent = twrReal == null ? 'var(--muted)'
-            : twrReal >= 4.5 ? 'var(--green)'
-            : twrReal >= 3 ? 'var(--yellow)'
-            : 'var(--red)';
+          const accent = cagrSemaphore(twrReal);
           const delta = twrReal != null ? twrReal - premissa : null;
           return (
             <KpiCard

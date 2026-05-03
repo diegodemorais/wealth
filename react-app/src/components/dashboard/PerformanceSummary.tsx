@@ -16,6 +16,7 @@ import React from 'react';
 import { KpiCard } from '@/components/primitives/KpiCard';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { useUiStore } from '@/store/uiStore';
+import { cagrSemaphore } from '@/utils/cagrSemaphore';
 
 interface AnnualReturn {
   year: number;
@@ -82,12 +83,8 @@ interface PerformanceSummaryProps {
   data: PerformanceSummaryData;
 }
 
-/** Semaphore color for CAGR real: green >= 4.5%, yellow 3-4.5%, red < 3% */
-function cagrSemaphore(v: number): string {
-  if (v >= 4.5) return 'var(--green)';
-  if (v >= 3) return 'var(--yellow)';
-  return 'var(--red)';
-}
+// cagrSemaphore canônico em utils/cagrSemaphore.ts (arredonda antes de comparar
+// com threshold pra alinhar com o display). Ver bug fix 2026-05-02.
 
 function fmtPct(v: number | null | undefined, privacyMode: boolean, decimals = 1): string {
   if (v == null) return '--';
@@ -213,7 +210,7 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
         <KpiCard
           label="CAGR Real BRL"
           value={cagrReal != null ? (pm ? '••%' : `${cagrReal.toFixed(1)}%`) : '--'}
-          accent={cagrReal != null ? cagrSemaphore(cagrReal) : 'var(--muted)'}
+          accent={cagrSemaphore(cagrReal)}
           delta={!pm && alphaAnual != null ? {
             text: `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(2)}pp vs VWRA`,
             positive: alphaAnual >= 0,
@@ -383,7 +380,7 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                     style={{
                       ...tdR,
                       fontWeight: 800,
-                      color: cagrReal != null ? cagrSemaphore(cagrReal) : 'var(--muted)',
+                      color: cagrSemaphore(cagrReal),
                     }}
                   >
                     {cagrReal != null ? (pm ? '••%' : `${cagrReal.toFixed(1)}%`) : '--'}
