@@ -173,7 +173,7 @@ export default function FirePage() {
         title="P(FIRE) reportado é conservador por design"
         testId="banner-fire-pfire-conservador"
       >
-        Exclui INSS Katia (~R$113k/ano) e capital humano. Real ~82-84%.
+        {maskMoneyValues('Exclui INSS Katia (~R$113k/ano) e capital humano. Real ~82-84%.', privacyMode)}
       </DiagnosticBanner>
 
       {/* 0. P(FIRE) Hero Banner */}

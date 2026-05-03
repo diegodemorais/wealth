@@ -154,18 +154,22 @@ describe('swr_gatilho — must not hardcode 0.03 in SWR calculations', () => {
 // ── ano_atual — YTD year label must not be hardcoded ─────────────────────────
 
 describe('ano_atual — year in YTD label must come from premissas', () => {
-  it('NOW page.tsx YTD label must use premissas.ano_atual (not raw new Date().getFullYear())', () => {
-    const nowPage = allSourceFiles.find(f => f.endsWith('/app/page.tsx'));
-    if (!nowPage) throw new Error('app/page.tsx not found');
-    const content = readFile(nowPage);
-    // The YTD kpi-sub must reference ano_atual, not a raw new Date() call
-    // Check that the "BRL · TWR" line uses ano_atual
-    const twrLineMatch = content.match(/BRL\s*·\s*TWR\s*\{([^}]+)\}/);
+  it('NOW page TWR label must come from data (not raw new Date().getFullYear())', () => {
+    // After DEV-now-refactor, KPI hero strip moved to NowKpiPrimario.
+    // The TWR sub now uses `data?.retornos_mensais?.periodo_anos` (data-driven).
+    // Guard: ensure no `new Date().getFullYear()` in TWR context.
+    const candidates = allSourceFiles.filter(f =>
+      f.endsWith('/app/page.tsx') || f.endsWith('/components/now/NowKpiPrimario.tsx')
+    );
+    if (candidates.length === 0) throw new Error('NOW page or NowKpiPrimario not found');
+    const combined = candidates.map(readFile).join('\n');
+    // TWR context must not hardcode current year via new Date()
+    const twrLineMatch = combined.match(/BRL\s*·\s*TWR[^]*?periodo_anos|TWR\s*·\s*desde[^}]+/);
+    expect(combined).toMatch(/periodo_anos|ano_atual/);
     if (twrLineMatch) {
-      expect(twrLineMatch[1]).toMatch(/ano_atual/);
-    } else {
-      // Fallback: just ensure ano_atual is present somewhere near TWR context
-      expect(content).toMatch(/ano_atual/);
+      // Within the TWR block, ensure no raw getFullYear() call
+      const block = twrLineMatch[0];
+      expect(block).not.toMatch(/new\s+Date\(\)\.getFullYear\(\)/);
     }
   });
 });

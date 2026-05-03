@@ -344,8 +344,7 @@ export default function WithdrawPage() {
         title="TD IPCA+ 2040 = FIRE Day"
         testId="banner-td-2040-fire-day"
       >
-        Vantagem estratégica: TD IPCA+ 2040 vence exatamente no FIRE Day (Diego 50 anos, 2040).
-        Resgate ~R$1.9M imediato, sem MtM, sem reinvestment risk.
+        {maskMoneyValues('Vantagem estratégica: TD IPCA+ 2040 vence exatamente no FIRE Day (Diego 50 anos, 2040). Resgate ~R$1.9M imediato, sem MtM, sem reinvestment risk.', privacyMode)}
       </DiagnosticBanner>
 
       {/* Seletor de cenário familiar — afeta SurplusGapChart, SWR e LTC */}
