@@ -72,6 +72,23 @@ Bug fix → escrever regression test.
 - `anchor`: id do `<CollapsibleSection>` mais próximo, sem `#`. Vazio = só a aba.
 - Só alterações visíveis no dashboard (não pipeline internals, não chore/docs)
 
+**`datetime` — fonte canônica obrigatória.** NUNCA escrever timestamp manual.
+
+```bash
+node react-app/scripts/changelog-now.mjs   # → 2026-05-02T22:35:00-03:00
+```
+
+Causa do bug recorrente (Diego reclamou 10x até 2026-05-02): cada Dev escolhia
+um valor "próximo do anterior" → efeito cascata, entradas progressivamente no
+futuro (ex: commit às 22:00 BRT registrado como 03:00 do dia seguinte). Helper
+acima usa `Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' })` —
+fonte única de verdade. Release gate (`scripts/release_gate_changelog.py`)
+falha o push se o último `datetime`:
+- usa sufixo `Z` (UTC ambíguo)
+- não tem offset `-03:00`
+- está mais de 5 min no futuro
+- está mais de 24 h no passado
+
 **Novo componente — checklist:**
 - [ ] `data-testid` nos campos que exibem dados financeiros
 - [ ] Assertion em `e2e/semantic-smoke.spec.ts` valida o *valor* renderizado (não só estrutura)

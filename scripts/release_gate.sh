@@ -172,6 +172,20 @@ fi
 echo ""
 
 # ────────────────────────────────────────────────────────────────────────────
+# Check 8b: Changelog datetime (BRT, sem futuro, sem 'Z')
+# ────────────────────────────────────────────────────────────────────────────
+echo "8️⃣ b  Changelog timestamp..."
+set +e
+"$VENV_PY" "$ROOT/scripts/release_gate_changelog.py"
+CHANGELOG_RESULT=$?
+set -e
+if [ $CHANGELOG_RESULT -ne 0 ]; then
+  echo "❌ Changelog timestamp FAILED — use: node react-app/scripts/changelog-now.mjs"
+  exit 1
+fi
+echo ""
+
+# ────────────────────────────────────────────────────────────────────────────
 # Check 9: Versão bumpou (warning soft — não bloqueia)
 # ────────────────────────────────────────────────────────────────────────────
 echo "9️⃣  Versão dashboard..."
