@@ -58,7 +58,7 @@ CIO definiu framing semântico (4 portfolios em alocação total). Architect map
 
 ### Fase 1 — Pipeline (dados + integração JSON)
 
-- [ ] **P1** [Médio] Criar `scripts/reconstruct_allocation_series.py` com funções:
+- [x] **P1** [Médio] Criar `scripts/reconstruct_allocation_series.py` com funções:
   - `load_atual_series()` — de `retornos_mensais.json:acumulado_pct`
   - `fetch_ipca_mensal_history(start)` — BCB SGS série 433 com `fetch_with_retry` + cache
   - `fetch_vwra_brl_history(start)` — pattern de `_download_monthly_returns` + câmbio
@@ -67,13 +67,15 @@ CIO definiu framing semântico (4 portfolios em alocação total). Architect map
   - `build_target_alocacao_total()` — blend 79/15/3/3 com pesos canônicos
   - `build_shadow_b()`, `build_shadow_c()`, `build_sem_legados()` (opcional)
   - Persistência via `append_only.write_with_meta()` versão `alloc-v1`
-- [ ] **P2** [Trivial] Adicionar `target_alocacao_total = {equity: 0.79, ipca_plus_2040: 0.15, hodl11: 0.03, renda_plus_2065: 0.03}` em `scripts/parse_carteira.py` + `dados/carteira_params.json`
-- [ ] **P3** [Trivial] Integrar em `scripts/generate_data.py:get_backtest()`: carregar `allocation_series.json` e mesclar como `backtest["allocation"]`
-- [ ] **P4** [Trivial] Schema assertion em `generate_data.py` final: `assert "allocation" in data["backtest"]` + chaves esperadas
-- [ ] **P9** [Trivial] Novo `scripts/tests/test_allocation_series.py`: invariantes (todas começam em 100, Atual ≡ acumulado_pct rebase, Shadow C ≈ blend de A+B+HODL+Renda)
-- [ ] **P10** [Trivial] Atualizar `scripts/release_gate_sanity.py` ANTI_CLIFF_SERIES: 5 entradas para `backtest.allocation.{atual_com_legados,target_alocacao_total,shadow_a,shadow_b,shadow_c}` com `max_abs_change=30.0`
-- [ ] **Gate** `bash scripts/release_gate.sh` verde
-- [ ] **Push** `git push -u origin main`
+- [x] **P2** [Trivial] Adicionar `target_alocacao_total = {equity: 0.79, ipca_plus_2040: 0.15, hodl11: 0.03, renda_plus_2065: 0.03}` em `scripts/parse_carteira.py` + `dados/carteira_params.json`
+- [x] **P3** [Trivial] Integrar em `scripts/generate_data.py:get_backtest()`: carregar `allocation_series.json` e mesclar como `backtest["allocation"]`
+- [x] **P4** [Trivial] Schema assertion em `generate_data.py` final: `assert "allocation" in data["backtest"]` + chaves esperadas
+- [x] **P9** [Trivial] Novo `scripts/tests/test_allocation_series.py`: invariantes (todas começam em 100, Atual ≡ acumulado_pct rebase, Shadow C ≈ blend de A+B+HODL+Renda)
+- [x] **P10** [Trivial] Atualizar `scripts/release_gate_sanity.py` ANTI_CLIFF_SERIES: 5 entradas para `backtest.allocation.{atual_com_legados,target_alocacao_total,shadow_a,shadow_b,shadow_c}` com `max_abs_change=30.0`
+- [x] **Gate** `bash scripts/release_gate.sh` verde
+- [x] **Push** `git push -u origin main`
+
+Fase 1 push: <pending-sha> 2026-05-03
 
 ### Fase 2 — Frontend (componente + página + spec)
 

@@ -240,6 +240,13 @@ ANTI_CLIFF_SERIES: list[tuple[str, dict]] = [
     # Trilha FIRE: cumulativa, BRL — salto >5M = bug.
     ("fire_trilha.trilha_p50_brl", {"max_abs_change": 5_000_000}),
     ("fire_trilha.trilha_brl", {"max_abs_change": 5_000_000}),
+    # Allocation series (DEV-shadow-allocation-series Fase 1) — séries rebase 100,
+    # mesma escala de retornos_mensais.acumulado_pct (variação típica <30 unidades/mês).
+    ("backtest.allocation.atual_com_legados",     {"max_abs_change": 30.0}),
+    ("backtest.allocation.target_alocacao_total", {"max_abs_change": 30.0}),
+    ("backtest.allocation.shadow_a",              {"max_abs_change": 30.0}),
+    ("backtest.allocation.shadow_b",              {"max_abs_change": 30.0}),
+    ("backtest.allocation.shadow_c",              {"max_abs_change": 30.0}),
 ]
 
 

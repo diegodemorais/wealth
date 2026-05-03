@@ -117,6 +117,7 @@ OUT_PATH        = ROOT / "react-app" / "public" / "data.json"
 
 PRIORITY_MATRIX_PATH    = ROOT / "agentes" / "contexto" / "priority_matrix.json"
 BACKTEST_R7_PATH        = ROOT / "dados" / "backtest_r7.json"
+ALLOCATION_SERIES_PATH  = ROOT / "dados" / "allocation_series.json"  # DEV-shadow-allocation-series Fase 1
 FIRE_MATRIX_PATH        = ROOT / "dados" / "fire_matrix.json"
 FIRE_SWR_PCT_PATH       = ROOT / "dados" / "fire_swr_percentis.json"
 FIRE_APORTE_SENS_PATH   = ROOT / "dados" / "fire_aporte_sensitivity.json"
@@ -890,22 +891,52 @@ def get_backtest():
     out, err = run([VENV_PY, "scripts/backtest_portfolio.py", "--json"], cwd=ROOT)
 
     # Tentar parsear JSON do output
+    backtest_data: dict = {}
     try:
         # procura bloco JSON no output
         m = re.search(r'(\{.+\})', out, re.DOTALL)
         if m:
-            data = json.loads(m.group(1))
+            backtest_data = json.loads(m.group(1))
             # Salvar cache
             cache = ROOT / "dados" / "ibkr" / "backtest_cache.json"
             cache.parent.mkdir(exist_ok=True)
-            cache.write_text(json.dumps(data, indent=2))
-            return data
+            cache.write_text(json.dumps(backtest_data, indent=2))
     except Exception:
-        pass
+        backtest_data = {}
 
-    # Fallback: parsear output texto
-    print(f"  ⚠️ backtest JSON não disponível, usando output texto")
-    return {}
+    if not backtest_data:
+        print(f"  ⚠️ backtest JSON não disponível, usando output texto")
+
+    # ── DEV-shadow-allocation-series Fase 1: mescla allocation_series.json ────
+    # Espera-se que reconstruct_allocation_series.py já tenha rodado antes do
+    # generate_data.py (pode ser invocado via pipeline orquestrador). Se faltar,
+    # log warning — Fase 2 (frontend) lida com allocation ausente graceful.
+    if ALLOCATION_SERIES_PATH.exists():
+        try:
+            alloc_raw = json.loads(ALLOCATION_SERIES_PATH.read_text())
+            alloc_payload = {
+                "dates":                  alloc_raw.get("dates", []),
+                "atual_com_legados":      alloc_raw.get("atual_com_legados", []),
+                "target_alocacao_total":  alloc_raw.get("target_alocacao_total", []),
+                "shadow_a":               alloc_raw.get("shadow_a", []),
+                "shadow_b":               alloc_raw.get("shadow_b", []),
+                "shadow_c":               alloc_raw.get("shadow_c", []),
+                "weights":                alloc_raw.get("weights", {}),
+                "_meta":                  alloc_raw.get("_meta", {}),
+                "_provenance":            alloc_raw.get("_provenance", {}),
+            }
+            # Inject como subkey "backtest.allocation"
+            inner_bt = backtest_data.get("backtest") or {}
+            inner_bt["allocation"] = alloc_payload
+            backtest_data["backtest"] = inner_bt
+            n = len(alloc_payload["dates"])
+            print(f"  ✓ allocation_series.json mesclado em backtest.allocation ({n} meses)")
+        except Exception as _e:
+            print(f"  ⚠️ allocation_series.json: erro ao mesclar ({_e}) — backtest.allocation ausente")
+    else:
+        print(f"  ⚠️ allocation_series.json ausente — rode reconstruct_allocation_series.py")
+
+    return backtest_data
 
 
 # ─── 4. TIMELINE ATTRIBUTION ─────────────────────────────────────────────────
@@ -6936,6 +6967,31 @@ def main():
     _pa_base = _pfire_asp.get("base")
     if _pa_base is not None and not (40.0 <= _pa_base <= 100.0):
         print(f"  ⚠️ pfire_aspiracional.base={_pa_base}% fora do range esperado [40-100%] — verificar PFireEngine")
+
+    # ── DEV-shadow-allocation-series Fase 1: schema assertion ────────────────
+    # Bloqueia output se allocation_series.json não foi mesclado em backtest.
+    # Se reconstruct_allocation_series.py ainda não rodou (1ª execução), ou se
+    # o arquivo está corrompido, abortar — evita data.json semi-completo.
+    _bt = data.get("backtest") or {}
+    assert "allocation" in _bt, (
+        "data.backtest.allocation ausente — rode "
+        "scripts/reconstruct_allocation_series.py antes do pipeline"
+    )
+    _alloc = _bt["allocation"]
+    _alloc_required = (
+        "dates", "atual_com_legados", "target_alocacao_total",
+        "shadow_a", "shadow_b", "shadow_c",
+    )
+    for _k in _alloc_required:
+        assert _k in _alloc, f"data.backtest.allocation.{_k} ausente"
+        assert isinstance(_alloc[_k], list), f"data.backtest.allocation.{_k} não é list"
+        assert len(_alloc[_k]) > 0, f"data.backtest.allocation.{_k} vazio"
+    # Todas as séries devem ter o mesmo comprimento das dates
+    _n = len(_alloc["dates"])
+    for _k in ("atual_com_legados", "target_alocacao_total", "shadow_a", "shadow_b", "shadow_c"):
+        assert len(_alloc[_k]) == _n, (
+            f"data.backtest.allocation.{_k} len={len(_alloc[_k])} != dates len={_n}"
+        )
 
     OUT_PATH.parent.mkdir(exist_ok=True)
     OUT_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False))

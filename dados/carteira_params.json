@@ -98,5 +98,11 @@
   "pfire_canonical_fav": 91.0,
   "pfire_canonical_stress": 78.9,
   "fire_age_base": 53,
-  "haircut_alpha_liquido": 0.0016
+  "haircut_alpha_liquido": 0.0016,
+  "target_alocacao_total": {
+    "equity": 0.79,
+    "ipca_plus_2040": 0.15,
+    "hodl11": 0.03,
+    "renda_plus_2065": 0.03
+  }
 }

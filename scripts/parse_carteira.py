@@ -72,11 +72,36 @@ def _coerce(raw: str):
         return raw
 
 
+def _inject_derived(params: dict) -> dict:
+    """Injeta blocos derivados de parâmetros já parseados.
+
+    target_alocacao_total: alocação canônica em escopo total (equity + IPCA+ longo
+    + HODL11 + Renda+) consumida por reconstruct_allocation_series.py e pelo
+    BacktestChart (Fase 2, DEV-shadow-allocation-series).
+    """
+    target_alloc = {
+        "equity":           params.get("equity_pct", 0.79),
+        "ipca_plus_2040":   params.get("ipca_longo_pct", 0.15),
+        "hodl11":           params.get("cripto_pct", 0.03),
+        "renda_plus_2065":  params.get("renda_plus_pct", 0.03),
+    }
+    # Sanity: somar 1.0 ± 1e-6
+    total = sum(target_alloc.values())
+    if abs(total - 1.0) > 1e-6:
+        raise ValueError(
+            f"target_alocacao_total não soma 1.0: {target_alloc} (Σ={total:.6f}). "
+            "Ajuste equity_pct/ipca_longo_pct/cripto_pct/renda_plus_pct em carteira.md."
+        )
+    params["target_alocacao_total"] = target_alloc
+    return params
+
+
 if __name__ == "__main__":
     params = parse()
+    params = _inject_derived(params)
     out = ROOT / "dados" / "carteira_params.json"
     out.write_text(json.dumps(params, indent=2, ensure_ascii=False) + "\n")
     print(f"✓ carteira_params.json gerado ({len(params)} parâmetros)")
-    # Mostrar resumo
+    # Mostrar resumo (top-level keys)
     for k, v in params.items():
         print(f"  {k}: {v!r}")
