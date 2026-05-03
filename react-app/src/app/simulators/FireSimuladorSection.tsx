@@ -241,8 +241,18 @@ export function FireSimuladorSection() {
   if (isPresetMode) {
     // Preset mode: use pré-computed data
     if (isAspirPreset) {
-      // Aspiracional: use earliest_fire + scenario_comparison.aspiracional para pat/swr
-      if (earliestFire) {
+      // Aspiracional: ano/idade/pat derivam de calcFireYear (determinístico
+      // sobre os sliders ativos), garantindo continuidade quando o usuário
+      // arrasta um slider — sem dele, baseline (MC P50 = earliest_fire.ano)
+      // pode coincidir por arredondamento com o resultado determinístico em
+      // alguma faixa de retorno (e.g. retorno=2% → ambos 2036), mascarando o
+      // recálculo e disparando falso "slider morto" na regression E2E.
+      // P(FIRE) continua vindo de pfire_aspiracional (MC pré-computado) — é
+      // a métrica probabilística da MC base, não recalculável no cliente.
+      if (aporte !== undefined && retorno !== undefined && custo !== undefined &&
+          currentAge !== undefined && patrimonio !== undefined && swrTarget !== undefined) {
+        result = calcFireYear(aporte, retorno / 100, custo, currentAge, getAnoAtual(premissas), patrimonio, swrTarget);
+      } else if (earliestFire) {
         const aspirScenario = (data as any)?.scenario_comparison?.aspiracional;
         result = {
           ano: earliestFire.ano,
@@ -250,8 +260,8 @@ export function FireSimuladorSection() {
           pat: aspirScenario?.pat_mediano ?? 0,
           swrAtFire: aspirScenario?.swr ?? 0,
         };
-        firePire = (data as any)?.pfire_aspiracional?.base ?? earliestFire.pfire ?? null;
       }
+      firePire = (data as any)?.pfire_aspiracional?.base ?? earliestFire?.pfire ?? null;
     } else if (isCambioDinamico) {
       // Câmbio Dinâmico: FIRE year from base preset, P(FIRE) from fxRegime MC
       const p = byProfile.find((x: any) => x.profile === profileKey[fireCond]);
