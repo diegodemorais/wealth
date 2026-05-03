@@ -57,7 +57,7 @@ export function AllInCostTable() {
         Custo All-in por ETF — Annual Reports 2025
       </div>
       <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 12 }}>
-        TER (headline KIID) vs all-in (TER + transaction costs + spread de réplica). Drag real da carteira é {(dragAggregate * 100 / 100).toFixed(3)}%/ano — {(dragAggregate / terAggregate).toFixed(1)}× o TER ponderado.
+        TER (headline KIID) vs all-in (TER + transaction costs + spread de réplica). Drag real da carteira é {dragAggregate.toFixed(3)}%/ano — {(dragAggregate / terAggregate).toFixed(1)}× o TER ponderado.
       </div>
 
       <div style={{ overflowX: 'auto' }}>
