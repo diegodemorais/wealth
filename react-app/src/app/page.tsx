@@ -389,7 +389,7 @@ export default function HomePage() {
           sub={(() => {
             const fireSub = d.pfireAspirFav != null && d.pfireAspirStress != null
               ? `fav ${d.pfireAspirFav.toFixed(1)}% · stress ${d.pfireAspirStress.toFixed(1)}%`
-              : 'cenário aspiracional (49a)';
+              : 'cenário aspiracional (FIRE 49 anos)';
             const pQualityAspiracionalRaw: number | null = (data as any)?.fire?.p_quality_aspiracional ?? null;
             const pQualityColor = pQualityAspiracionalRaw == null ? 'var(--muted)'
               : pQualityAspiracionalRaw >= 70 ? 'var(--green)'
@@ -989,7 +989,7 @@ export default function HomePage() {
                     )}
                     {/* CDS threshold note */}
                     <div style={{ marginTop: 4, fontSize: 10, color: 'var(--muted)' }}>
-                      CDS: verde &lt;250bps · amarelo 250–400 · vermelho &gt;400 (revisar RF Brasil)
+                      CDS: 🟢 &lt;250bps · 🟡 250–400 · 🔴 &gt;400 (revisar RF Brasil)
                     </div>
                   </div>
                 );
