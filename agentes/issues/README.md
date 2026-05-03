@@ -39,7 +39,9 @@
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| HD-portfolio-buckets-view | Componente "Ativos vs Target por Bucket" — performance individual ITD | Head → Bookkeeper → CIO → Dev → QA/Tester/Quant → CIO | 🟡 Média |
 
 ### Blocked
 > Issues aguardando dependências externas
