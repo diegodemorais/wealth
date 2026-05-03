@@ -111,6 +111,25 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
           show: !privacyMode, position: 'top', fontSize: 10, color: '#f59e0b',
           formatter: (p: any) => (p.value >= 0 ? '+' : '') + p.value.toFixed(2) + '%',
         },
+        // Threshold underperf — anti-pânico (factor drought academicamente esperado)
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          lineStyle: { type: 'dashed', width: 1 },
+          label: { color: '#94a3b8', fontSize: 10, position: 'insideEndTop' },
+          data: [
+            {
+              yAxis: -5,
+              lineStyle: { color: '#eab308' },
+              label: { formatter: '−5pp (atenção)', color: '#eab308' },
+            },
+            {
+              yAxis: -10,
+              lineStyle: { color: '#ef4444' },
+              label: { formatter: '−10pp (crítico)', color: '#ef4444' },
+            },
+          ],
+        },
       },
     ],
   };
