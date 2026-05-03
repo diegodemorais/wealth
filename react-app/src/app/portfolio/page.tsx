@@ -35,6 +35,7 @@ import { RollingReturnsHeatmap } from '@/components/charts/RollingReturnsHeatmap
 import { EfficientFrontierChart } from '@/components/charts/EfficientFrontierChart';
 import { OverlapChart } from '@/components/charts/OverlapChart';
 import { SectorExposureChart } from '@/components/charts/SectorExposureChart';
+import { DiagnosticBanner } from '@/components/banners/DiagnosticBanner';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -573,6 +574,15 @@ export default function PortfolioPage() {
           title={secTitle('portfolio', 'efficient-frontier', 'Fronteira Eficiente — Markowitz (Histórica + Black-Litterman)')}
           defaultOpen={secOpen('portfolio', 'efficient-frontier', false)}
         >
+          <DiagnosticBanner
+            variant="warning"
+            title="Markowitz é informativo, não prescritivo"
+            testId="banner-ef-markowitz"
+          >
+            Carteira atual 50/30/20 está dentro do IC estatístico. Rebalance via venda gera IR (Lei 14.754)
+            que aniquila ganho de Sharpe (Max Sharpe BL bruto 0.038 → líquido 0.001).
+            Regra: aporte direciona ao gap, venda só sem lucro.
+          </DiagnosticBanner>
           <EfficientFrontierChart
             data={(data as any).efficient_frontier}
             valueSpread={(data as any)?.factor?.value_spread}

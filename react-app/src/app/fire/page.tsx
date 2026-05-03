@@ -36,6 +36,7 @@ import { BondPoolDepletionChart } from '@/components/charts/BondPoolDepletionCha
 import { SpendingTimelineChart } from '@/components/charts/SpendingTimelineChart';
 import { WithdrawalRateChart } from '@/components/charts/WithdrawalRateChart';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
+import { DiagnosticBanner } from '@/components/banners/DiagnosticBanner';
 
 
 export default function FirePage() {
@@ -167,6 +168,14 @@ export default function FirePage() {
 
   return (
     <div>
+      <DiagnosticBanner
+        variant="info"
+        title="P(FIRE) reportado é conservador por design"
+        testId="banner-fire-pfire-conservador"
+      >
+        Exclui INSS Katia (~R$113k/ano) e capital humano. Real ~82-84%.
+      </DiagnosticBanner>
+
       {/* 0. P(FIRE) Hero Banner */}
       <div style={{
         background: `linear-gradient(135deg, color-mix(in srgb, ${pfireHeroColor} 8%, transparent), color-mix(in srgb, var(--accent) 4%, transparent))`,

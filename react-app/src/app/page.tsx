@@ -22,6 +22,7 @@ import { EChart } from '@/components/primitives/EChart';
 import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { EC } from '@/utils/echarts-theme';
 import { IifptRadar } from '@/components/dashboard/IifptRadar';
+import { DiagnosticBanner } from '@/components/banners/DiagnosticBanner';
 
 export default function HomePage() {
   const { data, derived, isLoading, dataError, privacyMode } = usePageData();
@@ -152,6 +153,25 @@ export default function HomePage() {
 
   return (
     <div>
+      {/* Banners de diagnóstico — anti-ancoragem (Markowitz informativo) + conservadorismo P(FIRE) */}
+      <DiagnosticBanner
+        variant="warning"
+        title="Markowitz é informativo, não prescritivo"
+        testId="banner-markowitz-informativo"
+      >
+        Carteira atual 50/30/20 está dentro do IC estatístico da fronteira eficiente.
+        Rebalance via venda gera IR (Lei 14.754) que aniquila ganho de Sharpe (Max Sharpe BL bruto 0.038 → líquido 0.001).
+        Regra: aporte direciona ao gap, venda só sem lucro.
+      </DiagnosticBanner>
+
+      <DiagnosticBanner
+        variant="info"
+        title="P(FIRE) reportado é conservador por design"
+        testId="banner-pfire-conservador"
+      >
+        Exclui INSS Katia (~R$113k/ano) e capital humano. Real ~82-84%.
+      </DiagnosticBanner>
+
       {/* 1. HERO STRIP — Patrimônio Total | Anos até FIRE | Progresso FIRE */}
       <KpiHero
         networth={d.networth}

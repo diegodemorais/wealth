@@ -24,6 +24,7 @@ import SWRDashboard from '@/components/dashboard/SWRDashboard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { BarChart3, Building2, Thermometer, Hospital, CheckCircle, AlertCircle, XCircle, Heart, Landmark } from 'lucide-react';
 import { fmtPrivacy, pvText, maskMoneyValues } from '@/utils/privacyTransform';
+import { DiagnosticBanner } from '@/components/banners/DiagnosticBanner';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
 interface FloorUpsideWithdrawProps {
@@ -338,6 +339,15 @@ export default function WithdrawPage() {
 
   return (
     <div>
+      <DiagnosticBanner
+        variant="success"
+        title="TD IPCA+ 2040 = FIRE Day"
+        testId="banner-td-2040-fire-day"
+      >
+        Vantagem estratégica: TD IPCA+ 2040 vence exatamente no FIRE Day (Diego 50 anos, 2040).
+        Resgate ~R$1.9M imediato, sem MtM, sem reinvestment risk.
+      </DiagnosticBanner>
+
       {/* Seletor de cenário familiar — afeta SurplusGapChart, SWR e LTC */}
       <div style={{
         display: 'flex',
