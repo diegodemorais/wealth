@@ -39,7 +39,10 @@
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| HD-dashboard-review-completa | Revisão completa do dashboard — UI/UX/BI + wealth (7 abas, 3 ondas) | Head + Dev + agentes | 🟡 Média |
+| FI-em-instrumento-investigation | Instrumento EM — AVEM ainda é a melhor escolha? | Factor (+ Quant, Tax) | 🟡 Média |
 
 ### Blocked
 > Issues aguardando dependências externas

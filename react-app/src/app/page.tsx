@@ -14,7 +14,6 @@ import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
 import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
 import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
-import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Trophy, Target, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
@@ -833,30 +832,7 @@ export default function HomePage() {
         </div>
       </CollapsibleSection>
 
-      {/* Gap A: Balanço Holístico — Patrimônio Total (financeiro + ilíquido + INSS + cap humano) */}
-      {(data as any)?.patrimonio_holistico && (
-        <div data-testid="balanco-holistico">
-        <CollapsibleSection
-          id="section-balanco-holistico"
-          title={secTitle('now', 'balanco-holistico', 'Balanço Holístico — Patrimônio Total')}
-          defaultOpen={secOpen('now', 'balanco-holistico', false)}
-          summary={(() => {
-            const h = (data as any)?.patrimonio_holistico;
-            if (!h?.total_brl) return undefined;
-            return (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 'var(--text-xs)' }}>
-                <span style={{ fontWeight: 700, fontSize: '1rem', fontFamily: 'monospace', color: 'var(--green)' }}>
-                  {fmtPrivacy(h.total_brl, privacyMode)}
-                </span>
-                <span style={{ color: 'var(--muted)' }}>total holístico</span>
-              </div>
-            );
-          })()}
-        >
-          <BalancoHolistico data={data as any} showCapitalHumanoBadge />
-        </CollapsibleSection>
-        </div>
-      )}
+      {/* Balanço Holístico — movido exclusivamente para FIRE (HD-dashboard-review-completa Onda 3.3) */}
 
       {/* Rebalancing Status — collapsed */}
       <CollapsibleSection id="section-rebalancing-status" title={secTitle('now', 'rebalancing-status', 'Rebalancing Status — Drift por Classe')} defaultOpen={secOpen('now', 'rebalancing-status', false)}>
