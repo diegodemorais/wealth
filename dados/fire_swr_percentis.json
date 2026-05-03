@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-05-03T07:56:18",
-  "_window_id": "20260503T075618",
+  "_generated": "2026-05-03T10:14:50",
+  "_window_id": "20260503T101450",
   "_source": "reconstruct_fire_data.py → SWREngine.calculate_fire()",
   "custo_vida_base": 250000,
   "patrimonio_p10_2040": 7277772.0,
@@ -12,5 +12,5 @@
   "swr_p10_pct": 3.44,
   "swr_p50_pct": 2.09,
   "swr_p90_pct": 1.32,
-  "mc_date": "2026-05-02"
+  "mc_date": "2026-05-03"
 }

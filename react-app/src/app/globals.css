@@ -287,6 +287,11 @@
     .hide-mobile { display: none !important; }
   }
 
+  /* Inverse — hides element on desktop, shows on mobile */
+  @media (min-width: 641px) {
+    .hide-desktop { display: none !important; }
+  }
+
   /* Mobile: 2-row layout — logo+controls on top, tabs full-width below */
   @media (max-width: 640px) {
     .header-container {

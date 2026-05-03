@@ -6760,6 +6760,32 @@ def main():
                 return None
             return obj
         return obj
+    # ─── HD-portfolio-buckets-view (Caminho A): enriquece posicoes[ticker] ────────
+    # Estende cada posicao com twr_ytd_pct, max_dd_itd_pct, ter_all_in_pct,
+    # series_short. Adiciona AVEM (alvo nao iniciado) se faltar. NAO emite mais
+    # bloco bucket_assets[] — HoldingsTable consome posicoes[] direto, agrupado
+    # por bucket no frontend.
+    try:
+        from compute_asset_metrics import enrich_posicoes
+        data = enrich_posicoes(data)
+        _pos = data.get("posicoes", {})
+        # Remover bloco legacy (pode existir em data.json antigo)
+        data.pop("bucket_assets", None)
+        # Sanity: AVEM precisa existir agora
+        assert "AVEM" in _pos, "compute_asset_metrics nao adicionou AVEM"
+        assert "ter_all_in_pct" in _pos["AVEM"], "AVEM sem ter_all_in_pct"
+        _avem_ter = _pos["AVEM"].get("ter_all_in_pct")
+        assert abs(_avem_ter - 1.18) < 0.001, f"AVEM TER all-in inesperado: {_avem_ter}"
+        # Sanity: SWRD precisa ter ter_all_in_pct injetado
+        if "SWRD" in _pos:
+            assert "ter_all_in_pct" in _pos["SWRD"], "SWRD sem ter_all_in_pct"
+        _enriched = sum(1 for p in _pos.values() if "ter_all_in_pct" in p)
+        print(f"  ✓ HD-portfolio-buckets-view: {_enriched}/{len(_pos)} posicoes enriquecidas (TWR/DD/TER)")
+    except ImportError:
+        print("  ⚠ compute_asset_metrics.py nao encontrado — posicoes nao enriquecidas")
+    except Exception as _e_am:
+        print(f"  ⚠ enrich_posicoes falhou ({_e_am}) — posicoes ficam sem TWR/DD")
+
     data = replace_nan(data)
 
     # ─── Spec Contract Validation — bloqueia se qualquer campo do dashboard é nulo ──
