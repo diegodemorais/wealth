@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { TooltipInfo } from '@/components/primitives/Tooltip';
 
 export interface MetricCardProps {
   /** Card title / label (can include a semaphore dot node) */
@@ -33,6 +34,11 @@ export interface MetricCardProps {
   className?: string;
   /** data-testid for Playwright assertions */
   'data-testid'?: string;
+  /**
+   * Tooltip explicativo do KPI (popover ao hover/focus do ícone Info).
+   * Privacy: caller é responsável por mascarar R$/USD literais antes de passar.
+   */
+  tooltip?: string | React.ReactNode;
 }
 
 /**
@@ -58,6 +64,7 @@ export function MetricCard({
   valueColor,
   className,
   'data-testid': dataTestId,
+  tooltip,
 }: MetricCardProps) {
   const isMd = size === 'md';
 
@@ -84,9 +91,16 @@ export function MetricCard({
   );
 
   return (
-    <div className={wrapperCls} data-testid={dataTestId}>
+    <div className={wrapperCls} data-testid={dataTestId} style={style}>
       <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
         {label}
+        {tooltip != null && (
+          <TooltipInfo
+            content={tooltip}
+            data-testid="metric-card-tooltip"
+            ariaLabel={typeof label === 'string' ? `Informação sobre ${label}` : 'Mais informações'}
+          />
+        )}
       </div>
       <div className={valueCls}>{value}</div>
       {sub != null && (

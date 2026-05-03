@@ -1,10 +1,12 @@
 'use client';
 
+import React from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct, fmtBrlCompact } from '@/utils/formatters';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { decimalYearsToYearsMonths } from '@/utils/time';
 import { canonicalizePFire } from '@/utils/pfire-canonical';
+import { TooltipInfo } from '@/components/primitives/Tooltip';
 
 // Compact USD formatter for hero display (e.g. $695k)
 function fmtUsdCompact(val: number): string {
@@ -32,6 +34,11 @@ export interface KpiHeroProps {
   // DC3 — IIFPT gap note: shows when RM or Est coverage < 0.3
   domainCoverageRm?: number | null;
   domainCoverageEst?: number | null;
+  // Tooltips opcionais por card (popover ⓘ ao lado do label)
+  tooltipPatrimonio?: React.ReactNode;
+  tooltipFire?: React.ReactNode;
+  tooltipProgresso?: React.ReactNode;
+  tooltipPfire?: React.ReactNode;
 }
 
 export function KpiHero({
@@ -52,6 +59,10 @@ export function KpiHero({
   fireDateFormatted,
   domainCoverageRm,
   domainCoverageEst,
+  tooltipPatrimonio,
+  tooltipFire,
+  tooltipProgresso,
+  tooltipPfire,
 }: KpiHeroProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
@@ -94,7 +105,12 @@ export function KpiHero({
     <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2.5 mb-4">
       {/* Card 1: Patrimônio Total */}
       <div className="kpi kpi-fire text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
-        <div className="kpi-label">Patrimônio Total</div>
+        <div className="kpi-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center', width: '100%' }}>
+          <span>Patrimônio Total</span>
+          {tooltipPatrimonio != null && (
+            <TooltipInfo content={tooltipPatrimonio} data-testid="metric-card-tooltip" ariaLabel="Informação sobre Patrimônio Total" />
+          )}
+        </div>
         <div className="kpi-value text-4xl font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }} data-testid="patrimonio-total">
           {privacyMode ? 'R$ ••••' : networthCompact}
         </div>
@@ -105,7 +121,12 @@ export function KpiHero({
 
       {/* Card 2: Anos até FIRE */}
       <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
-        <div className="kpi-label">Anos até FIRE</div>
+        <div className="kpi-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center', width: '100%' }}>
+          <span>Anos até FIRE</span>
+          {tooltipFire != null && (
+            <TooltipInfo content={tooltipFire} data-testid="metric-card-tooltip" ariaLabel="Informação sobre Anos até FIRE" />
+          )}
+        </div>
         <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }}>
           {yearsMonthsStr}
         </div>
@@ -116,7 +137,12 @@ export function KpiHero({
 
       {/* Card 3: Progresso FIRE */}
       <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--yellow)' }}>
-        <div className="kpi-label">Progresso FIRE</div>
+        <div className="kpi-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center', width: '100%' }}>
+          <span>Progresso FIRE</span>
+          {tooltipProgresso != null && (
+            <TooltipInfo content={tooltipProgresso} data-testid="metric-card-tooltip" ariaLabel="Informação sobre Progresso FIRE" />
+          )}
+        </div>
         <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '2rem', color: 'rgba(234,179,8,0.9)' }}>
           {fmtPct(fireProgress, 1)}
         </div>
@@ -146,7 +172,12 @@ export function KpiHero({
       {/* Card 4: P(FIRE) base — G3: mostra fav/stress como contexto */}
       {pfire > 0 && (
         <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--green)' }} data-testid="pfire-base-hero">
-          <div className="kpi-label">P(FIRE)</div>
+          <div className="kpi-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center', width: '100%' }}>
+            <span>P(FIRE)</span>
+            {tooltipPfire != null && (
+              <TooltipInfo content={tooltipPfire} data-testid="metric-card-tooltip" ariaLabel="Informação sobre P(FIRE)" />
+            )}
+          </div>
           <div
             className="kpi-value font-black mt-1 mb-0.5"
             style={{

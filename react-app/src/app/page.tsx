@@ -88,6 +88,45 @@ export default function HomePage() {
         fireDateFormatted={(d as any).fireDateFormatted}
         domainCoverageRm={domainCoverage.rm ?? null}
         domainCoverageEst={domainCoverage.est ?? null}
+        tooltipPatrimonio={
+          <>
+            <strong>Patrimônio Total</strong> — soma financeira: IBKR (USD@PTAX) +
+            RF Brasil (IPCA+ / Renda+ / pré) + cripto (HODL11 + custódia) + caixa.
+            <br /><br />
+            <em>Não inclui</em> capital humano, imóvel equity, terreno e INSS futuro.
+            Ver aba FIRE → Balanço Holístico para visão completa.
+          </>
+        }
+        tooltipFire={
+          <>
+            <strong>Anos até FIRE</strong> — tempo restante até o gatilho FIRE base
+            (cenário conservador). Calculado a partir da data atual e da projeção
+            do patrimônio atingir o gatilho.
+            <br /><br />
+            Sub: data alvo do FIRE Day. Cenário <em>aspiracional</em> (49 anos) é mais
+            curto; ver KPI "P(Cenário Aspiracional)" abaixo.
+          </>
+        }
+        tooltipProgresso={
+          <>
+            <strong>Progresso FIRE</strong> — patrimônio atual / patrimônio gatilho
+            FIRE base. 100% = atingiu o número FIRE.
+            <br /><br />
+            Gatilho = SWR-target sobre gasto base anual. Ver aba FIRE para detalhe
+            do cálculo (Trinity-equivalente ajustado para realidade brasileira).
+          </>
+        }
+        tooltipPfire={
+          <>
+            <strong>P(FIRE) base</strong> — probabilidade Monte Carlo (10k simulações)
+            de atingir e sustentar FIRE no cenário <em>conservador</em>: gasto base,
+            premissas de retorno haircut, FF5 com haircut McLean-Pontiff 58%.
+            <br /><br />
+            <em>Conservador por design:</em> exclui INSS Katia e capital humano (real
+            estimado ~82-84%). Sub mostra fav/stress. Bandas: ≥90% verde · 80-90%
+            amarelo · &lt;80% vermelho.
+          </>
+        }
       />
 
       <NowHeroStrips data={data} privacyMode={privacyMode} />

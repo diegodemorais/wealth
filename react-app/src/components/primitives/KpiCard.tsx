@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { TooltipInfo } from '@/components/primitives/Tooltip';
 
 /**
  * KpiCard — KPI primitive with hero value, optional delta chip, inline progress bar, sub text.
@@ -21,11 +22,16 @@ export interface KpiCardProps {
   progress?: number;
   /** Texto descritivo abaixo */
   sub?: string;
+  /** Tooltip explicativo (popover ao lado do label). Não vaza R$ literais. */
+  tooltip?: React.ReactNode;
+  /** data-testid no wrapper */
+  'data-testid'?: string;
 }
 
-export function KpiCard({ label, value, accent, delta, progress, sub }: KpiCardProps) {
+export function KpiCard({ label, value, accent, delta, progress, sub, tooltip, 'data-testid': dataTestId }: KpiCardProps) {
   return (
     <div
+      data-testid={dataTestId}
       style={{
         background: 'var(--card)',
         border: '1px solid var(--border)',
@@ -40,6 +46,9 @@ export function KpiCard({ label, value, accent, delta, progress, sub }: KpiCardP
     >
       <div
         style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
           fontSize: 'var(--text-xs)',
           color: 'var(--muted)',
           textTransform: 'uppercase',
@@ -47,7 +56,14 @@ export function KpiCard({ label, value, accent, delta, progress, sub }: KpiCardP
           fontWeight: 600,
         }}
       >
-        {label}
+        <span>{label}</span>
+        {tooltip != null && (
+          <TooltipInfo
+            content={tooltip}
+            data-testid="metric-card-tooltip"
+            ariaLabel={`Informação sobre ${label}`}
+          />
+        )}
       </div>
 
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
