@@ -41,7 +41,7 @@
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| (vazio) | | | |
+| DEV-shadow-allocation-series | Shadow Portfolios em alocação total — série histórica (5 linhas) | Dev | 🟡 Em execução por fases |
 
 ### Blocked
 > Issues aguardando dependências externas
