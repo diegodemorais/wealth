@@ -1,9 +1,51 @@
 # ETF Candidatos — Radar de Monitoramento
 
 > Criado em: 2026-04-02
-> Última atualização: 2026-04-20
+> Última atualização: 2026-05-03
 > Dono: Factor (02) — revisão mensal no scan RR/Bogleheads
-> Propósito: ETFs fora da carteira com potencial de inclusão futura
+> Propósito: ETFs fora da carteira com potencial de inclusão futura **+ ETFs em carteira sob monitoramento ativo (gatilhos de reavaliação)**
+
+---
+
+## In-Portfolio Monitoring (gatilhos ativos)
+
+> ETFs já na carteira ou no legado que requerem monitoramento ativo por triggers explícitos. Não são candidatos — mas a decisão de mantê-los depende de sinais quantitativos.
+
+### AVEM.L — Avantis Emerging Markets Equity UCITS (em carteira, 20% target)
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | AVEM (LSE USD) · AVEZ (LSE GBP) |
+| **ISIN** | IE000ZWZ9SY1 |
+| **TER (factsheet)** | 0.35% |
+| **All-in real (AR 2025 Deloitte)** | **1.184%** (TER 0.290% + WHT 0.319% + CGT Indian 0.251% + Transaction 0.325%) |
+| **AUM** | USD 67.6M médio 2025 (cresceu 21M → 114M) — **zona crítica USD <100M** |
+| **Spread Xetra round-trip** | 0.516% (RR Forum post 1529) — 24× pior que IWDA |
+| **Status** | ✅ MANTIDO 100% (FI-em-instrumento-investigation, decisão Diego 2026-05-03) |
+| **Conviction** | Média — síntese ponderada 6.35/10 (Factor 40% / Quant 25% / OV 20% / Advocate 15%) |
+| **Premium líquido esperado** | +77 a +161 bps/ano vs EMIM passivo (gap incremental real ~49bps) |
+| **Próxima auditoria** | Avantis AR 2026 (~abr/2027) + scan trimestral AUM |
+| **Quem monitora** | Factor (02) |
+
+**Triggers de reabrir decisão (monitoramento ativo):**
+
+| Sinal | Threshold | Ação |
+|-------|-----------|------|
+| AUM AVEM < USD 50M | 2 trimestres consecutivos | Reabrir issue: gestora pode estar em breakeven (Advocate steelman) |
+| Crescimento AUM | <10%/ano por 12m | Mesma ação |
+| AR 2026 mantém all-in | > 1.10% | Reabrir blend defensivo (60-70% AVEM + EMIM) |
+| AR 2026 cai | < 0.85% (precedente Dimensional EM Value 0.79%→0.15%) | Tese reforçada — manter integral |
+| AUM cresce | > USD 200M | Custody costs como % devem cair — gap incremental melhora |
+| DEMR/DEMV lança como ETF UCITS | Disponível IBKR | Comparar imediatamente |
+| Gap líquido vs EMIM | Virar negativo em projeção FIRE | Migrar blend |
+
+**Decisão registrada (FI-em-instrumento-investigation, 2026-05-03):**
+- Diego já tem EIMI no legado (~$160k EIMI+AVES+DGS) — exposição passiva EM existe.
+- WHT cancela entre AVEM e EMIM (ambos UCITS Ireland) → gap estrutural real ~49bps (não 84bps que TER simples sugeria).
+- Não vender (IR Lei 14.754 15% aniquila ganho de Sharpe).
+- Concorrentes EM (FLXE, EMVL, EMEE, DEMR futuro) seguem no radar abaixo.
+
+---
 >
 > **Convenção de ticker:** sempre registrar o ticker da versão USD quando disponível (ex: listagem Euronext Amsterdam em USD). Se não existir versão USD, usar ticker primário (LSE GBP ou Xetra EUR) com nota. AUM sempre em USD (~, convertido se necessário).
 
