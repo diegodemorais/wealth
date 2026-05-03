@@ -96,7 +96,10 @@ export function FactorProfileChart({ data }: FactorProfileChartProps) {
     return {
       backgroundColor: 'transparent',
       animation: false,
-      grid: { left: 96, right: 64, top: 24, bottom: 32 },
+      // Legend movida para o topo (era bottom: 0). Antes legend e xAxis labels
+      // colidiam na mesma faixa inferior — labels do eixo (-0.6/-0.3/+0.0...)
+      // sobrepunham nomes dos ETFs (SWRD · AVGS · AVEM). Ver issue de visual fix.
+      grid: { left: 96, right: 64, top: 44, bottom: 48 },
       xAxis: {
         type: 'value' as const,
         name: 'Loading (vs neutro = 0)',
@@ -141,7 +144,7 @@ export function FactorProfileChart({ data }: FactorProfileChartProps) {
         },
       },
       legend: {
-        bottom: 0,
+        top: 4,
         left: 'center' as const,
         textStyle: { color: EC.muted, fontSize: 10 },
         itemWidth: 12,

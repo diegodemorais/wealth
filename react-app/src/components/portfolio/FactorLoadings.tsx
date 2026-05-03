@@ -19,11 +19,14 @@ interface FactorLoadingsProps {
 }
 
 const FACTORS = ['smb', 'hml', 'rmw', 'cma'] as const;
+// Hex literals (não CSS vars) — preciso concatenar alpha hex (ex: #58a6ffcc)
+// pra modular opacidade por significância. `var(--accent)cc` é CSS inválido
+// e renderizava barra invisível (bug pré-extração 9e748774).
 const FACTOR_COLORS: Record<string, string> = {
-  smb: 'var(--accent)',
-  hml: 'var(--green)',
-  rmw: 'var(--yellow)',
-  cma: 'var(--purple)',
+  smb: '#58a6ff', // --accent
+  hml: '#3ed381', // --green
+  rmw: '#d97706', // --yellow
+  cma: '#a855f7', // --purple
 };
 const FACTOR_LABELS: Record<string, string> = {
   smb: 'SMB (Size)',
