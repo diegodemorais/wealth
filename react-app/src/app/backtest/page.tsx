@@ -25,7 +25,7 @@ import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { fmtBrlPrivate } from '@/utils/formatters';
 import { useConfig } from '@/hooks/useConfig';
-import { yearsFrom } from '@/utils/time';
+import { SHORT_PERIODS, LONG_PERIODS, ShortPeriodKey, LongPeriodKey } from '@/lib/periods';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -69,11 +69,12 @@ function useBtcIndicators() {
 }
 
 // ── Period button types ───────────────────────────────────────────────────────
+// Importados de @/lib/periods — fonte única de verdade.
+// ShortPeriodKey: dados reais do portfólio (desde abr/2021).
+// LongPeriodKey: backtest/benchmark R7 (desde jan/1995).
 
-type AllocPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'all';
-// LongoPeriod — period selector for BacktestLongoSection (R7 chart, 1995–present)
-// Long historical periods restored: since2009, since2013, since2020, 5y (all supported by R7 data)
-type LongoPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | '5y' | 'since2020' | 'since2013' | 'since2009' | 'since2003' | 'all';
+type AllocPeriod = ShortPeriodKey | 'all'; // AllocationHistoricoSection usa SHORT + 'all' (série completa)
+type LongoPeriod = LongPeriodKey;          // BacktestLongoSection usa LONG completo
 
 // ── Allocation-total 5-series spec (approved DEV-shadow-allocation-series) ────
 // Colors: protagonist uses EC.accent (area), others use distinct palette
@@ -86,38 +87,16 @@ const ALLOCATION_SERIES: AllocationSeriesSpec[] = [
   { name: 'Shadow C (benchmark justo)', key: 'shadow_c', color: EC.purple, style: 'dashed' },
 ];
 
-const ALLOC_PERIODS: { key: AllocPeriod; label: string; title: string }[] = [
-  { key: '1m',  label: '1m',  title: 'Último mês' },
-  { key: '3m',  label: '3m',  title: 'Últimos 3 meses' },
-  { key: 'ytd', label: 'YTD', title: 'Ano corrente (desde jan)' },
-  { key: '1y',  label: '1a',  title: 'Últimos 12 meses' },
-  { key: '3y',  label: '3a',  title: 'Últimos 3 anos' },
+// ALLOC_PERIODS: SHORT_PERIODS + 'all' (série completa desde abr/2021).
+// Importado de @/lib/periods — não redefinir localmente.
+const ALLOC_PERIODS: Array<{ key: AllocPeriod; label: string; title: string }> = [
+  ...SHORT_PERIODS,
   { key: 'all', label: 'All', title: 'Série completa — desde abr/2021' },
 ];
 
-
-// Period selector for BacktestLongoSection (R7 chart covers 1995–present, supports all historical windows)
-// Long periods restored: since2020, since2013, since2009, 5y — dynamically labeled with yearsFrom()
-const _longoHoje = new Date();
-const _longoAteLabel = _longoHoje.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }).replace(' de ', '/');
-const _ySince2020L = yearsFrom('2020-01-01', _longoHoje);
-const _ySince2013L = yearsFrom('2013-01-01', _longoHoje);
-const _ySince2009L = yearsFrom('2009-01-01', _longoHoje);
-const _ySince2003L = yearsFrom('2002-10-01', _longoHoje); // fundo da bolha .com
-
-const LONGO_PERIODS: { key: LongoPeriod; label: string; title: string }[] = [
-  { key: '1m',        label: '1m',                                   title: 'Último mês' },
-  { key: '3m',        label: '3m',                                   title: 'Últimos 3 meses' },
-  { key: 'ytd',       label: 'YTD',                                  title: 'Ano corrente (desde jan)' },
-  { key: '1y',        label: '1a',                                   title: 'Últimos 12 meses' },
-  { key: '3y',        label: '3a',                                   title: 'Últimos 3 anos' },
-  { key: '5y',        label: '5a',                                   title: 'Últimos 5 anos' },
-  { key: 'since2020', label: `Pós-COVID (${_ySince2020L}a)`,         title: `jan/2020–${_longoAteLabel} · desde o fundo de março 2020` },
-  { key: 'since2013', label: `Pós-Euro (${_ySince2013L}a)`,          title: `jan/2013–${_longoAteLabel} · pós-crise da dívida europeia` },
-  { key: 'since2009', label: `Pós-GFC (${_ySince2009L}a)`,           title: `jan/2009–${_longoAteLabel} · desde o fundo da crise de 2008` },
-  { key: 'since2003', label: `Pós-.com (${_ySince2003L}a)`,          title: `out/2002–${_longoAteLabel} · pós-fundo da bolha .com` },
-  { key: 'all',       label: 'All (R7)',                             title: 'Série completa R7 — desde jan/1995' },
-];
+// LONGO_PERIODS: grupo LONG canônico — backtest R7 desde jan/1995.
+// Importado de @/lib/periods — não redefinir localmente.
+const LONGO_PERIODS: Array<{ key: LongoPeriod; label: string; title: string }> = LONG_PERIODS;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

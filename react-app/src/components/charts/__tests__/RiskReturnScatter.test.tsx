@@ -1,11 +1,13 @@
 /**
- * RiskReturnScatter.test.tsx — testes dos botões de período com sufixo "(N anos)".
+ * RiskReturnScatter.test.tsx — testes dos botões de período canônicos.
+ * Fonte de verdade: @/lib/periods (LONG_PERIODS).
  * Feature: DEV-period-buttons-anos (2026-05-01)
+ * Atualizado: DEV-canonical-periods (2026-05-05)
  *
  * Cobre:
- *  - Botões "Pós-COVID/Pós-Euro/Pós-GFC/Máximo" mostram "(N anos)" calculado dinamicamente
- *  - Botões "5 anos" / "3 anos" sem redundância (sem sufixo "(N anos)")
- *  - Anos calculados via yearsFrom — mockando Date para determinismo
+ *  - Botões históricos longos mostram "Pós-COVID (6a)" formato canônico
+ *  - Botões "5a" / "3a" sem sufixo adicional
+ *  - Anos calculados via yearsFrom em @/lib/periods — mockando Date para determinismo
  */
 
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
@@ -52,6 +54,7 @@ const MOCK_DATA = {
   since2020: { EQ: MOCK_BUCKET },
   since2013: { EQ: MOCK_BUCKET },
   since2009: { EQ: MOCK_BUCKET },
+  since2003: { EQ: MOCK_BUCKET },
   all:       { EQ: MOCK_BUCKET },
   '5y':      { EQ: MOCK_BUCKET },
   '3y':      { EQ: MOCK_BUCKET },
@@ -70,41 +73,41 @@ describe('RiskReturnScatter — period button labels with anos', () => {
     vi.useRealTimers();
   });
 
-  it('Pós-COVID button shows "(6 anos)"', () => {
+  it('Pós-COVID button shows "(6a)" canonical format', () => {
     render(<RiskReturnScatter data={MOCK_DATA as any} />);
     const btn = screen.getByRole('button', { name: /Pós-COVID/i });
     expect(btn.textContent).toContain('Pós-COVID');
-    expect(btn.textContent).toContain('(6 anos)');
+    expect(btn.textContent).toContain('(6a)');
   });
 
-  it('Pós-Euro button shows "(13 anos)"', () => {
+  it('Pós-Euro button shows "(13a)" canonical format', () => {
     render(<RiskReturnScatter data={MOCK_DATA as any} />);
     const btn = screen.getByRole('button', { name: /Pós-Euro/i });
-    expect(btn.textContent).toContain('(13 anos)');
+    expect(btn.textContent).toContain('(13a)');
   });
 
-  it('Pós-GFC button shows "(17 anos)"', () => {
+  it('Pós-GFC button shows "(17a)" canonical format', () => {
     render(<RiskReturnScatter data={MOCK_DATA as any} />);
     const btn = screen.getByRole('button', { name: /Pós-GFC/i });
-    expect(btn.textContent).toContain('(17 anos)');
+    expect(btn.textContent).toContain('(17a)');
   });
 
-  it('Máximo button shows "(N anos)" suffix (dinâmico, dependente do startISO)', () => {
+  it('All (R7) button replaces old "Máximo" button', () => {
     render(<RiskReturnScatter data={MOCK_DATA as any} />);
-    const btn = screen.getByRole('button', { name: /Máximo/i });
-    // 2019-07 → 2026-05 ≈ 6.84 → 7
-    expect(btn.textContent).toMatch(/Máximo \(\d+ anos\)/);
+    // "all" key → "All (R7)" label from LONG_PERIODS
+    const btn = screen.getByRole('button', { name: /All \(R7\)/i });
+    expect(btn.textContent?.trim()).toBe('All (R7)');
   });
 
-  it('5 anos button has no redundant suffix', () => {
+  it('5a button uses canonical short label', () => {
     render(<RiskReturnScatter data={MOCK_DATA as any} />);
-    const btn = screen.getByRole('button', { name: /^5 anos$/i });
-    expect(btn.textContent?.trim()).toBe('5 anos');
+    const btn = screen.getByRole('button', { name: /^5a$/i });
+    expect(btn.textContent?.trim()).toBe('5a');
   });
 
-  it('3 anos button has no redundant suffix', () => {
+  it('3a button uses canonical short label', () => {
     render(<RiskReturnScatter data={MOCK_DATA as any} />);
-    const btn = screen.getByRole('button', { name: /^3 anos$/i });
-    expect(btn.textContent?.trim()).toBe('3 anos');
+    const btn = screen.getByRole('button', { name: /^3a$/i });
+    expect(btn.textContent?.trim()).toBe('3a');
   });
 });

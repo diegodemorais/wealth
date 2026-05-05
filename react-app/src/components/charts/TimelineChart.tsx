@@ -29,7 +29,7 @@ function filterByPeriod(
   if (period === 'ytd') {
     cutoff = new Date(now.getFullYear(), 0, 1);
   } else {
-    const months = period === '6m' ? 6 : period === '1y' ? 12 : period === '3y' ? 36 : period === '5y' ? 60 : 0;
+    const months = period === '1m' ? 1 : period === '3m' ? 3 : period === '6m' ? 6 : period === '1y' ? 12 : period === '3y' ? 36 : period === '5y' ? 60 : 0;
     if (!months) return { dates, arrays };
     cutoff = new Date(now);
     cutoff.setMonth(cutoff.getMonth() - months);

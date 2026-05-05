@@ -14,7 +14,7 @@ import { useState, useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useChartResize } from '@/hooks/useChartResize';
 import { EC, EC_TOOLTIP, EC_AXIS_LABEL, EC_SPLIT_LINE } from '@/utils/echarts-theme';
-import { yearsFrom } from '@/utils/time';
+import { LONG_PERIODS } from '@/lib/periods';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 
@@ -35,27 +35,13 @@ export interface RiskReturnScatterProps {
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
-// Alinhados ao backtest page e ao pipeline (compute_risk_return_by_bucket em generate_data.py)
-// startISO segue as datas-fonte do pipeline; anos calculados dinamicamente em runtime.
-// Sufixo "(N anos)" só para períodos onde "anos" não está no label-base.
-const PERIODS: Array<{ id: string; baseLabel: string; startISO: string; titleBase: string; suffix: boolean }> = [
-  { id: 'since2020', baseLabel: 'Pós-COVID', startISO: '2020-01-01', titleBase: 'jan/2020→hoje · desde o fundo de março 2020',     suffix: true  },
-  { id: 'since2013', baseLabel: 'Pós-Euro',  startISO: '2013-01-01', titleBase: 'jan/2013→hoje · pós-crise da dívida europeia',     suffix: true  },
-  { id: 'since2009', baseLabel: 'Pós-GFC',   startISO: '2009-01-01', titleBase: 'jan/2009→hoje · desde o fundo da crise 2008',      suffix: true  },
-  { id: 'all',       baseLabel: 'Máximo',    startISO: '2019-07-01', titleBase: 'histórico completo com proxies',                    suffix: true  },
-  { id: '5y',        baseLabel: '5 anos',    startISO: '2021-01-01', titleBase: 'jan/2021→hoje',                                     suffix: false },
-  { id: '3y',        baseLabel: '3 anos',    startISO: '2023-01-01', titleBase: 'jan/2023→hoje',                                     suffix: false },
-];
-
-function periodLabel(p: { baseLabel: string; startISO: string; suffix: boolean }, today: Date = new Date()): string {
-  if (!p.suffix) return p.baseLabel;
-  return `${p.baseLabel} (${yearsFrom(p.startISO, today)} anos)`;
-}
-
-function periodTitle(p: { baseLabel: string; startISO: string; titleBase: string; suffix: boolean }, today: Date = new Date()): string {
-  const yrs = yearsFrom(p.startISO, today);
-  return `${p.titleBase} (${yrs} anos)`;
-}
+// Seletores de período: subconjunto de LONG_PERIODS disponíveis nos dados do pipeline
+// (compute_risk_return_by_bucket em generate_data.py). Filtrado em runtime por data[key].
+// Chaves válidas: since2020, since2013, since2009, since2003, 5y, 3y, all.
+// Fonte única: @/lib/periods — não redefinir localmente.
+// Exclui 1m/3m/ytd/1y (pipeline não calcula risk-return para janelas curtas).
+const SCATTER_PERIOD_KEYS = new Set(['since2020', 'since2013', 'since2009', 'since2003', '5y', '3y', 'all']);
+const PERIODS = LONG_PERIODS.filter(p => SCATTER_PERIOD_KEYS.has(p.key));
 
 // since2020 = início operacional da carteira; fallback para primeiro disponível
 const DEFAULT_PERIOD = 'since2020';
@@ -93,7 +79,7 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
     if (!data) return null;
     if (data[period]) return period;
     // Fallback para primeiro período disponível
-    return PERIODS.find(p => data[p.id])?.id ?? null;
+    return PERIODS.find(p => data[p.key])?.key ?? null;
   }, [data, period]);
 
   const periodData: PeriodData | null = activePeriod ? (data?.[activePeriod] ?? null) : null;
@@ -212,25 +198,25 @@ export function RiskReturnScatter({ data }: RiskReturnScatterProps) {
     <div style={{ padding: '0 16px 16px' }}>
       {/* Seletor de período — scroll horizontal, labels com contexto histórico */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 12, overflowX: 'auto' as const, paddingBottom: 2 }}>
-        {PERIODS.filter(p => data[p.id]).map(p => (
+        {PERIODS.filter(p => data[p.key]).map(p => (
           <button
-            key={p.id}
-            onClick={() => setPeriod(p.id)}
-            title={periodTitle(p)}
+            key={p.key}
+            onClick={() => setPeriod(p.key)}
+            title={p.title}
             style={{
               padding: '4px 12px',
               borderRadius: 4,
-              border: `1px solid ${period === p.id ? EC.accent : 'var(--border)'}`,
-              background: period === p.id ? 'color-mix(in srgb, var(--accent) 15%, transparent)' : 'transparent',
-              color: period === p.id ? EC.accent : 'var(--muted)',
+              border: `1px solid ${period === p.key ? EC.accent : 'var(--border)'}`,
+              background: period === p.key ? 'color-mix(in srgb, var(--accent) 15%, transparent)' : 'transparent',
+              color: period === p.key ? EC.accent : 'var(--muted)',
               fontSize: 12,
-              fontWeight: period === p.id ? 700 : 400,
+              fontWeight: period === p.key ? 700 : 400,
               cursor: 'pointer',
               whiteSpace: 'nowrap' as const,
               flexShrink: 0,
             }}
           >
-            {periodLabel(p)}
+            {p.label}
           </button>
         ))}
       </div>

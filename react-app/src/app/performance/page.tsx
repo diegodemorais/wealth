@@ -21,18 +21,16 @@ import PerformanceSummary from '@/components/dashboard/PerformanceSummary';
 import { BarChart3 } from 'lucide-react';
 import { fmtPrivacy, pvText } from '@/utils/privacyTransform';
 import { EC } from '@/utils/echarts-theme';
+import { SHORT_PERIODS, ShortPeriodKey } from '@/lib/periods';
 
-// Period buttons for timeline
-const PERIODS = [
-  { key: '6m', label: '6m' },
-  { key: 'ytd', label: 'YTD' },
-  { key: '1y', label: '1y' },
-  { key: '3y', label: '3y' },
-  { key: '5y', label: '5y' },
-  { key: 'all', label: 'All' },
-] as const;
+// Seletores de período para o TimelineChart (dados reais do portfólio desde abr/2021).
+// SHORT_PERIODS + 'all' — fonte canônica em @/lib/periods.
+const PERIODS: Array<{ key: ShortPeriodKey | 'all'; label: string; title: string }> = [
+  ...SHORT_PERIODS,
+  { key: 'all', label: 'All', title: 'Série completa — desde abr/2021' },
+];
 
-type Period = (typeof PERIODS)[number]['key'];
+type Period = ShortPeriodKey | 'all';
 
 export default function PerformancePage() {
   const { data, isLoading, dataError, privacyMode } = usePageData();
