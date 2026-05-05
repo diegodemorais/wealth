@@ -72,7 +72,7 @@ function useBtcIndicators() {
 
 type BacktestPeriod = 'r7' | 'all' | 'since2009' | 'since2013' | 'since2020' | '5y' | '3y';
 type ShadowPeriod = 'since2009' | 'since2013' | 'since2020' | '5y' | '3y' | 'all';
-type AllocPeriod = 'since2021' | '3y' | 'all';
+type AllocPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'all';
 
 // ── Allocation-total 5-series spec (approved DEV-shadow-allocation-series) ────
 // Colors: protagonist uses EC.accent (area), others use distinct palette
@@ -86,9 +86,12 @@ const ALLOCATION_SERIES: AllocationSeriesSpec[] = [
 ];
 
 const ALLOC_PERIODS: { key: AllocPeriod; label: string; title: string }[] = [
-  { key: 'since2021', label: 'Desde abr/2021', title: 'abr/2021 em diante — início da série histórica real (TWR Modified Dietz)' },
-  { key: '3y', label: '3 anos', title: 'Últimos 3 anos' },
-  { key: 'all', label: 'Tudo', title: 'Série completa disponível' },
+  { key: '1m',  label: '1m',  title: 'Último mês' },
+  { key: '3m',  label: '3m',  title: 'Últimos 3 meses' },
+  { key: 'ytd', label: 'YTD', title: 'Ano corrente (desde jan)' },
+  { key: '1y',  label: '1a',  title: 'Últimos 12 meses' },
+  { key: '3y',  label: '3a',  title: 'Últimos 3 anos' },
+  { key: 'all', label: 'All', title: 'Série completa — desde abr/2021' },
 ];
 
 // Dynamic "até" label — uses current month/year to avoid hardcoded dates
@@ -133,15 +136,191 @@ function deltaColor(v: number | null | undefined) {
   return v >= 0 ? 'var(--green)' : 'var(--red)';
 }
 
+// ── Allocation metrics calculation ────────────────────────────────────────────
+
+const MONTHS_PT_SHORT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+/** Format a YYYY-MM string as "mai/2026" */
+function fmtYm(ym: string): string {
+  const [y, m] = ym.split('-');
+  return MONTHS_PT_SHORT[parseInt(m, 10) - 1] + '/' + y;
+}
+
+/** Compute start YM for AllocPeriod relative to the last available date in the series */
+function allocStartYm(period: AllocPeriod, lastDate: string): string {
+  if (period === 'all') return '2021-04';
+  const [ly, lm] = lastDate.split('-').map(Number);
+  const lastYear = ly;
+  const lastMonth = lm;
+  if (period === '1m') {
+    const d = new Date(lastYear, lastMonth - 2, 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+  if (period === '3m') {
+    const d = new Date(lastYear, lastMonth - 4, 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+  if (period === 'ytd') return `${lastYear}-01`;
+  if (period === '1y') {
+    const d = new Date(lastYear - 1, lastMonth - 1, 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+  if (period === '3y') {
+    const d = new Date(lastYear - 3, lastMonth - 1, 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+  return '2021-04';
+}
+
+/** Slice a dated series to the window [startYm, …] and rebase to 100 */
+function sliceAndRebase(dates: string[], values: number[], startYm: string): { dates: string[]; values: number[] } {
+  // Clamp to series minimum
+  const clampedStart = startYm < dates[0] ? dates[0] : startYm;
+  const idx = dates.findIndex(d => d >= clampedStart);
+  if (idx < 0) return { dates: [], values: [] };
+  const slicedDates = dates.slice(idx);
+  const slicedVals = values.slice(idx);
+  const base = slicedVals[0] ?? 100;
+  return { dates: slicedDates, values: slicedVals.map(v => (v / base) * 100) };
+}
+
+interface SeriesMetrics {
+  totalReturn: number;   // total return % in period
+  cagr: number;          // annualised
+  vol: number;           // annualised std dev of monthly returns %
+  maxdd: number;         // max drawdown % (negative)
+  sharpe: number;        // (CAGR - rfRate) / vol
+  alpha: number | null;  // vs Shadow C benchmark (pp), null for Shadow C itself
+}
+
+const RISK_FREE_RATE = 10.5; // % p.a. — hardcode per spec (Selic/IPCA+ proxy)
+
+function computeMetrics(values: number[], benchmarkValues: number[] | null, isBenchmark: boolean): SeriesMetrics {
+  if (values.length < 2) return { totalReturn: 0, cagr: 0, vol: 0, maxdd: 0, sharpe: 0, alpha: null };
+
+  // Total return
+  const totalReturn = (values[values.length - 1] / values[0] - 1) * 100;
+
+  // CAGR
+  const nMonths = values.length - 1;
+  const nYears = nMonths / 12;
+  const cagr = nYears > 0 ? ((values[values.length - 1] / values[0]) ** (1 / nYears) - 1) * 100 : 0;
+
+  // Monthly returns for vol
+  const monthlyRets: number[] = [];
+  for (let i = 1; i < values.length; i++) {
+    monthlyRets.push((values[i] / values[i - 1] - 1) * 100);
+  }
+  const mean = monthlyRets.reduce((a, b) => a + b, 0) / monthlyRets.length;
+  const variance = monthlyRets.reduce((a, b) => a + (b - mean) ** 2, 0) / (monthlyRets.length - 1);
+  const vol = Math.sqrt(variance * 12); // annualised
+
+  // Max drawdown
+  let peak = values[0];
+  let maxdd = 0;
+  for (const v of values) {
+    if (v > peak) peak = v;
+    const dd = (v / peak - 1) * 100;
+    if (dd < maxdd) maxdd = dd;
+  }
+
+  // Sharpe
+  const sharpe = vol > 0 ? (cagr - RISK_FREE_RATE) / vol : 0;
+
+  // Alpha vs Shadow C
+  let alpha: number | null = null;
+  if (!isBenchmark && benchmarkValues && benchmarkValues.length >= 2) {
+    const benchReturn = (benchmarkValues[benchmarkValues.length - 1] / benchmarkValues[0] - 1) * 100;
+    const benchNYears = (benchmarkValues.length - 1) / 12;
+    const benchCagr = benchNYears > 0 ? ((benchmarkValues[benchmarkValues.length - 1] / benchmarkValues[0]) ** (1 / benchNYears) - 1) * 100 : 0;
+    alpha = cagr - benchCagr;
+  }
+
+  return { totalReturn, cagr, vol, maxdd, sharpe, alpha };
+}
+
+/** TER and TER All-in values per series (constant — not period-dependent) */
+const ALLOC_SERIES_COSTS: Record<string, { ter: number; terAllin: number }> = {
+  // Atual com Legados: legacy mix, use wellness_config current_ter
+  atual_com_legados: { ter: 0.211, terAllin: 0.511 },
+  // Target: equity 79% × blend + RF 15% × 0 + HODL 3% × 0.20 + Renda+ 3% × 0
+  // Equity blend: SWRD 50% × 0.38% + AVGS 30% × 0.707% + AVEM 20% × 1.184% = 0.658% all-in
+  // Total all-in: 0.79 × 0.658% + 0.03 × 0.20% = 0.526% (approx)
+  target_alocacao_total: { ter: 0.247, terAllin: 0.526 },
+  // Shadow A: VWRA ≈ SWRD in cost, using SWRD proxy
+  shadow_a: { ter: 0.20, terAllin: 0.20 },
+  // Shadow B: 100% IPCA+ — government bond, zero TER
+  shadow_b: { ter: 0.0, terAllin: 0.0 },
+  // Shadow C: 79% VWRA + 15% IPCA+ + 3% HODL11 + 3% Renda+ (benchmark justo)
+  // 0.79 × 0.20 + 0.03 × 0.20 = 0.164%  (IPCA+/Renda+ zero TER)
+  shadow_c: { ter: 0.207, terAllin: 0.22 },
+};
+
+/** Format a number with fixed decimals and optional sign; handles null → "—" */
+function fmtNum(v: number | null | undefined, dec = 2, sign = false): string {
+  if (v == null || isNaN(v as number)) return '—';
+  const s = (v as number).toFixed(dec);
+  return sign && (v as number) >= 0 ? '+' + s : s;
+}
+
 // ── Allocation Total — 5-series histórico (DEV-shadow-allocation-series) ─────
 
 function AllocationHistoricoSection() {
   const data = useDashboardStore(s => s.data);
-  const [period, setPeriod] = useState<AllocPeriod>('since2021');
+  const [period, setPeriod] = useState<AllocPeriod>('all');
 
   // Only render when allocation data is present
   const alloc = (data as any)?.backtest?.allocation;
   if (!alloc?.dates?.length) return null;
+
+  const allDates: string[] = alloc.dates ?? [];
+  const lastDate: string = allDates[allDates.length - 1] ?? '2026-05';
+
+  // Compute period window for display
+  const startYm = allocStartYm(period, lastDate);
+  // Clamp start to series minimum
+  const effectiveStart = startYm < allDates[0] ? allDates[0] : startYm;
+  const periodLabel = `${fmtYm(effectiveStart)} → ${fmtYm(lastDate)}`;
+
+  // Compute per-series metrics for the selected window
+  const shadowCRaw: number[] = alloc['shadow_c'] ?? [];
+  const { values: benchSliced } = sliceAndRebase(allDates, shadowCRaw, effectiveStart);
+
+  const allocMetrics: Record<string, SeriesMetrics> = {};
+  for (const s of ALLOCATION_SERIES) {
+    const raw: number[] = alloc[s.key] ?? [];
+    const { values: sliced } = sliceAndRebase(allDates, raw, effectiveStart);
+    const isBench = s.key === 'shadow_c';
+    allocMetrics[s.key] = computeMetrics(sliced, isBench ? null : benchSliced, isBench);
+  }
+
+  // Determine best series per metric row (for bold highlight)
+  type MetricKey = 'totalReturn' | 'cagr' | 'vol' | 'maxdd' | 'sharpe' | 'alpha';
+  // For vol and maxdd, lower is better (most negative = worst DD)
+  const metricHigherIsBetter: Record<MetricKey, boolean> = {
+    totalReturn: true, cagr: true, vol: false, maxdd: false, sharpe: true, alpha: true,
+  };
+
+  function bestSeriesKey(mKey: MetricKey): string | null {
+    let bestKey: string | null = null;
+    let bestVal: number = metricHigherIsBetter[mKey] ? -Infinity : Infinity;
+    for (const s of ALLOCATION_SERIES) {
+      const v = allocMetrics[s.key]?.[mKey];
+      if (v == null) continue;
+      if (metricHigherIsBetter[mKey] ? v > bestVal : v < bestVal) {
+        bestVal = v;
+        bestKey = s.key;
+      }
+    }
+    return bestKey;
+  }
+
+  const colStyle = (key: string, color: string, isBest: boolean) => ({
+    padding: '5px 8px',
+    textAlign: 'right' as const,
+    color: isBest ? color : undefined,
+    fontWeight: isBest ? (700 as const) : undefined,
+  });
 
   return (
     <div data-testid="allocation-historico">
@@ -150,19 +329,24 @@ function AllocationHistoricoSection() {
         title={secTitle('backtest', 'backtest-allocation-total', 'Shadow Portfolios — Alocação Total (série histórica)')}
         defaultOpen={secOpen('backtest', 'backtest-allocation-total', true)}
       >
-        {/* Period buttons */}
-        <div className="period-btns" style={{ marginBottom: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          {ALLOC_PERIODS.map(p => (
-            <Button
-              key={p.key}
-              variant={period === p.key ? 'default' : 'outline'}
-              size="sm"
-              title={p.title}
-              onClick={() => setPeriod(p.key)}
-            >
-              {p.label}
-            </Button>
-          ))}
+        {/* Period buttons + period label */}
+        <div style={{ marginBottom: '10px' }}>
+          <div className="period-btns" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '6px' }}>
+            {ALLOC_PERIODS.map(p => (
+              <Button
+                key={p.key}
+                variant={period === p.key ? 'default' : 'outline'}
+                size="sm"
+                title={p.title}
+                onClick={() => setPeriod(p.key)}
+              >
+                {p.label}
+              </Button>
+            ))}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
+            Período: <strong style={{ color: 'var(--text)' }}>{periodLabel}</strong>
+          </div>
         </div>
 
         {/* 5-series chart */}
@@ -174,6 +358,165 @@ function AllocationHistoricoSection() {
             series={ALLOCATION_SERIES}
           />
         )}
+
+        {/* Metrics table */}
+        <div style={{ overflowX: 'auto', marginTop: 14 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 6 }}>
+            Métricas — período: <strong style={{ color: 'var(--text)' }}>{periodLabel}</strong>
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-xs)' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600, minWidth: 90 }}>Métrica</th>
+                {ALLOCATION_SERIES.map(s => (
+                  <th key={s.key} style={{ textAlign: 'right', padding: '5px 8px', color: s.color, fontWeight: 600, whiteSpace: 'nowrap' }}>
+                    {s.name.replace(' (alocação total)', '').replace(' (benchmark justo)', '').replace(' (100% IPCA+)', ' (IPCA+)').replace(' (VWRA)', '')}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {/* Rentabilidade */}
+              {(() => {
+                const mk: MetricKey = 'totalReturn';
+                const best = bestSeriesKey(mk);
+                return (
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Rentabilidade</td>
+                    {ALLOCATION_SERIES.map(s => {
+                      const v = allocMetrics[s.key]?.totalReturn;
+                      return (
+                        <td key={s.key} style={colStyle(s.key, s.color, s.key === best)}>
+                          {fmtPct(v)}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })()}
+              {/* CAGR */}
+              {(() => {
+                const mk: MetricKey = 'cagr';
+                const best = bestSeriesKey(mk);
+                return (
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>CAGR</td>
+                    {ALLOCATION_SERIES.map(s => {
+                      const v = allocMetrics[s.key]?.cagr;
+                      return (
+                        <td key={s.key} style={colStyle(s.key, s.color, s.key === best)}>
+                          {fmtPct(v)}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })()}
+              {/* Volatilidade */}
+              {(() => {
+                const mk: MetricKey = 'vol';
+                const best = bestSeriesKey(mk);
+                return (
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Volatilidade</td>
+                    {ALLOCATION_SERIES.map(s => {
+                      const v = allocMetrics[s.key]?.vol;
+                      return (
+                        <td key={s.key} style={colStyle(s.key, s.color, s.key === best)}>
+                          {fmtNum(v)}%
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })()}
+              {/* Max DD */}
+              {(() => {
+                const mk: MetricKey = 'maxdd';
+                const best = bestSeriesKey(mk);
+                return (
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Max DD</td>
+                    {ALLOCATION_SERIES.map(s => {
+                      const v = allocMetrics[s.key]?.maxdd;
+                      return (
+                        <td key={s.key} style={{ ...colStyle(s.key, s.color, s.key === best), color: s.key === best ? s.color : 'var(--red)' }}>
+                          {fmtNum(v, 2, false)}%
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })()}
+              {/* Sharpe */}
+              {(() => {
+                const mk: MetricKey = 'sharpe';
+                const best = bestSeriesKey(mk);
+                return (
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Sharpe</td>
+                    {ALLOCATION_SERIES.map(s => {
+                      const v = allocMetrics[s.key]?.sharpe;
+                      return (
+                        <td key={s.key} style={colStyle(s.key, s.color, s.key === best)}>
+                          {fmtNum(v)}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })()}
+              {/* Alpha vs Shadow C */}
+              {(() => {
+                const mk: MetricKey = 'alpha';
+                const best = bestSeriesKey(mk);
+                return (
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Alpha vs C</td>
+                    {ALLOCATION_SERIES.map(s => {
+                      const v = allocMetrics[s.key]?.alpha;
+                      if (s.key === 'shadow_c') {
+                        return <td key={s.key} style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>—</td>;
+                      }
+                      return (
+                        <td key={s.key} style={{ ...colStyle(s.key, s.color, s.key === best), color: s.key === best ? s.color : deltaColor(v) }}>
+                          {v != null ? fmtNum(v, 2, true) + 'pp' : '—'}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })()}
+              {/* TER */}
+              <tr style={{ borderBottom: '1px solid var(--border)', opacity: 0.85 }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)', fontStyle: 'italic' }}>TER (anual)</td>
+                {ALLOCATION_SERIES.map(s => {
+                  const costs = ALLOC_SERIES_COSTS[s.key];
+                  return (
+                    <td key={s.key} style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>
+                      {costs != null ? costs.ter.toFixed(3) + '%' : '—'}
+                    </td>
+                  );
+                })}
+              </tr>
+              {/* TER All-in */}
+              <tr style={{ opacity: 0.85 }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)', fontStyle: 'italic' }}>TER All-in</td>
+                {ALLOCATION_SERIES.map(s => {
+                  const costs = ALLOC_SERIES_COSTS[s.key];
+                  return (
+                    <td key={s.key} style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>
+                      {costs != null ? costs.terAllin.toFixed(3) + '%' : '—'}
+                    </td>
+                  );
+                })}
+              </tr>
+            </tbody>
+          </table>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4, fontStyle: 'italic' }}>
+            Sharpe: rf = {RISK_FREE_RATE}% a.a. (proxy Selic/IPCA+) · TER All-in inclui tracking difference estimada · Alpha = CAGR série − CAGR Shadow C
+          </div>
+        </div>
 
         {/* Legend / methodology note */}
         <div style={{ marginTop: 10, padding: '8px 12px', background: 'rgba(88,166,255,0.06)', border: '1px solid rgba(88,166,255,0.15)', borderRadius: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>

@@ -24,7 +24,7 @@ export interface AllocationSeriesSpec {
 
 export interface BacktestChartProps {
   data: DashboardData;
-  period?: string; // '3y' | '5y' | 'since2020' | 'since2013' | 'since2009' | 'since2021' | 'all'
+  period?: string; // '1m' | '3m' | 'ytd' | '1y' | '3y' | '5y' | 'since2020' | 'since2013' | 'since2009' | 'since2021' | 'all'
   height?: number;
   /** Optional dataset override — when provided, used instead of data.backtest */
   dataset?: { dates: string[]; target: number[]; shadowA?: number[] };
@@ -40,6 +40,17 @@ const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','
 /** Compute the ISO year-month string for rolling-window periods */
 function rollingStartYm(period: string): string {
   const now = new Date();
+  if (period === '1m') {
+    // 1 month back
+    const d = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+  if (period === '3m') {
+    const d = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+  if (period === 'ytd') return `${now.getFullYear()}-01`;
+  if (period === '1y') return `${now.getFullYear() - 1}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   if (period === '3y') return `${now.getFullYear() - 3}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   if (period === '5y') return `${now.getFullYear() - 5}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   return '';
@@ -48,7 +59,7 @@ function rollingStartYm(period: string): string {
 /** Resolve the ISO start year-month for a given period key */
 function startYmForPeriod(period?: string): string {
   if (!period) return '';
-  if (period === '3y' || period === '5y') return rollingStartYm(period);
+  if (period === '1m' || period === '3m' || period === 'ytd' || period === '1y' || period === '3y' || period === '5y') return rollingStartYm(period);
   if (period === 'since2020') return '2020-01';
   if (period === 'since2021') return '2021-04'; // allocation series starts 2021-04
   if (period === 'since2013') return '2013-01';
