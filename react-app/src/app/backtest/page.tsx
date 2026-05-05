@@ -25,6 +25,7 @@ import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { fmtBrlPrivate } from '@/utils/formatters';
 import { useConfig } from '@/hooks/useConfig';
+import { yearsFrom } from '@/utils/time';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -70,8 +71,9 @@ function useBtcIndicators() {
 // ── Period button types ───────────────────────────────────────────────────────
 
 type AllocPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'all';
-// LongoPeriod — standard 6-button selector shared by AllocationHistoricoSection + BacktestLongoSection
-type LongoPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'all';
+// LongoPeriod — period selector for BacktestLongoSection (R7 chart, 1995–present)
+// Long historical periods restored: since2009, since2013, since2020, 5y (all supported by R7 data)
+type LongoPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'since2020' | 'since2013' | 'since2009' | '5y' | 'all';
 
 // ── Allocation-total 5-series spec (approved DEV-shadow-allocation-series) ────
 // Colors: protagonist uses EC.accent (area), others use distinct palette
@@ -94,14 +96,25 @@ const ALLOC_PERIODS: { key: AllocPeriod; label: string; title: string }[] = [
 ];
 
 
-// Standard 6-button period selector — shared by AllocationHistoricoSection and BacktestLongoSection
+// Period selector for BacktestLongoSection (R7 chart covers 1995–present, supports all historical windows)
+// Long periods restored: since2020, since2013, since2009, 5y — dynamically labeled with yearsFrom()
+const _longoHoje = new Date();
+const _longoAteLabel = _longoHoje.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }).replace(' de ', '/');
+const _ySince2020L = yearsFrom('2020-01-01', _longoHoje);
+const _ySince2013L = yearsFrom('2013-01-01', _longoHoje);
+const _ySince2009L = yearsFrom('2009-01-01', _longoHoje);
+
 const LONGO_PERIODS: { key: LongoPeriod; label: string; title: string }[] = [
-  { key: '1m',  label: '1m',  title: 'Último mês' },
-  { key: '3m',  label: '3m',  title: 'Últimos 3 meses' },
-  { key: 'ytd', label: 'YTD', title: 'Ano corrente (desde jan)' },
-  { key: '1y',  label: '1a',  title: 'Últimos 12 meses' },
-  { key: '3y',  label: '3a',  title: 'Últimos 3 anos' },
-  { key: 'all', label: 'All', title: 'Série completa' },
+  { key: '1m',        label: '1m',                                   title: 'Último mês' },
+  { key: '3m',        label: '3m',                                   title: 'Últimos 3 meses' },
+  { key: 'ytd',       label: 'YTD',                                  title: 'Ano corrente (desde jan)' },
+  { key: '1y',        label: '1a',                                   title: 'Últimos 12 meses' },
+  { key: '3y',        label: '3a',                                   title: 'Últimos 3 anos' },
+  { key: '5y',        label: '5a',                                   title: 'Últimos 5 anos' },
+  { key: 'since2020', label: `Pós-COVID (${_ySince2020L}a)`,         title: `jan/2020–${_longoAteLabel} · desde o fundo de março 2020` },
+  { key: 'since2013', label: `Pós-Euro (${_ySince2013L}a)`,          title: `jan/2013–${_longoAteLabel} · pós-crise da dívida europeia` },
+  { key: 'since2009', label: `Pós-GFC (${_ySince2009L}a)`,           title: `jan/2009–${_longoAteLabel} · desde o fundo da crise de 2008` },
+  { key: 'all',       label: 'All (R7)',                             title: 'Série completa R7 — desde jan/1995' },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -126,9 +139,14 @@ function fmtYm(ym: string): string {
   return MONTHS_PT_SHORT[parseInt(m, 10) - 1] + '/' + y;
 }
 
-/** Compute start YM for AllocPeriod relative to the last available date in the series */
-function allocStartYm(period: AllocPeriod, lastDate: string): string {
-  if (period === 'all') return '2021-04';
+/** Compute start YM for AllocPeriod or LongoPeriod relative to the last available date in the series */
+function allocStartYm(period: AllocPeriod | LongoPeriod, lastDate: string): string {
+  // Fixed anchor periods (not relative to lastDate)
+  if (period === 'since2009') return '2009-01';
+  if (period === 'since2013') return '2013-01';
+  if (period === 'since2020') return '2020-01';
+  // 'all' for AllocPeriod (allocation series starts 2021-04); LongoPeriod 'all' maps to R7 start (clamped by chart)
+  if (period === 'all') return '1995-01';
   const [ly, lm] = lastDate.split('-').map(Number);
   const lastYear = ly;
   const lastMonth = lm;
@@ -149,7 +167,11 @@ function allocStartYm(period: AllocPeriod, lastDate: string): string {
     const d = new Date(lastYear - 3, lastMonth - 1, 1);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
   }
-  return '2021-04';
+  if (period === '5y') {
+    const d = new Date(lastYear - 5, lastMonth - 1, 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+  return '1995-01';
 }
 
 /** Slice a dated series to the window [startYm, …] and rebase to 100 */
