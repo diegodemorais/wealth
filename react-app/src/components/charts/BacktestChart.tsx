@@ -64,6 +64,7 @@ function startYmForPeriod(period?: string): string {
   if (period === 'since2021') return '2021-04'; // allocation series starts 2021-04
   if (period === 'since2013') return '2013-01';
   if (period === 'since2009') return '2009-01';
+  if (period === 'since2003') return '2002-10'; // Pós-.com
   return ''; // 'all' and undefined → full range
 }
 
@@ -79,7 +80,7 @@ function filterByPeriod(
   if (!startYm) return { dates, target, shadow };
 
   const idx = dates.findIndex(d => d >= startYm);
-  if (idx <= 0) return { dates, target, shadow };
+  if (idx < 0) return { dates, target, shadow };
 
   const slicedDates = dates.slice(idx);
   const slicedTarget = target.slice(idx);
@@ -106,7 +107,7 @@ function filterNSeriesByPeriod(
   if (!startYm) return { dates, seriesData };
 
   const idx = dates.findIndex(d => d >= startYm);
-  if (idx <= 0) return { dates, seriesData };
+  if (idx < 0) return { dates, seriesData };
 
   const slicedDates = dates.slice(idx);
   const slicedSeries = seriesData.map(vals => {
