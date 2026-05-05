@@ -44,7 +44,9 @@
 ### Blocked
 > Issues aguardando dependências externas
 
-(vazio)
+| ID | Titulo | Dono | Prioridade | Bloqueio |
+|----|--------|------|------------|----------|
+| TX-dirpf-2026 | DIRPF 2026 — Informe de Rendimentos e Declaração (ano-base 2025) | Tax | 🔴 Alta | Aguardando documentos de Diego: declaração 2024 + informes de rendimentos 2025 |
 
 ### Backlog
 > Issues prontas para execução, aguardando vez

@@ -11,8 +11,8 @@
 
 ## Expertise Principal
 
-- Lei 14.754/2023: ETFs UCITS exterior = 15% flat sobre qualquer ganho, sem isencao
-- Sem threshold de isencao (diferente de acoes B3: R$20k/mes)
+### Tributação Exterior (Lei 14.754/2023)
+- ETFs UCITS exterior = 15% flat sobre qualquer ganho, sem isencao de R$20k/mes
 - Come-cotas: NAO se aplica a ETFs UCITS detidos diretamente por PF
 - UCITS Irlanda/Luxemburgo: FORA do alcance do IRS estate tax americano
 - US-listed (AVUV, AVDV, AVES, AVGS US): estate tax 40% acima de US$60k
@@ -24,6 +24,23 @@
 - HODL11: B3, sem isencao R$20k (e ETF), 15% sobre qualquer ganho
 - EIMI (56% lucro), AVES (35% lucro): nao vender — diluir via aportes
 - Declaracao: Bens e Direitos codigo 99, DARF manual, DIRPF anual
+- Apuracao de lotes FIFO: sempre via `ibkr_lotes.py --flex` + PTAX canonica (`fx_utils.py`)
+
+### IRPF Doméstico (DIRPF anual)
+- Declaracao completa: rendimentos tributaveis, isentos, exclusivos na fonte, ganho de capital, renda variavel, bens e direitos, dividas
+- Fontes a consolidar: Tesouro Direto, corretoras (XP, IBKR), bancos, alugueis (imovel Pinheiros R$4.100/mes)
+- Rendimentos isentos: LCI/LCA, dividendos (enquanto isentos), INSS >=65 anos
+- Ganho de capital B3: isencao R$20k/mes para acoes (NAO para ETFs como HODL11)
+- IPCA+/Renda+: 15% sobre retorno NOMINAL (nao so o real) — tabela regressiva 22.5%->15% por prazo
+- Renda variavel: apuracao mensal, DARF ate ultimo dia util do mes seguinte
+- Bens e direitos: posicao em 31/12 de cada ano, custo historico (nao valor de mercado)
+- Come-cotas fundos: 15% ou 20% semestral (maio e novembro) — nao se aplica a ETFs UCITS diretos
+
+### Reforma Tributária (LC 214/2025)
+- CBS (federal) e IBS (estadual/municipal) substituem PIS/COFINS/ICMS/ISS — impacto indireto em custos de servicos financeiros
+- IS (Imposto Seletivo): incide sobre bens/servicos "prejudiciais" — acompanhar se alcanca instrumentos financeiros
+- Dividendos: monitorar proposta de tributacao (se aprovada, recalibrar distribuicao PJ)
+- Scan trimestral obrigatorio: issues `TX-reforma-tributaria` e `TX-lei14754-juridico`
 
 ### Plataformas de Investimento
 - **ETFs internacionais (UCITS LSE)**: Interactive Brokers
@@ -35,11 +52,15 @@
 ## Referencias Academicas, Legais e de Mercado
 
 ### Legislacao e Fontes Oficiais (manter-se atualizado)
-- **Lei 14.754/2023**: Marco legal para tributacao de investimentos no exterior — verificar alteracoes periodicamente
+- **Lei 14.754/2023** + **IN RFB 2.180/2024**: tributacao de investimentos no exterior para PF
+- **LC 214/2025**: Reforma Tributaria (CBS/IBS/IS)
+- **RIR/2018** (Decreto 9.580): Regulamento do Imposto de Renda — tabela progressiva, deducoes, bens e direitos
+- **Lei 11.033/2004**: tabela regressiva de IR para renda fixa (22.5% ate 15% por prazo)
 - **Receita Federal (rfb.gov.br)**: IN RFB, perguntas e respostas IRPF, DARF, normas atualizadas
 - **IRS Publication 519**: Estate tax para non-resident aliens
 - **Tax Treaty Brazil-US**: Inexistente para estate tax — risco real
 - **planalto.gov.br**: Legislacao primaria atualizada
+- **CARF**: jurisprudencia sobre ETFs e ganho de capital em moeda estrangeira
 
 ### Fontes Confiaveis para Atualizacao
 - **KPMG / PwC / EY / Deloitte**: Tax guides e alerts sobre mudancas na legislacao BR e internacional
