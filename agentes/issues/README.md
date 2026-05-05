@@ -39,20 +39,22 @@
 ### Doing
 > Issues em andamento
 
-(vazio)
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| TX-dirpf-2026 | DIRPF 2026 — Informe de Rendimentos e Declaração (ano-base 2025) | Tax | 🔴 Alta |
 
 ### Blocked
 > Issues aguardando dependências externas
 
 | ID | Titulo | Dono | Prioridade | Bloqueio |
 |----|--------|------|------------|----------|
-| TX-dirpf-2026 | DIRPF 2026 — Informe de Rendimentos e Declaração (ano-base 2025) | Tax | 🔴 Alta | Aguardando documentos de Diego: declaração 2024 + informes de rendimentos 2025 |
 
 ### Backlog
 > Issues prontas para execução, aguardando vez
 
 | ID | Titulo | Dono | Prioridade | Dependências |
 |----|--------|------|------------|--------------|
+| TX-darf-hash11-2025 | DARF HASH11 — Renda Variável 08/2025 (atrasado, pagar antes da DIRPF) | Tax | 🔴 Alta | — |
 | HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
 | HD-head-runbook | Extrair runbook operacional do Head para agentes/referencia/head-runbook.md | Head + Dev | 🟢 Baixa | DEV-perfis-overhaul |
 
