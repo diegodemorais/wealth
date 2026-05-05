@@ -14,6 +14,20 @@
 
 Montar o informe de rendimentos consolidado de Diego para a DIRPF 2026 (ano-base 2025) e preparar a declaração completa.
 
+## Perímetro — O que está IN e OUT
+
+**IN (controlamos aqui):**
+- Investimentos PF: ETFs IBKR (SWRD, AVGS, AVEM), Renda+ 2065, HODL11, Tesouro Direto, XP
+- Contas PF: corretoras, bancos pessoais
+- Imóvel Pinheiros (aluguel R$4.100/mês) — bem de Diego
+- Apenas 2 PJs: **Diego de Morais Tecnologia** e **Diego de Morais Consultoria em Tecnologia**
+
+**OUT (não tocar):**
+- Imóveis e empresas em nome de Diego que são empréstimos ao tio → contador do tio é responsável
+- Qualquer ativo, empresa ou obrigação fiscal de terceiros, mesmo que formalmente em nome de Diego
+
+---
+
 ## Escopo
 
 ### Fontes a consolidar

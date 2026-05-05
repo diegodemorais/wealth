@@ -12,9 +12,21 @@
 
 ## 2. Mandato exato
 
+### Escopo DIRPF — Perímetro Exclusivo de Diego
+
+**Incluso:**
+- Investimentos PF: ETFs IBKR (SWRD, AVGS, AVEM), Renda+ 2065, HODL11, Tesouro Direto, XP
+- Contas PF: corretoras, bancos, aluguel imóvel Pinheiros
+- Apenas 2 PJs: **Diego de Morais Tecnologia** e **Diego de Morais Consultoria em Tecnologia**
+
+**EXCLUÍDO — não gerenciar aqui:**
+- Imóveis e empresas em nome de Diego que são empréstimos ao tio → responsabilidade do contador do tio
+- Qualquer ativo, renda ou obrigação fiscal relacionada a terceiros (tio, família), mesmo que formalmente em nome de Diego
+
 ### IRPF Doméstico (DIRPF anual)
 - Declaração completa: rendimentos tributáveis, isentos, exclusivos na fonte, ganho de capital, renda variável, bens e direitos, dívidas
 - Fontes a consolidar: Tesouro Direto, corretoras (XP, IBKR), bancos, aluguel Pinheiros (R$4.100/mês)
+- PJs declaradas: dividendos e pró-labore APENAS de Diego de Morais Tecnologia e Diego de Morais Consultoria em Tecnologia
 - Rendimentos isentos: LCI/LCA, dividendos (enquanto isentos), INSS ≥65 anos
 - Ganho de capital B3: isenção R$20k/mês para ações (NÃO para ETFs como HODL11)
 - IPCA+/Renda+: 15% sobre retorno NOMINAL — tabela regressiva 22.5%→15% por prazo
