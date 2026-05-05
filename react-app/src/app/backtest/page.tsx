@@ -236,13 +236,6 @@ const ALLOC_SERIES_COSTS: Record<string, { ter: number; terAllin: number }> = {
   shadow_c: { ter: 0.207, terAllin: 0.22 },
 };
 
-/** TER costs for the 2-series BacktestLongo chart (Target equity vs VWRA benchmark) */
-const LONGO_SERIES_COSTS = {
-  // Target equity portfolio: SWRD 50% × 0.38 + AVGS 30% × 0.707 + AVEM 20% × 1.184 = 0.658% all-in
-  target: { ter: 0.247, terAllin: 0.658 },
-  // VWRA / Shadow A: TER 0.20%, tracking difference negligível
-  vwra: { ter: 0.20, terAllin: 0.20 },
-};
 
 /** Format a number with fixed decimals and optional sign; handles null → "—" */
 function fmtNum(v: number | null | undefined, dec = 2, sign = false): string {
@@ -541,63 +534,75 @@ function AllocationHistoricoSection() {
   );
 }
 
-// ── Backtest Longo — merged: Target vs VWRA + Regime 7 ───────────────────────
-// Replaces both BacktestHistoricoSection (removed) and ShadowPortfoliosSection (removed).
+// ── Regime Histórico R7 — period-selectable chart + 8-metric table ────────────
+// Target equity vs R7 Benchmark (MSCI World regimes since 1995).
 // Standard 6-button period selector: 1m · 3m · YTD · 1a · 3a · All
 // Full 8-metric table per spec: Rentabilidade, CAGR, Vol, Max DD, Sharpe, Alpha, TER, TER All-in
+
+/** TER costs for the R7 chart (Target equity vs R7 Benchmark — academic index, no ETF TER) */
+const R7_SERIES_COSTS = {
+  // Target equity portfolio: SWRD 50% × 0.38 + AVGS 30% × 0.707 + AVEM 20% × 1.184 = 0.658% all-in
+  target: { ter: 0.247, terAllin: 0.658 },
+  // R7 Benchmark: MSCI World NR index — no ETF wrapper, academic proxy
+  bench: { ter: 0.0, terAllin: 0.0 },
+};
 
 function BacktestLongoSection() {
   const data = useDashboardStore(s => s.data);
   const [period, setPeriod] = useState<LongoPeriod>('all');
 
-  const backtest = data?.backtest;
-  // backtest_r7 is at top-level of data; all sub-keys are directly on backtest_r7 (no .r7 sub-key)
+  // backtest_r7 is at top-level of data; cumulative_returns has YYYY-MM-DD dates
   const r7 = data?.backtest_r7 ?? null;
 
-  // ── Period label (same logic as AllocationHistoricoSection) ─────────────────
-  const allDates: string[] = backtest?.dates ?? [];
-  const lastDate: string = allDates[allDates.length - 1] ?? '2026-05';
-  const startYm = allocStartYm(period, lastDate);
-  const effectiveStart = startYm < (allDates[0] ?? startYm) ? (allDates[0] ?? startYm) : startYm;
-  const periodLabel = allDates.length > 0 ? `${fmtYm(effectiveStart)} → ${fmtYm(lastDate)}` : '—';
+  // ── R7 date/period label ──────────────────────────────────────────────────────
+  // R7 dates are YYYY-MM-DD; extract YYYY-MM for period computation
+  const r7Dates: string[] = (r7 as any)?.cumulative_returns?.dates ?? [];
+  const r7LastYm: string = r7Dates.length > 0 ? r7Dates[r7Dates.length - 1].slice(0, 7) : '2026-05';
+  const r7FirstYm: string = r7Dates.length > 0 ? r7Dates[0].slice(0, 7) : '1995-01';
 
-  // ── Compute metrics for Target vs VWRA using standard computeMetrics ─────────
-  const targetRaw: number[] = backtest?.target ?? [];
-  const vwraRaw: number[] = backtest?.shadowA ?? [];
-  const { values: targetSliced } = allDates.length > 0
-    ? sliceAndRebase(allDates, targetRaw, effectiveStart)
-    : { values: [] };
-  const { values: vwraSliced } = allDates.length > 0
-    ? sliceAndRebase(allDates, vwraRaw, effectiveStart)
-    : { values: [] };
+  // Compute startYm for the selected period (uses existing allocStartYm helper which works on YYYY-MM)
+  const startYmRaw = allocStartYm(period, r7LastYm);
+  // Clamp to series minimum
+  const effectiveStartYm = startYmRaw < r7FirstYm ? r7FirstYm : startYmRaw;
+  const periodLabel = r7Dates.length > 0 ? `${fmtYm(effectiveStartYm)} → ${fmtYm(r7LastYm)}` : '—';
 
-  // VWRA is the benchmark — isBenchmark=true means alpha=null for VWRA itself
-  const targetM2 = computeMetrics(targetSliced, vwraSliced, false);
-  const vwraM2 = computeMetrics(vwraSliced, null, true);
+  // ── Compute R7 metrics for the selected period window ─────────────────────────
+  // Slice cumulative_returns arrays to window, then rebase to 100 at window start
+  const r7Target: number[] = (r7 as any)?.cumulative_returns?.target ?? [];
+  const r7Bench: number[] = (r7 as any)?.cumulative_returns?.bench ?? [];
 
-  // Best series per metric (higher is better for all except vol+maxdd)
-  type M2Key = 'totalReturn' | 'cagr' | 'vol' | 'maxdd' | 'sharpe';
-  const m2Higher: Record<M2Key, boolean> = {
+  const r7StartIdx = r7Dates.findIndex(d => d.slice(0, 7) >= effectiveStartYm);
+  const r7SliceIdx = r7StartIdx >= 0 ? r7StartIdx : 0;
+
+  const r7TargetSliced = r7Target.slice(r7SliceIdx);
+  const r7BenchSliced = r7Bench.slice(r7SliceIdx);
+
+  // Rebase to 100 at window start for metrics computation
+  const r7TBase = r7TargetSliced[0] ?? 1;
+  const r7BBase = r7BenchSliced[0] ?? 1;
+  const r7TargetRebased = r7TargetSliced.map(v => (v / r7TBase) * 100);
+  const r7BenchRebased = r7BenchSliced.map(v => (v / r7BBase) * 100);
+
+  const r7TargetM = computeMetrics(r7TargetRebased, r7BenchRebased, false);
+  const r7BenchM = computeMetrics(r7BenchRebased, null, true);
+
+  // Best series per metric row
+  type R7Key = 'totalReturn' | 'cagr' | 'vol' | 'maxdd' | 'sharpe';
+  const r7Higher: Record<R7Key, boolean> = {
     totalReturn: true, cagr: true, vol: false, maxdd: false, sharpe: true,
   };
-  function bestM2(k: M2Key): 'target' | 'vwra' {
-    const tv = targetM2[k]; const bv = vwraM2[k];
-    return m2Higher[k] ? (tv >= bv ? 'target' : 'vwra') : (tv <= bv ? 'target' : 'vwra');
+  function bestR7(k: R7Key): 'target' | 'bench' {
+    const tv = r7TargetM[k]; const bv = r7BenchM[k];
+    return r7Higher[k] ? (tv >= bv ? 'target' : 'bench') : (tv <= bv ? 'target' : 'bench');
   }
-
-  const colStyleM2 = (isBest: boolean, isTarget: boolean) => ({
+  const colR7 = (isBest: boolean, isTarget: boolean) => ({
     padding: '5px 8px',
     textAlign: 'right' as const,
-    color: isBest ? (isTarget ? 'var(--accent)' : 'var(--muted-fg)') : undefined,
+    color: isBest ? (isTarget ? 'var(--accent)' : 'var(--yellow)') : undefined,
     fontWeight: isBest ? (700 as const) : undefined,
   });
 
-  // CAGR vs TWR cards (from original BacktestHistoricoSection)
-  const cagrPatrimonial: number | null = data?.attribution?.cagr_total ?? null;
-  const twrUsd: number | null = backtest?.metrics?.target?.cagr ?? backtest?.metrics?.twr_usd ?? null;
-  const notaProxy = backtest?.nota_proxy ?? null;
-
-  // ── R7 long-term data ─────────────────────────────────────────────────────────
+  // ── R7 summary metrics (full-series, from pipeline) ──────────────────────────
   const r7Metrics = r7?.metricas_globais ?? null;
   const winRates = r7?.win_rates ?? null;
   const winRatePct = winRates?.['120m_pct'] ?? winRates?.['240m_pct'] ?? null;
@@ -606,11 +611,11 @@ function BacktestLongoSection() {
 
   return (
     <div data-testid="backtest-regime-longo">
-    {/* backtest-metricas testid kept for E2E compat (was on removed BacktestHistoricoSection) */}
+    {/* backtest-metricas testid kept for E2E compat */}
     <div data-testid="backtest-metricas">
     <CollapsibleSection
       id="section-backtest-r7"
-      title={secTitle('backtest', 'longo-prazo', 'Backtest — Target vs VWRA + Regime Histórico')}
+      title={secTitle('backtest', 'longo-prazo', 'Backtest — Regime Histórico (Target vs R7 Benchmark)')}
       defaultOpen={secOpen('backtest', 'longo-prazo', true)}
     >
       {/* Period buttons + label */}
@@ -633,20 +638,11 @@ function BacktestLongoSection() {
         </div>
       </div>
 
-      {/* Target vs VWRA chart */}
-      {data && (
-        <BacktestChart data={data} period={period} height={300} />
-      )}
+      {/* ── Regime Histórico R7 chart (period-filtered) ──────────────────────── */}
+      {data && <BacktestR7Chart data={data} startYm={effectiveStartYm} />}
 
-      {/* Proxy warning */}
-      {notaProxy && (
-        <div style={{ marginTop: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-          {notaProxy}
-        </div>
-      )}
-
-      {/* Full 8-metric table: Rentabilidade, CAGR, Vol, Max DD, Sharpe, Alpha, TER, TER All-in */}
-      {(targetSliced.length > 1 || vwraSliced.length > 1) && (
+      {/* 8-metric table for R7: Target vs R7 Benchmark */}
+      {(r7TargetRebased.length > 1 || r7BenchRebased.length > 1) && (
         <div style={{ overflowX: 'auto', marginTop: 14 }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 6 }}>
             Métricas — período: <strong style={{ color: 'var(--text)' }}>{periodLabel}</strong>
@@ -656,95 +652,73 @@ function BacktestLongoSection() {
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600, minWidth: 90 }}>Métrica</th>
                 <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--accent)', fontWeight: 600 }}>Target</th>
-                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
+                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--yellow)', fontWeight: 600 }}>R7 Benchmark</th>
               </tr>
             </thead>
             <tbody>
               {/* Rentabilidade */}
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Rentabilidade</td>
-                <td style={colStyleM2(bestM2('totalReturn') === 'target', true)}>{fmtPct(targetM2.totalReturn)}</td>
-                <td style={colStyleM2(bestM2('totalReturn') === 'vwra', false)}>{fmtPct(vwraM2.totalReturn)}</td>
+                <td style={colR7(bestR7('totalReturn') === 'target', true)}>{fmtPct(r7TargetM.totalReturn)}</td>
+                <td style={colR7(bestR7('totalReturn') === 'bench', false)}>{fmtPct(r7BenchM.totalReturn)}</td>
               </tr>
               {/* CAGR */}
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>CAGR</td>
-                <td style={colStyleM2(bestM2('cagr') === 'target', true)}>{fmtPct(targetM2.cagr)}</td>
-                <td style={colStyleM2(bestM2('cagr') === 'vwra', false)}>{fmtPct(vwraM2.cagr)}</td>
+                <td style={colR7(bestR7('cagr') === 'target', true)}>{fmtPct(r7TargetM.cagr)}</td>
+                <td style={colR7(bestR7('cagr') === 'bench', false)}>{fmtPct(r7BenchM.cagr)}</td>
               </tr>
               {/* Volatilidade */}
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Volatilidade</td>
-                <td style={colStyleM2(bestM2('vol') === 'target', true)}>{fmtNum(targetM2.vol)}%</td>
-                <td style={colStyleM2(bestM2('vol') === 'vwra', false)}>{fmtNum(vwraM2.vol)}%</td>
+                <td style={colR7(bestR7('vol') === 'target', true)}>{fmtNum(r7TargetM.vol)}%</td>
+                <td style={colR7(bestR7('vol') === 'bench', false)}>{fmtNum(r7BenchM.vol)}%</td>
               </tr>
               {/* Max DD */}
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Max DD</td>
-                <td style={{ ...colStyleM2(bestM2('maxdd') === 'target', true), color: bestM2('maxdd') === 'target' ? 'var(--accent)' : 'var(--red)' }}>
-                  {fmtNum(targetM2.maxdd, 2, false)}%
+                <td style={{ ...colR7(bestR7('maxdd') === 'target', true), color: bestR7('maxdd') === 'target' ? 'var(--accent)' : 'var(--red)' }}>
+                  {fmtNum(r7TargetM.maxdd, 2, false)}%
                 </td>
-                <td style={{ ...colStyleM2(bestM2('maxdd') === 'vwra', false), color: bestM2('maxdd') === 'vwra' ? 'var(--muted-fg)' : 'var(--red)' }}>
-                  {fmtNum(vwraM2.maxdd, 2, false)}%
+                <td style={{ ...colR7(bestR7('maxdd') === 'bench', false), color: bestR7('maxdd') === 'bench' ? 'var(--yellow)' : 'var(--red)' }}>
+                  {fmtNum(r7BenchM.maxdd, 2, false)}%
                 </td>
               </tr>
               {/* Sharpe */}
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Sharpe</td>
-                <td style={colStyleM2(bestM2('sharpe') === 'target', true)}>{fmtNum(targetM2.sharpe)}</td>
-                <td style={colStyleM2(bestM2('sharpe') === 'vwra', false)}>{fmtNum(vwraM2.sharpe)}</td>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Sharpe (rf={RISK_FREE_RATE}%)</td>
+                <td style={colR7(bestR7('sharpe') === 'target', true)}>{fmtNum(r7TargetM.sharpe)}</td>
+                <td style={colR7(bestR7('sharpe') === 'bench', false)}>{fmtNum(r7BenchM.sharpe)}</td>
               </tr>
-              {/* Alpha vs VWRA */}
+              {/* Alpha vs R7 Benchmark */}
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Alpha vs VWRA</td>
-                <td style={{ padding: '5px 8px', textAlign: 'right', color: targetM2.alpha != null ? deltaColor(targetM2.alpha) : undefined, fontWeight: targetM2.alpha != null && targetM2.alpha > 0 ? 700 : undefined }}>
-                  {targetM2.alpha != null ? fmtNum(targetM2.alpha, 2, true) + 'pp' : '—'}
+                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Alpha vs Benchmark</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: r7TargetM.alpha != null ? deltaColor(r7TargetM.alpha) : undefined, fontWeight: r7TargetM.alpha != null && r7TargetM.alpha > 0 ? 700 : undefined }}>
+                  {r7TargetM.alpha != null ? fmtNum(r7TargetM.alpha, 2, true) + 'pp' : '—'}
                 </td>
                 <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>—</td>
               </tr>
               {/* TER */}
               <tr style={{ borderBottom: '1px solid var(--border)', opacity: 0.85 }}>
                 <td style={{ padding: '5px 8px', color: 'var(--muted)', fontStyle: 'italic' }}>TER (anual)</td>
-                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{LONGO_SERIES_COSTS.target.ter.toFixed(3)}%</td>
-                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{LONGO_SERIES_COSTS.vwra.ter.toFixed(3)}%</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{R7_SERIES_COSTS.target.ter.toFixed(3)}%</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>— (índice)</td>
               </tr>
               {/* TER All-in */}
               <tr style={{ opacity: 0.85 }}>
                 <td style={{ padding: '5px 8px', color: 'var(--muted)', fontStyle: 'italic' }}>TER All-in</td>
-                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{LONGO_SERIES_COSTS.target.terAllin.toFixed(3)}%</td>
-                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{LONGO_SERIES_COSTS.vwra.terAllin.toFixed(3)}%</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{R7_SERIES_COSTS.target.terAllin.toFixed(3)}%</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>— (índice)</td>
               </tr>
             </tbody>
           </table>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4, fontStyle: 'italic' }}>
-            Sharpe: rf = {RISK_FREE_RATE}% a.a. · TER All-in inclui tracking difference estimada · Alpha = CAGR Target − CAGR VWRA
+            Sharpe: rf = {RISK_FREE_RATE}% a.a. · TER All-in inclui tracking difference estimada · Alpha = CAGR Target − CAGR Benchmark · R7 Benchmark = índice acadêmico (sem custo de ETF)
           </div>
         </div>
       )}
 
-      {/* CAGR vs TWR cards */}
-      <div data-testid="cagr-patrimonial-twr" className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: '14px' }}>
-        <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px' }}>CAGR Patrimonial (incl. aportes)</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '6px' }} className="pv">
-            {cagrPatrimonial != null ? fmtPct(cagrPatrimonial) : '—'}
-          </div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            Crescimento total do patrimônio. Inflado por aportes — NÃO é performance dos ETFs.
-          </div>
-        </div>
-        <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px' }}>TWR USD (retorno puro, ex-aportes)</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '6px' }}>
-            {twrUsd != null ? fmtPct(twrUsd) : '—'}
-          </div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-            Time-Weighted Return do backtest. Performance real dos ETFs sem efeito de aportes.
-          </div>
-        </div>
-      </div>
-
-      {/* ── Regime 7 long-term view ─────────────────────────────────────────── */}
+      {/* ── R7 full-series summary metrics ──────────────────────────────────── */}
       {r7 && (
         <>
           {/* Metrics grid */}
@@ -825,9 +799,6 @@ function BacktestLongoSection() {
             </CollapsibleSection>
           )}
 
-          {/* R7 Chart */}
-          {data && <BacktestR7Chart data={data} />}
-
           <div className="src" style={{ marginTop: 8 }}>
             R7 Dados: MSCI World NR USD (yfinance) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro).
           </div>
@@ -835,7 +806,7 @@ function BacktestLongoSection() {
       )}
 
       <div className="src">
-        Target: SWRD 50% / AVGS 30% / AVEM 20% (UCITS proxies) · Benchmark: VWRA.L · Rebase = 100 no início do período
+        Target: SWRD 50% / AVGS 30% / AVEM 20% (UCITS proxies) · R7 Benchmark: MSCI World NR USD (índice acadêmico) · Rebase = 100 no início do período
       </div>
     </CollapsibleSection>
     </div>

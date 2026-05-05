@@ -458,14 +458,6 @@ test.describe('Backtest — semantic values', () => {
     await gotoAndWait(page, ROUTES.backtest);
   });
 
-  // P1: value must contain digits and not be "—"
-  test('cagr-patrimonial-twr shows values with digits', async ({ page }) => {
-    const el = page.locator('[data-testid="cagr-patrimonial-twr"]');
-    await expect(el).toBeVisible({ timeout: 15_000 });
-    const text = (await el.textContent()) ?? '';
-    expect(text, 'cagr-patrimonial-twr must contain digits').toMatch(/\d/);
-  });
-
   // P2: visible and not empty
   test('backtest-metricas block is visible and not empty', async ({ page }) => {
     const el = page.locator('[data-testid="backtest-metricas"]');
