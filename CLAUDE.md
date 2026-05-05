@@ -47,7 +47,8 @@ Reutilizar via SendMessage antes de spawnar novo. Múltiplos em paralelo quando 
 | Factor/ETFs | `factor` | |
 | Fixed Income | `rf` | |
 | FIRE | `fire` | |
-| Tax | `tax` | |
+| Tax | `tax` | IR, DARF, DIRPF, ganho de capital, Lei 14.754, Reforma Tributária |
+| Wealth/Patrimonial | `wealth` | Estrutura PJ, holding, sucessão, seguros, balanço holístico |
 | Crypto/Tactical | `risco` | |
 | Macro/FX | `macro` | |
 | Stress-test | `advocate` | |
