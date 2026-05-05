@@ -1570,6 +1570,24 @@
       "optional": true,
       "_optional_reason": "Ferramenta de revisão (não diária). Pipeline pode falhar download yfinance — chart oculta se ausente.",
       "privacy": false
+    },
+    {
+      "id": "backtest-allocation-total",
+      "tab": "backtest",
+      "label": "Shadow Portfolios — Alocação Total (série histórica)",
+      "type": "chart-line",
+      "purpose": "Mostra 5 séries em alocação total desde abr/2021: Atual com Legados (TWR real), Target (79% equity+15% IPCA++3% HODL11+3% Renda+), Shadow A (VWRA), Shadow B (100% IPCA+), Shadow C (benchmark justo). Footer anti-regret obrigatório.",
+      "data_fields": [
+        "backtest.allocation.dates",
+        "backtest.allocation.atual_com_legados",
+        "backtest.allocation.target_alocacao_total",
+        "backtest.allocation.shadow_a",
+        "backtest.allocation.shadow_b",
+        "backtest.allocation.shadow_c"
+      ],
+      "optional": true,
+      "_optional_reason": "Dados gerados por reconstruct_allocation_series.py — chart oculta se backtest.allocation ausente.",
+      "privacy": false
     }
   ]
 }

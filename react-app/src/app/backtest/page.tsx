@@ -5,7 +5,7 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { usePageData } from '@/hooks/usePageData';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
-import { BacktestChart } from '@/components/charts/BacktestChart';
+import { BacktestChart, AllocationSeriesSpec } from '@/components/charts/BacktestChart';
 import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
 import { Button } from '@/components/ui/button';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
@@ -72,6 +72,24 @@ function useBtcIndicators() {
 
 type BacktestPeriod = 'r7' | 'all' | 'since2009' | 'since2013' | 'since2020' | '5y' | '3y';
 type ShadowPeriod = 'since2009' | 'since2013' | 'since2020' | '5y' | '3y' | 'all';
+type AllocPeriod = 'since2021' | '3y' | 'all';
+
+// ── Allocation-total 5-series spec (approved DEV-shadow-allocation-series) ────
+// Colors: protagonist uses EC.accent (area), others use distinct palette
+const ALLOCATION_SERIES: AllocationSeriesSpec[] = [
+  { name: 'Atual com Legados', key: 'atual_com_legados', color: EC.accent, area: true, style: 'solid' },
+  // target_alocacao_total: dashed pre-2024-12 (proxy), solid post (see BacktestChart PROXY_CUTOFF logic)
+  { name: 'Target (alocação total)', key: 'target_alocacao_total', color: EC.muted, style: 'solid' },
+  { name: 'Shadow A (VWRA)', key: 'shadow_a', color: EC.green, style: 'dashed' },
+  { name: 'Shadow B (100% IPCA+)', key: 'shadow_b', color: EC.yellow, style: 'dashed' },
+  { name: 'Shadow C (benchmark justo)', key: 'shadow_c', color: EC.purple, style: 'dashed' },
+];
+
+const ALLOC_PERIODS: { key: AllocPeriod; label: string; title: string }[] = [
+  { key: 'since2021', label: 'Desde abr/2021', title: 'abr/2021 em diante — início da série histórica real (TWR Modified Dietz)' },
+  { key: '3y', label: '3 anos', title: 'Últimos 3 anos' },
+  { key: 'all', label: 'Tudo', title: 'Série completa disponível' },
+];
 
 // Dynamic "até" label — uses current month/year to avoid hardcoded dates
 const _hoje = new Date();
@@ -113,6 +131,83 @@ function fmtPct(v: number | null | undefined, dec = 2) {
 function deltaColor(v: number | null | undefined) {
   if (v == null) return 'var(--muted)';
   return v >= 0 ? 'var(--green)' : 'var(--red)';
+}
+
+// ── Allocation Total — 5-series histórico (DEV-shadow-allocation-series) ─────
+
+function AllocationHistoricoSection() {
+  const data = useDashboardStore(s => s.data);
+  const [period, setPeriod] = useState<AllocPeriod>('since2021');
+
+  // Only render when allocation data is present
+  const alloc = (data as any)?.backtest?.allocation;
+  if (!alloc?.dates?.length) return null;
+
+  return (
+    <div data-testid="allocation-historico">
+      <CollapsibleSection
+        id="backtest-allocation-total"
+        title={secTitle('backtest', 'backtest-allocation-total', 'Shadow Portfolios — Alocação Total (série histórica)')}
+        defaultOpen={secOpen('backtest', 'backtest-allocation-total', true)}
+      >
+        {/* Period buttons */}
+        <div className="period-btns" style={{ marginBottom: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          {ALLOC_PERIODS.map(p => (
+            <Button
+              key={p.key}
+              variant={period === p.key ? 'default' : 'outline'}
+              size="sm"
+              title={p.title}
+              onClick={() => setPeriod(p.key)}
+            >
+              {p.label}
+            </Button>
+          ))}
+        </div>
+
+        {/* 5-series chart */}
+        {data && (
+          <BacktestChart
+            data={data}
+            period={period}
+            height={320}
+            series={ALLOCATION_SERIES}
+          />
+        )}
+
+        {/* Legend / methodology note */}
+        <div style={{ marginTop: 10, padding: '8px 12px', background: 'rgba(88,166,255,0.06)', border: '1px solid rgba(88,166,255,0.15)', borderRadius: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+          <strong style={{ color: 'var(--text)' }}>Séries (alocação total, rebase 100 em abr/2021):</strong>{' '}
+          <span style={{ color: EC.accent }}>Atual com Legados</span> — TWR real (Modified Dietz) incl. transitórios e RF ·{' '}
+          <span style={{ color: EC.muted }}>Target</span> — 79% equity (50/30/20) + 15% IPCA+ + 3% HODL11 + 3% Renda+ 2065 (tracejado = proxy pré-2024-12) ·{' '}
+          <span style={{ color: EC.green }}>Shadow A</span> — 100% VWRA ·{' '}
+          <span style={{ color: EC.yellow }}>Shadow B</span> — 100% IPCA+ 2040 ·{' '}
+          <span style={{ color: EC.purple }}>Shadow C</span> — benchmark justo (79% VWRA + 15% IPCA+ + 3% HODL11 + 3% Renda+)
+        </div>
+
+        {/* Footer anti-regret — obrigatório per spec */}
+        <div
+          data-testid="allocation-footer-anti-regret"
+          style={{
+            marginTop: 10,
+            padding: '8px 12px',
+            background: 'rgba(234,179,8,0.08)',
+            border: '1px solid rgba(234,179,8,0.25)',
+            borderLeft: '3px solid var(--yellow)',
+            borderRadius: 6,
+            fontSize: 'var(--text-xs)',
+            color: 'var(--muted)',
+          }}
+        >
+          ⚠ Realizar gap Atual→Target = IR 15% sobre ganho que destrói premium fatorial líquido (alpha 0.16%/ano)
+        </div>
+
+        <div className="src" style={{ marginTop: 8 }}>
+          Fonte: dados/allocation_series.json · TWR Modified Dietz · proxies acadêmicos pré-2024-12 (URTH/DFSVX/DISVX/DFEMX) · BRL · rebase 100 = abr/2021
+        </div>
+      </CollapsibleSection>
+    </div>
+  );
 }
 
 // ── Backtest Histórico section ────────────────────────────────────────────────
@@ -901,7 +996,10 @@ export default function BacktestPage() {
 
   return (
     <div>
-      {/* 1. Backtest Histórico — Target vs VWRA (entrada da aba; sem divider redundante) */}
+      {/* 1. Allocation Total — 5 séries em alocação total com série histórica real */}
+      <AllocationHistoricoSection />
+
+      {/* 2. Backtest Histórico — Target vs VWRA (entrada da aba; sem divider redundante) */}
       <BacktestHistoricoSection />
 
       <SectionDivider label="Drawdown & Risco" />
