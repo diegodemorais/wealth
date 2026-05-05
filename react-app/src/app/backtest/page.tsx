@@ -73,7 +73,7 @@ function useBtcIndicators() {
 type AllocPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'all';
 // LongoPeriod — period selector for BacktestLongoSection (R7 chart, 1995–present)
 // Long historical periods restored: since2009, since2013, since2020, 5y (all supported by R7 data)
-type LongoPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'since2020' | 'since2013' | 'since2009' | '5y' | 'all';
+type LongoPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | '5y' | 'since2020' | 'since2013' | 'since2009' | 'since2003' | 'all';
 
 // ── Allocation-total 5-series spec (approved DEV-shadow-allocation-series) ────
 // Colors: protagonist uses EC.accent (area), others use distinct palette
@@ -103,6 +103,7 @@ const _longoAteLabel = _longoHoje.toLocaleDateString('pt-BR', { month: 'short', 
 const _ySince2020L = yearsFrom('2020-01-01', _longoHoje);
 const _ySince2013L = yearsFrom('2013-01-01', _longoHoje);
 const _ySince2009L = yearsFrom('2009-01-01', _longoHoje);
+const _ySince2003L = yearsFrom('2002-10-01', _longoHoje); // fundo da bolha .com
 
 const LONGO_PERIODS: { key: LongoPeriod; label: string; title: string }[] = [
   { key: '1m',        label: '1m',                                   title: 'Último mês' },
@@ -114,6 +115,7 @@ const LONGO_PERIODS: { key: LongoPeriod; label: string; title: string }[] = [
   { key: 'since2020', label: `Pós-COVID (${_ySince2020L}a)`,         title: `jan/2020–${_longoAteLabel} · desde o fundo de março 2020` },
   { key: 'since2013', label: `Pós-Euro (${_ySince2013L}a)`,          title: `jan/2013–${_longoAteLabel} · pós-crise da dívida europeia` },
   { key: 'since2009', label: `Pós-GFC (${_ySince2009L}a)`,           title: `jan/2009–${_longoAteLabel} · desde o fundo da crise de 2008` },
+  { key: 'since2003', label: `Pós-.com (${_ySince2003L}a)`,          title: `out/2002–${_longoAteLabel} · pós-fundo da bolha .com` },
   { key: 'all',       label: 'All (R7)',                             title: 'Série completa R7 — desde jan/1995' },
 ];
 
@@ -145,6 +147,7 @@ function allocStartYm(period: AllocPeriod | LongoPeriod, lastDate: string): stri
   if (period === 'since2009') return '2009-01';
   if (period === 'since2013') return '2013-01';
   if (period === 'since2020') return '2020-01';
+  if (period === 'since2003') return '2002-10'; // fundo da bolha .com: out/2002
   // 'all' for AllocPeriod (allocation series starts 2021-04); LongoPeriod 'all' maps to R7 start (clamped by chart)
   if (period === 'all') return '1995-01';
   const [ly, lm] = lastDate.split('-').map(Number);
