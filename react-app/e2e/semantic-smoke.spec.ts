@@ -479,12 +479,10 @@ test.describe('Backtest — semantic values', () => {
     await expect(el).toBeVisible({ timeout: 15_000 });
   });
 
-  test('shadow-portfolios block is visible', async ({ page }) => {
-    const el = page.locator('[data-testid="shadow-portfolios"]');
-    await expect(el).toBeVisible({ timeout: 15_000 });
-  });
+  // shadow-portfolios removed (Part 1 refactor: merged into BacktestLongoSection)
 
   test('backtest-regime-longo block is visible', async ({ page }) => {
+    // merged: covers both old backtest-regime-longo + backtest-metricas (same element now)
     const el = page.locator('[data-testid="backtest-regime-longo"]');
     await expect(el).toBeVisible({ timeout: 15_000 });
   });

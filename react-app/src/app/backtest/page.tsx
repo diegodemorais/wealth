@@ -25,7 +25,6 @@ import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { fmtBrlPrivate } from '@/utils/formatters';
 import { useConfig } from '@/hooks/useConfig';
-import { yearsFrom } from '@/utils/time';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -70,9 +69,9 @@ function useBtcIndicators() {
 
 // ── Period button types ───────────────────────────────────────────────────────
 
-type BacktestPeriod = 'r7' | 'all' | 'since2009' | 'since2013' | 'since2020' | '5y' | '3y';
-type ShadowPeriod = 'since2009' | 'since2013' | 'since2020' | '5y' | '3y' | 'all';
 type AllocPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'all';
+// LongoPeriod — standard 6-button selector shared by AllocationHistoricoSection + BacktestLongoSection
+type LongoPeriod = '1m' | '3m' | 'ytd' | '1y' | '3y' | 'all';
 
 // ── Allocation-total 5-series spec (approved DEV-shadow-allocation-series) ────
 // Colors: protagonist uses EC.accent (area), others use distinct palette
@@ -94,34 +93,15 @@ const ALLOC_PERIODS: { key: AllocPeriod; label: string; title: string }[] = [
   { key: 'all', label: 'All', title: 'Série completa — desde abr/2021' },
 ];
 
-// Dynamic "até" label — uses current month/year to avoid hardcoded dates
-const _hoje = new Date();
-const _ateLabel = _hoje.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }).replace(' de ', '/');
 
-// Anos calculados dinamicamente em runtime — `5y`/`3y` mantêm label sem sufixo (já é auto-explicativo)
-const _yR7        = yearsFrom('1989-07-01', _hoje);
-const _yAll       = yearsFrom('2005-01-01', _hoje);
-const _ySince2009 = yearsFrom('2009-01-01', _hoje);
-const _ySince2013 = yearsFrom('2013-01-01', _hoje);
-const _ySince2020 = yearsFrom('2020-01-01', _hoje);
-
-const BACKTEST_PERIODS: { key: BacktestPeriod; label: string; title: string }[] = [
-  { key: 'r7',        label: `Acadêmico (${_yR7} anos)`,       title: `jul/1989–${_ateLabel} (${_yR7} anos) · proxies acadêmicos Ken French + MSCI` },
-  { key: 'all',       label: `Completo (${_yAll} anos)`,       title: `jan/2005–${_ateLabel} (${_yAll} anos)` },
-  { key: 'since2009', label: `Pós-GFC (${_ySince2009} anos)`,  title: `jan/2009–${_ateLabel} (${_ySince2009} anos) · desde o fundo da crise de 2008` },
-  { key: 'since2013', label: `Pós-Euro (${_ySince2013} anos)`, title: `jan/2013–${_ateLabel} (${_ySince2013} anos) · pós-crise da dívida europeia` },
-  { key: 'since2020', label: `Pós-COVID (${_ySince2020} anos)`,title: `jan/2020–${_ateLabel} (${_ySince2020} anos) · desde o fundo de março 2020` },
-  { key: '5y',        label: '5 anos',                          title: `jan/2021–${_ateLabel} (5 anos)` },
-  { key: '3y',        label: '3 anos',                          title: `jan/2023–${_ateLabel} (3 anos)` },
-];
-
-const SHADOW_PERIODS: { key: ShadowPeriod; label: string }[] = [
-  { key: 'since2009', label: 'Desde 2009' },
-  { key: 'since2013', label: 'Desde 2013' },
-  { key: 'since2020', label: 'Desde 2020' },
-  { key: '5y',        label: '5 anos' },
-  { key: '3y',        label: '3 anos' },
-  { key: 'all',       label: 'Tudo (21a)' },
+// Standard 6-button period selector — shared by AllocationHistoricoSection and BacktestLongoSection
+const LONGO_PERIODS: { key: LongoPeriod; label: string; title: string }[] = [
+  { key: '1m',  label: '1m',  title: 'Último mês' },
+  { key: '3m',  label: '3m',  title: 'Últimos 3 meses' },
+  { key: 'ytd', label: 'YTD', title: 'Ano corrente (desde jan)' },
+  { key: '1y',  label: '1a',  title: 'Últimos 12 meses' },
+  { key: '3y',  label: '3a',  title: 'Últimos 3 anos' },
+  { key: 'all', label: 'All', title: 'Série completa' },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -254,6 +234,14 @@ const ALLOC_SERIES_COSTS: Record<string, { ter: number; terAllin: number }> = {
   // Shadow C: 79% VWRA + 15% IPCA+ + 3% HODL11 + 3% Renda+ (benchmark justo)
   // 0.79 × 0.20 + 0.03 × 0.20 = 0.164%  (IPCA+/Renda+ zero TER)
   shadow_c: { ter: 0.207, terAllin: 0.22 },
+};
+
+/** TER costs for the 2-series BacktestLongo chart (Target equity vs VWRA benchmark) */
+const LONGO_SERIES_COSTS = {
+  // Target equity portfolio: SWRD 50% × 0.38 + AVGS 30% × 0.707 + AVEM 20% × 1.184 = 0.658% all-in
+  target: { ter: 0.247, terAllin: 0.658 },
+  // VWRA / Shadow A: TER 0.20%, tracking difference negligível
+  vwra: { ter: 0.20, terAllin: 0.20 },
 };
 
 /** Format a number with fixed decimals and optional sign; handles null → "—" */
@@ -553,183 +541,184 @@ function AllocationHistoricoSection() {
   );
 }
 
-// ── Backtest Histórico section ────────────────────────────────────────────────
+// ── Backtest Longo — merged: Target vs VWRA + Regime 7 ───────────────────────
+// Replaces both BacktestHistoricoSection (removed) and ShadowPortfoliosSection (removed).
+// Standard 6-button period selector: 1m · 3m · YTD · 1a · 3a · All
+// Full 8-metric table per spec: Rentabilidade, CAGR, Vol, Max DD, Sharpe, Alpha, TER, TER All-in
 
-function BacktestHistoricoSection() {
+function BacktestLongoSection() {
   const data = useDashboardStore(s => s.data);
-  const [period, setPeriod] = useState<BacktestPeriod>('since2009');
+  const [period, setPeriod] = useState<LongoPeriod>('all');
 
   const backtest = data?.backtest;
-  // backtestR5 covers 2005-01 → present (21 years) — used for long periods
-  const backtestR5 = (data as any)?.backtestR5 ?? null;
+  // backtest_r7 is at top-level of data; all sub-keys are directly on backtest_r7 (no .r7 sub-key)
+  const r7 = data?.backtest_r7 ?? null;
 
-  // For long periods, use backtestR5 if available; otherwise fall back to backtest
-  const LONG_PERIODS = new Set(['all', 'since2009', 'since2013']);
-  const activeDataset = LONG_PERIODS.has(period) && backtestR5 ? backtestR5 : backtest;
+  // ── Period label (same logic as AllocationHistoricoSection) ─────────────────
+  const allDates: string[] = backtest?.dates ?? [];
+  const lastDate: string = allDates[allDates.length - 1] ?? '2026-05';
+  const startYm = allocStartYm(period, lastDate);
+  const effectiveStart = startYm < (allDates[0] ?? startYm) ? (allDates[0] ?? startYm) : startYm;
+  const periodLabel = allDates.length > 0 ? `${fmtYm(effectiveStart)} → ${fmtYm(lastDate)}` : '—';
 
-  // Determine earliest available date in backtest data
-  const earliestDate: string | null = activeDataset?.dates?.[0] ?? null;
-  const periodMinDates: Record<string, string> = {
-    all: '2005-01', since2009: '2009-01', since2013: '2013-01',
-    since2020: '2020-01', '5y': '2021-01', '3y': '2023-01', r7: '1989-07',
+  // ── Compute metrics for Target vs VWRA using standard computeMetrics ─────────
+  const targetRaw: number[] = backtest?.target ?? [];
+  const vwraRaw: number[] = backtest?.shadowA ?? [];
+  const { values: targetSliced } = allDates.length > 0
+    ? sliceAndRebase(allDates, targetRaw, effectiveStart)
+    : { values: [] };
+  const { values: vwraSliced } = allDates.length > 0
+    ? sliceAndRebase(allDates, vwraRaw, effectiveStart)
+    : { values: [] };
+
+  // VWRA is the benchmark — isBenchmark=true means alpha=null for VWRA itself
+  const targetM2 = computeMetrics(targetSliced, vwraSliced, false);
+  const vwraM2 = computeMetrics(vwraSliced, null, true);
+
+  // Best series per metric (higher is better for all except vol+maxdd)
+  type M2Key = 'totalReturn' | 'cagr' | 'vol' | 'maxdd' | 'sharpe';
+  const m2Higher: Record<M2Key, boolean> = {
+    totalReturn: true, cagr: true, vol: false, maxdd: false, sharpe: true,
   };
-  const periodLimited = (key: string) => {
-    const ds = LONG_PERIODS.has(key) && backtestR5 ? backtestR5 : backtest;
-    const earliest = ds?.dates?.[0] ?? null;
-    if (!earliest) return false;
-    const minNeeded = periodMinDates[key] ?? '2000-01';
-    return earliest > minNeeded;
-  };
-
-  // Metrics for selected period
-  const metrics = backtest?.metrics_by_period?.[period] ?? backtest?.metrics ?? null;
-  const targetMetrics = metrics?.target ?? metrics;
-  // Benchmark is 'shadowA' (first shadow portfolio) in current data schema
-  const benchMetrics = metrics?.bench ?? metrics?.shadowA ?? null;
-
-  // CAGR and TWR values
-  const cagrPatrimonial: number | null = data?.attribution?.cagr_total ?? null;
-  const twrUsd: number | null = targetMetrics?.cagr ?? targetMetrics?.twr_usd ?? null;
-
-  // TER médio ponderado — wellness_config.metrics[id='ter'].current_ter (in %, e.g. 0.247 = 0.247%)
-  const terMedioPct: number | null = (() => {
-    const wc = (data as any)?.wellness_config;
-    if (!wc) return null;
-    // wellness_config.metrics is an array
-    if (Array.isArray(wc.metrics)) {
-      const terMetric = wc.metrics.find((m: any) => m.id === 'ter');
-      if (terMetric?.current_ter != null) return terMetric.current_ter as number;
-    }
-    // fallback: premissas
-    const pm = (data as any)?.premissas?.ter_medio_ponderado;
-    return pm != null ? pm : null;
-  })();
-
-  // Build metrics table rows
-  // Data uses keys: cagr, sharpe, maxdd, vol (not max_drawdown, volatility)
-  const metricRows: { label: string; target: string; vwra: string; delta: string; deltaVal: number | null }[] = [];
-  if (targetMetrics) {
-    const pairs: { label: string; tKey: string; bKey?: string; fmt?: 'pct' | 'num' }[] = [
-      { label: 'CAGR',      tKey: 'cagr',               bKey: 'cagr',    fmt: 'pct' },
-      { label: 'Sharpe',    tKey: 'sharpe',              bKey: 'sharpe',  fmt: 'num' },
-      { label: 'Volatility',tKey: 'vol',                 bKey: 'vol',     fmt: 'pct' },
-      { label: 'Max DD',    tKey: 'maxdd',               bKey: 'maxdd',   fmt: 'pct' },
-      { label: 'Alpha',     tKey: 'alpha_pp',            bKey: undefined, fmt: 'pct' },
-    ];
-    pairs.forEach(({ label, tKey, bKey, fmt }) => {
-      const tVal = targetMetrics[tKey];
-      const bVal = bKey ? benchMetrics?.[bKey] : null;
-      const dVal = tVal != null && bVal != null ? tVal - bVal : null;
-      const fmtVal = (v: number) => fmt === 'num' ? v.toFixed(2) : fmtPct(v);
-      metricRows.push({
-        label,
-        target: tVal != null ? fmtVal(tVal) : '—',
-        vwra:   bVal != null ? fmtVal(bVal) : '—',
-        delta:  dVal != null ? fmtPct(dVal) : '—',
-        deltaVal: dVal,
-      });
-    });
+  function bestM2(k: M2Key): 'target' | 'vwra' {
+    const tv = targetM2[k]; const bv = vwraM2[k];
+    return m2Higher[k] ? (tv >= bv ? 'target' : 'vwra') : (tv <= bv ? 'target' : 'vwra');
   }
 
-  // Proxy warning note
+  const colStyleM2 = (isBest: boolean, isTarget: boolean) => ({
+    padding: '5px 8px',
+    textAlign: 'right' as const,
+    color: isBest ? (isTarget ? 'var(--accent)' : 'var(--muted-fg)') : undefined,
+    fontWeight: isBest ? (700 as const) : undefined,
+  });
+
+  // CAGR vs TWR cards (from original BacktestHistoricoSection)
+  const cagrPatrimonial: number | null = data?.attribution?.cagr_total ?? null;
+  const twrUsd: number | null = backtest?.metrics?.target?.cagr ?? backtest?.metrics?.twr_usd ?? null;
   const notaProxy = backtest?.nota_proxy ?? null;
 
+  // ── R7 long-term data ─────────────────────────────────────────────────────────
+  const r7Metrics = r7?.metricas_globais ?? null;
+  const winRates = r7?.win_rates ?? null;
+  const winRatePct = winRates?.['120m_pct'] ?? winRates?.['240m_pct'] ?? null;
+  const decadesList: Array<{ Decada: string; Target: number; Benchmark: number; Delta: number }> =
+    r7?.cagr_por_decada ?? null;
+
   return (
+    <div data-testid="backtest-regime-longo">
+    {/* backtest-metricas testid kept for E2E compat (was on removed BacktestHistoricoSection) */}
     <div data-testid="backtest-metricas">
-    <CollapsibleSection id="backtest-historico" title={secTitle('backtest', 'backtest-historico', 'Backtest Histórico — Target vs VWRA')} defaultOpen={secOpen('backtest', 'backtest-historico')}>
-      {/* Period buttons */}
-      <div className="period-btns" style={{ marginBottom: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-        {BACKTEST_PERIODS.map(p => {
-          const limited = p.key !== 'r7' && periodLimited(p.key);
-          return (
+    <CollapsibleSection
+      id="section-backtest-r7"
+      title={secTitle('backtest', 'longo-prazo', 'Backtest — Target vs VWRA + Regime Histórico')}
+      defaultOpen={secOpen('backtest', 'longo-prazo', true)}
+    >
+      {/* Period buttons + label */}
+      <div style={{ marginBottom: '10px' }}>
+        <div className="period-btns" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '6px' }}>
+          {LONGO_PERIODS.map(p => (
             <Button
               key={p.key}
               variant={period === p.key ? 'default' : 'outline'}
               size="sm"
-              title={limited ? `${p.title} — dados disponíveis desde ${earliestDate}` : p.title}
+              title={p.title}
               onClick={() => setPeriod(p.key)}
-              style={limited && period !== p.key ? { opacity: 0.55 } : undefined}
             >
-              {p.label}{limited ? ' *' : ''}
+              {p.label}
             </Button>
-          );
-        })}
+          ))}
+        </div>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
+          Período: <strong style={{ color: 'var(--text)' }}>{periodLabel}</strong>
+        </div>
       </div>
 
-      {/* Note when period data is limited */}
-      {period !== 'r7' && periodLimited(period) && earliestDate && (
-        <div style={{ marginBottom: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-          * Dados disponíveis desde {earliestDate} — período completo não disponível neste backtest.
+      {/* Target vs VWRA chart */}
+      {data && (
+        <BacktestChart data={data} period={period} height={300} />
+      )}
+
+      {/* Proxy warning */}
+      {notaProxy && (
+        <div style={{ marginTop: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+          {notaProxy}
         </div>
       )}
 
-      {/* Chart */}
-      {data && period === 'r7' && <BacktestR7Chart data={data} />}
-      {data && period !== 'r7' && (
-        <BacktestChart
-          data={data}
-          period={period}
-          dataset={LONG_PERIODS.has(period) && backtestR5 ? backtestR5 : undefined}
-        />
-      )}
-
-      {/* TER disclaimer */}
-      {terMedioPct != null && (
-        <div style={{
-          padding: '8px 12px',
-          background: 'rgba(234, 179, 8, 0.08)',
-          border: '1px solid rgba(234, 179, 8, 0.25)',
-          borderRadius: 6,
-          fontSize: 'var(--text-xs)',
-          color: 'var(--muted)',
-          marginTop: 12,
-          marginBottom: 4,
-        }}>
-          ⓘ Retornos exibidos são <strong>brutos</strong>. TER médio ponderado da carteira: <strong>{terMedioPct.toFixed(2)}%/ano</strong>.{' '}
-          Retorno líquido estimado: CAGR − {terMedioPct.toFixed(2)}pp.{' '}
-          Tracking difference e custos operacionais não incluídos.
-        </div>
-      )}
-
-      {/* Metrics table */}
-      {metricRows.length > 0 && (
-        <div style={{ overflowX: 'auto', marginTop: '12px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+      {/* Full 8-metric table: Rentabilidade, CAGR, Vol, Max DD, Sharpe, Alpha, TER, TER All-in */}
+      {(targetSliced.length > 1 || vwraSliced.length > 1) && (
+        <div style={{ overflowX: 'auto', marginTop: 14 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 6 }}>
+            Métricas — período: <strong style={{ color: 'var(--text)' }}>{periodLabel}</strong>
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-xs)' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Métrica</th>
-                <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Target</th>
-                <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
-                <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Delta</th>
+                <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600, minWidth: 90 }}>Métrica</th>
+                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--accent)', fontWeight: 600 }}>Target</th>
+                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
               </tr>
             </thead>
             <tbody>
-              {metricRows.map(row => (
-                <tr key={row.label} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '6px 8px' }}>{row.label}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600 }}>{row.target}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right' }}>{row.vwra}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(row.deltaVal), fontWeight: 600 }}>{row.delta}</td>
-                </tr>
-              ))}
-              {/* CAGR líquido (net of TER) */}
-              {terMedioPct != null && targetMetrics?.cagr != null && (
-                <tr style={{ borderBottom: '1px solid var(--border)', opacity: 0.8 }}>
-                  <td style={{ padding: '6px 8px', color: 'var(--muted)', fontStyle: 'italic' }}>CAGR líquido*</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600, color: 'var(--muted)' }}>
-                    {fmtPct((targetMetrics.cagr as number) - terMedioPct)}
-                  </td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', color: 'var(--muted)' }}>—</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', color: 'var(--muted)' }}>—</td>
-                </tr>
-              )}
+              {/* Rentabilidade */}
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Rentabilidade</td>
+                <td style={colStyleM2(bestM2('totalReturn') === 'target', true)}>{fmtPct(targetM2.totalReturn)}</td>
+                <td style={colStyleM2(bestM2('totalReturn') === 'vwra', false)}>{fmtPct(vwraM2.totalReturn)}</td>
+              </tr>
+              {/* CAGR */}
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>CAGR</td>
+                <td style={colStyleM2(bestM2('cagr') === 'target', true)}>{fmtPct(targetM2.cagr)}</td>
+                <td style={colStyleM2(bestM2('cagr') === 'vwra', false)}>{fmtPct(vwraM2.cagr)}</td>
+              </tr>
+              {/* Volatilidade */}
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Volatilidade</td>
+                <td style={colStyleM2(bestM2('vol') === 'target', true)}>{fmtNum(targetM2.vol)}%</td>
+                <td style={colStyleM2(bestM2('vol') === 'vwra', false)}>{fmtNum(vwraM2.vol)}%</td>
+              </tr>
+              {/* Max DD */}
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Max DD</td>
+                <td style={{ ...colStyleM2(bestM2('maxdd') === 'target', true), color: bestM2('maxdd') === 'target' ? 'var(--accent)' : 'var(--red)' }}>
+                  {fmtNum(targetM2.maxdd, 2, false)}%
+                </td>
+                <td style={{ ...colStyleM2(bestM2('maxdd') === 'vwra', false), color: bestM2('maxdd') === 'vwra' ? 'var(--muted-fg)' : 'var(--red)' }}>
+                  {fmtNum(vwraM2.maxdd, 2, false)}%
+                </td>
+              </tr>
+              {/* Sharpe */}
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Sharpe</td>
+                <td style={colStyleM2(bestM2('sharpe') === 'target', true)}>{fmtNum(targetM2.sharpe)}</td>
+                <td style={colStyleM2(bestM2('sharpe') === 'vwra', false)}>{fmtNum(vwraM2.sharpe)}</td>
+              </tr>
+              {/* Alpha vs VWRA */}
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)' }}>Alpha vs VWRA</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: targetM2.alpha != null ? deltaColor(targetM2.alpha) : undefined, fontWeight: targetM2.alpha != null && targetM2.alpha > 0 ? 700 : undefined }}>
+                  {targetM2.alpha != null ? fmtNum(targetM2.alpha, 2, true) + 'pp' : '—'}
+                </td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>—</td>
+              </tr>
+              {/* TER */}
+              <tr style={{ borderBottom: '1px solid var(--border)', opacity: 0.85 }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)', fontStyle: 'italic' }}>TER (anual)</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{LONGO_SERIES_COSTS.target.ter.toFixed(3)}%</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{LONGO_SERIES_COSTS.vwra.ter.toFixed(3)}%</td>
+              </tr>
+              {/* TER All-in */}
+              <tr style={{ opacity: 0.85 }}>
+                <td style={{ padding: '5px 8px', color: 'var(--muted)', fontStyle: 'italic' }}>TER All-in</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{LONGO_SERIES_COSTS.target.terAllin.toFixed(3)}%</td>
+                <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{LONGO_SERIES_COSTS.vwra.terAllin.toFixed(3)}%</td>
+              </tr>
             </tbody>
           </table>
-          {terMedioPct != null && targetMetrics?.cagr != null && (
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4, fontStyle: 'italic' }}>
-              * Estimado: CAGR bruto − TER ({terMedioPct.toFixed(2)}%). Tracking difference excluído.
-            </div>
-          )}
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4, fontStyle: 'italic' }}>
+            Sharpe: rf = {RISK_FREE_RATE}% a.a. · TER All-in inclui tracking difference estimada · Alpha = CAGR Target − CAGR VWRA
+          </div>
         </div>
       )}
 
@@ -755,287 +744,101 @@ function BacktestHistoricoSection() {
         </div>
       </div>
 
-      {/* Proxy warning */}
-      {notaProxy && (
-        <div style={{ marginTop: '8px', padding: '8px', background: 'rgba(234,179,8,.08)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)' }}>
-          {notaProxy}
-        </div>
-      )}
-    </CollapsibleSection>
-    </div>
-  );
-}
-
-// ── Shadow Portfolios section ─────────────────────────────────────────────────
-
-function ShadowPortfoliosSection() {
-  const data = useDashboardStore(s => s.data);
-  const [period, setPeriod] = useState<ShadowPeriod>('since2009');
-  const backtestR5 = (data as any)?.backtestR5 ?? null;
-  const SHADOW_LONG = new Set(['all', 'since2009', 'since2013']);
-  const shadowActiveDataset = SHADOW_LONG.has(period) && backtestR5 ? backtestR5 : data?.backtest;
-  const earliestDate: string | null = shadowActiveDataset?.dates?.[0] ?? null;
-  const shadowPeriodMinDates: Record<string, string> = {
-    since2009: '2009-01', since2013: '2013-01', since2020: '2020-01',
-    '5y': '2021-01', '3y': '2023-01', all: '2005-01',
-  };
-  const shadowPeriodLimited = (key: string) => {
-    const ds = SHADOW_LONG.has(key) && backtestR5 ? backtestR5 : data?.backtest;
-    const earliest = ds?.dates?.[0] ?? null;
-    if (!earliest) return false;
-    return earliest > (shadowPeriodMinDates[key] ?? '2000-01');
-  };
-
-  // Q1 snapshot from data.shadows
-  const snap = (data as any)?.shadows ?? null;
-  const snapPeriodo = snap?.periodo ?? null;
-
-  // Metrics from backtest.metrics for summary table
-  const metrics = data?.backtest?.metrics ?? null;
-  const targetM = metrics?.target ?? null;
-  const shadowAM = metrics?.shadowA ?? null;
-
-  const kpiRows = targetM ? [
-    { label: 'CAGR',   target: targetM.cagr,   vwra: shadowAM?.cagr,   fmt: 'pct' as const },
-    { label: 'Sharpe', target: targetM.sharpe,  vwra: shadowAM?.sharpe, fmt: 'num' as const },
-    { label: 'Max DD', target: targetM.maxdd,   vwra: shadowAM?.maxdd,  fmt: 'pct' as const },
-    { label: 'Vol',    target: targetM.vol,     vwra: shadowAM?.vol,    fmt: 'pct' as const },
-  ] : [];
-
-  return (
-    <div data-testid="shadow-portfolios">
-    <CollapsibleSection id="backtest-shadows" title={secTitle('backtest', 'shadow', 'Shadow Portfolios — Target vs VWRA')} defaultOpen={secOpen('backtest', 'shadow', false)}>
-      {/* Shadow label */}
-      <div style={{ padding: '4px 16px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
-        Shadow = 100% SWRD (benchmark simples sem tilt fatorial)
-      </div>
-
-      {/* Period buttons */}
-      <div className="period-btns" style={{ marginBottom: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-        {SHADOW_PERIODS.map(p => {
-          const limited = shadowPeriodLimited(p.key);
-          return (
-            <Button
-              key={p.key}
-              variant={period === p.key ? 'default' : 'outline'}
-              size="sm"
-              title={limited ? `Dados disponíveis desde ${earliestDate}` : undefined}
-              style={limited && period !== p.key ? { opacity: 0.55 } : undefined}
-              onClick={() => setPeriod(p.key)}
-            >
-              {p.label}{limited ? ' *' : ''}
-            </Button>
-          );
-        })}
-      </div>
-      {shadowPeriodLimited(period) && earliestDate && (
-        <div style={{ marginBottom: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-          * Dados disponíveis desde {earliestDate} — período completo não disponível.
-        </div>
-      )}
-
-      {/* Equity curve chart — Target vs VWRA filtered by period */}
-      {data && (
-        <BacktestChart
-          data={data}
-          period={period}
-          height={260}
-          dataset={SHADOW_LONG.has(period) && backtestR5 ? backtestR5 : undefined}
-        />
-      )}
-
-      {/* Metrics table */}
-      {kpiRows.length > 0 && (
-        <div style={{ overflowX: 'auto', marginTop: '10px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Métrica</th>
-                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Target</th>
-                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
-                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Delta</th>
-              </tr>
-            </thead>
-            <tbody>
-              {kpiRows.map(row => {
-                const fv = (v: number | null | undefined) =>
-                  v == null ? '—' : row.fmt === 'num' ? v.toFixed(2) : fmtPct(v);
-                const delta = row.target != null && row.vwra != null ? row.target - row.vwra : null;
-                return (
-                  <tr key={row.label} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '5px 8px' }}>{row.label}</td>
-                    <td style={{ padding: '5px 8px', textAlign: 'right', fontWeight: 600 }}>{fv(row.target)}</td>
-                    <td style={{ padding: '5px 8px', textAlign: 'right' }}>{fv(row.vwra)}</td>
-                    <td style={{ padding: '5px 8px', textAlign: 'right', color: deltaColor(delta), fontWeight: 600 }}>
-                      {delta != null ? fmtPct(delta) : '—'}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Q1 snapshot if available */}
-      {snap && snapPeriodo && (
-        <div style={{ marginTop: '10px', padding: '10px', background: 'var(--card2)', borderRadius: 6, fontSize: 'var(--text-sm)' }}>
-          <div style={{ fontWeight: 600, color: 'var(--muted)', fontSize: 'var(--text-xs)', textTransform: 'uppercase', marginBottom: '6px' }}>
-            Performance {snapPeriodo}
-          </div>
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-            {[
-              { label: 'Carteira', value: snap.atual },
-              { label: 'Target', value: snap.target },
-              { label: 'Shadow A (VWRA)', value: snap.q1_2026?.shadow_a ?? null },
-              { label: 'Shadow B', value: snap.q1_2026?.shadow_b ?? null },
-              { label: 'Δ vs VWRA', value: snap.delta_vwra },
-            ].filter(x => x.value != null).map(x => (
-              <div key={x.label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{x.label}</div>
-                <div style={{ fontWeight: 700, color: (x.value ?? 0) >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                  {fmtPct(x.value)}
+      {/* ── Regime 7 long-term view ─────────────────────────────────────────── */}
+      {r7 && (
+        <>
+          {/* Metrics grid */}
+          {r7Metrics && (
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2" style={{ marginTop: 16, marginBottom: 4 }}>
+              {[
+                { label: 'CAGR R7', value: r7Metrics.cagr_target_pct != null ? `${r7Metrics.cagr_target_pct.toFixed(2)}%` : '—', color: undefined as string | undefined },
+                { label: 'Alpha R7', value: r7Metrics.alpha_pp != null ? `${r7Metrics.alpha_pp >= 0 ? '+' : ''}${r7Metrics.alpha_pp.toFixed(2)}pp` : '—', color: r7Metrics.alpha_pp != null ? deltaColor(r7Metrics.alpha_pp) : undefined },
+                { label: 'Sharpe R7', value: r7Metrics.sharpe_target != null ? r7Metrics.sharpe_target.toFixed(2) : '—', color: undefined as string | undefined },
+                { label: 'Max DD R7', value: r7Metrics.max_dd_target_pct != null ? `${r7Metrics.max_dd_target_pct.toFixed(1)}%` : '—', color: undefined as string | undefined },
+                { label: 'Win Rate 10a', value: winRatePct != null ? `${winRatePct.toFixed(1)}%` : '—', color: undefined as string | undefined },
+              ].map(m => (
+                <div key={m.label} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>{m.label}</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: m.color ?? 'var(--text)' }}>{m.value}</div>
                 </div>
+              ))}
+            </div>
+          )}
+
+          {/* Risk Grid: Factor Drought + Drawdown Recovery */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: '10px' }}>
+            <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Factor Drought</div>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>
+                {r7?.factor_drought?.max_meses != null
+                  ? `Maior seca: ${(r7.factor_drought.max_meses / 12).toFixed(1)}a (${r7.factor_drought.max_meses}m)`
+                  : '—'}
               </div>
-            ))}
+              {r7?.factor_drought?.nota && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>{r7.factor_drought.nota}</div>
+              )}
+            </div>
+            <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Drawdown Recovery</div>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>
+                {r7?.drawdown_recovery?.max_meses != null
+                  ? `Máx recuperação: ${r7.drawdown_recovery.max_meses}m`
+                  : '—'}
+              </div>
+              {r7?.drawdown_recovery?.p90_meses != null && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>P90: {r7.drawdown_recovery.p90_meses}m</div>
+              )}
+            </div>
           </div>
-        </div>
+
+          {/* CAGR por Década — list format: [{ Decada, Target, Benchmark, Delta, N_meses }] */}
+          {decadesList && decadesList.length > 0 && (
+            <CollapsibleSection id="backtest-cagr-decada" title="CAGR por Década" defaultOpen={secOpen('backtest', 'cagr-decada', true)}>
+              <div style={{ padding: '0 16px 16px', overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                      <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Década</th>
+                      <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Target</th>
+                      <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
+                      <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Alpha</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {decadesList.map((row, idx) => (
+                      <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
+                        <td style={{ padding: '6px 8px' }}>{row.Decada ?? '—'}</td>
+                        <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600 }}>
+                          {row.Target != null ? `${(row.Target * 100).toFixed(2)}%` : '—'}
+                        </td>
+                        <td style={{ padding: '6px 8px', textAlign: 'right' }}>
+                          {row.Benchmark != null ? `${(row.Benchmark * 100).toFixed(2)}%` : '—'}
+                        </td>
+                        <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(row.Delta) }}>
+                          {row.Delta != null ? fmtPct(row.Delta * 100) : '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CollapsibleSection>
+          )}
+
+          {/* R7 Chart */}
+          {data && <BacktestR7Chart data={data} />}
+
+          <div className="src" style={{ marginTop: 8 }}>
+            R7 Dados: MSCI World NR USD (yfinance) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro).
+          </div>
+        </>
       )}
 
       <div className="src">
-        Target: SWRD 50% / AVGS 30% / AVEM 20% (UCITS proxies) · Benchmark: VWRA.L (Vanguard FTSE All-World) · Rebase = 100 no início do período
+        Target: SWRD 50% / AVGS 30% / AVEM 20% (UCITS proxies) · Benchmark: VWRA.L · Rebase = 100 no início do período
       </div>
     </CollapsibleSection>
     </div>
-  );
-}
-
-// ── Backtest Longo — Regime 7 ─────────────────────────────────────────────────
-
-function BacktestLongoSection() {
-  const data = useDashboardStore(s => s.data);
-  // backtest_r7 is at top-level of data; all sub-keys are directly on backtest_r7 (no .r7 sub-key)
-  const r7 = data?.backtest_r7 ?? null;
-
-  if (!r7) {
-    return (
-      <div data-testid="backtest-regime-longo">
-      <CollapsibleSection id="section-backtest-r7-empty" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
-        <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)', fontSize: '14px' }}>
-          <p>Dados de backtest R7 não carregados. Aguardando sincronização com IBKR.</p>
-          <p style={{ fontSize: '12px', marginTop: '8px', fontStyle: 'italic' }}>Os dados históricos (1995-2026) serão preenchidos após a próxima execução de generate_data.py.</p>
-        </div>
-      </CollapsibleSection>
-      </div>
-    );
-  }
-
-  // Metrics — real field: metricas_globais (not .metrics)
-  const metrics = r7?.metricas_globais ?? null;
-  // win_rates — real field: at top-level of backtest_r7 (not inside metrics)
-  const winRates = r7?.win_rates ?? null;
-  const winRatePct = winRates?.['120m_pct'] ?? winRates?.['240m_pct'] ?? null;
-
-  const metricCards = metrics ? [
-    // cagr_target_pct is already in % (e.g. 9.79)
-    { label: 'CAGR', value: metrics.cagr_target_pct != null ? `${metrics.cagr_target_pct.toFixed(2)}%` : '—', color: undefined as string | undefined },
-    { label: 'Alpha vs VWRA', value: metrics.alpha_pp != null ? `${metrics.alpha_pp >= 0 ? '+' : ''}${metrics.alpha_pp.toFixed(2)}pp` : '—', color: metrics.alpha_pp != null ? deltaColor(metrics.alpha_pp) : undefined },
-    { label: 'Sharpe', value: metrics.sharpe_target != null ? metrics.sharpe_target.toFixed(2) : '—', color: undefined as string | undefined },
-    // max_dd_target_pct is already in % (e.g. -54.37)
-    { label: 'Max DD', value: metrics.max_dd_target_pct != null ? `${metrics.max_dd_target_pct.toFixed(1)}%` : '—', color: undefined as string | undefined },
-    // win_rates.120m_pct is already in % (e.g. 67.8)
-    { label: 'Win Rate 10a', value: winRatePct != null ? `${winRatePct.toFixed(1)}%` : '—', color: undefined as string | undefined },
-  ] : [];
-
-  // CAGR by decade — real field: cagr_por_decada (list, not object)
-  // Each entry: { Decada, Target, Benchmark, Delta, N_meses }
-  const decadesList: Array<{ Decada: string; Target: number; Benchmark: number; Delta: number }> =
-    r7?.cagr_por_decada ?? null;
-
-  return (
-    <div data-testid="backtest-regime-longo">
-    <CollapsibleSection id="section-backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
-      {/* Metrics grid */}
-      {metricCards.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2" style={{ marginBottom: '14px' }}>
-          {metricCards.map(m => (
-            <div key={m.label} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>{m.label}</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: m.color ?? 'var(--text)' }}>{m.value}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Risk Grid: Factor Drought + Drawdown Recovery */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: '10px' }}>
-        <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Factor Drought</div>
-          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>
-            {r7?.factor_drought?.max_meses != null
-              ? `Maior seca: ${(r7.factor_drought.max_meses / 12).toFixed(1)}a (${r7.factor_drought.max_meses}m)`
-              : '—'}
-          </div>
-          {r7?.factor_drought?.nota && (
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>{r7.factor_drought.nota}</div>
-          )}
-        </div>
-        <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Drawdown Recovery</div>
-          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>
-            {r7?.drawdown_recovery?.max_meses != null
-              ? `Máx recuperação: ${r7.drawdown_recovery.max_meses}m`
-              : '—'}
-          </div>
-          {r7?.drawdown_recovery?.p90_meses != null && (
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>P90: {r7.drawdown_recovery.p90_meses}m</div>
-          )}
-        </div>
-      </div>
-
-      {/* CAGR por Década — list format: [{ Decada, Target, Benchmark, Delta, N_meses }] */}
-      {decadesList && decadesList.length > 0 && (
-        <CollapsibleSection id="backtest-cagr-decada" title="CAGR por Década" defaultOpen={secOpen('backtest', 'cagr-decada', true)}>
-          <div style={{ padding: '0 16px 16px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Década</th>
-                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Target</th>
-                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
-                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Alpha</th>
-                </tr>
-              </thead>
-              <tbody>
-                {decadesList.map((row, idx) => (
-                  <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '6px 8px' }}>{row.Decada ?? '—'}</td>
-                    <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600 }}>
-                      {row.Target != null ? `${(row.Target * 100).toFixed(2)}%` : '—'}
-                    </td>
-                    <td style={{ padding: '6px 8px', textAlign: 'right' }}>
-                      {row.Benchmark != null ? `${(row.Benchmark * 100).toFixed(2)}%` : '—'}
-                    </td>
-                    <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(row.Delta) }}>
-                      {row.Delta != null ? fmtPct(row.Delta * 100) : '—'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CollapsibleSection>
-      )}
-
-      {/* Chart */}
-      {data && <BacktestR7Chart data={data} />}
-
-      {/* Factor Regression FF5 — movido para PERFORMANCE (seção Fatores) */}
-
-      <div className="src">
-        Dados: MSCI World NR USD (yfinance ^990100-USD-STRD) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro). RF variável Ken French.
-      </div>
-    </CollapsibleSection>
     </div>
   );
 }
@@ -1342,8 +1145,8 @@ export default function BacktestPage() {
       {/* 1. Allocation Total — 5 séries em alocação total com série histórica real */}
       <AllocationHistoricoSection />
 
-      {/* 2. Backtest Histórico — Target vs VWRA (entrada da aba; sem divider redundante) */}
-      <BacktestHistoricoSection />
+      {/* 2. Backtest — Target vs VWRA + Regime Histórico (merged from BacktestHistoricoSection + BacktestLongoSection) */}
+      <BacktestLongoSection />
 
       <SectionDivider label="Drawdown & Risco" />
       {/* 2. DrawdownAnalysis — MERGE: ECharts moderno + crises + recovery */}
@@ -1458,13 +1261,6 @@ export default function BacktestPage() {
 
       {/* B11: Timeline Attribution — RF vs Equity vs FX por período */}
       <TimelineAttributionChart />
-
-      <SectionDivider label="Deep Dive" />
-      {/* 3. Shadow Portfolios — Tracking */}
-      <ShadowPortfoliosSection />
-
-      {/* 4. Backtest Longo — Regime 7 (collapsed: análise histórica longa) */}
-      <BacktestLongoSection />
 
       <SectionDivider label="Bitcoin" />
       {/* 7. Bitcoin On-Chain Indicators (renomeado) */}

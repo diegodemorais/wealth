@@ -153,14 +153,13 @@ export const SECTIONS: Record<string, SectionDef[]> = {
   // ── BACKTEST (/backtest) ───────────────────────────────────────────────────
   backtest: [
     // Group: Backtest Principal
-    { id: 'backtest-historico',  title: 'Backtest Histórico — Target vs VWRA',              defaultOpen: true,  collapsible: true,  group: 'Backtest Principal' },
+    // longo-prazo: merged section (BacktestHistoricoSection + ShadowPortfoliosSection → BacktestLongoSection)
+    { id: 'longo-prazo',         title: 'Backtest — Target vs VWRA + Regime Histórico',      defaultOpen: true,  collapsible: true,  group: 'Backtest Principal' },
     // Group: Drawdown & Risco
     { id: 'drawdown-analysis',   title: 'Drawdown Analysis — Histórico, Crises & Recovery', defaultOpen: true,  collapsible: true,  group: 'Drawdown & Risco' },
     { id: 'drawdown-crises',     title: 'Crises Históricas — tabela detalhada',              defaultOpen: false, collapsible: true,  group: 'Drawdown & Risco' },
     { id: 'drawdown-recovery',   title: 'Recovery Table — eventos 2021–2026',                defaultOpen: false, collapsible: true,  group: 'Drawdown & Risco' },
     // Group: Deep Dive
-    { id: 'shadow',              title: 'Shadow Portfolios — Target vs VWRA',                defaultOpen: false, collapsible: true,  group: 'Deep Dive' },
-    { id: 'longo-prazo',         title: 'Backtest Longo — Regime 7 (1995–2026)',             defaultOpen: false, collapsible: true,  group: 'Deep Dive' },
     { id: 'cagr-decada',         title: 'CAGR por Década',                                   defaultOpen: true,  collapsible: true,  group: 'Deep Dive' },
     // Group: Bitcoin
     { id: 'btc-indicators',      title: 'Bitcoin On-Chain — Indicadores Históricos',         defaultOpen: false, collapsible: true,  group: 'Bitcoin' },
