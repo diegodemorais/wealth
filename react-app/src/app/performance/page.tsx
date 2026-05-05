@@ -190,12 +190,12 @@ export default function PerformancePage() {
       <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <MonthlyReturnsHeatmap data={(() => {
-            if (safeData.monthly_returns && Object.keys(safeData.monthly_returns).length > 0) return safeData.monthly_returns;
+            // retornos_mensais.twr_pct is in %, component expects decimals
             const rm = (safeData as any).retornos_mensais;
-            if (rm?.dates && rm?.values) {
+            if (rm?.dates && rm?.twr_pct) {
               const result: Record<string, number> = {};
               (rm.dates as string[]).forEach((d: string, i: number) => {
-                result[d] = (rm.values as number[])[i] / 100;
+                result[d] = (rm.twr_pct as number[])[i] / 100;
               });
               return result;
             }
