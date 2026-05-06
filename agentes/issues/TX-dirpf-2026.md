@@ -93,11 +93,11 @@ Deduções: INSS retido PJ2 R$166,98. IR na fonte: R$0,00.
 
 ### Ficha 6 — Bens e Direitos (custo histórico 31/12/2025)
 
-**ETFs IBKR — total R$2.102.859 (lotes FIFO ibkr_lotes.py, PTAX compra por lote):**
+**ETFs IBKR — total R$2.133.227 (lotes FIFO lotes.json, PTAX compra por lote via BCB — corrigido 2026-05-05):**
 
 | ETF | Cotas | Custo BRL | Domicílio |
 |-----|-------|-----------|-----------|
-| SWRD | 4.725,68 | R$803.278 | UCITS (IE) |
+| SWRD | 4.930,55 | R$833.646 | UCITS (IE) |
 | EIMI | 2.020,29 | R$341.011 | UCITS (IE) |
 | AVDV | 947,60 | R$302.836 | US-listed |
 | AVUV | 548,88 | R$237.373 | US-listed |
@@ -107,10 +107,13 @@ Deduções: INSS retido PJ2 R$166,98. IR na fonte: R$0,00.
 | IWVL | 34,00 | R$6.663 | UCITS (IE) |
 | AVGS | 0 | R$0 | *(adquirido em 2026)* |
 
+> **Correção SWRD (2026-05-05):** issue original tinha 4.725,68 cotas / R$803.278. Confrontado com lotes.json: posição correta em 31/12/2025 = 4.930,55 cotas (+204,87). Custo recalculado com PTAX BCB por lote = R$833.646 (+R$30.368).
+
 **B3 / Brasil:**
 | Ativo | Saldo 31/12/2024 | Saldo 31/12/2025 |
 |-------|-----------------|-----------------|
-| HODL11 (1.605 cotas @ R$84,57) — XP | R$0 | R$135.732 |
+| HODL11 (987 cotas @ PM R$85,08 — custo histórico) — XP | R$0 | R$83.975 |
+| ↳ *Correção 2026-05-05: issue original usava 1.605 cotas @ MtM R$84,57 = R$135.732 (errado). 1.605 inclui compras de jan/fev 2026. Posição correta 31/12/2025 = 987 cotas. Valor = custo histórico, não MtM.* | | |
 | HASH11 (103 cotas @ R$40,35) — XP | R$4.156 | R$0 (vendido ago/2025) |
 | IT NOW B5P2 F11 (ETF RF) — XP | R$51.758 | R$27.554 |
 
