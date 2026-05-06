@@ -55,7 +55,6 @@
 | ID | Titulo | Dono | Prioridade | Dependências |
 |----|--------|------|------------|--------------|
 | TX-darf-hash11-2025 | DARF HASH11 — Renda Variável 08/2025 (atrasado, pagar antes da DIRPF) | Tax | 🔴 Alta | — |
-| HD-holding-e-seguro | Holding Familiar e Seguro de Vida — Avaliação Patrimonial | Head + Patrimonial | 🟡 Média | — |
 | HD-head-runbook | Extrair runbook operacional do Head para agentes/referencia/head-runbook.md | Head + Dev | 🟢 Baixa | DEV-perfis-overhaul |
 
 ### Done

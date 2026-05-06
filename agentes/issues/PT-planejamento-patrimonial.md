@@ -12,7 +12,7 @@
 | **Co-sponsor** | Tax |
 | **Dependencias** | PT-multimodel-holding (Done) |
 | **Criado em** | 2026-04-06 |
-| **Origem** | PT-multimodel-holding — síntese de 4 modelos externos (Bloco A + Bloco B) |
+| **Origem** | PT-multimodel-holding — síntese de 4 modelos externos (Bloco A + Bloco B). Absorveu HD-holding-e-seguro (2026-05-05) |
 | **Concluido em** | — |
 
 ---
