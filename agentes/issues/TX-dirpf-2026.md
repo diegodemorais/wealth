@@ -96,6 +96,8 @@ Datas e valores de pagamento (Activity Statement IBKR):
 
 **DARF 0291:** ~R$12.003 — **vence 31/05/2026** (issue TX-darf-hash11-2025)
 
+**Binance Earn 2025 (staking rewards):** ~R$18 → IR 15% = ~R$2,70 → **abaixo do mínimo de DARF (R$10) — sem DARF a pagar; apenas declarar na ficha de rendimentos.**
+
 ### Ficha 5 — Renda Variável (B3)
 
 | Ativo | Data venda | Ganho | IRRF | IR 15% | Status |
@@ -139,6 +141,17 @@ Datas e valores de pagamento (Activity Statement IBKR):
 | RDB NuConta — Nubank | R$11.131 |
 | Nexoos (P2P) | R$32 |
 | BOXX — Nomad/Apex (4,91 cotas) | R$3.026 |
+
+**Criptoativos Binance (Account ID: 196070807 — custo médio planilha Diego — confirmado 2026-05-06):**
+| Ativo | Qtd 31/12/2024 | Custo 31/12/2024 | Qtd 31/12/2025 | Custo 31/12/2025 |
+|-------|----------------|------------------|----------------|------------------|
+| BTC — Binance Earn/Spot (Cód. 01) | 0,004351 | R$1.164 | 0,004359 | R$1.166 |
+| ETH — Binance Earn/Spot (Cód. 02) | 0,066474 | R$1.195 | 0,067617 | R$1.215 |
+| BNB — Binance Earn/Spot (Cód. 02) | 0,205127 | R$591 | 0,205195 | R$591 |
+| ADA (Cardano) — Binance Earn/Spot (Cód. 02) | 48,250957 | R$682 | 48,392193 | R$684 |
+| ENA + PENGU — Binance (Cód. 02) | — | R$0 | — | R$0 |
+
+> ENA (2,77 unid.) e PENGU (35,32 unid.) declarados a R$0 (custo histórico não rastreado — tratamento airdrop, aprovado Diego 2026-05-06). ETHFI (0,19), LISTA (0,76), TON (0,08) adquiridos em 2025 via Earn rewards, custo = R$0.
 
 **Outros:**
 | Ativo | 31/12/2024 | 31/12/2025 |
@@ -384,11 +397,57 @@ Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, dom
 
 > Saldos 31/12/2024 preenchidos 2026-05-05: open_lots pré-2025 (tlh_lotes.json) + custo dos lotes vendidos em set/2025 (confirmados via DARF 0291). Quantidades 31/12/2024 confirmadas no Activity Statement IBKR 2024.
 
+#### Grupo 08 — Criptoativos · Código 01 — Bitcoin (BTC)
+
+Binance = plataforma internacional, sem CNPJ BR. Deixar campo CNPJ em branco.
+
+| Campo | 31/12/2024 | 31/12/2025 |
+|-------|------------|------------|
+| CNPJ | — (exterior) | — |
+| Discriminação | Bitcoin (BTC) — Binance Earn/Spot (Account ID: 196070807) — 0,004351 unid. — custo médio R$267.425,99/BTC | 0,004359 unid. |
+| Situação | R$1.164 | R$1.166 |
+
 #### Grupo 08 — Criptoativos · Código 02 — Outras criptomoedas
 
-| Item | 31/12/2024 | 31/12/2025 |
-|------|------------|------------|
-| USDC — Nu Crypto (CNPJ: 44.342.498/0001-46) | R$101 (16,54 unid.) | R$101 (17,20 unid.) |
+Uma entrada por moeda. Para cada: CNPJ em branco (exterior), discriminação com símbolo + custodiante + quantidade.
+
+**Ethereum (ETH):**
+
+| Campo | 31/12/2024 | 31/12/2025 |
+|-------|------------|------------|
+| Discriminação | Ethereum (ETH) — Binance Earn/Spot (196070807) — 0,066474 unid. — custo médio R$17.975,00/ETH | 0,067617 unid. |
+| Situação | R$1.195 | R$1.215 |
+
+**BNB:**
+
+| Campo | 31/12/2024 | 31/12/2025 |
+|-------|------------|------------|
+| Discriminação | BNB — Binance Earn/Spot (196070807) — 0,205127 unid. — custo médio R$2.881,42/BNB | 0,205195 unid. |
+| Situação | R$591 | R$591 |
+
+**ADA (Cardano):**
+
+| Campo | 31/12/2024 | 31/12/2025 |
+|-------|------------|------------|
+| Discriminação | Cardano (ADA) — Binance Earn/Spot (196070807) — 48,250957 unid. — custo médio R$14,14/ADA | 48,392193 unid. |
+| Situação | R$682 | R$684 |
+
+**ENA + PENGU (declarar conjuntamente ou separado — valor residual):**
+
+| Campo | 31/12/2024 | 31/12/2025 |
+|-------|------------|------------|
+| Discriminação | Ethena (ENA) 2,771429 unid. + Pudgy Penguins (PENGU) 35,317619 unid. — Binance — custo histórico não rastreado, tratados como airdrop | = |
+| Situação | R$0 | R$0 |
+
+**USDC — Nu Crypto:**
+
+| Campo | 31/12/2024 | 31/12/2025 |
+|-------|------------|------------|
+| CNPJ | 44.342.498/0001-46 | = |
+| Discriminação | USD Coin (USDC) — Nu Crypto — 16,54 unid. | 17,20 unid. |
+| Situação | R$101 | R$101 |
+
+> Staking Earn Binance 2025: rendimento ~R$18 → declarar como rendimento no exterior (Lei 14.754) → IR ~R$2,70 → abaixo do mínimo de DARF. Informar na ficha de Rendimentos de Aplicações Financeiras no Exterior com valor total ~R$18.
 
 ---
 
@@ -432,6 +491,8 @@ Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, dom
 | DARF 0291 (Lei 14.754) não pago | Vence 31/05/2026 | Pagar via Sicalc — issue TX-darf-hash11-2025 |
 | Saldo CC Bradesco 31/12/2025 | Bens e Direitos (se relevante, valor <R$140) | Informe CC Bradesco — baixa prioridade |
 | Despesas dedutíveis (saúde etc.) | Reduz IR na tabela progressiva | Diego verificar se tem |
+| Nomad SGOV + TFLO | Bens e Direitos individuais (31/12/2025 = R$0, mas discriminados) | Completar com Nomad informe — baixa prioridade (valores zero) |
+| Binance staking rendimento exato | Ficha rendimentos exterior | Exportar Binance Tax Report (Wallet → Tax Reports) — estimativa ~R$18 suficiente se não houver auditoria |
 
 ---
 
@@ -449,6 +510,7 @@ Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, dom
 - [x] IT NOW reclassificado: Cód. 08 (ETF RF B3), não Cód. 06
 - [x] TD IPCA+ 2045 (vendido em 2025) incluído: 31/12/2024 = R$69.995
 - [x] Trend funds incluídos em Bens e Direitos: Cód. 01, saldos 31/12/2024 e 31/12/2025=R$0
+- [x] Criptoativos Binance incluídos: BTC (Cód. 01) + ETH/BNB/ADA/ENA/PENGU (Cód. 02) — custo médio planilha Diego + informe Binance 2025 (2026-05-06)
 - [ ] DARFs pagos (6015 + 0291) — issue TX-darf-hash11-2025
 - [ ] Preenchimento no programa IRPF 2026 (RFB)
 - [ ] Diego valida e aprova antes de transmitir à RFB
