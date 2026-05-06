@@ -49,7 +49,7 @@ Fontes para montar o Top 3:
 - Risco de key person: Diego é a única fonte de renda. Contingência?
 
 ### Liquidez Operacional
-- Reserva de emergência: R$87k em IPCA+ 2029 (~4 meses de custo de vida). Suficiente?
+- Reserva de emergência: **ZERADA** (06/05/2026 — IPCA+ 2029 resgatado para compra de veículo). Reconstituir se necessário.
 - Regra: manter 3-6 meses de custo de vida em instrumento de liquidez imediata
 - Reavaliar quando custo de vida mudar
 
@@ -181,3 +181,30 @@ Quem verifica: Advocate em toda retro (item fixo de checklist). Fact-Checker qua
 Quando verifica: em todo debate estruturado e em retros. Reincidência = escalação de perfil do agente.
 
 **Origem:** Erros da sessão 2026-03-20: (1) HODL11 classificado como risco Brasil 2×, (2) IPCA+ sem IR sobre nominal, (3) shadow sem câmbio, (4) teto 7% quando números diziam 15-20%, (5) piso 6% quando breakeven era 6.4%, (6) AVGS comparado com equity genérico. HD-006 revelou 9 erros adicionais e 4 erros sequenciais no breakeven. 5 regras anti-recorrência (A-E).
+
+---
+
+## Regra L-25 — Patrimônio Sempre do Pipeline (2026-05-06)
+
+**Causa raiz:** 3+ ocorrências de patrimônio errado em carteira.md por cálculo manual (valor anterior ± evento). Na sessão 06/05/2026: Bookkeeper registrou R$3.385M usando R$3.472M (22/Abr, stale) − R$86.8k (resgate), ignorando +R$320k de ganho de mercado desde 22/Abr. Patrimônio correto: R$3.705M (pipeline).
+
+**Regra única:** `carteira.md` nunca recebe patrimônio calculado manualmente. O valor vem **sempre** do pipeline.
+
+**Protocolo obrigatório pós-evento:**
+
+```
+1. Evento ocorreu (resgate, aporte, movimentação >R$10k)
+2. Rodar: ~/claude/finance-tools/.venv/bin/python3 scripts/generate_data.py
+3. Extrair: patrimonio_holistico.financeiro_brl do data.json
+4. Registrar esse valor em carteira.md (linha Patrimônio total)
+5. Nunca fazer: valor_anterior ± delta_manual
+```
+
+**Gate de integridade pré-commit:**
+Antes de commitar carteira.md com patrimônio atualizado:
+- Verificar `|carteira_valor - pipeline_valor| < R$100k`
+- Se drift > R$100k → rodar pipeline primeiro, não usar valor calculado na mão
+
+**Quem verifica:** Bookkeeper, a cada registro de patrimônio.
+**Quando verifica:** em toda atualização de patrimônio em carteira.md.
+**SLA:** violação detectada em retro = falha de Bookkeeper, não de Head.

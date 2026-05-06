@@ -30,10 +30,11 @@ Esta regra foi violada 3x (2026-03-22, 2026-03-27, 2026-04-01). Ler antes de qua
 
 | Campo | Valor | Data | Fonte |
 |-------|-------|------|-------|
-| Patrimonio total | R$ 3.385.515,28 | 2026-05-06 | Recalculado: R$3.472.335 - R$86.819,70 (resgate IPCA+ 2029) |
-| Equity total | USD $608.472 | 2026-04-22 | dashboard_state.json (calc: patrimonio equity_brl / cambio) — a atualizar |
-| Cambio referencia | R$ 4,960 | 2026-05-01 | PTAX BCB (scan 2026-05-01) |
-| Performance desde 01/04 | +2,96% (R$ +99.662) | 2026-04-22 | Crescimento: equity USD + DCA IPCA+ 2/2 tranches — OBSOLETO, recalcular pós-06/05 |
+| Patrimonio total | R$ 3.705.611 | 2026-05-06 | **pipeline generate_data.py** → patrimonio_holistico.financeiro_brl |
+| Câmbio referência | R$ 4,9121 | 2026-05-06 | pipeline (BCB live) |
+| Nota de erro | ~~R$3.385.515~~ calculado manualmente (R$3.472k − resgate) — ERRADO | 2026-05-06 | ignorou +R$320k de mercado desde 22/Abr. L-25 adicionada para prevenir recorrência |
+
+> **REGRA L-25 (2026-05-06):** Patrimônio em carteira.md SEMPRE vem do pipeline (`generate_data.py → patrimonio_holistico.financeiro_brl`). NUNCA calcular manualmente (valor_anterior ± delta). Ver `agentes/referencia/head-runbook.md § L-25`.
 
 ### Posicoes detalhadas (USD, 2026-04-22)
 
@@ -202,7 +203,7 @@ Diego e executor consistente acima da meta. Critica de "gap de execucao" feita e
 | 2026-03-30 | Check-in semanal | Equity $585,371 USD (-1,7% vs 23/Mar). Total ~R$3,372k (-3,4%). Câmbio R$5,25. Renda+ 2065 ~R$99,673 (MtM -11% em março, taxa subiu). HODL11 ~R$103,400 (BTC $67,822). IPCA+ DCA: 0/? tranches — leve atraso. Sem gatilhos atingidos. Sem operacoes novas. Não é M1 (mesmo mês que 23/Mar). |
 | 2026-04-25 | AUDITORIA FASE 2 — Integridade de Dados (Dashboard Health Score) | ✓ PASSED: Freshness SLA, Patrimônio reconciliado (R$3.472.335 = zero drift), P(FIRE) 86.3% > 85%. ⚠ ALERTAS: Drift IPCA+ -8.2pp (alvo 15%, atual 6.8%), gap R$396k a aportar. Drift equity +11.4pp. ✗ CRÍTICO: lotes.json não calcula valor_atual_brl (100% do equity = R$3.137k não reconcilia). Impacto: TLH reports e ir_diferido não confiáveis. Detalhes: `/tmp/auditoria_bookkeeper_fase2.txt`. Recomendações: (1) Consertar ibkr_sync.py (CRÍTICO), (2) Executar DCA T3 (ALTO), (3) Cron diário (MÉDIO). |
 | 2026-05-01 | RECONCILIAÇÃO PÓS-SCAN — Atualização de Macro e RF | ✓ Scan completado. Divergências encontradas: IPCA+ 2040 +19bps (7.21% → 7.40%), Renda+ 2065 +3pp (6.93% → 6.96%), Câmbio -3.8% (R$5.156 → R$4.96, BRL apreciado), BTC +8.8% ($71.8k → $78.1k). Status gatilhos: IPCA+ continua ativo (7.40% > 6.0% piso), Renda+ não compra novo (6.96% < 6.5%), sem alertas críticos (CDS 138bps < 300bps). Carteira.md atualizado. |
-| 2026-05-06 | REGISTRO DE OPERAÇÕES — Resgate IPCA+ 2029 + Aporte Maio Desviado | ✓ Operações confirmadas por Diego: (1) Resgate IPCA+ 2029 integral (R$86.819,70 líquido); (2) Aporte maio R$25k desviado para compra de veículo (R$224k Haval H6 PHEV); (3) Empréstimo de parente R$17k a quitar em junho. Impacto: patrimônio financeiro cai para R$3.385.515,28. IPCA+ DCA pausa maio, retoma junho com aporte residual ~R$8k. Bem pessoal (veículo) fora da carteira de investimentos. Registrado: carteira.md (patrimônio atualizado, reserva zerada), operacoes.md (resgate), execucoes-pendentes.md (pausa DCA maio), memoria/13-bookkeeper.md (histórico). |
+| 2026-05-06 | REGISTRO DE OPERAÇÕES — Resgate IPCA+ 2029 + Aporte Maio Desviado | ✓ Operações confirmadas por Diego: (1) Resgate IPCA+ 2029 integral (R$86.819,70 líquido); (2) Aporte maio R$25k desviado para compra de veículo (R$224k Haval H6 PHEV); (3) Empréstimo de parente R$17k a quitar em junho. IPCA+ DCA pausa maio, retoma junho com aporte residual ~R$8k. Bem pessoal (veículo) fora da carteira de investimentos. ⚠️ ERRO DETECTADO E CORRIGIDO: patrimônio registrado inicialmente como R$3.385M (cálculo manual stale) — corrigido para R$3.705.611 após rodar pipeline (L-25 adicionada). |
 
 ---
 
