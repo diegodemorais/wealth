@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Status** | Backlog |
+| **Status** | Doing |
 | **Dono** | Tax |
-| **Prioridade** | 🔴 Alta — pagar antes de entregar DIRPF 2026 (prazo 31/05/2026) |
+| **Prioridade** | 🔴 Alta — DARF 0291 vence **31/05/2026 (25 dias)** · DARF 6015 atrasado ~7 meses |
 | **Aberta** | 2026-05-05 |
 
 ---
@@ -24,7 +24,7 @@
 
 **Competência:** 08/2025  
 **Vencimento original:** 30/09/2025 — **ATRASADO ~7 meses**  
-**Estimativa corrigida (mai/2026):** ~R$931 (principal + multa 20% + juros Selic)
+**Estimativa corrigida (mai/2026):** ~R$950–960 (principal R$743 + multa 20% teto = R$148,60 + juros Selic acumulada set/2025–mai/2026 ~9–10% sobre principal+multa)
 
 ### Como pagar
 
@@ -32,7 +32,8 @@
 2. Código de receita: **6015**
 3. Período de apuração: **08/2025**
 4. CPF: 224.753.558-59
-5. Valor: calcular com Sicalc na data do pagamento
+5. **Valor principal: R$743,00** — o Sicalc calcula multa e juros automaticamente; não inserir valor já corrigido
+6. Gerar DARF e pagar via internet banking (opção "DARF") ou lotérica
 
 ### Impacto na DIRPF 2026
 
@@ -73,22 +74,26 @@ US withholding (30%) > IR BR (15%) → crédito zera o imposto brasileiro sobre 
 
 ### Cálculo do DARF 0291
 
-| Base | IR 15% |
-|------|--------|
-| Ganho IBKR R$79.265 + Nomad R$753 = R$80.018 | **R$12.003** |
-| Dividendos (crédito US compensa) | R$0 |
-| **DARF 0291 total** | **~R$12.003** |
+| Base | Valor |
+|------|-------|
+| Ganho IBKR (5 ETFs) | R$79.265,00 |
+| Nomad (BOXX/SGOV/TFLO) | R$753,36 |
+| **Base total** | **R$80.018,36** |
+| IR 15% (exato) | R$12.002,75 |
+| Dividendos IBKR (WHT US 30% > IR BR 15%) | R$0 — crédito compensa integralmente |
+| **DARF 0291 a pagar** | **R$12.003** (arredondado — aceito pela RFB) |
 
 **Competência:** 2025 (apuração anual Lei 14.754/2023)  
-**Vencimento: 31/05/2026** (26 dias a partir de 2026-05-05)
+**⚠️ Vencimento: 31/05/2026 — 25 dias**
 
 ### Como pagar
 
 1. Acessar Sicalc: https://sicalc.receita.economia.gov.br/
-2. Código de receita: **0291** (Ganhos de Capital — Bens e Direitos no Exterior)
-3. Período de apuração: **2025** (ano)
+2. Código de receita: **0291** (Ganhos de Capital — Aplicações Financeiras no Exterior, Lei 14.754/2023)
+3. Período de apuração: **12/2025** (mês/ano — não inserir só "2025")
 4. CPF: 224.753.558-59
-5. Valor: R$12.003 (confirmar com cálculo exato antes de pagar — dividendos precisam de PTAX exata por data)
+5. **Valor principal: R$12.003** — pagamento dentro do prazo, sem multa/juros
+6. Gerar DARF e pagar via internet banking ou lotérica
 
 ---
 
