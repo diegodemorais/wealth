@@ -43,7 +43,6 @@
 |----|--------|------|------------|
 | TX-dirpf-2026 | DIRPF 2026 — Informe de Rendimentos e Declaração (ano-base 2025) | Tax | 🔴 Alta |
 | TX-darf-hash11-2025 | DARFs pendentes 2025 (6015 HASH11 + 0291 Lei 14.754) — 0291 vence 31/05/2026 | Tax | 🔴 Alta |
-| HD-patrimonio-integrity | Verificação automática de integridade de patrimônio (L-25) — script + cron semanal | Head | 🟠 Média |
 
 ### Blocked
 > Issues aguardando dependências externas
@@ -62,6 +61,7 @@
 
 | ID | Titulo | Data | Resumo |
 |----|--------|------|--------|
+| HD-patrimonio-integrity | Verificação automática de integridade de patrimônio (L-25) | 2026-05-06 | `scripts/patrimonio_check.py` (stdlib, drift gate R$100k, --update flag). LaunchAgent io.fdte.patrimonio-check toda segunda 9h07. Regra L-25 adicionada ao head-runbook. Patrimônio corrigido: R$3.385M→R$3.705.611 (pipeline). |
 | HD-head-runbook | Extrair runbook operacional do Head | 2026-05-05 | 00-head.md: 372 → 189 linhas. Blocos extraídos para agentes/referencia/head-runbook.md: Abertura de Sessão (Top 3), Planejamento Financeiro, L-24 (commit gates), L-08/12/13 (retros), Encerramento de Issue, Checklist Pré-Veredicto + Regras A-F, Revisão de Premissas de Vida. |
 | HD-agent-patterns-2026 | Padrões de Agentes: Feedback Loop + State Tracking + Two-LLM Split | 2026-05-05 | P1: campos data_revisao_programada+status nas PRVs, bloco de outcome canônico, item 12 na retro mensal. P2: template Estado do Debate pós-R4 em debate-estruturado.md, D8/D11 addendum em protocolos-decisao.md. P3: seção "Protocolo de Modelo LLM" + modelo_padrao em 15 perfis (haiku: bookkeeper/fact-checker; opus: head/cio/advocate; sonnet: demais). |
 | DEV-shadow-allocation-series | Shadow Portfolios em alocação total — série histórica (5 linhas) | 2026-05-05 | BacktestChart.tsx estendido com prop `series?: AllocationSeriesSpec[]` (retro-compat total). Nova AllocationHistoricoSection na aba ANALYSIS: 5 séries (Atual com Legados área accent, Target com proxy tracejado pré-2024-12, Shadow A/B/C tracejados). Período since2021 padrão. Footer anti-regret obrigatório. spec.json: bloco backtest-allocation-total. 9 testes vitest novos. Gate: TS ✓ Build ✓ Playwright 131/131 ✓ Vitest 830/830 ✓ Sanity 30/30 ✓. Commit 88366c83. |

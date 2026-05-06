@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Status** | Doing |
+| **Status** | Done |
 | **Dono** | Head / Bookkeeper |
 | **Prioridade** | 🟠 Média — prevenção de erro recorrente |
 | **Aberta** | 2026-05-06 |
@@ -36,13 +36,13 @@ Verifica drift entre `carteira.md` e `data.json` sem rodar o pipeline completo:
 
 ### Cron Semanal
 
-CronCreate (durable) — toda segunda-feira às 9:07: roda `patrimonio_check.py`, reporta resultado.
+LaunchAgent macOS (`~/Library/LaunchAgents/io.fdte.patrimonio-check.plist`) — toda segunda-feira às 9:07: roda `patrimonio_check.py`, log em `logs/patrimonio_check.log`. Persiste entre sessões e reinicializações.
 
 ---
 
 ## Critério de Done
 
-- [ ] `scripts/patrimonio_check.py` implementado e testado
-- [ ] `python3 scripts/patrimonio_check.py` funciona standalone
-- [ ] Cron configurado e ativo
-- [ ] Issue commitada e arquivada
+- [x] `scripts/patrimonio_check.py` implementado e testado
+- [x] `python3 scripts/patrimonio_check.py` funciona standalone
+- [x] Cron configurado e ativo (LaunchAgent io.fdte.patrimonio-check, toda segunda 9h07)
+- [x] Issue commitada e arquivada
