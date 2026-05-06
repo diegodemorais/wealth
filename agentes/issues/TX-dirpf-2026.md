@@ -91,7 +91,7 @@ Datas e valores de pagamento (Activity Statement IBKR):
 | 2025-12-18/30 | AVDV, AVES, AVUV, DGS | 2.688,84 | 806,66 |
 | **Total** | | **5.773,15** | **1.731,96** |
 
-→ Para preenchimento: buscar PTAX BCB (bcb.gov.br/conversao) de cada data para converter USD→BRL.
+→ PTAX BCB preenchida abaixo (confirmada bcb.gov.br, PTAX venda, 2026-05-05).
 → WHT 30% (US) > IR 15% (BR) em todos os grupos → IR adicional = R$0.
 
 **DARF 0291:** ~R$12.003 — **vence 31/05/2026** (issue TX-darf-hash11-2025)
@@ -208,15 +208,15 @@ Linha **09 — Lucros e dividendos recebidos** → "Novo" para cada PJ:
 
 Linha **06 — Rendimentos de aplicações financeiras** → "Novo" para cada item:
 
-| Item | Rendimento 2025 | Fonte (buscar CNPJ no informe) |
-|------|----------------|-------------------------------|
-| TD IPCA+ 2029 — Nubank | R$104,70 | Nu Financeira S.A. |
-| RDB NuConta (ag.0001 ct.7268399-5) | R$1.382,38 | Nu Financeira S.A. |
-| Fundo Trend INB FIC FIRF (XP, resgatado) | R$339,31 | XP Investimentos |
-| Fundo Trend DI Simples FIRF RL (XP) | R$3.012,99 | XP Investimentos |
-| Fundo Trend DI FIC RF Simples RL (XP) | R$699,65 | XP Investimentos |
-| IT NOW IMA-B5 P2 F11 (ETF RF, XP) | R$5.194,41 | XP Investimentos |
-| Nexoos (P2P) | R$90,25 | Nexoos |
+| Item | Rendimento 2025 | CNPJ da Fonte |
+|------|----------------|--------------|
+| TD IPCA+ 2029 — NuInvest | R$104,70 | 62.169.875/0001-79 |
+| RDB NuConta (ag.0001 ct.7268399-5) — Nu Financeira | R$1.382,38 | 30.680.829/0001-43 |
+| Fundo Trend INB FIC FIRF (XP, resgatado) | R$339,31 | 02.332.886/0001-04 |
+| Fundo Trend DI Simples FIRF RL (XP, resgatado) | R$3.012,99 | 02.332.886/0001-04 |
+| Fundo Trend DI FIC RF Simples RL (XP, resgatado) | R$699,65 | 02.332.886/0001-04 |
+| IT NOW IMA-B5 P2 F11 (ETF RF, XP) | R$5.194,41 | 02.332.886/0001-04 |
+| Nexoos (P2P) | R$90,25 | 34.254.279/0001-51 |
 
 ---
 
@@ -247,14 +247,16 @@ PTAX canônica BCB nas datas de venda (2025-09-22/23) já aplicada via `ibkr_lot
 
 Para cada grupo, lançar no programa com: data, gross USD, PTAX, gross BRL, WHT USD, crédito WHT:
 
-| Data | ETFs | Gross USD | WHT USD | PTAX BCB venda | Gross BRL* | IR BR 15%* | Crédito WHT* | IR adicional |
-|------|------|-----------|---------|---------------|-----------|-----------|-------------|-------------|
-| 2025-03-27 | AVUV, DGS | 177,58 | 53,28 | bcb.gov.br | × PTAX | × 15% | WHT × PTAX | R$0 |
-| 2025-06-26 | AVDV, AVES, AVUV, DGS | 2.506,26 | 751,88 | bcb.gov.br | × PTAX | × 15% | WHT × PTAX | R$0 |
-| 2025-09-25 | AVUV, DGS | 400,47 | 120,14 | bcb.gov.br | × PTAX | × 15% | WHT × PTAX | R$0 |
-| 2025-12-18 | AVDV, AVES, AVUV, DGS | 2.688,84 | 806,66 | bcb.gov.br | × PTAX | × 15% | WHT × PTAX | R$0 |
+| Data | ETFs | Gross USD | WHT USD | PTAX BCB | Gross BRL | IR BR 15% | Crédito WHT | IR adicional |
+|------|------|-----------|---------|----------|-----------|-----------|-------------|-------------|
+| 2025-03-27 | AVUV, DGS | 177,58 | 53,28 | 5,7474 | R$1.020,62 | R$153,09 | R$306,22 | R$0 |
+| 2025-06-26 | AVDV, AVES, AVUV, DGS | 2.506,26 | 751,88 | 5,5145 | R$13.820,77 | R$2.073,12 | R$4.146,24 | R$0 |
+| 2025-09-25 | AVUV, DGS | 400,47 | 120,14 | 5,3425 | R$2.139,51 | R$320,93 | R$641,85 | R$0 |
+| 2025-12-18 | AVDV, AVES, AVUV, DGS | 2.688,84 | 806,66 | 5,5283 | R$14.864,71 | R$2.229,71 | R$4.459,46 | R$0 |
+| **Total** | | **5.773,15** | **1.731,96** | — | **R$31.845,61** | **R$4.776,85** | **R$9.553,77** | **R$0** |
 
-*WHT (~30% US) > IR BR (15%) em todos os grupos → crédito integral → IR adicional = R$0 em todos.
+WHT (~30% US) > IR BR (15%) em todos os grupos → crédito integral → IR adicional = R$0.
+PTAX BCB confirmada 2026-05-05 via bcb.gov.br/ptax (PTAX venda de cada data de pagamento).
 
 > Usar data representativa do grupo (primeiro dia de pgto). Programa IRPF 2026 permite lançar por evento.
 
@@ -311,12 +313,25 @@ Para cada grupo, lançar no programa com: data, gross USD, PTAX, gross BRL, WHT 
 
 | Item | 31/12/2024 | 31/12/2025 |
 |------|------------|------------|
-| TD IPCA+ 2029 — Nubank | buscar declaração anterior | R$76.868 |
-| COE XP0121A3C3W — Banco XP | buscar declaração anterior | R$90.000 |
-| NTNB 15/08/2040 — XP | buscar declaração anterior | R$12.976 |
-| RDB NuConta — Nubank | buscar declaração anterior | R$11.131 |
-| Nexoos (P2P) | buscar declaração anterior | R$32 |
-| BOXX — Nomad/Apex (4,91 cotas) | buscar declaração anterior | R$3.026 |
+| TD IPCA+ 2029 — NuInvest (CNPJ: 62.169.875/0001-79) | R$88.119 | R$76.868 |
+| TD IPCA+ 2045 — NuInvest (vendido em 2025) | R$69.995 | R$0 |
+| COE XP0121A3C3W — Banco XP (CNPJ: 33.264.668/0001-03) | R$90.000 | R$90.000 |
+| NTNB 15/08/2040 — XP (adquirido em 2025) | R$0 | R$12.976 |
+| RDB NuConta — Nu Financeira (CNPJ: 30.680.829/0001-43) | R$11.171 | R$11.131 |
+| Nexoos (CNPJ: 34.254.279/0001-51) | R$1.127 | R$32 |
+| BOXX — Nomad/DriveWealth (CNPJ: 34.662.852/0001-66 — 6,76 cotas) | R$3.709 | R$3.026 |
+
+> Saldos 31/12/2024 preenchidos 2026-05-05 a partir dos informes de rendimentos 2024 (Nubank, XP, Nomad, Nexoos).
+
+#### Grupo 07 — Fundos · Código 01 — Fundo de Renda Fixa (resgatados em 2025)
+
+| Fundo | CNPJ | 31/12/2024 | 31/12/2025 |
+|-------|------|------------|------------|
+| Trend INB FIC FIRF Simples — XP | 37.910.132/0001-60 | R$1.318,10 | R$0 |
+| Trend DI Simples FIRF RL — XP | 32.893.503/0001-20 | R$24.923,86 | R$0 |
+| Trend DI FIC Simples — XP | 45.278.833/0001-57 | R$6.053,55 | R$0 |
+
+> Saldos 31/12/2024 do informe XP 2024. Todos resgatados em 2025 → 31/12/2025 = R$0.
 
 #### Grupo 07 — Fundos · Código 06 — FIP, FIDC e ETF – Entidades de Investimento (Lei 14.754/2023)
 
@@ -333,40 +348,47 @@ Para cada grupo, lançar no programa com: data, gross USD, PTAX, gross BRL, WHT 
 
 | Campo | 31/12/2024 | 31/12/2025 |
 |-------|------------|------------|
-| CNPJ do fundo | buscar informe XP | = |
+| CNPJ do fundo | 38.314.708/0001-90 | = |
 | Nome do fundo | Hashdex Nasdaq Crypto Index Brasil ETF | = |
 | Discriminação | 103 cotas @ R$40,35/cota (custo histórico) — XP — vendido 07/08/2025 | |
 | Situação | R$4.156 | R$0 |
+
+#### Grupo 07 — Fundos · Código 08 — ETF de índice de renda fixa (B3)
 
 **IT NOW IMA-B5 P2 F11 (ETF RF — B3):**
 
 | Campo | 31/12/2024 | 31/12/2025 |
 |-------|------------|------------|
-| CNPJ do fundo | buscar informe XP | = |
+| CNPJ do fundo | 38.354.864/0001-84 | = |
+| Nome do fundo | It Now IMA-B5 P2 Fundo de Índice | = |
 | Situação | R$51.758 | R$27.554 |
+
+> Código 08 (ETF de índice de renda fixa — B3), NÃO Código 06 (Lei 14.754 aplica-se a criptoETFs, não a IMA-B). Valores = custo histórico FIFO.
 
 #### Grupo 07 — Fundos · Código 99 — Outros (ETFs IBKR — Lei 14.754/2023)
 
 Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, domicílio do fundo.
 
-| ETF | Cotas 31/12/2025 | Custo BRL 31/12/2025 | Domicílio | Custo BRL 31/12/2024 |
-|-----|-----------------|---------------------|-----------|---------------------|
-| SWRD | 4.930,55 | R$833.646 | UCITS — Irlanda | buscar IRPF 2025 |
-| EIMI | 2.020,29 | R$341.011 | UCITS — Irlanda | buscar IRPF 2025 |
-| AVDV | 947,60 | R$302.836 | US-listed | buscar IRPF 2025 |
-| AVUV | 548,88 | R$237.373 | US-listed | buscar IRPF 2025 |
-| AVES | 926,55 | R$232.019 | US-listed | buscar IRPF 2025 |
-| USSC | 373,25 | R$129.465 | UCITS — Irlanda | buscar IRPF 2025 |
-| DGS | 188,21 | R$50.214 | US-listed | buscar IRPF 2025 |
-| IWVL | 34,00 | R$6.663 | UCITS — Irlanda | buscar IRPF 2025 |
+| ETF | Cotas 31/12/2024 | Custo BRL 31/12/2024 | Cotas 31/12/2025 | Custo BRL 31/12/2025 | Domicílio |
+|-----|-----------------|---------------------|-----------------|---------------------|-----------|
+| SWRD | 3.945,0126 | R$625.225 | 4.930,55 | R$833.646 | UCITS — Irlanda |
+| EIMI | 1.617,7130 | R$269.612 | 2.020,29 | R$341.011 | UCITS — Irlanda |
+| AVDV | 793,4346 | R$240.689 | 947,60 | R$302.836 | US-listed |
+| AVUV | 410,1175 | R$168.796 | 548,88 | R$237.373 | US-listed |
+| AVES | 529,7296 | R$128.170 | 926,55 | R$232.019 | US-listed |
+| USSC | 233,5449 | R$52.822 | 373,25 | R$129.465 | UCITS — Irlanda |
+| DGS | 188,2107 | R$50.214 | 188,21 | R$50.214 | US-listed |
+| IWVL | 34,0000 | R$6.663 | 34,00 | R$6.663 | UCITS — Irlanda |
+| JPGL | 410,0000 | R$288.537 | 0 | R$0 | UCITS — Irlanda |
+| ZPRX | 91,0000 | R$21.223 | 0 | R$0 | UCITS — Irlanda |
 
-> Saldos 31/12/2024: buscar na declaração IRPF 2025 entregue à RFB (seção Bens e Direitos do ano anterior).
+> Saldos 31/12/2024 preenchidos 2026-05-05: open_lots pré-2025 (tlh_lotes.json) + custo dos lotes vendidos em set/2025 (confirmados via DARF 0291). Quantidades 31/12/2024 confirmadas no Activity Statement IBKR 2024.
 
 #### Grupo 08 — Criptoativos · Código 02 — Outras criptomoedas
 
 | Item | 31/12/2024 | 31/12/2025 |
 |------|------------|------------|
-| USDC (17,20 unidades) — Nubank | buscar declaração anterior | R$101 |
+| USDC — Nu Crypto (CNPJ: 44.342.498/0001-46) | R$101 (16,54 unid.) | R$101 (17,20 unid.) |
 
 ---
 
@@ -374,8 +396,10 @@ Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, dom
 
 | Código | Credor | Contrato | 31/12/2024 | 31/12/2025 | Pago em 2025 |
 |--------|--------|----------|------------|------------|-------------|
-| 11 — Imóvel | Bradesco | 0001030320 | buscar extrato dez/2024 | R$457.002 | R$49.576 |
-| 16 — Outras | Banco XP | 800033276 | buscar extrato dez/2024 | R$109.450 | R$0 |
+| 11 — Imóvel | Bradesco (CNPJ: 60.746.948/0001-12) | 0001030320 | R$464.677 | R$457.002 | R$49.576 |
+| 16 — Outras | Banco XP (CNPJ: 33.264.668/0001-03) | 800033276 | R$95.749 | R$109.450 | R$0 |
+
+> Saldos 31/12/2024 confirmados: Bradesco = parcela 46 (venc.15/12/2024, saldo devedor R$464.676,64); Banco XP = informe 2024 contrato 800033276.
 
 ---
 
@@ -383,7 +407,7 @@ Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, dom
 
 | Código | Beneficiário | Valor |
 |--------|-------------|-------|
-| 36 — Previdência social | INSS (PJ2) | R$166,98 |
+| 36 — Previdência social | INSS (CNPJ: 29.979.036/0001-40) — retido na fonte pela PJ2 | R$166,98 |
 | 21/26 — Saúde | Diego verificar plano + consultas 2025 | — |
 
 ---
@@ -392,9 +416,9 @@ Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, dom
 
 - [ ] **DARF 6015 pago** — HASH11, R$743,45 + Selic (~9 meses). Pagar via Sicalc antes de transmitir.
 - [ ] **DARF 0291 pago** — Lei 14.754, R$12.003, vence 31/05/2026. Pagar antes de transmitir.
-- [ ] Dividendos IBKR: 4 grupos declarados com PTAX BCB por data (datas: 27/03, 26/06, 25/09, 18/12)
-- [ ] Bens e Direitos: saldos 31/12/2024 ETFs IBKR preenchidos (buscar declaração IRPF 2025)
-- [ ] Bens e Direitos: saldos 31/12/2024 RF (Nubank/XP) e dívidas (Bradesco/BancoXP) preenchidos
+- [x] Dividendos IBKR: PTAX BCB preenchida (27/03: 5,7474 / 26/06: 5,5145 / 25/09: 5,3425 / 18/12: 5,5283) — Gross BRL, IR 15% e Crédito WHT calculados por grupo
+- [x] Bens e Direitos: saldos 31/12/2024 ETFs IBKR preenchidos (lotes.json + DARF 0291 — 2026-05-05)
+- [x] Bens e Direitos: saldos 31/12/2024 RF (Nubank/XP/Nomad/Nexoos) e dívidas (Bradesco/BancoXP) preenchidos
 - [ ] Despesas de saúde/médicas 2025 levantadas e lançadas (se houver)
 - [ ] Diego valida e transmite à RFB
 
@@ -406,10 +430,7 @@ Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, dom
 |------|---------|------|
 | DARF 6015 (HASH11) não pago | Malha fina se declarar sem pagar | Pagar via Sicalc — issue TX-darf-hash11-2025 |
 | DARF 0291 (Lei 14.754) não pago | Vence 31/05/2026 | Pagar via Sicalc — issue TX-darf-hash11-2025 |
-| Saldos 31/12/2024 ETFs IBKR em Bens e Direitos | Campos obrigatórios no programa IRPF | Buscar na declaração IRPF 2025 anterior |
-| Saldos 31/12/2024 RF (Nubank/XP) + Dívidas (Bradesco/BancoXP) | Campos obrigatórios | Informes 2024 ou extrato dez/2024 |
-| PTAX BCB por data de pgto dividendos | Preenchimento ficha dividendos (4 datas) | bcb.gov.br/conversao — datas: 27/03, 26/06, 25/09, 18/12 |
-| Saldo CC Bradesco 31/12/2025 | Bens e Direitos (se relevante) | Informe CC Bradesco |
+| Saldo CC Bradesco 31/12/2025 | Bens e Direitos (se relevante, valor <R$140) | Informe CC Bradesco — baixa prioridade |
 | Despesas dedutíveis (saúde etc.) | Reduz IR na tabela progressiva | Diego verificar se tem |
 
 ---
@@ -423,6 +444,11 @@ Uma entrada por ETF. Discriminação: quantidade de cotas, custodiante IBKR, dom
 - [x] PJ saldos 31/12/2024 confirmados: PJ1 R$95.000 / PJ2 R$1.000 (capital social nominal)
 - [x] Dividendos IBKR: datas e valores confirmados via Activity Statement (4 grupos: mar/jun/set/dez)
 - [x] Guia de preenchimento campo a campo elaborado (seção Guia acima)
+- [x] Todos os placeholders preenchidos: PTAX BCB, CNPJs, saldos 31/12/2024 (2026-05-05)
+- [x] Saldos 31/12/2024 ETFs IBKR computados via lotes.json + DARF 0291
+- [x] IT NOW reclassificado: Cód. 08 (ETF RF B3), não Cód. 06
+- [x] TD IPCA+ 2045 (vendido em 2025) incluído: 31/12/2024 = R$69.995
+- [x] Trend funds incluídos em Bens e Direitos: Cód. 01, saldos 31/12/2024 e 31/12/2025=R$0
 - [ ] DARFs pagos (6015 + 0291) — issue TX-darf-hash11-2025
 - [ ] Preenchimento no programa IRPF 2026 (RFB)
 - [ ] Diego valida e aprova antes de transmitir à RFB
