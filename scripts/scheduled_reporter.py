@@ -70,6 +70,27 @@ JOBS = [
         "schedule": "seg 9h15",
         "weekdays": [1],  # Monday only
     },
+    {
+        "key": "monthly-health",
+        "log_file": "monthly_health.log",
+        "label": "Health check mensal",
+        "schedule": "dia 2 8h00",
+        "weekdays": [1, 2, 3, 4, 5],  # dia 2 se for dia útil
+    },
+    {
+        "key": "monthly-shadows",
+        "log_file": "reconstruct_shadows.log",
+        "label": "Reconstrução shadows",
+        "schedule": "dia 6 7h30",
+        "weekdays": [1, 2, 3, 4, 5],  # dia 6 se for dia útil
+    },
+    {
+        "key": "monthly-factor",
+        "log_file": "factor_regression.log",
+        "label": "Factor regression rolling",
+        "schedule": "dia 3 7h30",
+        "weekdays": [1, 2, 3, 4, 5],  # dia 3 se for dia útil
+    },
 ]
 
 # Error indicators in log lines

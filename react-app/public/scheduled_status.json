@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-05-06T07:40:34",
+    "generated": "2026-05-06T07:50:17",
     "reporter_version": "1"
   },
   "jobs": [
@@ -57,13 +57,40 @@
       "last_run_iso": null,
       "last_line": "",
       "alert_count": 0
+    },
+    {
+      "key": "monthly-health",
+      "label": "Health check mensal",
+      "schedule": "dia 2 8h00",
+      "status": "no_log",
+      "last_run_iso": null,
+      "last_line": "",
+      "alert_count": 0
+    },
+    {
+      "key": "monthly-shadows",
+      "label": "Reconstrução shadows",
+      "schedule": "dia 6 7h30",
+      "status": "no_log",
+      "last_run_iso": null,
+      "last_line": "",
+      "alert_count": 0
+    },
+    {
+      "key": "monthly-factor",
+      "label": "Factor regression rolling",
+      "schedule": "dia 3 7h30",
+      "status": "no_log",
+      "last_run_iso": null,
+      "last_line": "",
+      "alert_count": 0
     }
   ],
   "summary": {
-    "total": 6,
+    "total": 9,
     "ok": 0,
     "error": 0,
     "stale": 0,
-    "no_log": 6
+    "no_log": 9
   }
 }
