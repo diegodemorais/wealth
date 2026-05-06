@@ -1,8 +1,9 @@
 # Carteira Diego Morais — Contexto Compartilhado
 
-> Atualizado em: 2026-05-01
+> Atualizado em: 2026-05-06
 > Este arquivo e a fonte de verdade para todos os agentes.
 > Cambio de referencia: R$ 4,960 (PTAX BCB 2026-05-01, scan mercado)
+> Patrimonio total: R$ 3.385.515,28 (atualizado 06/05/2026 — resgate IPCA+ 2029)
 
 ---
 
@@ -42,7 +43,7 @@
 - **Localidade**: Sao Paulo, Pinheiros
 - **Meta FIRE**: **Cenário Base — 2040 (53 anos).** SWR ≤ 3.0%, aporte R$25k/mês → P(FIRE Base): **84,1% base / 91,4% favorável / 79,0% stress** (MC 10k, spending smile ex-saúde + guardrails + bond tent + IR 15% nominal + INSS R$18k/ano@65 + vol bond pool 13.3% + SAUDE_BASE R$24k + VCMH 3.5% + SAUDE_DECAY 15% — FR-saude-modelo-custo 2026-04-29). **Cenário Aspiracional — 2035 (49 anos).** SWR ≤ 3.0%, aporte R$30k/mês → P(FIRE Aspiracional): **78.8% base** (MC 2026-04-25, retornos + aportes + IR diferido). Revisão anual a partir de 2034 (48 anos). **Não trabalhar além de 2040 independente de P(FIRE).** Gatilho adicional: **patrimônio ≥ R$10M → avaliar cenário aspiracional como viável** (materializa ~2036–2038). **Safety net stress**: Se filho + income shock + drawdown 25%+ simultâneos (P(FIRE) = 55.2%), Katia mantém renda por 2–3 anos como piso, aporte cai para R$15k floor, horizonte 25+ anos torna-se aceitável. Mecanismo: guardrails + INSS R$113.8k/ano Katia a partir de 2049.
 - **Distribuição subjetiva FIRE date** (elicitação estruturada FR-fire-date-elicitation, 2026-04-11): P(<47)=10% risco saúde/invalidez involuntário — não planejável, SWR ~3.5-4.5%; P(47–50)=30% viável com guardrails se patrimônio ≥ R$9M; P(50–53)=30% alinhado com modelo base; P(53–57)=10% atraso por casamento/filho; P(>57)=20% "não quis parar" ou vida mudou muito. **Gatilhos de vida**: casar → atrasa; filho → atrasa; negócio bom → acelera; burnout → FIRE involuntário (monitorar SWR anualmente a partir de 2030); patrimônio R$10M → debate antecipação; sócio/projeto → atrasa. **Flag Behavioral**: gap 9/10 profissional vs 7/10 pessoal já presente em 2026 — não se resolve automaticamente no FIRE. Intervenção recomendada: mover 7→8 pessoal nos próximos 12 meses independente do target financeiro.
-- **Patrimonio**: R$ 3.472.335 (excl. operacao estruturada COE/emprestimo)
+- **Patrimonio**: R$ 3.385.515,28 (excl. operacao estruturada COE/emprestimo) — atualizado 06/05/2026 após resgate IPCA+ 2029
 - **Aporte mensal**: R$ 25k
 - **Renda estimada**: R$ 45k/mês (para cálculo savings rate no dashboard — SR = aporte R$25k / renda R$45k = 55.6%)
 - **Custo de vida**: R$ 250k/ano
@@ -86,7 +87,7 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 
 | Bloco | % Atual | Alvo | Valor | Instrumento | Regra |
 |-------|---------|------|-------|-------------|-------|
-| Reserva | 2,5% | — | R$ 86.554,71 | Tesouro IPCA+ 2029 | Emergencia. Migrar pra Selic no vencimento (2029) |
+| Reserva | 0% | — | R$ 0,00 | Tesouro IPCA+ 2029 | ZERADA em 06/05/2026 (resgate R$86.819,70 líquido). Decisão: reserva de emergência convertida para veículo pessoal. Reconstituir se necessário em futuro. |
 | IPCA+ existente | — | — | — | — | Incorporado ao bloco IPCA+ longo (posicao 2040) |
 | IPCA+ longo | **6,1%** | **15%** | R$ 124.675,79 (2040: R$113.015 + 2050: R$11.660 após liq. 13/04) | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity SEMPRE.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para equity. Gatilho de venda: NENHUM (exceto risco soberano extremo). Posicao estrutural — nao vender por MtM |
 | IPCA+ curto | 0% | **3%** | — | TD curto ~2 anos | SoRR buffer. **Comprar perto dos 50**, nao agora. Substitui Selic no plano original (melhor protecao inflacionaria, MtM baixo com ~2 anos duration) |

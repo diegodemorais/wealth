@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-05
+
+| Data | Tipo | Ativo | Qtd/Valor | Preco | Moeda | Cambio | Custo | Plataforma | Status | Obs |
+|------|------|-------|-----------|-------|-------|--------|-------|------------|--------|-----|
+| 2026-05-04 | Resgate | Tesouro IPCA+ 2029 | R$ 86.819,70 | IPCA+ 7,58% | BRL | — | R$ 190,09 (taxa B3) | Nubank | ✅ Executado | Resgate integral da posição de reserva de emergência. 23,35 títulos @ R$3.726,33 = R$87.009,80 bruto. Líquido: R$86.819,70. Posição ZERADA. Motivo: realocação para compra de veículo (bem pessoal, fora da carteira de investimentos). |
+
 ## 2026-04
 
 | Data | Tipo | Ativo | Qtd/Valor | Preco | Moeda | Cambio | Custo | Plataforma | Status | Obs |
