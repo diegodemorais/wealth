@@ -467,7 +467,7 @@ Uma entrada por moeda. Para cada: CNPJ em branco (exterior), discriminação com
 | Código | Beneficiário | Valor |
 |--------|-------------|-------|
 | 36 — Previdência social | INSS (CNPJ: 29.979.036/0001-40) — retido na fonte pela PJ2 | R$166,98 |
-| 21/26 — Saúde | Diego verificar plano + consultas 2025 | — |
+| 21/26 — Saúde | N/A — renda tributável R$1.518 (abaixo da isenção) → dedução não gera benefício | R$0 |
 
 ---
 
@@ -478,7 +478,7 @@ Uma entrada por moeda. Para cada: CNPJ em branco (exterior), discriminação com
 - [x] Dividendos IBKR: PTAX BCB preenchida (27/03: 5,7474 / 26/06: 5,5145 / 25/09: 5,3425 / 18/12: 5,5283) — Gross BRL, IR 15% e Crédito WHT calculados por grupo
 - [x] Bens e Direitos: saldos 31/12/2024 ETFs IBKR preenchidos (lotes.json + DARF 0291 — 2026-05-05)
 - [x] Bens e Direitos: saldos 31/12/2024 RF (Nubank/XP/Nomad/Nexoos) e dívidas (Bradesco/BancoXP) preenchidos
-- [ ] Despesas de saúde/médicas 2025 levantadas e lançadas (se houver)
+- [x] Despesas de saúde — N/A (renda tributável R$1.518 < isenção → dedução não reduz IR)
 - [ ] Diego valida e transmite à RFB
 
 ---
@@ -490,7 +490,7 @@ Uma entrada por moeda. Para cada: CNPJ em branco (exterior), discriminação com
 | DARF 6015 (HASH11) não pago | Malha fina se declarar sem pagar | Pagar via Sicalc — issue TX-darf-hash11-2025 |
 | DARF 0291 (Lei 14.754) não pago | Vence 31/05/2026 | Pagar via Sicalc — issue TX-darf-hash11-2025 |
 | Saldo CC Bradesco 31/12/2025 | Bens e Direitos (se relevante, valor <R$140) | Informe CC Bradesco — baixa prioridade |
-| Despesas dedutíveis (saúde etc.) | Reduz IR na tabela progressiva | Diego verificar se tem |
+| ~~Despesas dedutíveis (saúde)~~ | ~~Reduz IR na tabela progressiva~~ | N/A — renda tributável abaixo da isenção |
 | Nomad SGOV + TFLO | Bens e Direitos individuais (31/12/2025 = R$0, mas discriminados) | Completar com Nomad informe — baixa prioridade (valores zero) |
 | Binance staking rendimento exato | Ficha rendimentos exterior | Exportar Binance Tax Report (Wallet → Tax Reports) — estimativa ~R$18 suficiente se não houver auditoria |
 
