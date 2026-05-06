@@ -43,6 +43,7 @@
 |----|--------|------|------------|
 | TX-dirpf-2026 | DIRPF 2026 — Informe de Rendimentos e Declaração (ano-base 2025) | Tax | 🔴 Alta |
 | TX-darf-hash11-2025 | DARFs pendentes 2025 (6015 HASH11 + 0291 Lei 14.754) — 0291 vence 31/05/2026 | Tax | 🔴 Alta |
+| HD-patrimonio-integrity | Verificação automática de integridade de patrimônio (L-25) — script + cron semanal | Head | 🟠 Média |
 
 ### Blocked
 > Issues aguardando dependências externas
