@@ -29,25 +29,18 @@ OUT_FILE = ROOT / "react-app" / "public" / "scheduled_status.json"
 # if "stale" logic applies (daily jobs vs weekly jobs).
 JOBS = [
     {
-        "key": "pipeline-daily",
-        "log_file": "pipeline_daily.log",
-        "label": "Pipeline diário",
+        "key": "morning-pipeline",
+        "log_file": "morning_pipeline.log",
+        "label": "Pipeline matinal",
         "schedule": "seg–sex 7h00",
-        "weekdays": [1, 2, 3, 4, 5],  # Mon–Fri
-    },
-    {
-        "key": "validate-data",
-        "log_file": "validate_data.log",
-        "label": "Validação de dados",
-        "schedule": "seg–sex 7h05",
-        "weekdays": [1, 2, 3, 4, 5],
+        "weekdays": [1, 2, 3, 4, 5],  # Mon–Fri — orquestrador (generate→validate→sanity→gatilhos)
     },
     {
         "key": "check-gatilhos",
         "log_file": "check_gatilhos.log",
         "label": "Check gatilhos",
         "schedule": "seg–sex 7h10",
-        "weekdays": [1, 2, 3, 4, 5],
+        "weekdays": [1, 2, 3, 4, 5],  # kept separate for alert_count visibility
     },
     {
         "key": "integration-health",
