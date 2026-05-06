@@ -20,6 +20,58 @@ import { NowRiskPanel } from '@/components/now/NowRiskPanel';
 import { NowIpsSummary } from '@/components/now/NowIpsSummary';
 import { NowRebalancingWrapper } from '@/components/now/NowRebalancingWrapper';
 import { NowPatrimonioLiquidoWrapper } from '@/components/now/NowPatrimonioLiquidoWrapper';
+import { useScheduledStatus } from '@/hooks/useScheduledStatus';
+import type { ScheduledJob } from '@/hooks/useScheduledStatus';
+
+// ─── Scheduled Status Banner helpers ─────────────────────────────────────────
+
+function formatJobDate(isoStr: string | null): string {
+  if (!isoStr) return 'desconhecido';
+  try {
+    const dt = new Date(isoStr);
+    return dt.toLocaleDateString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      day: '2-digit', month: '2-digit',
+    });
+  } catch {
+    return isoStr;
+  }
+}
+
+function ScheduledStatusBanner() {
+  const { data, isLoading } = useScheduledStatus();
+  if (isLoading || !data) return null;
+
+  const { summary } = data;
+  if (summary.error === 0 && summary.stale === 0) return null;
+
+  // Collect issues, errors first
+  const errorJobs = data.jobs.filter(j => j.status === 'error');
+  const staleJobs = data.jobs.filter(j => j.status === 'stale');
+  const allIssues: ScheduledJob[] = [...errorJobs, ...staleJobs];
+  if (allIssues.length === 0) return null;
+
+  const primary = allIssues[0];
+  const extra = allIssues.length - 1;
+
+  const isError = primary.status === 'error';
+  const message = isError
+    ? `🔴 Rotina com falha: ${primary.label} — ${primary.last_line || 'ver logs/'}. Ver logs/.`
+    : `⚠️ Rotina sem execução: ${primary.label} (último run: ${formatJobDate(primary.last_run_iso)})`;
+
+  const extraSuffix = extra > 0 ? ` e mais ${extra}` : '';
+
+  return (
+    <DiagnosticBanner
+      variant={isError ? 'warning' : 'info'}
+      title="Rotinas Agendadas"
+      testId="banner-scheduled-status"
+      compact
+    >
+      {message}{extraSuffix}
+    </DiagnosticBanner>
+  );
+}
 
 export default function HomePage() {
   const { data, derived, isLoading, dataError, privacyMode } = usePageData();
@@ -74,6 +126,9 @@ export default function HomePage() {
       >
         {maskMoneyValues('Exclui INSS Katia (~R$113k/ano) e capital humano. Real ~82-84%.', privacyMode)}
       </DiagnosticBanner>
+
+      {/* Banner condicional — rotinas com falha ou stale (só se problema) */}
+      <ScheduledStatusBanner />
 
       {/* 1. HERO STRIP — Patrimônio Total | Anos até FIRE | Progresso FIRE */}
       <KpiHero

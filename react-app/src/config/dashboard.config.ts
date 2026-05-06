@@ -176,6 +176,8 @@ export const SECTIONS: Record<string, SectionDef[]> = {
   assumptions: [
     // Group: Changelog
     { id: 'dashboard-updates',             title: '📋 Changelog — Alterações do Dashboard', defaultOpen: true,  collapsible: true, group: 'Changelog' },
+    // Group: Rotinas Agendadas
+    { id: 'scheduled-status',             title: '🕐 Rotinas Agendadas',                   defaultOpen: false, collapsible: true, group: 'Changelog' },
     // Group: Simuladores (moved from /simulators)
     { id: 'fire-sim',                      title: 'Simulador FIRE — Cenários de Aposentadoria',   defaultOpen: true,  collapsible: false, group: 'Simuladores' },
     { id: 'what-if',                       title: 'What-If — Sensibilidade de Variáveis',          defaultOpen: true,  collapsible: true,  group: 'Simuladores' },

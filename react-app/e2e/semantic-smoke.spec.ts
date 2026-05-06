@@ -936,3 +936,20 @@ test.describe('Privacy regression — NOW tab', () => {
     expect(text, `patrimonio-total should show real R$ value, got: ${text}`).toMatch(/R\$/);
   });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Scheduled Status smoke — DEV-scheduled-status
+// Verifies the section renders in Tools tab (even when no logs exist yet)
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.describe('Scheduled Status — smoke', () => {
+  test.beforeEach(async ({ page }) => {
+    await gotoAndWait(page, ROUTES.assumptions);
+  });
+
+  test('scheduled-status section renders in Tools tab', async ({ page }) => {
+    // Find the CollapsibleSection header containing "Rotinas Agendadas"
+    const header = page.locator('text=Rotinas Agendadas').first();
+    await expect(header).toBeVisible({ timeout: 15_000 });
+  });
+});

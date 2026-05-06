@@ -20,6 +20,7 @@ import { CascadeSection } from '@/app/simulators/CascadeSection';
 import { StressTestSection } from '@/app/simulators/StressTestSection';
 import { RendaVsIpcaDuracaoSection } from '@/app/simulators/RendaVsIpcaDuracaoSection';
 import { ReverseFire } from '@/app/simulators/ReverseFire';
+import { ScheduledStatus } from '@/components/dashboard/ScheduledStatus';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 
@@ -723,6 +724,9 @@ export default function AssumptionsPage() {
       >
         <ChangelogTable />
       </CollapsibleSection>
+
+      {/* Rotinas Agendadas — status dos LaunchAgents seg–sex */}
+      <ScheduledStatus />
 
       {/* ════════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1: DECISÕES & AÇÕES (most actionable)                           */}

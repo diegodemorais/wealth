@@ -1588,6 +1588,17 @@
       "optional": true,
       "_optional_reason": "Dados gerados por reconstruct_allocation_series.py — chart oculta se backtest.allocation ausente.",
       "privacy": false
+    },
+    {
+      "id": "scheduled-status-panel",
+      "tab": "assumptions",
+      "label": "Rotinas Agendadas — Status dos LaunchAgents",
+      "type": "table",
+      "purpose": "Exibe status dos 7 LaunchAgents (seg–sex): ok/error/stale/no_log. Gerado por scripts/scheduled_reporter.py a partir de logs/*.log. DiagnosticBanner na NOW tab se error ou stale.",
+      "data_fields": [],
+      "optional": true,
+      "_optional_reason": "Lê /scheduled_status.json independente do data.json. Se arquivo não existir, mostra erro de fetch. Não tem valores monetários — sem privacy masking.",
+      "privacy": false
     }
   ]
 }
