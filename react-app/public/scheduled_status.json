@@ -1,22 +1,13 @@
 {
   "_meta": {
-    "generated": "2026-05-06T07:25:00",
+    "generated": "2026-05-06T07:40:34",
     "reporter_version": "1"
   },
   "jobs": [
     {
-      "key": "pipeline-daily",
-      "label": "Pipeline diário",
+      "key": "morning-pipeline",
+      "label": "Pipeline matinal",
       "schedule": "seg–sex 7h00",
-      "status": "no_log",
-      "last_run_iso": null,
-      "last_line": "",
-      "alert_count": 0
-    },
-    {
-      "key": "validate-data",
-      "label": "Validação de dados",
-      "schedule": "seg–sex 7h05",
       "status": "no_log",
       "last_run_iso": null,
       "last_line": "",
@@ -69,10 +60,10 @@
     }
   ],
   "summary": {
-    "total": 7,
+    "total": 6,
     "ok": 0,
     "error": 0,
     "stale": 0,
-    "no_log": 7
+    "no_log": 6
   }
 }
