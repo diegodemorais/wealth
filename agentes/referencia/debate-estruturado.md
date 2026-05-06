@@ -62,3 +62,28 @@ Score absoluto e direção são registrados na conclusão da issue (ex: "6.5p fa
 ## Registro
 
 Debates estruturados sao registrados na issue correspondente (secao Analise) ou, se em conversa, o Head sugere abertura de issue para registro formal.
+
+---
+
+## Estado do Debate (template pós-R4)
+
+Após cada debate formal R1-R4, o Head preenche esta tabela na issue (preenchimento pós-R4, nunca durante):
+
+```markdown
+## Estado do Debate (preenchido pelo Head após R4)
+
+| Agente | Prior (antes do debate) | R2 (após 1º counter) | Final (R4) | Flip? | Evidência nova entre R2→R4? |
+|--------|------------------------|----------------------|------------|-------|------------------------------|
+| Factor | A | A | A | — | — |
+| RF | B | B | A | ✅ | Não → flag sycophancy |
+| Advocate | A | A | B | ✅ | Sim: dado X introduzido em R3 |
+| Head | — | — | A | — | Sintetizador/votante |
+
+**Flip rate neste debate:** X de Y agentes fliparam sem evidência nova
+**Flag de sycophancy:** [Sim/Não — quais agentes]
+```
+
+**Regras de preenchimento:**
+- Somente em debates formais com rounds R1-R4 explícitos
+- Para debates exploratórios (sem posição prévia clara): omitir tabela
+- Flip sem evidência nova = sycophancy flag obrigatório (ver D8-addendum e D11-addendum em protocolos-decisao.md)

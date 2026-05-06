@@ -20,12 +20,13 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 | **Decisao** | DCA em IPCA+ 2040 (80%) + 2050 (20%), ate atingir 15% do portfolio |
 | **Previsao** | Taxa media de compra >= 6.5% real |
 | **Prazo** | Jun 2026 (first tracking checkpoint) |
+| **Data de revisão programada** | 2026-06-30 |
+| **Status** | `aberta` |
 | **Confianca** | Alta (~80%) |
 | **Racional** | Taxa atual 7.16% (2026-03-26). Selic em 14.25%, sem sinais de corte iminente. IPCA pressionado. Taxas reais devem permanecer elevadas ate pelo menos jun 2026 |
 | **Cenario de falha** | Corte surpresa de Selic, ou sinalizacao forte de fiscal responsavel pelo governo, comprimindo taxas reais abaixo de 6.5% |
 | **Gatilho de parada** | Se taxa cair abaixo de 6.0% (piso operacional), pausar DCA e redirecionar aportes para **SWRD** (JPGL eliminado em 2026-04-01) |
 | **Agente dono** | 03 Renda Fixa |
-| **Status** | Aberta — DCA ativo |
 
 **Tracking:**
 
@@ -45,12 +46,13 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 | **Decisao** | DCA pausado (taxa abaixo de 6.5%). Vender tudo se taxa <= 6.0% (ganho MtM) |
 | **Previsao** | Taxa cai para <= 6.0% em 12-18 meses |
 | **Prazo** | Mar 2027 - Set 2027 |
+| **Data de revisão programada** | 2027-03-31 |
+| **Status** | `aberta` |
 | **Confianca** | Baixa-Media (40-55%) |
 | **Racional** | Ciclo de Selic eventualmente reverte. Se economia desacelerar, taxas longas caem. Mas risco fiscal pode manter taxas elevadas por mais tempo. Duração 43.6 anos — alta sensibilidade a variacao de taxa |
 | **Cenario de falha** | Risco fiscal se materializa, Selic fica alta por 2+ anos, taxas longas sobem para 8%+ |
 | **Regra de saida** | Aguardar 720 dias se holding < 2 anos (carry domina reducao de IR). Se taxa >= 9%: manter pelo carrego |
 | **Agente dono** | 03 Renda Fixa |
-| **Status** | Aberta — monitorando mensalmente |
 
 **Tracking:**
 
@@ -105,15 +107,36 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 | **Decisao** | ... |
 | **Previsao** | ... |
 | **Prazo** | ... |
+| **Data de revisão programada** | YYYY-MM-DD (tipicamente 3-6 meses após abertura) |
+| **Status** | `aberta` \| `em revisão` \| `fechada` |
 | **Confianca** | ... |
 | **Racional** | ... |
 | **Cenario de falha** | ... |
 | **Condição de encerramento por mudança de tese** | [critério explícito — ex: "se o target do ativo for removido, a previsão é encerrada como mudança de tese, não como erro de previsão"] |
 | **Agente dono** | ... |
-| **Status** | ... |
 ```
 
 > **Regra L-22 (2026-04-01):** Toda nova previsão DEVE definir explicitamente a condição de encerramento por mudança de tese. Sem esse campo, o encerramento retroativo fica ambíguo (acerto vs abandono). Caso: PRV-003 encerrada porque JPGL foi eliminado — o campo teria deixado o critério claro desde a abertura.
+
+---
+
+## Template de Fechamento / Outcome (preencher na data de revisão)
+
+Quando uma PRV atinge a `data_revisao_programada` ou o prazo, o Head preenche este bloco na issue:
+
+```markdown
+### Outcome (preenchido em YYYY-MM-DD)
+
+| Campo | Valor |
+|-------|-------|
+| Resultado real | [o que aconteceu] |
+| Previsão estava correta? | Sim / Parcialmente / Não / Encerrada por mudança de tese |
+| Raciocínio original estava correto? | Sim / Parcialmente / Não |
+| Reflexão | [2-4 frases — o que o sistema aprendeu] |
+| Impacto nos perfis dos agentes | [qual agente deve incorporar o aprendizado, via agentes/memoria/] |
+```
+
+Mudar `status` para `fechada` após preenchimento.
 
 ---
 

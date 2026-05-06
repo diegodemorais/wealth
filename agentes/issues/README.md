@@ -42,6 +42,7 @@
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 | TX-dirpf-2026 | DIRPF 2026 — Informe de Rendimentos e Declaração (ano-base 2025) | Tax | 🔴 Alta |
+| HD-agent-patterns-2026 | Padrões de Agentes: Feedback Loop + State Tracking + Two-LLM Split | Head | 🟡 Média |
 
 ### Blocked
 > Issues aguardando dependências externas

@@ -78,6 +78,8 @@ Escalas de contestação:
 
 Para >5%, o Head apresenta o consenso do time Claude + a resposta do modelo externo lado a lado. Diego decide. **Soberania do usuário:** consenso entre modelos é recomendação, não decisão.
 
+**D8-addendum (HD-agent-patterns-2026):** Após R4, Head preenche tabela de estado de debate na issue (template em `debate-estruturado.md`). Flip sem evidência nova = sycophancy flag obrigatório.
+
 ### Numerical Dual-Path (D9)
 
 Para qualquer conclusão quantitativa (expected return, SWR, P(FIRE), IR):
@@ -116,6 +118,8 @@ Se qualquer bullet revelar risco não mitigado → adicionar mitigação ou reje
 
 **Head monitora flip rate**: se agente muda posição após pushback sem citar dado novo → flag como sycophancy potencial.
 
+**D11-addendum (HD-agent-patterns-2026):** Flip rate calculável a partir das tabelas de estado de debate (template pós-R4). Meta: <20% de flips sem evidência nova por trimestre. Registrar em retro trimestral.
+
 ### Calibration Audit (D12 — Ops mensal)
 
 Tracking mensal de acurácia e vieses:
@@ -132,3 +136,44 @@ Tracking mensal de acurácia e vieses:
 3. **Convergence speed**: se 5+ agentes concordam em <30 segundos de debate → flag como "convergência rápida demais"
 
 Registrar em `agentes/retros/` junto com a retro mensal.
+
+---
+
+## Protocolo de Modelo LLM (HD-agent-patterns-2026)
+
+Two-LLM split: usar o modelo mais barato/rápido para coleta e o mais capaz para síntese. Haiku ~20× mais barato que Opus, ~5× mais barato que Sonnet.
+
+| Modelo | Quando usar |
+|--------|-------------|
+| **Haiku** | Coleta de dados, pesquisa inicial, fact-checking simples, bookkeeper (registros/lookups), transcrição |
+| **Sonnet** | Análise, debates R1-R2, síntese intermediária, agentes especializados (factor, rf, fire, tax, behavioral, macro, risco, quant, wealth) |
+| **Opus** | Síntese final cross-domain (CIO, Head), debates complexos R3-R4, stress-test estrutural (Advocate), decisões >5% portfolio |
+
+**Tabela por agente:**
+
+| Agente | Modelo padrão | Justificativa |
+|--------|--------------|---------------|
+| bookkeeper | haiku | Registro e lookup — sem raciocínio complexo |
+| fact-checker | haiku → sonnet se ambíguo | Verificação factual simples é Haiku; interpretação é Sonnet |
+| transcrever | haiku | Transcrição direta |
+| macro (snapshot) | haiku | Coleta de dados macro |
+| macro (análise) | sonnet | Interpretação e cenário |
+| factor | sonnet | Literatura e raciocínio sobre fatores |
+| rf | sonnet | Cálculos de duration e marcação a mercado |
+| fire | sonnet | Projeção e Monte Carlo |
+| tax | sonnet | Cálculo tributário com nuance |
+| behavioral | sonnet | Detecção de vieses requer contexto |
+| risco | sonnet | Análise de gatilhos e posições |
+| wealth | sonnet | Estrutura patrimonial |
+| quant | sonnet | Validação numérica |
+| outside-view | sonnet | Perspectiva externa |
+| advocate | opus | Stress-test usa modelo mais capaz |
+| cio | opus | Síntese cross-domain exige capacidade máxima |
+| Head | opus | Orquestrador principal |
+
+**Como aplicar ao spawnar via Agent tool:**
+```
+Agent(subagent_type="bookkeeper", model="haiku", ...)
+Agent(subagent_type="factor", model="sonnet", ...)
+Agent(subagent_type="advocate", model="opus", ...)
+```

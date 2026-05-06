@@ -33,7 +33,8 @@ Quando solicitado, coordene revisao completa:
 9. **Devil's Advocate** (`advocate`): stress-test das premissas do mes
 10. **Tactical** (`risco`): alguma oportunidade relevante no radar?
 11. **Ops** (`ops`): execuções pendentes, prazos vencidos, drift >5pp, aportes em dia? Flight rules ativados?
-12. Sintetizar em relatorio consolidado (ou usar `/relatorio-mensal`)
+12. **PRVs** (`agentes/metricas/previsoes.md`): verificar PRVs com `data_revisao_programada` vencida → preencher outcome, fechar ou prorrogar. Registrar acurácia acumulada (corretas / total fechadas).
+13. Sintetizar em relatorio consolidado (ou usar `/relatorio-mensal`)
 
 ## Revisao Trimestral
 
